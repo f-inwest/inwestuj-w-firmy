@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+	<link href='http://fonts.googleapis.com/css?family=Ubuntu:400,300,300italic,400italic,500,700,500italic,700italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<link href="font.css" rel="stylesheet" type="text/css">
+	<link href="style.css" rel="stylesheet" type="text/css">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			$(".checkbox").change(function(){
+				if($(this).is(":checked")){
+					$(this).next("label").addClass("etykieta_wybrana");
+				}else{
+					$(this).next("label").removeClass("etykieta_wybrana");
+				}
+			});
+		});	
+			
+	</script>
+</head>
+<body>
+<div id="all-page">
+	<div id="down-header-sub-page">	
+	</div>	
+		
+		<!--#include file="opis/header-content-sub.html"-->
+	
+	<div id="page">
+		
+		<section>
+				<!--#include file="edycja-profilu/page.html"-->
+				
+		</section>
+		<aside>
+				<!--#include file="edycja-profilu/bar.html"-->
+		</aside>
+	</div>
+</div>
+	
+<!--#include file="index/footer.html"-->
+</body>
+</html>

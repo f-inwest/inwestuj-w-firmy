@@ -22,6 +22,24 @@ How to build project:
  - "Migrate version ..."
  - "Update all listing stats"
  - "Update all aggregate stats"
+ 
+ 
+ How to setup Apache to see UI project files:
+ 1. Open your apache config file (httpd.conf or simiar)
+ 2. Define the following alias and directory (change folder location)
+ Alias /inwestujwfirmy "C:/greg/projects/inwestuj-w-firmy/inwestujwfirmy_ui"
+<Directory "C:/greg/projects/inwestuj-w-firmy/inwestujwfirmy_ui">
+    Options Indexes FollowSymLinks
+    Options +Includes
+
+    AddType text/html .html
+    AddOutputFilter INCLUDES .html
+
+    Require all granted
+</Directory>
+3. Restart your apache
+4. Access http://localhost:8080/inwestujwfirmy/index.html
+
 
 
 If you're using Eclipse (Google Plugin required) then you can directly import project and run it.

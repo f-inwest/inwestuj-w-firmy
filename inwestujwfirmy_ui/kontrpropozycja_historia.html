@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+	<link href='http://fonts.googleapis.com/css?family=Ubuntu:400,300,300italic,400italic,500,700,500italic,700italic&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<link href="font.css" rel="stylesheet" type="text/css">
+	<link href="style.css" rel="stylesheet" type="text/css">
+	    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+        <script src="js/jquery.knob.js"></script>
+        <script src="js/jQueryRotate.1.7.js"></script>
+        <script src="js/kolko.js"></script>
+	<script type="text/javascript" src="js/mootools12_all_p.js"></script>
+	<script type="text/javascript" src="js/slider_bar.js"></script>
+	
+	<script type="text/javascript" >
+
+// ON LOAD 
+window.addEvent('domready', function() {
+
+	var mySlideB = new Slider($('slider_gutter_1'), $('slider_knob_1'), $('slider_gutter_bkg_1'),{
+		start: 0,
+		end: 5000, //tu zmienna max ze skryptu
+		offset: 10,
+		onChange: function(pos){
+			// $('slider_current_val').setHTML(pos + ' inches');
+		
+			document.getElementById('slider_current_val').value = pos;
+
+			//document.getElementById('slider_gutter_bkg_1').style.width = (pos/5000 * 100) + '%';
+			//console.log(document.getElementById('slider_gutter_bkg_1').style.width);
+
+		}
+
+	}, null).setMin(300);// zmienna aktualnie ze skryptu
+	$('slider_current_val').setHTML(300 + ' inches');// zmienna aktualnie ze skryptu
+
+});
+
+
+</script>
+
+<script type="text/javascript">
+    function onChangeTest(textbox) {
+        //alert("Value is " + textbox.value + "\n" + "Old Value is " + textbox.oldvalue);
+        var a = parseInt(document.getElementById("slider_current_val").value);
+        var mySlideBc = new Slider($('slider_gutter_1'), $('slider_knob_1'), $('slider_gutter_bkg_1'),{
+		start: 0,
+		end: 5000, //tu zmienna max ze skryptu
+		offset: 10,
+
+	}, null).setMin(a);
+    }
+</script>
+<!-- skrypt do obracania -->
+<script type="text/javascript">
+(function($){
+	$(document).ready(function(){
+		var $znacznik = $("#znacznik");
+		
+		function onChangeZmiana(textbox) {
+		  var a = parseInt($("#inputkolko").val());
+		  //var $znacznik = $('#znacznik');
+		  var kat = a * 3.6; 
+		  kat=Math.round(kat);
+		  
+		  console.log(kat);
+		  $znacznik.css('transform', 'rotate('+kat+'deg)'); 
+		  $znacznik.css('-webkit-transform', 'rotate('+kat+'deg)');  
+		}
+		
+		$znacznik.on('mousedown', false);
+		
+		$('.kolko > div').on('mousedown', function(){
+			$(document).on('mousemove', onChangeZmiana);
+		});
+		
+		$(document).on('mouseup', function(){
+			$(document).off('mousemove', onChangeZmiana);
+		});
+	})
+})(jQuery);
+</script>
+
+<link rel="stylesheet" href="bar.css" />
+
+</head>
+<body>
+<div id="all-page">
+	<div id="down-header-sub-page">	
+	</div>	
+	<!--#include file="inwestuj/header-content-sub.html"-->
+
+	<div id="page">
+		<!--#include file="inwestuj/header-opis.html"-->
+
+		
+		<!--#include file="inwestuj/menu-details.html"-->
+
+		<div class="page-single">
+			
+		<!--#include file="kontrpropozycja_historia/page.html"-->
+
+		</div>
+		
+		<div class="page-single" style="margin-top: 30px;">
+			
+		<!--#include file="kontrpropozycja_historia/page2.html"-->
+
+		</div>
+		
+	</div>
+</div>
+	
+<!--#include file="index/footer.html"-->
+</body>
+</html>
+

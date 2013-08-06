@@ -1,0 +1,80 @@
+body:{ 
+
+}
+.clearfix {
+	clear:both;
+	content:'';
+	display:block;
+}
+.floatl {
+	float:left;
+	} 
+.floatr {
+	float:right;
+} 
+.inline{
+	display:inline;
+}
+/* Slider Style */
+
+.slider_outer{
+	margin: 10px; 
+	border:1px solid #e6e6e6; 
+	padding:5px;
+}
+.slider_gutter {
+	float: left;
+	width: 100%;
+	display: block;
+	position: relative; 
+}
+.slider_gutter_item{
+	position: relative;	
+	float: left; 
+	left: 100%;
+}
+
+#minmax_slider{ 
+	width:380px; 
+	margin:0px 10px;
+}
+
+.slider_gutter{
+	width:150px; 
+	margin:10px 0px 0px 0px; 
+}
+.slider_gutter_m{
+	width:570px;
+	margin-left:-150px;	
+	height:20px; 
+	background:url(images/suwak/bck2.png) repeat-x;
+}
+
+.slider_gutter_bkg{ 
+	position: absolute; 
+	background:url(images/suwak/bck-up.png) repeat-x; 
+	height:15px; 
+	margin:0px 0px 0px 0px; 
+	padding-right:9px; 
+}
+.knob {	
+	position: absolute !important;	
+	height: 20px;
+	width: 25px;
+	background: url(images/suwak/znacznik.png) no-repeat;
+	cursor: pointer;
+	margin:-12px -30px 0px 0px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
