@@ -1,0 +1,308 @@
+<project name="Inwestuj w Firmy">
+  <property environment="env"/>
+  <echo message="\'JAVA_HOME\'=${env.JAVA_HOME}"/>
+  <echo message="\'ANT_HOME\'=${env.ANT_HOME}"/>
+  <echo message="\'APPENGINE_HOME\'=${env.APPENGINE_HOME}"/>
+  <property name="env.APPENGINE_ADDRESS" value="127.0.0.1"/>
+  <echo message="\'APPENGINE_ADDRESS\'=${env.APPENGINE_ADDRESS}"/>
+  <import file="${env.APPENGINE_HOME}/config/user/ant-macros.xml" />
+
+  <property name="java-classes" value="war/WEB-INF/classes"/>
+  <property name="java-src" value="java/src"/>
+  <property name="test-classes" value="tests/classes"/>
+  <property name="test-reports" value="tests/reports"/>
+  <property name="test-docs" value="tests/test-docs"/>
+
+  <target name="check-appengine-home" unless="env.APPENGINE_HOME">
+  	<echo message="Set \'APPENGINE_HOME\' environment variable to folder where you installed AppEngine SDK."/>
+  	<echo message="Set \'APPENGINE_EMAIL\' environment variable to email address of AppEngine adminstator of your application."/>
+  	<echo message="Set \'APPENGINE_ADDRESS\' environment variable to the local network address of AppEngine, so you can access from other machines on the local network."/>
+  	<echo message="Set \'http_proxy\' and \'https_proxy\' environment variables if you use proxy to connect to appengine website."/>
+  </target>
+
+  <scriptdef name="extract_host_and_port" language="javascript">
+    <attribute name="proxy" />
+    <attribute name="host_property" />
+    <attribute name="port_property" />
+	 <![CDATA[
+	   var proxy = attributes.get("proxy");
+  	   var host_start = proxy.indexOf("//");
+  	   var last_colon = proxy.lastIndexOf(":");
+  	   var host = "";
+	   var port = "";
+  	   if (last_colon != -1 && host_start != -1) {
+  	      host = proxy.substring(host_start + 2, last_colon);
+  	      port = proxy.substring(last_colon + 1);
+  	   }
+	   project.setProperty(attributes.get("host_property"), host);
+  	   project.setProperty(attributes.get("port_property"), port);
+	 ]]>
+  </scriptdef>
+
+  <path id="project.classpath">
+    <pathelement path="${java-classes}" />
+    <fileset dir="war/WEB-INF/lib">
+      <include name="**/*.jar" />
+    </fileset>
+    <fileset dir="${env.APPENGINE_HOME}/lib">
+      <include name="shared/**/*.jar" />
+      <exclude name="**/repackaged-appengine-ant*.jar"/>
+      <exclude name="**/datanucleus-*.jar"/>
+    </fileset>
+    <fileset dir="lib">
+      <include name="**/*.jar" />
+    </fileset>
+  </path>
+
+  <target name="copyjars" depends="check-appengine-home" description="Copies the App Engine JARs to the WAR.">
+    <copy
+        todir="war/WEB-INF/lib"
+        flatten="true">
+      <fileset dir="${env.APPENGINE_HOME}/lib/user">
+        <include name="**/*.jar" />
+        <exclude name="**/datanucleus-*.jar"/>
+      	<exclude name="**/appengine-api-labs-*.jar"/>
+      </fileset>
+	  <fileset dir="${env.APPENGINE_HOME}/lib/opt/user/appengine-api-labs">
+        <include name="**/*.jar" />
+      </fileset>
+  	  <fileset dir="${env.APPENGINE_HOME}/lib/opt/user/appengine-endpoints">
+        <include name="**/*.jar" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile" depends="compile-static-files, check-error-page, compile-java, update-version-info"
+      description="Compiles Java and static files">
+  </target>
+
+  <target name="check-error-page">
+  	<condition property="error-page-too-large">
+  	  <length file="war/error-page.html" length="10240" when="greater"/>
+  	</condition>
+  	<fail if="error-page-too-large" message="Error page is too large! Check size of the file war/error-page.html"/>
+  </target>
+
+  <target name="compile-java" depends="check-appengine-home, copyjars"
+      description="Compiles Java source and copies other source files to the WAR.">
+  	<mkdir dir="${java-classes}" />
+    <copy todir="${java-classes}">
+      <fileset dir="${java-src}">
+        <exclude name="**/*.java" />
+      </fileset>
+    </copy>
+    <javac
+        destdir="${java-classes}"
+        classpathref="project.classpath"
+        debug="on">
+    	<src path="${java-src}"/>
+    	<include name="eu/**"/>
+    </javac>
+  	<mkdir dir="${test-classes}"/>
+    <javac
+        destdir="${test-classes}"
+        classpathref="project.classpath"
+        debug="on">
+    	<src path="${java-src}"/>
+    	<include name="test/**"/>
+    </javac>
+  </target>
+
+  <target name="update-version-info" description="Updates version info on app.yaml and html files">
+  	<tstamp/>
+  	<echo message="Updating app.yaml and main-page.html with build timestamp ${DSTAMP}${TSTAMP}"/>
+  	<replaceregexp file="war/WEB-INF/app.yaml" byline="true"
+  	               match="version.*"
+  	               replace="version: ${DSTAMP}${TSTAMP}"
+  	/>
+  	<replaceregexp file="war/main-page.html" byline="true"
+  	               match="Copyright &amp;copy;.*F-Inwest sp. z o.o."
+  		           replace="Copyright &amp;copy;${DSTAMP} ${TSTAMP} F-Inwest sp. z o.o."
+  	/>
+  </target>
+
+  <target name="compile-static-files" depends="check-appengine-home, copyjars"
+      description="Runs html5-boilerplate for static files">
+
+  	<!-- Windows version of build.sh script. Runs m4 for each file separately. -->
+  	<apply executable="m4.exe" dir="html5-boilerplate/m4" osfamily="windows" verbose="true">
+  	  <!-- Collect the page.m4 -->
+  	  <fileset dir="html5-boilerplate/m4" includes="*page.m4"/>
+  	  <redirector>
+  	    <!-- redirect STDOUT to file in html5-boilerplate -->
+  	    <outputmapper id="out" type="glob" from="*page.m4" to="html5-boilerplate/*page.html"/>
+  	  </redirector>
+  	</apply>
+  	<!-- On Unix runs build.sh script. -->
+  	<exec executable="/bin/sh" dir="html5-boilerplate/m4" osfamily="unix">
+  	  <arg value="build.sh"/>
+  	</exec>
+
+  	<ant dir="html5-boilerplate" antfile="build/build.xml">
+  	  <target name="build"/>
+  	</ant>
+  	<copy todir="war">
+  	  <fileset dir="html5-boilerplate/publish"/>
+  	</copy>
+  </target>
+
+	<target name="ensure-test-name" unless="test">
+	    <fail message="You must run this target with -Dtest=fully.specified.class.Name"/>
+	</target>
+
+	<target name="runtest" description="Runs the test you specify on the command line with -Dtest="
+		depends="compile-java, ensure-test-name">
+		<mkdir dir="${test-reports}"/>
+	    <junit printsummary="withOutAndErr" fork="yes" >
+	    	<classpath refid="project.classpath" />
+	    	<classpath path="${test-classes}"/>
+	    	<classpath path="${test-docs}"/>
+	        <batchtest todir="${test-reports}">
+	        	<formatter type="xml"/>
+	            <fileset dir="${test-classes}">
+	                <include name="**/${test}.class"/>
+	            </fileset>
+	        </batchtest>
+	    </junit>
+		<junitreport todir="${test-reports}">
+		  <fileset dir="${test-reports}">
+		    <include name="TEST-*.xml"/>
+		  </fileset>
+		  <report format="frames" todir="${test-reports}"/>
+		</junitreport>
+	</target>
+
+	<target name="runtests" description="Runs all provided tests" depends="compile-java">
+		<mkdir dir="${test-reports}"/>
+		<delete includeEmptyDirs="true" failonerror="false">
+		   <fileset dir="${test-reports}" includes="**/*"/>
+		</delete>
+	    <junit printsummary="withOutAndErr" fork="yes">
+	        <classpath refid="project.classpath" />
+	    	<classpath path="${test-classes}"/>
+	    	<classpath path="${test-docs}"/>
+	        <batchtest todir="${test-reports}">
+	        	<formatter type="xml"/>
+	            <fileset dir="${test-classes}">
+	            	<exclude name="**/*AbstractTest.class"/>
+	                <include name="**/*Test.class"/>
+	            </fileset>
+	        </batchtest>
+	    </junit>
+		<junitreport todir="${test-reports}">
+			<fileset dir="${test-reports}">
+				<include name="TEST-*.xml"/>
+			</fileset>
+			<report format="frames" todir="${test-reports}"/>
+		</junitreport>
+	</target>
+
+  <target name="runserver" description="Starts the development server.">
+	<mkdir dir="war/test-docs"/>
+    <copy todir="war/test-docs">
+      <fileset dir="tests/test-docs"/>
+    </copy>
+  	<!--
+  	<extract_host_and_port proxy="${env.http_proxy}" host_property="http_proxy_host" port_property="http_proxy_port"/>
+  	<extract_host_and_port proxy="${env.https_proxy}" host_property="https_proxy_host" port_property="https_proxy_port"/>
+  	-->
+  	<dev_appserver war="war" port="7777" >
+      <options>
+        <!-- arg value="- -jvm_flag=-Xdebug"/
+        arg value="- -jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=7778"/ -->
+        <arg value="--jvm_flag=-Xmx1024m"/>
+      	<arg value="--jvm_flag=-Dappengine.user.timezone=UTC"/>
+        <!--
+        <arg value="- -jvm_flag=-Dhttp.proxyHost=${http_proxy_host}"/>
+        <arg value="- -jvm_flag=-Dhttp.proxyPort=${http_proxy_port}"/>
+        <arg value="- -jvm_flag=-Dhttps.proxyHost=${https_proxy_host}"/>
+        <arg value="- -jvm_flag=-Dhttps.proxyPort=${https_proxy_port}"/>
+        <arg value="- -jvm_flag=-Dhttp.nonProxyHosts=local*|127*"/>
+        -->
+        <arg value="--address=${env.APPENGINE_ADDRESS}"/>
+        <arg value="--disable_update_check"/>
+      </options>
+    </dev_appserver>
+  </target>
+
+  <target name="update" description="Uploads the application to App Engine.">
+	<appcfg action="update" war="war">
+	   <options>
+	   	  <arg value="--passin"/>
+	   	  <arg value="--email=${env.APPENGINE_EMAIL}"/>
+	   	  <arg value="--proxy=${env.http_proxy}"/>
+	   	  <arg value="--proxy_https=${env.https_proxy}"/>
+	   </options>
+	</appcfg>
+  </target>
+
+  <target name="update_indexes" description="Uploads just the datastore index configuration to App Engine.">
+	<appcfg action="update_indexes" war="war">
+	   <options>
+	   	  <arg value="--email=${env.APPENGINE_EMAIL}"/>
+	   	  <arg value="--proxy=${env.http_proxy}"/>
+	   	  <arg value="--proxy_https=${env.https_proxy}"/>
+	   </options>
+	</appcfg>
+  </target>
+
+  <target name="rollback" description="Rolls back an interrupted application update.">
+	<appcfg action="rollback" war="war">
+	   <options>
+	   	  <arg value="--email=${env.APPENGINE_EMAIL}"/>
+	   	  <arg value="--proxy=${env.http_proxy}"/>
+	   	  <arg value="--proxy_https=${env.https_proxy}"/>
+	   </options>
+	</appcfg>
+  </target>
+
+  <target name="request_logs" depends="check-appengine-home" description="Downloads log data from App Engine for the application.">
+	<appcfg action="request_logs" antfile="build/build.xml" war="war">
+	   <options>
+	   	  <arg value="--email=${env.APPENGINE_EMAIL}"/>
+	   	  <arg value="--proxy=${env.http_proxy}"/>
+	   	  <arg value="--proxy_https=${env.https_proxy}"/>
+	      <arg value="--num_days=5"/>
+	   </options>
+	   <args>
+	      <arg value="logs.txt"/>
+	   </args>
+	</appcfg>
+  </target>
+
+  <target name="clean" depends="clean-static-files, clean-java"
+  	      description="Cleans generated files">
+  </target>
+
+  <target name="clean-static-files" description="Cleans generated static files">
+  	<ant dir="html5-boilerplate" antfile="build/build.xml" target="clean">
+  	</ant>
+    <delete includeEmptyDirs="true" failonerror="false">
+      <fileset dir="war">
+    	<include name="*" />
+      	<include name="css/**" />
+      	<include name="img/**" />
+     	<include name="js/**" />
+      </fileset>
+    </delete>
+    <delete includeEmptyDirs="true" failonerror="false" dir="war/test-docs"/>
+  </target>
+
+  <target name="clean-java" depends="check-appengine-home" description="Cleans Java artefacts">
+    <delete includeEmptyDirs="true" failonerror="false">
+      <fileset dir="${java-classes}"/>
+      <fileset dir="${test-classes}"/>
+      <fileset dir="war/WEB-INF/lib">
+    	<include name="appengine*" />
+      	<include name="jsr107*" />
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="test_extract_host_and_port" description="Runs simple test of extract_host_and_port scriptlet">
+  	 <echo message="http_proxy = ${env.http_proxy}"/>
+	 <extract_host_and_port proxy="${env.http_proxy}" host_property="http_proxy_host" port_property="http_proxy_port"/>
+	 <echo message="${env.http_proxy}   = > ${http_proxy_host} : ${http_proxy_port}" />
+  </target>
+
+</project>

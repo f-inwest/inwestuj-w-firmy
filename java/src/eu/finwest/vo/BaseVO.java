@@ -1,0 +1,27 @@
+package eu.finwest.vo;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.google.appengine.api.utils.SystemProperty;
+import com.googlecode.objectify.Key;
+
+public abstract class BaseVO {
+	public abstract String getId();
+
+	public long toKeyId() {
+		return Key.create(getId()).getId();
+	}
+
+	public static long toKeyId(String id) {
+		return Key.create(id).getId();
+	}
+
+	public static String getServiceLocation () {
+		return SystemProperty.environment.value() == SystemProperty.Environment.Value.Development ?
+				"http://localhost:7777" : "http://www.inwestujwfirmy.pl";
+	}
+
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+}

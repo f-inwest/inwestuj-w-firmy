@@ -1,0 +1,413 @@
+indexes:
+
+- kind: SBUser
+  ancestor: no
+  properties:
+    - name: dragon
+    - name: nicknameLower
+
+- kind: SBUser
+  ancestor: no
+  properties:
+    - name: lister
+    - name: nicknameLower
+
+- kind: UserStats
+  ancestor: no
+  properties:
+    - name: status
+    - name: sumOfBids
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: listing
+    - name: status
+    - name: placed
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: listing
+    - name: status
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: user
+    - name: status
+    - name: placed
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: listingOwner
+    - name: status
+    - name: placed
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: user
+    - name: placed
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: listingOwner
+    - name: placed
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: listingOwner
+    - name: status
+    - name: placed
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: status
+    - name: placed
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: user
+    - name: status
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: listingOwner
+    - name: status
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: user
+    - name: status
+    - name: valuation
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: listingOwner
+    - name: status
+    - name: valuation
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: listing
+    - name: status
+    - name: valuation
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: listing
+    - name: placed
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: user
+    - name: listing
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: user
+    - name: listing
+    - name: status
+
+- kind: Comment
+  ancestor: no
+  properties:
+    - name: listing
+    - name: commentedOn
+      direction: desc
+
+- kind: Comment
+  ancestor: no
+  properties:
+    - name: user
+    - name: commentedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: owner
+    - name: state
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: owner
+    - name: listedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: owner
+    - name: state
+    - name: listedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: owner
+    - name: state
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: state
+    - name: listedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: state
+    - name: closingOn
+      direction: asc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: state
+    - name: posted
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: category
+    - name: listedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: country
+    - name: listedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: usState
+    - name: listedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: city
+    - name: listedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: country
+    - name: usState
+    - name: listedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: country
+    - name: city
+    - name: listedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: usState
+    - name: city
+    - name: listedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: country
+    - name: usState
+    - name: city
+    - name: listedOn
+      direction: desc
+
+- kind: ListingStats
+  ancestor: no
+  properties:
+    - name: state
+    - name: score
+      direction: desc
+
+- kind: ListingStats
+  ancestor: no
+  properties:
+    - name: state
+    - name: numberOfBids
+      direction: desc
+
+- kind: ListingStats
+  ancestor: no
+  properties:
+    - name: state
+    - name: numberOfComments
+      direction: desc
+
+- kind: ListingStats
+  ancestor: no
+  properties:
+    - name: state
+    - name: valuation
+      direction: desc
+
+- kind: ListingStats
+  ancestor: no
+  properties:
+    - name: askedForFunding
+    - name: state
+    - name: score
+      direction: desc
+
+- kind: Monitor
+  ancestor: no
+  properties:
+    - name: monitoredListing
+    - name: active
+
+- kind: Monitor
+  ancestor: no
+  properties:
+    - name: user
+    - name: monitoredListing
+
+- kind: Monitor
+  ancestor: no
+  properties:
+    - name: user
+    - name: active
+
+- kind: QuestionAnswer
+  ancestor: no
+  properties:
+    - name: listing
+    - name: created
+
+- kind: QuestionAnswer
+  ancestor: no
+  properties:
+    - name: listing
+    - name: user
+    - name: published
+    - name: created
+
+- kind: QuestionAnswer
+  ancestor: no
+  properties:
+    - name: listing
+    - name: published
+    - name: created
+
+- kind: PrivateMessageUser
+  ancestor: no
+  properties:
+    - name: userA
+    - name: userB
+    - name: created
+      direction: desc
+
+- kind: PrivateMessageUser
+  ancestor: no
+  properties:
+    - name: userA
+    - name: created
+      direction: desc
+
+- kind: PrivateMessage
+  ancestor: no
+  properties:
+    - name: userA
+    - name: userB
+    - name: created
+      direction: desc
+
+- kind: BidUser
+  ancestor: no
+  properties:
+    - name: listing
+    - name: userA
+    - name: userB
+    - name: created
+      direction: desc
+
+- kind: BidUser
+  ancestor: no
+  properties:
+    - name: listing
+    - name: userA
+    - name: created
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: listing
+    - name: userA
+    - name: userB
+    - name: created
+      direction: desc
+
+- kind: Bid
+  ancestor: no
+  properties:
+    - name: listing
+    - name: userA
+    - name: created
+      direction: desc
+
+- kind: Notification
+  ancestor: no
+  properties:
+    - name: user
+    - name: created
+      direction: desc
+
+- kind: Notification
+  ancestor: no
+  properties:
+    - name: user
+    - name: read
+    - name: created
+      direction: desc
+
+- kind: Notification
+  ancestor: no
+  properties:
+    - name: user
+    - name: listing
+    - name: created
+      direction: desc
