@@ -12,6 +12,7 @@
 		ant runserver
 6. Open browser, go to http://localhost:7777, click on login button, then select "Sign in as Administrator"
 7. In the footer you should see link to Setup, go there, then click on the following buttons:
+
 * "Recreate mock data"
 * "Associate mock images"
 * "Update test avatars, dragon/lister flags"
