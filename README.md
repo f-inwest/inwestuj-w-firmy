@@ -68,4 +68,4 @@ To set up project in Eclipse (or IntelliJ Idea) you'll have to add the following
 6. Note that if you get stuck you can clean the war/ directory then rebuild the backend and client (in that order)
 
 
-![](https://raw.github.com/f-inwest/inwestuj-w-firmy/master/inwestujwfirmy_ui/images/stopka-ue.png)
+![](https://raw.github.com/f-inwest/inwestuj-w-firmy/master/inwestujwfirmy_ui/images/stopka-ue.png?login=grzegorznittner&token=44a462809a214d6f1875824929c1e33a)
