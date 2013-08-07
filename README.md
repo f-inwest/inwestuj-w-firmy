@@ -49,7 +49,7 @@ To set up project in Eclipse (or IntelliJ Idea) you'll have to add the following
 * %APPENGINE_HOME%\lib\impl\appengine-api.jar
 * %APPENGINE_HOME%\lib\testing\appengine-testing.jar
 
-## How to upload war to appengine:
+## How to upload war to GAE environment:
 1. Set APPENGINE_HOME variable to your AppEngine SDK location
 2. Set APPENGINE_EMAIL to your AppEngine user name
 3. First upload has to be manual to store your credentials:
