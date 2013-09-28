@@ -31,6 +31,7 @@
             	<or>
                 	<contains string="${ant.version}" substring="1.8.2"/>
             		<contains string="${ant.version}" substring="1.8.3"/>
+            		<contains string="${ant.version}" substring="1.8.4"/>
             		<contains string="${ant.version}" substring="1.9"/>
             	</or>
             </not>
