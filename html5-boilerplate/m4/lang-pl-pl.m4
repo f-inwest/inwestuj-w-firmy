@@ -1,0 +1,28 @@
+define(`lang_find', `w pobliżu')
+define(`lang_nearby', `dodaj')
+define(`lang_add', `zarejestruj')
+define(`lang_signin', `zaloguj')
+define(`lang_gettingfunded', `
+<b>Zainwestuj</b> w obiecujący</br>
+<b>projekt</b>, aby pomóc mu</br> 
+wypłynąć na szerokie wody!
+')
+define(`lang_welcomelink', `znajdź projekt w pobliżu')
+define(`lang_categories', `kategorie')
+define(`lang_locations', `lokalizacja')
+define(`lang_appname_lower', `inwestuj w firmy')
+define(`lang_about', `O')
+define(`lang_investors', `inwestor')
+define(`lang_help', `pomoc')
+define(`lang_tandcs', `warunki')
+define(`lang_listings', `firmy')
+define(`lang_top', `popularne')
+define(`lang_latest', `nowy')
+define(`lang_entrepreneuers', `przedsiębiorca')
+define(`lang_admin', `admin')
+define(`lang_contact', `napisz do nas')
+define(`lang_api', `api')
+define(`lang_setup', `stworzyć')
+define(`lang_hello', `cześć')
+define(`lang_users', `użytkownicy')
+define(`lang_followus', `podążać za nas')

@@ -28,6 +28,7 @@ war/WEB-INF/classes
 war/WEB-INF/web.xml
 war/WEB-INF/lib/appengine*
 war/WEB-INF/lib/datanucleus*
+war/WEB-INF/lib/jsr107cache-1.1.jar
 war/.htaccess
 war/favicon.ico
 mockup/*.html
