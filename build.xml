@@ -141,7 +141,14 @@
   	<ant dir="html5-boilerplate" antfile="build/build.xml">
   	  <target name="build"/>
   	</ant>
-  	<copy todir="war">
+
+  	<filter filtersfile="en.properties"/>
+  	<copy todir="war/en" filtering="true">
+  	  <fileset dir="html5-boilerplate/publish"/>
+  	</copy>
+
+  	<filter filtersfile="pl.properties"/>
+  	<copy todir="war/pl" filtering="true">
   	  <fileset dir="html5-boilerplate/publish"/>
   	</copy>
   </target>

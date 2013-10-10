@@ -12,6 +12,8 @@ html5-boilerplate/publish
 tests/classes
 tests/reports
 tests/local_db.bin
+war/pl
+war/en
 war/.settings
 war/css
 war/js

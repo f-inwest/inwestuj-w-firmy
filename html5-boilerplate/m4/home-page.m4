@@ -1,7 +1,7 @@
 builtin(`include', langfile)
 `
 <!doctype html>
-<html lang="en">
+<html lang="@lang_html_language@">
 '
 include(head.m4)
 `
