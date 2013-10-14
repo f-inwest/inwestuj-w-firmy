@@ -1,8 +1,10 @@
 application: inwestuj-w-firmy
-version: 201310092039
+version: 201310142317
 runtime: java
 
 static_files:
+  - include: /en/**
+  - include: /pl/**
   - include: /**.css
   - include: /**.js
   - include: /**.png
@@ -40,7 +42,7 @@ listeners:
    - eu.finwest.web.servlets.WarmupListener
 
 welcome_files:
-  - discover-page.html
+  - pl/discover-page.html
 
 inbound_services:
   - warmup

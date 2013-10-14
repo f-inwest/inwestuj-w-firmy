@@ -81,14 +81,14 @@ public class WarmupListener implements ServletContextListener {
 		// This will be invoked as part of a warmup request, or the first user
 		// request if no warmup request was invoked.
 
-		File css = new File("./css");
+		File css = new File("./pl/css");
 		if (css.exists()) {
 			File csses[] = css.listFiles();
 			if (csses.length > 0) {
 				MAIN_CSS_FILE = "./css/" + csses[0].getName();
 			}
 		}
-		File js = new File("./js");
+		File js = new File("./pl/js");
 		if (js.exists()) {
 			for(File jsFile : js.listFiles()) {
 				if (jsFile.isDirectory()) {

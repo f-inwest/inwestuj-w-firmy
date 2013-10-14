@@ -115,7 +115,11 @@
   	               match="version.*"
   	               replace="version: ${DSTAMP}${TSTAMP}"
   	/>
-  	<replaceregexp file="war/main-page.html" byline="true"
+  	<replaceregexp file="war/pl/main-page.html" byline="true"
+  	               match="Copyright &amp;copy;.*F-Inwest sp. z o.o."
+  		           replace="Copyright &amp;copy;${DSTAMP} ${TSTAMP} F-Inwest sp. z o.o."
+  	/>
+  	<replaceregexp file="war/en/main-page.html" byline="true"
   	               match="Copyright &amp;copy;.*F-Inwest sp. z o.o."
   		           replace="Copyright &amp;copy;${DSTAMP} ${TSTAMP} F-Inwest sp. z o.o."
   	/>

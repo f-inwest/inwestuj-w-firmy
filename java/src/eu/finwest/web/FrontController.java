@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +32,9 @@ import eu.finwest.web.servlets.WarmupListener;
 @SuppressWarnings("serial")
 public class FrontController extends HttpServlet {
 	private static final Logger log = Logger.getLogger(FrontController.class.getName());
+	
+	private static final String ACCEPT_LANGUAGE = "Accept-Language";
+	private static final String LANGUAGE_COOKIE = "SELECTED_LANGUAGE";
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -46,20 +50,22 @@ public class FrontController extends HttpServlet {
 			response.sendRedirect(redirectUrl);
 			return;
 		}
+		
+		String version = getVersionFolder(request);
 
 		if (StringUtils.endsWith(pathInfo, ".css")) {
 			response.setContentType("text/css");
-			IOUtils.copy(new FileInputStream(WarmupListener.MAIN_CSS_FILE), response.getOutputStream());
+			IOUtils.copy(new FileInputStream(versionedRelative(version, WarmupListener.MAIN_CSS_FILE)), response.getOutputStream());
 			return;
 		} else if (StringUtils.endsWith(pathInfo, ".js")) {
 			response.setContentType("text/javascript");
 			if (StringUtils.countMatches(pathInfo, "/") == 2) {
-				IOUtils.copy(new FileInputStream(WarmupListener.MAIN_JS_FILE), response.getOutputStream());
+				IOUtils.copy(new FileInputStream(versionedRelative(version, WarmupListener.MAIN_JS_FILE)), response.getOutputStream());
 				return;
 			} else {
 				String parts[] = pathInfo.split("/");
 				String jsName = parts[parts.length - 1];
-				IOUtils.copy(new FileInputStream(WarmupListener.JS_FOLDER + "/" + jsName), response.getOutputStream());
+				IOUtils.copy(new FileInputStream(versionedRelative(version, WarmupListener.JS_FOLDER + "/" + jsName)), response.getOutputStream());
 				return;
 			}
 		}
@@ -94,9 +100,9 @@ public class FrontController extends HttpServlet {
 			} else {
 				log.log(Level.WARNING, "Returned object is NULL");
 			}
-		} else {
+		} else if (!StringUtils.endsWith(pathInfo, ".html")) {
 			log.log(Level.WARNING, request.getMethod() + " " + request.getPathInfo() + " is not supported!  Redirecting to error page.");
-			response.sendRedirect("/error-page.html");
+			response.sendRedirect(versioned(version, "/error-page.html"));
 			return;
 		}
 
@@ -111,6 +117,63 @@ public class FrontController extends HttpServlet {
 					controller.generateJson(response);
 				}
 			}
+		} else if (StringUtils.endsWith(pathInfo, ".html")) {
+			response.setContentType("text/html");
+			IOUtils.copy(new FileInputStream(versionedRelative(version, pathInfo)), response.getOutputStream());
+			return;
+		}
+	}
+	
+	private String getVersionFolder(HttpServletRequest request) {
+		String langCookie = null;
+		if (request.getCookies() != null) {
+			for (Cookie cookie : request.getCookies()) {
+				if (LANGUAGE_COOKIE.equals(cookie.getName())) {
+					langCookie = cookie.getValue();
+				}
+			}
+		}
+		if (langCookie != null && (langCookie.equals("en") || langCookie.equals("pl"))) {
+			log.info("Selected version: " + langCookie);
+			return langCookie;
+		} else {
+			if (langCookie == null)
+				log.info("Language cookie not set");
+			else
+				log.info("Language cookie set to not handled value: " + langCookie);
+		}
+		
+		String version = "en";
+		String acceptLang = request.getHeader(ACCEPT_LANGUAGE);
+		for (String lang : acceptLang.split(",")) {
+			if (lang.trim().startsWith("pl")) {
+				log.info("User accepts language pl");
+				version = "pl";
+				break;
+			}
+			if (lang.trim().startsWith("en")) {
+				log.info("User accepts language en");
+				version = "en";
+				break;
+			}
+		}
+		log.info("Selected version: " + version);
+		return version;
+	}
+	
+	private String versionedRelative(String version, String path) {
+		if (StringUtils.startsWith(path, "/pl") || StringUtils.startsWith(path, "/en")) {
+			return path;
+		} else {
+			return "./" + version + "/" + path;
+		}
+	}
+	
+	private String versioned(String version, String path) {
+		if (StringUtils.startsWith(path, "/pl") || StringUtils.startsWith(path, "/en")) {
+			return path;
+		} else {
+			return "/" + version + path;
 		}
 	}
 }
