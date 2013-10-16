@@ -387,12 +387,12 @@ function SearchBoxClass() {}
 pl.implement(SearchBoxClass, {
     bindEvents: function() {
         var qs = new QueryStringClass(),
-            val = (qs && qs.vars && qs.vars.searchtext) ? qs.vars.searchtext : 'Search',
+            val = (qs && qs.vars && qs.vars.searchtext) ? qs.vars.searchtext : '@lang_search',
             displayVal = decodeURIComponent(val).replace(/\+/g, ' ');
         pl('#searchtext').attr({value: displayVal});
         pl('#searchtext').bind({
             focus: function() {
-                if (pl('#searchtext').attr('value') === 'Search') {
+                if (pl('#searchtext').attr('value') === '@lang_search') {
                     pl('#searchtext').attr({value: ''});
                 }
             },
@@ -962,7 +962,7 @@ pl.implement(BaseCompanyListPageClass,{
     },
     loadPage: function(completeFunc) {
         var titleroot = (this.type === 'category' || this.type === 'location') ? this.val.toUpperCase() : this.type.toUpperCase(),
-            title = this.type === 'keyword' ? 'SEARCH RESULTS' : ((this.type === 'location') ? 'LISTINGS IN ' + titleroot : titleroot + ' LISTINGS'),
+            title = this.type === 'keyword' ? '@lang_search_results' : ((this.type === 'location') ? '@long_projects_in@' + ' ' + titleroot : titleroot + ' ' + '@lang_projects'),
             ajax;
         this.setListingSearch();
         ajax = new AjaxClass(this.url, 'companydiv', completeFunc);

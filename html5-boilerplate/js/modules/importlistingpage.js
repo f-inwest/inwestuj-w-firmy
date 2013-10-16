@@ -60,7 +60,7 @@ pl.implement(ImportListingClass, {
             };
         pl('#importquery').bind({
             focus: function() {
-                if (pl('#importquery').attr('value') === 'Search') {
+                if (pl('#importquery').attr('value') === '@lang_search@') {
                     pl('#importquery').attr({value: ''});
                 }
             },

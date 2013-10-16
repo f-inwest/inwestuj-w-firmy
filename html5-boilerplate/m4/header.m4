@@ -1,4 +1,3 @@
-builtin(`include', langfile)
 `
 <div class="header" id="header">
   <div class="container headerrow" style="width: 960px;">
@@ -9,9 +8,9 @@ builtin(`include', langfile)
         </a>
     </div>
     <div class="span-7 headerrow headerrowcenter last">
-      <a href="discover-page.html"><span class="headerlink hoverlink headerlinknoborder">'lang_find`</span></a>
-      <a href="nearby-page.html"><span class="headerlink"><span class="hoverlink">'lang_nearby`</span></span></a>
-      <a href="add-listing-page.html"><span class="headerlink"><span class="hoverlink">'lang_add`</span></span></a>
+      <a href="discover-page.html"><span class="headerlink hoverlink headerlinknoborder">@lang_find@</span></a>
+      <a href="nearby-page.html"><span class="headerlink"><span class="hoverlink">@lang_nearby@</span></span></a>
+      <a href="add-listing-page.html"><span class="headerlink"><span class="hoverlink">@lang_add@</span></span></a>
     </div>
 
     <div class="span-8 headerrow">
@@ -26,7 +25,7 @@ builtin(`include', langfile)
     <div class="span-5 last loginspan headerrow initialhidden" id="headernotloggedin">
         <div>
             <a href="/login-page.html">
-                <span class="headerlink headerlinkright">'lang_signin`</span>
+                <span class="headerlink headerlinkright">@lang_signin@</span>
             </a>
             <a id="loginlink" href="">
                 <div class="headericon headersignin"></div>

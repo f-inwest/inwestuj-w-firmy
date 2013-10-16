@@ -1,4 +1,3 @@
-builtin(`include', langfile)
 `
 <!-- right column -->
 <div class="span-8 last">
@@ -11,7 +10,7 @@ builtin(`include', langfile)
     -->
 
     <div class="initialhidden" id="categorywrapper">
-    <div class="boxtitle boxtitleside">'lang_categories`</div>
+    <div class="boxtitle boxtitleside">@lang_categories@</div>
     <div class="sidebox frontsidebox categorysidebox">
         <span class="attention" id="categorymsg"></span>
         <span class="sideboxcolfull clear">
@@ -21,7 +20,7 @@ builtin(`include', langfile)
     </div>
     
     <div class="initialhidden" id="locationwrapper"> 
-    <div class="boxtitle boxtitleside">'lang_locations`</div>
+    <div class="boxtitle boxtitleside">@lang_locations@</div>
     <div class="sidebox frontsidebox">
         <span class="attention" id="locationmsg"></span>
         <span class="sideboxcolfull clear">

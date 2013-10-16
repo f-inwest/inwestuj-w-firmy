@@ -1,4 +1,3 @@
-builtin(`include', langfile)
 `
 <!doctype html>
 <html lang="en">
