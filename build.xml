@@ -12,6 +12,75 @@
   <property name="test-classes" value="tests/classes"/>
   <property name="test-reports" value="tests/reports"/>
   <property name="test-docs" value="tests/test-docs"/>
+  
+<script language="beanshell">
+    <classpath>
+            <fileset dir="./lib" includes="bsh-2.0b5.jar" />
+    </classpath>
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.Enumeration;
+import java.util.Properties;
+
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Filter;
+import org.apache.tools.ant.types.FilterSet;
+import org.apache.tools.ant.util.FileUtils;
+
+public class FilterWithEncoding extends Filter {
+	private String encoding = "UTF-8";
+	private File filtersFile;
+	
+	public void setEncoding(String encoding) {
+		this.encoding = encoding;
+	}
+	
+    public void setFiltersfile(File filtersFile) {
+        this.filtersFile = filtersFile;
+        super.setFiltersfile(filtersFile);
+    }
+
+    protected void readFilters() throws BuildException {
+        log("Reading filters from " + filtersFile, Project.MSG_VERBOSE);
+        readFiltersFromFile(getProject().getGlobalFilterSet(), filtersFile);
+    }
+    
+    public synchronized void readFiltersFromFile(FilterSet filterSet, File filtersFile) throws BuildException {
+        if (!filtersFile.exists()) {
+        	throw new BuildException("Could not read filters from file " + filtersFile + " as it doesn't exist.");
+        }
+        if (filtersFile.isFile()) {
+           log("Reading filters from " + filtersFile, Project.MSG_VERBOSE);
+           FileInputStream in = null;
+           try {
+              Properties props = new Properties();
+              in = new FileInputStream(filtersFile);
+              props.load(new InputStreamReader(in, encoding));
+
+              Enumeration e = props.propertyNames();
+              while (e.hasMoreElements()) {
+                 String strPropName = (String) e.nextElement();
+                 String strValue = props.getProperty(strPropName);
+                 filterSet.addFilter(new FilterSet.Filter(strPropName, strValue));
+              }
+           } catch (Exception ex) {
+              throw new BuildException("Could not read filters from file: " + filtersFile, ex);
+           } finally {
+              FileUtils.close(in);
+           }
+        } else {
+        	throw new BuildException("Must specify a file rather than a directory in "
+               + "the filtersfile attribute:" + filtersFile);
+        }
+    }
+
+}
+
+project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
+</script>
+
 
   <target name="check-appengine-home" unless="env.APPENGINE_HOME">
   	<echo message="Set \'APPENGINE_HOME\' environment variable to folder where you installed AppEngine SDK."/>
@@ -78,10 +147,14 @@
 
   <target name="check-error-page">
   	<condition property="error-page-too-large">
-  	  <length file="war/error-page.html" length="10240" when="greater"/>
+  	  <length file="war/en/error-page.html" length="10240" when="greater"/>
   	</condition>
-  	<fail if="error-page-too-large" message="Error page is too large! Check size of the file war/error-page.html"/>
-  </target>
+  	<fail if="error-page-too-large" message="Error page is too large! Check size of the file war/en/error-page.html"/>
+  	<condition property="error-page-too-large-pl">
+  	  <length file="war/pl/error-page.html" length="10240" when="greater"/>
+  	</condition>
+  	<fail if="error-page-too-large-pl" message="Error page is too large! Check size of the file war/pl/error-page.html"/>
+  	</target>
 
   <target name="compile-java" depends="check-appengine-home, copyjars"
       description="Compiles Java source and copies other source files to the WAR.">
@@ -128,35 +201,35 @@
   <target name="compile-static-files" depends="check-appengine-home, copyjars"
       description="Runs html5-boilerplate for static files">
 
-  	<!-- Windows version of build.sh script. Runs m4 for each file separately. -->
-  	<apply executable="m4.exe" dir="html5-boilerplate/m4" osfamily="windows" verbose="true">
-  	  <!-- Collect the page.m4 -->
-  	  <fileset dir="html5-boilerplate/m4" includes="*page.m4"/>
-  	  <redirector>
-  	    <!-- redirect STDOUT to file in html5-boilerplate -->
-  	    <outputmapper id="out" type="glob" from="*page.m4" to="html5-boilerplate/*page.html"/>
-  	  </redirector>
-  	</apply>
-  	<!-- On Unix runs build.sh script. -->
-  	<exec executable="/bin/sh" dir="html5-boilerplate/m4" osfamily="unix">
-  	  <arg value="build.sh"/>
-  	</exec>
-
-  	<ant dir="html5-boilerplate" antfile="build/build.xml">
-  	  <target name="build"/>
-  	</ant>
-
-  	<filter filtersfile="en.properties"/>
-  	<copy todir="war/en" filtering="true">
-  	  <fileset dir="html5-boilerplate/publish"/>
-  	</copy>
-
-  	<filter filtersfile="pl.properties"/>
-  	<copy todir="war/pl" filtering="true">
-  	  <fileset dir="html5-boilerplate/publish"/>
-  	</copy>
-  </target>
-
+	  	<!-- Windows version of build.sh script. Runs m4 for each file separately. -->
+	  	<apply executable="m4.exe" dir="html5-boilerplate/m4" osfamily="windows" verbose="true">
+	  	  <!-- Collect the page.m4 -->
+	  	  <fileset dir="html5-boilerplate/m4" includes="*page.m4"/>
+	  	  <redirector>
+	  	    <!-- redirect STDOUT to file in html5-boilerplate -->
+	  	    <outputmapper id="out" type="glob" from="*page.m4" to="html5-boilerplate/*page.html"/>
+	  	  </redirector>
+	  	</apply>
+	  	<!-- On Unix runs build.sh script. -->
+	  	<exec executable="/bin/sh" dir="html5-boilerplate/m4" osfamily="unix">
+	  	  <arg value="build.sh"/>
+	  	</exec>
+	
+	  	<ant dir="html5-boilerplate" antfile="build/build.xml">
+	  	  <target name="build"/>
+	  	</ant>
+	
+	  	<filterWithEncoding filtersfile="en.properties" encoding="UTF-8"/>
+	  	<copy todir="war/en" filtering="true" outputencoding="UTF-8" encoding="UTF-8">
+	  	  <fileset dir="html5-boilerplate/publish"/>
+	  	</copy>
+	
+	  	<filterWithEncoding filtersfile="pl.properties" encoding="UTF-8"/>
+	  	<copy todir="war/pl" filtering="true" outputencoding="UTF-8" encoding="UTF-8">
+	  	  <fileset dir="html5-boilerplate/publish"/>
+	  	</copy>
+    </target>
+  
 	<target name="ensure-test-name" unless="test">
 	    <fail message="You must run this target with -Dtest=fully.specified.class.Name"/>
 	</target>
@@ -297,6 +370,7 @@
       </fileset>
     </delete>
     <delete includeEmptyDirs="true" failonerror="false" dir="war/test-docs"/>
+    <delete includeEmptyDirs="true" failonerror="false" dir="html5-boilerplate/publish-utf-8"/> 
   </target>
 
   <target name="clean-java" depends="check-appengine-home" description="Cleans Java artefacts">
