@@ -120,6 +120,7 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
     </fileset>
     <fileset dir="lib">
       <include name="**/*.jar" />
+      <exclude name="bsh-2.0b5.jar" />
     </fileset>
   </path>
 
@@ -137,6 +138,7 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
       </fileset>
   	  <fileset dir="${env.APPENGINE_HOME}/lib/opt/user/appengine-endpoints">
         <include name="**/*.jar" />
+        <exclude name="bsh-2.0b5.jar" />
       </fileset>
     </copy>
   </target>
@@ -370,7 +372,6 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
       </fileset>
     </delete>
     <delete includeEmptyDirs="true" failonerror="false" dir="war/test-docs"/>
-    <delete includeEmptyDirs="true" failonerror="false" dir="html5-boilerplate/publish-utf-8"/> 
   </target>
 
   <target name="clean-java" depends="check-appengine-home" description="Cleans Java artefacts">
