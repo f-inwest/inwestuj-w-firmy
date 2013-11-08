@@ -387,12 +387,12 @@ function SearchBoxClass() {}
 pl.implement(SearchBoxClass, {
     bindEvents: function() {
         var qs = new QueryStringClass(),
-            val = (qs && qs.vars && qs.vars.searchtext) ? qs.vars.searchtext : '@lang_search',
+            val = (qs && qs.vars && qs.vars.searchtext) ? qs.vars.searchtext : '@lang_search@',
             displayVal = decodeURIComponent(val).replace(/\+/g, ' ');
         pl('#searchtext').attr({value: displayVal});
         pl('#searchtext').bind({
             focus: function() {
-                if (pl('#searchtext').attr('value') === '@lang_search') {
+                if (pl('#searchtext').attr('value') === '@lang_search@') {
                     pl('#searchtext').attr({value: ''});
                 }
             },
@@ -868,7 +868,7 @@ pl.implement(CompanyListClass, {
             html += '<div class="showmore hoverlink" id="moreresults"><span class="initialhidden" id="moreresultsurl">' + more_results_url + '</span><span id="moreresultsmsg">More...</span></div>\n';
         }
         else if (seeall) {
-            html += '<div class="showmore"><a href="' + this.options.seeall + '">See all...</a></div>\n';
+            html += '<div class="showmore"><a href="' + this.options.seeall + '">@lang_see_all@...</a></div>\n';
         }
         pl('#'+this.options.companydiv).html(html);
         if (more_results_url) {

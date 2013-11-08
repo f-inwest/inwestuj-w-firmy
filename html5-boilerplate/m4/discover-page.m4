@@ -27,14 +27,14 @@ include(banner.m4)
 </div>
 
 <div class="span-16 initialhidden wrapper">
-    <div class="boxtitle">TOP LISTINGS</div>
+    <div class="boxtitle">@lang_top_listings@</div>
     <div id="top_listings"></div>
 
-    <div class="boxtitle">JUST LISTED</div>
+    <div class="boxtitle">@lang_just_listed@</div>
     <div id="latest_listings"></div>
 
     <div id="monitored_listings_wrapper" class="initialhidden">
-        <div class="boxtitle">WATCHING</div>
+        <div class="boxtitle">@lang_watching@</div>
         <div id="monitored_listings"></div>
     </div>
  </div> 
