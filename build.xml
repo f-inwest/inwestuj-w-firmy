@@ -220,7 +220,12 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
 	  	<ant dir="html5-boilerplate" antfile="build/build.xml">
 	  	  <target name="build"/>
 	  	</ant>
-	
+	  	
+	  	<delete dir="war/en/js"/>
+	  	<delete dir="war/en/css"/>
+	  	<delete dir="war/pl/js"/>
+	  	<delete dir="war/pl/css"/>
+	  	
 	  	<filterWithEncoding filtersfile="en.properties" encoding="UTF-8"/>
 	  	<copy todir="war/en" filtering="true" outputencoding="UTF-8" encoding="UTF-8">
 	  	  <fileset dir="html5-boilerplate/publish"/>
@@ -363,14 +368,8 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
   <target name="clean-static-files" description="Cleans generated static files">
   	<ant dir="html5-boilerplate" antfile="build/build.xml" target="clean">
   	</ant>
-    <delete includeEmptyDirs="true" failonerror="false">
-      <fileset dir="war">
-    	<include name="*" />
-      	<include name="css/**" />
-      	<include name="img/**" />
-     	<include name="js/**" />
-      </fileset>
-    </delete>
+    <delete dir="war/en" includeEmptyDirs="true" failonerror="false"/>
+    <delete dir="war/pl" includeEmptyDirs="true" failonerror="false"/>
     <delete includeEmptyDirs="true" failonerror="false" dir="war/test-docs"/>
   </target>
 

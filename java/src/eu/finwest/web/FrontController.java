@@ -145,19 +145,23 @@ public class FrontController extends HttpServlet {
 		
 		String version = "en";
 		String acceptLang = request.getHeader(ACCEPT_LANGUAGE);
-		for (String lang : acceptLang.split(",")) {
-			if (lang.trim().startsWith("pl")) {
-				log.info("User accepts language pl");
-				version = "pl";
-				break;
+		if (acceptLang != null) {
+			for (String lang : acceptLang.split(",")) {
+				if (lang.trim().startsWith("pl")) {
+					log.info("User accepts language pl");
+					version = "pl";
+					break;
+				}
+				if (lang.trim().startsWith("en")) {
+					log.info("User accepts language en");
+					version = "en";
+					break;
+				}
 			}
-			if (lang.trim().startsWith("en")) {
-				log.info("User accepts language en");
-				version = "en";
-				break;
-			}
+			log.info("Selected version: " + version);
+		} else {
+			log.warning("Header " + ACCEPT_LANGUAGE + " not passed!");
 		}
-		log.info("Selected version: " + version);
 		return version;
 	}
 	
