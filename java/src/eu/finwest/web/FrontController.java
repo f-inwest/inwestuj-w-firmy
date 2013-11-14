@@ -34,11 +34,14 @@ public class FrontController extends HttpServlet {
 	private static final Logger log = Logger.getLogger(FrontController.class.getName());
 	
 	private static final String ACCEPT_LANGUAGE = "Accept-Language";
+	private static final String SET_LANGUAGE = "set-lang";
 	private static final String LANGUAGE_COOKIE = "SELECTED_LANGUAGE";
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String pathInfo = request.getPathInfo();
+		log.log(Level.INFO, ">>>>>>> Path info: " + pathInfo);
+		
 		if ("GET".equals(request.getMethod()) && !"true".equalsIgnoreCase(request.getHeader("X-AppEngine-Cron"))
 				&& "inwestuj-w-firmy.appspot.com".equals(request.getServerName())) {
 			String redirectUrl = request.getScheme() + "://www.inwestujwfirmy.pl" + request.getServletPath();
@@ -51,23 +54,27 @@ public class FrontController extends HttpServlet {
 			return;
 		}
 		
-		String version = getVersionFolder(request);
+		String version = getVersionFolder(request, response);
 
+		String outFile = null;
 		if (StringUtils.endsWith(pathInfo, ".css")) {
 			response.setContentType("text/css");
-			IOUtils.copy(new FileInputStream(versionedRelative(version, WarmupListener.MAIN_CSS_FILE)), response.getOutputStream());
-			return;
+			outFile = versionedRelative(version, WarmupListener.MAIN_CSS_FILE);
 		} else if (StringUtils.endsWith(pathInfo, ".js")) {
 			response.setContentType("text/javascript");
 			if (StringUtils.countMatches(pathInfo, "/") == 2) {
-				IOUtils.copy(new FileInputStream(versionedRelative(version, WarmupListener.MAIN_JS_FILE)), response.getOutputStream());
-				return;
+				outFile = versionedRelative(version, WarmupListener.MAIN_JS_FILE);
 			} else {
 				String parts[] = pathInfo.split("/");
 				String jsName = parts[parts.length - 1];
-				IOUtils.copy(new FileInputStream(versionedRelative(version, WarmupListener.JS_FOLDER + "/" + jsName)), response.getOutputStream());
-				return;
+				outFile = versionedRelative(version, WarmupListener.JS_FOLDER + "/" + jsName);
 			}
+		}
+		
+		if (outFile != null) {
+			log.log(Level.INFO, ">>>>>>> Sending back file: " + outFile);
+			IOUtils.copy(new FileInputStream(outFile), response.getOutputStream());
+			return;
 		}
 
 		ModelDrivenController controller = null;
@@ -124,8 +131,15 @@ public class FrontController extends HttpServlet {
 		}
 	}
 	
-	private String getVersionFolder(HttpServletRequest request) {
+	private String getVersionFolder(HttpServletRequest request, HttpServletResponse response) {
 		String langCookie = null;
+		if (request.getParameter(SET_LANGUAGE) != null) {
+			String version = request.getParameter(SET_LANGUAGE);
+			if ("en".equals(version) || "pl".equals(version)) {
+				response.addCookie(new Cookie(LANGUAGE_COOKIE, version));
+				return version;
+			}
+		}
 		if (request.getCookies() != null) {
 			for (Cookie cookie : request.getCookies()) {
 				if (LANGUAGE_COOKIE.equals(cookie.getName())) {
@@ -134,7 +148,7 @@ public class FrontController extends HttpServlet {
 			}
 		}
 		if (langCookie != null && (langCookie.equals("en") || langCookie.equals("pl"))) {
-			log.info("Selected version: " + langCookie);
+			log.info("Selected version from cookie: " + langCookie);
 			return langCookie;
 		} else {
 			if (langCookie == null)
@@ -169,6 +183,7 @@ public class FrontController extends HttpServlet {
 		if (StringUtils.startsWith(path, "/pl") || StringUtils.startsWith(path, "/en")) {
 			return path;
 		} else {
+			path = path.startsWith("./") ? path.substring(2) : path;
 			return "./" + version + "/" + path;
 		}
 	}
