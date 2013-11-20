@@ -57,7 +57,15 @@ public class FrontController extends HttpServlet {
 		String version = getVersionFolder(request, response);
 
 		String outFile = null;
-		if (StringUtils.endsWith(pathInfo, ".css")) {
+		if (pathInfo.equals("/") || StringUtils.endsWith(pathInfo, ".html")) {
+			String path = "/".equals(pathInfo) ? "/discover-page.html" : pathInfo;
+//			String queryString = request.getQueryString();
+//			if (!"/".equals(pathInfo) && StringUtils.isNotEmpty(queryString)) {
+//				path += "?" + queryString;
+//			}
+			response.setContentType("text/html");
+			outFile = versionedRelative(version, path);
+		} else if (StringUtils.endsWith(pathInfo, ".css")) {
 			response.setContentType("text/css");
 			outFile = versionedRelative(version, WarmupListener.MAIN_CSS_FILE);
 		} else if (StringUtils.endsWith(pathInfo, ".js")) {

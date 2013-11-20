@@ -1,15 +1,10 @@
 application: inwestuj-w-firmy
-version: 201311141907
+version: 201311201815
 runtime: java
 
 static_files:
   - include: /en/**
   - include: /pl/**
-  - include: /**.css
-  - include: /**.js
-  - include: /**.png
-  - include: /**.jpg
-  - include: /**.gif
   - include: /**.ico
   - include: /**.txt
   - include: /crossdomain.xml
