@@ -43,7 +43,8 @@ public abstract class ModelDrivenController {
     private static int MAX_RESULTS = 20;
 	private String command[];
 	private UserVO loggedInUser;
-
+	private LangVersion langVersion;
+	
 	/**
 	 * Executes action handler for particular controller
 	 * @param request
@@ -252,5 +253,13 @@ public abstract class ModelDrivenController {
 
 	protected UserVO getLoggedInUser() {
 		return loggedInUser;
+	}
+
+	public LangVersion getLangVersion() {
+		return langVersion;
+	}
+
+	public void setLangVersion(LangVersion langVersion) {
+		this.langVersion = langVersion;
 	}
 }

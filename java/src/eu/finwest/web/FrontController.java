@@ -1,6 +1,8 @@
 package eu.finwest.web;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,36 +56,7 @@ public class FrontController extends HttpServlet {
 			return;
 		}
 		
-		String version = getVersionFolder(request, response);
-
-		String outFile = null;
-		if (pathInfo.equals("/") || StringUtils.endsWith(pathInfo, ".html")) {
-			String path = "/".equals(pathInfo) ? "/discover-page.html" : pathInfo;
-//			String queryString = request.getQueryString();
-//			if (!"/".equals(pathInfo) && StringUtils.isNotEmpty(queryString)) {
-//				path += "?" + queryString;
-//			}
-			response.setContentType("text/html");
-			outFile = versionedRelative(version, path);
-		} else if (StringUtils.endsWith(pathInfo, ".css")) {
-			response.setContentType("text/css");
-			outFile = versionedRelative(version, WarmupListener.MAIN_CSS_FILE);
-		} else if (StringUtils.endsWith(pathInfo, ".js")) {
-			response.setContentType("text/javascript");
-			if (StringUtils.countMatches(pathInfo, "/") == 2) {
-				outFile = versionedRelative(version, WarmupListener.MAIN_JS_FILE);
-			} else {
-				String parts[] = pathInfo.split("/");
-				String jsName = parts[parts.length - 1];
-				outFile = versionedRelative(version, WarmupListener.JS_FOLDER + "/" + jsName);
-			}
-		}
-		
-		if (outFile != null) {
-			log.log(Level.INFO, ">>>>>>> Sending back file: " + outFile);
-			IOUtils.copy(new FileInputStream(outFile), response.getOutputStream());
-			return;
-		}
+		LangVersion langVersion = getVersionFolder(request, response);
 
 		ModelDrivenController controller = null;
 		HttpHeaders headers = null;
@@ -110,42 +83,74 @@ public class FrontController extends HttpServlet {
 		}
 
 		if (controller != null) {
+			controller.setLangVersion(langVersion);
 			headers = ((ModelDrivenController)controller).execute(request);
 			if (controller.getModel() != null) {
 			} else {
 				log.log(Level.WARNING, "Returned object is NULL");
 			}
-		} else if (!StringUtils.endsWith(pathInfo, ".html")) {
+			if (headers != null) {
+				if (headers.apply(request, response, controller.getModel()) != null) {
+					if (request.getRequestURI().endsWith(".html")) {
+						// default is plain/text
+						controller.generateHtml(response);
+					} else {
+						// default is JSON
+						response.setContentType("application/json");
+						controller.generateJson(response);
+					}
+				}
+			} else if (StringUtils.endsWith(pathInfo, ".html")) {
+				response.setContentType("text/html");
+				IOUtils.copy(new FileInputStream(versionedRelative(langVersion, pathInfo)), response.getOutputStream());
+			}
+		} else {
+			handleStaticFiles(request, response, pathInfo, langVersion);
+			// after this is called do not modify output
+		}
+	}
+
+	private void handleStaticFiles(HttpServletRequest request, HttpServletResponse response, String pathInfo, LangVersion version)
+			throws IOException, FileNotFoundException {
+		String outFile = null;
+		if (pathInfo.equals("/") || StringUtils.endsWith(pathInfo, ".html")) {
+			String path = "/".equals(pathInfo) ? "/discover-page.html" : pathInfo;
+//				String queryString = request.getQueryString();
+//				if (!"/".equals(pathInfo) && StringUtils.isNotEmpty(queryString)) {
+//					path += "?" + queryString;
+//				}
+			response.setContentType("text/html");
+			outFile = versionedRelative(version, path);
+		} else if (StringUtils.endsWith(pathInfo, ".css")) {
+			response.setContentType("text/css");
+			outFile = versionedRelative(version, WarmupListener.MAIN_CSS_FILE);
+		} else if (StringUtils.endsWith(pathInfo, ".js")) {
+			response.setContentType("text/javascript");
+			if (StringUtils.countMatches(pathInfo, "/") == 2) {
+				outFile = versionedRelative(version, WarmupListener.MAIN_JS_FILE);
+			} else {
+				String parts[] = pathInfo.split("/");
+				String jsName = parts[parts.length - 1];
+				outFile = versionedRelative(version, WarmupListener.JS_FOLDER + "/" + jsName);
+			}
+		}
+		
+		if (outFile != null && new File(outFile).exists()) {
+			log.log(Level.INFO, ">>>>>>> Sending back file: " + outFile);
+			IOUtils.copy(new FileInputStream(outFile), response.getOutputStream());
+		} else {
 			log.log(Level.WARNING, request.getMethod() + " " + request.getPathInfo() + " is not supported!  Redirecting to error page.");
 			response.sendRedirect(versioned(version, "/error-page.html"));
-			return;
-		}
-
-		if (headers != null) {
-			if (headers.apply(request, response, controller.getModel()) != null) {
-				if (request.getRequestURI().endsWith(".html")) {
-					// default is plain/text
-					controller.generateHtml(response);
-				} else {
-					// default is JSON
-					response.setContentType("application/json");
-					controller.generateJson(response);
-				}
-			}
-		} else if (StringUtils.endsWith(pathInfo, ".html")) {
-			response.setContentType("text/html");
-			IOUtils.copy(new FileInputStream(versionedRelative(version, pathInfo)), response.getOutputStream());
-			return;
 		}
 	}
 	
-	private String getVersionFolder(HttpServletRequest request, HttpServletResponse response) {
+	private LangVersion getVersionFolder(HttpServletRequest request, HttpServletResponse response) {
 		String langCookie = null;
 		if (request.getParameter(SET_LANGUAGE) != null) {
 			String version = request.getParameter(SET_LANGUAGE);
 			if ("en".equals(version) || "pl".equals(version)) {
 				response.addCookie(new Cookie(LANGUAGE_COOKIE, version));
-				return version;
+				return "en".equals(version) ? LangVersion.EN : LangVersion.PL;
 			}
 		}
 		if (request.getCookies() != null) {
@@ -157,7 +162,7 @@ public class FrontController extends HttpServlet {
 		}
 		if (langCookie != null && (langCookie.equals("en") || langCookie.equals("pl"))) {
 			log.info("Selected version from cookie: " + langCookie);
-			return langCookie;
+			return "en".equals(langCookie) ? LangVersion.EN : LangVersion.PL;
 		} else {
 			if (langCookie == null)
 				log.info("Language cookie not set");
@@ -184,23 +189,23 @@ public class FrontController extends HttpServlet {
 		} else {
 			log.warning("Header " + ACCEPT_LANGUAGE + " not passed!");
 		}
-		return version;
+		return "en".equals(version) ? LangVersion.EN : LangVersion.PL;
 	}
 	
-	private String versionedRelative(String version, String path) {
+	private String versionedRelative(LangVersion version, String path) {
 		if (StringUtils.startsWith(path, "/pl") || StringUtils.startsWith(path, "/en")) {
 			return path;
 		} else {
 			path = path.startsWith("./") ? path.substring(2) : path;
-			return "./" + version + "/" + path;
+			return "./" + version.toString().toLowerCase() + (path.startsWith("/") ? "" : "/") + path;
 		}
 	}
 	
-	private String versioned(String version, String path) {
+	private String versioned(LangVersion version, String path) {
 		if (StringUtils.startsWith(path, "/pl") || StringUtils.startsWith(path, "/en")) {
 			return path;
 		} else {
-			return "/" + version + path;
+			return "/" + version.toString().toLowerCase() + (path.startsWith("/") ? "" : "/") + path;
 		}
 	}
 }
