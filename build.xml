@@ -228,26 +228,62 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
 	  	
 	  	<filterWithEncoding filtersfile="en.properties" encoding="UTF-8"/>
 	  	<copy todir="war/en" filtering="true" outputencoding="UTF-8" encoding="UTF-8">
-	  	  <fileset dir="html5-boilerplate/publish"/>
+	  	  <fileset dir="html5-boilerplate/publish">
+	  	      <include name="**/*"/>
+	  	      <exclude name="*.ico"/>
+	  	      <exclude name="*.png"/>
+	  	      <exclude name="*.jpg"/>
+	  	      <exclude name="*.gif"/>
+	  	      <exclude name="img"/>
+	  	      <exclude name="css"/>
+	  	  </fileset>
 	  	</copy>
-	  	<replace dir="war/en" token="src='js/" value="src='en/js/">
+	  	<copy todir="war/en" filtering="false" outputencoding="UTF-8" encoding="UTF-8">
+	  	  <fileset dir="html5-boilerplate/publish">
+	  	      <include name="*.ico"/>
+	  	      <include name="*.png"/>
+	  	      <include name="*.jpg"/>
+	  	      <include name="*.gif"/>
+	  	      <include name="img"/>
+	  	      <include name="css"/>
+	  	  </fileset>
+	  	</copy>
+<!-- 	  	<replace dir="war/en" token="src='js/" value="src='en/js/">
 			<include name="**/*.html"/>
 		</replace>
 	  	<replace dir="war/en" token="href='css/" value="href='en/css/">
 			<include name="**/*.html"/>
 		</replace>
-	  		
+ -->	  		
 	  	<filterWithEncoding filtersfile="pl.properties" encoding="UTF-8"/>
 	  	<copy todir="war/pl" filtering="true" outputencoding="UTF-8" encoding="UTF-8">
-	  	  <fileset dir="html5-boilerplate/publish"/>
+	  	  <fileset dir="html5-boilerplate/publish">
+	  	      <include name="**/*"/>
+	  	      <exclude name="*.ico"/>
+	  	      <exclude name="*.png"/>
+	  	      <exclude name="*.jpg"/>
+	  	      <exclude name="*.gif"/>
+	  	      <exclude name="img/*"/>
+	  	      <exclude name="css/*"/>
+	  	  </fileset>
 	  	</copy>
-	  	<replace dir="war/pl" token="src='js/" value="src='pl/js/">
+	  	<copy todir="war/pl" filtering="false" outputencoding="UTF-8" encoding="UTF-8">
+	  	  <fileset dir="html5-boilerplate/publish">
+	  	      <include name="*.ico"/>
+	  	      <include name="*.png"/>
+	  	      <include name="*.jpg"/>
+	  	      <include name="*.gif"/>
+	  	      <include name="img/*"/>
+	  	      <include name="css/*"/>
+	  	  </fileset>
+	  	</copy>
+<!-- 	  	<replace dir="war/pl" token="src='js/" value="src='pl/js/">
 			<include name="**/*.html"/>
 		</replace>
 	  	<replace dir="war/pl" token="href='css/" value="href='pl/css/">
 			<include name="**/*.html"/>
 		</replace>
-	</target>
+ -->	</target>
   
 	<target name="ensure-test-name" unless="test">
 	    <fail message="You must run this target with -Dtest=fully.specified.class.Name"/>
