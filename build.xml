@@ -234,8 +234,8 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
 	  	      <exclude name="*.png"/>
 	  	      <exclude name="*.jpg"/>
 	  	      <exclude name="*.gif"/>
-	  	      <exclude name="img"/>
-	  	      <exclude name="css"/>
+	  	      <exclude name="img/*"/>
+	  	      <exclude name="css/*"/>
 	  	  </fileset>
 	  	</copy>
 	  	<copy todir="war/en" filtering="false" outputencoding="UTF-8" encoding="UTF-8">
@@ -244,8 +244,8 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
 	  	      <include name="*.png"/>
 	  	      <include name="*.jpg"/>
 	  	      <include name="*.gif"/>
-	  	      <include name="img"/>
-	  	      <include name="css"/>
+	  	      <include name="img/*"/>
+	  	      <include name="css/*"/>
 	  	  </fileset>
 	  	</copy>
 <!-- 	  	<replace dir="war/en" token="src='js/" value="src='en/js/">
