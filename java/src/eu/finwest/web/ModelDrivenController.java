@@ -107,6 +107,10 @@ public abstract class ModelDrivenController {
 			locationHeaders.put("X-AppEngine-CityLatLong", request.getHeader("X-AppEngine-CityLatLong"));
 			loggedInUser.setLocationHeaders(locationHeaders);
 		}
+		
+		if (loggedInUser != null) {
+			loggedInUser.setLangVersion(langVersion);
+		}
 
 		command = decomposeRequest(request.getPathInfo());
 

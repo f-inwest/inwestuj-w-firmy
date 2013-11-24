@@ -63,6 +63,7 @@ import eu.finwest.datamodel.Vote;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.UserVO;
+import eu.finwest.web.LangVersion;
 import eu.finwest.web.ListingFacade;
 import eu.finwest.web.controllers.ListingController;
 
@@ -572,27 +573,26 @@ public class MockDataBuilder {
 		return ofy;
 	}
 
-
 	public List<Category> createCategories() {
 		List<Category> categories = new ArrayList<Category>();
-		categories.add(new Category(1, "@lang_biotech@"));
-		categories.add(new Category(2, "@lang_chemical@"));
-		categories.add(new Category(3, "@lang_retail@"));
-		categories.add(new Category(4, "@lang_electronics@"));
-		categories.add(new Category(5, "@lang_energy@"));
-		categories.add(new Category(6, "@lang_environmental@"));
-		categories.add(new Category(7, "@lang_finance@"));
-		categories.add(new Category(8, "@lang_hardware@"));
-		categories.add(new Category(9, "@lang_healthcare@"));
-		categories.add(new Category(10, "@lang_industrial@"));
-		categories.add(new Category(11, "@lang_internet@"));
-		categories.add(new Category(12, "@lang_manufacturing@"));
-		categories.add(new Category(13, "@lang_media@"));
-		categories.add(new Category(14, "@lang_medical@"));
-		categories.add(new Category(15, "@lang_pharma@"));
-		categories.add(new Category(16, "@lang_software@"));
-		categories.add(new Category(17, "@lang_telecom@"));
-		categories.add(new Category(18, "@lang_other@"));
+		categories.add(new Category(1, "Biotechnology", "Biotechnologia"));
+		categories.add(new Category(2, "Chemical", "Chemiczny"));
+		categories.add(new Category(3, "Retail", "Handel detal."));
+		categories.add(new Category(4, "Electronics", "Elektronika"));
+		categories.add(new Category(5, "Energy", "Energia"));
+		categories.add(new Category(6, "Environmental", "Środowisko"));
+		categories.add(new Category(7, "Finance", "Finanse"));
+		categories.add(new Category(8, "Hardware", "Sprzęt komp."));
+		categories.add(new Category(9, "Healthcare", "Ochrona zrowia"));
+		categories.add(new Category(10, "Industrial", "Przemysł"));
+		categories.add(new Category(11, "Internet", "Internet"));
+		categories.add(new Category(12, "Manufacturing", "Produkcja"));
+		categories.add(new Category(13, "Media", "Media"));
+		categories.add(new Category(14, "Medical", "Medycyna"));
+		categories.add(new Category(15, "Pharma", "Farmaceutyka"));
+		categories.add(new Category(16, "Software", "Oprogramowanie"));
+		categories.add(new Category(17, "Telecom", "Telekomunikacja"));
+		categories.add(new Category(18, "Other", "Inne"));
 
 		return categories;
 	}

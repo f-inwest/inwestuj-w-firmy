@@ -665,7 +665,7 @@ public class ListingController extends ModelDrivenController {
 
     // GET /listings/categories
     private HttpHeaders getCategories(HttpServletRequest request) {
-    	model = ListingFacade.instance().getCategories();
+    	model = ListingFacade.instance().getCategories(getLangVersion());
         return new HttpHeadersImpl("categories").disableCaching();
     }
 

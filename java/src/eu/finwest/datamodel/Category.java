@@ -16,17 +16,19 @@ import com.googlecode.objectify.annotation.Indexed;
 public class Category {
 	@Id public Long id;
 	public String name;
+	public String namePl;
 	public int count = 0;
 	
 	public Category() {
 	}
 	
-	public Category(long id, String name) {
+	public Category(long id, String name, String namePl) {
 		this.id = id;
 		this.name = name;
+		this.namePl = namePl;
 	}
 	
 	public String toString() {
-		return "Category(id=" + id + ", name=" + name + ", count=" + count + ")";
+		return "Category(id=" + id + ", name=" + name + ", namePl=" + namePl + ", count=" + count + ")";
 	}
 }

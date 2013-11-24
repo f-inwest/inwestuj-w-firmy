@@ -121,6 +121,18 @@ public class FrontController extends HttpServlet {
 //				}
 			response.setContentType("text/html");
 			outFile = versionedRelative(version, path);
+		} else if (StringUtils.endsWith(pathInfo, ".png")) {
+			response.setContentType("image/png");
+			outFile = versionedRelative(version, pathInfo);
+		} else if (StringUtils.endsWith(pathInfo, ".jpg")) {
+			response.setContentType("image/jpg");
+			outFile = versionedRelative(version, pathInfo);
+		} else if (StringUtils.endsWith(pathInfo, ".gif")) {
+			response.setContentType("image/gif");
+			outFile = versionedRelative(version, pathInfo);
+		} else if (StringUtils.endsWith(pathInfo, ".ico")) {
+			response.setContentType("image/x-icon");
+			outFile = versionedRelative(version, pathInfo);
 		} else if (StringUtils.endsWith(pathInfo, ".css")) {
 			response.setContentType("text/css");
 			outFile = versionedRelative(version, WarmupListener.MAIN_CSS_FILE);

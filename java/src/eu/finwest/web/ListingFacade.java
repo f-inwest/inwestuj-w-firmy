@@ -66,6 +66,7 @@ import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Category;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingDoc;
+import eu.finwest.datamodel.ListingDoc.Type;
 import eu.finwest.datamodel.ListingLocation;
 import eu.finwest.datamodel.ListingStats;
 import eu.finwest.datamodel.Location;
@@ -73,7 +74,6 @@ import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.PictureImport;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.VoToModelConverter;
-import eu.finwest.datamodel.ListingDoc.Type;
 import eu.finwest.util.ImageHelper;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.DiscoverListingsVO;
@@ -172,7 +172,7 @@ public class ListingFacade {
 			Monitor monitor = getDAO().getListingMonitor(loggedInUser.toKeyId(), newListing.toKeyId());
 			applyListingData(loggedInUser, newListing, monitor);
 			result.setListing(newListing);
-			result.setCategories(getCategories());
+			result.setCategories(getCategories(loggedInUser.getLangVersion()));
 
     		String[] url = ServiceFacade.instance().createUploadUrls(loggedInUser, "/file/upload/" + newListing.getId() + "/", 1);
     		newListing.setUploadUrl(url[0]);
@@ -232,7 +232,7 @@ public class ListingFacade {
 			ListingVO listing = DtoToVoConverter.convert(newListing);
 			applyListingData(loggedInUser, listing, monitor);
 			result.setListing(listing);
-			result.setCategories(getCategories());
+			result.setCategories(getCategories(loggedInUser.getLangVersion()));
 		}
 		return result;
 	}
@@ -807,7 +807,7 @@ public class ListingFacade {
 			}
 		}
 
-		if (listing.category == null || !getCategories().values().contains(listing.category)) {
+		if (listing.category == null || !getCategories(LangVersion.EN).keySet().contains(listing.category)) {
 			logs.append("Category is not set or contains not valid category. ");
 		}
 
@@ -2139,12 +2139,12 @@ public class ListingFacade {
 		return DtoToVoConverter.convert(getDAO().getListingDocument(BaseVO.toKeyId(docId)));
 	}
 
-	public Map<String, String> getCategories() {
+	public Map<String, String> getCategories(LangVersion lang) {
 		List<Category> categories = getDAO().getCategories();
 
 		Map<String, String> result = new LinkedHashMap<String, String>();
 		for (Category cat : categories) {
-			result.put(cat.name, cat.name);
+			result.put(cat.name, lang == LangVersion.EN ? cat.name : cat.namePl);
 		}
 		return result;
 	}
