@@ -1,19 +1,18 @@
 `
 <div class="header" id="header">
   <div class="container headerrow" style="width: 960px;">
-    <div class="span-4 headerrow hoverlink">
+    <div class="span-6 headerrow hoverlink">
         <a href="discover-page.html">
-            <div style="font-size:24px; padding-top: 7px;"><span style="color:#45a9e6;">inwestuj</span><span style="color:#eee">w</span><span style="color:#45a9e6;">firmy</span></div>
-            <div style="position: relative; top: -12px; left: 112px; font-size:16px; color: #eed;">beta</div>
+            <img src="img/logo.png"/>
         </a>
     </div>
-    <div class="span-7 headerrow headerrowcenter last">
+    <div class="span-6 headerrow headerrowcenter last">
       <a href="discover-page.html"><span class="headerlink hoverlink headerlinknoborder">@lang_find@</span></a>
       <a href="nearby-page.html"><span class="headerlink"><span class="hoverlink">@lang_nearby@</span></span></a>
       <a href="add-listing-page.html"><span class="headerlink"><span class="hoverlink">@lang_add@</span></span></a>
     </div>
 
-    <div class="span-8 headerrow">
+    <div class="span-7 headerrow">
         <form id="searchform" action="/main-page.html">
             <input type="hidden" name="type" value="keyword"></input>
             <input type="text" class="text inputtext searchtext" name="searchtext" id="searchtext" value=""></input>
