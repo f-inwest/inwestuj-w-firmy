@@ -1,5 +1,5 @@
 /* layout styles */
-* { margin: 0; padding: 0; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
+* { margin: 0; padding: 0; /* font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; */ }
 html, body, #wrap { height: 100%; }
 body { margin: 0; }
 body > #wrap { height: auto; min-height: 100%; }
@@ -77,7 +77,7 @@ body.nearby-page > #wrap > #main > div.container > div.nearbywrapper { height: 1
 .dummy { position: absolute; height: 0; width: 0; display: none; }
 
 /* general styles */
-body { font-size: 14px; font-weight: normal; }
+body { font-size: 16px; font-weight: normal; font-family: Ubuntu, sans-serif; font-weight: 300; }
 
 /* borders */
 .tile, .companybannertile, .companyhalftile
@@ -114,11 +114,10 @@ a:focus, a:hover { cursor: pointer; }
 
 /* font colors */
 .white,
-    .welcometitle, .welcometext, .welcometext a
     { color: #f8f8f8; }
 .midgrey,
     .headertext, .headerlink, .notificationtitle
-    { color: #eee; }
+    { color: #7c7f81; }
 .smokegrey,
     .infowindow, .boxtitle, .boxtitlegap, .boxsteptitle, .boxsteptext, .tileloc,
     .sideboxnum, .sideboxlistnum, .titleinfoheader, .sideinfoheader, .bmcinfoheader, .ipinfoheader,
@@ -153,22 +152,24 @@ a:focus, a:hover { cursor: pointer; }
 .topheader { width: 100%; height: 26px; background: #32aff6; }
 .topheaderline { color: #f8f8f8 !important; font-weight: normal; }
 .topheaderlink { color: #f8f8f8 !important; font-weight: bold; }
-.header { width: 100%; height: 150px; background: none; }
+.header { width: 100%; height: 150px; background: #fefefe; }
 .headerrow { height: 150px; }
 .headerrowcenter { margin-left: 10px; }
-.headertext, .headerlink { position: relative; font-weight: bold; font-size: 14px; top: 16px; padding: 5px 10px; }
+.headertext, .headerlink { position: relative; float: left; font-size: 16px; padding: 39px 10px 0 20px;  }
 .headerlinknoborder { border-left: none; }
 .headerlinkright { border-left: none; padding-left: 0; padding-right: 0; }
+.headerlogoimg { padding-top: 24px; }
+.headersearchrow { background: url(/img/lula.png) no-repeat; width: 200px; }
 .logotextblue { position: relative; font-weight: bold; font-size: 24px; top: 8px; color: #32aff6; }
 .logotextgrey { position: relative; font-weight: bold; font-size: 24px; top: 8px; color: #f8f8f8; }
 .headerprofile { float: right; text-align: right; }
 .loginspan { text-align: right; margin-left: 0; }
 .logout { position: relative; margin-top:6px; display: none; }
 .headersignintext { float: right; border-left: none; padding-right: 0px; }
-.headerloggedin { position: relative; }
+.headerloggedin { position: relative; top: 21px; }
 
 /* banner styles */
-.banner { width: 100%; height: 55px; background: #45a9e6; }
+.banner { width: 100%; height: 350px; background: url(../img/s111.png) no-repeat; }
 .bannertext { font-size: 30px; font-weight: bold; top: 5px; height: 40px; position: relative; }
 .bannersmall { width: 980px; height: 50px; margin-top: 10px; }
 .bannertextsmall { font-size: 30px; font-weight: bold; margin-top: 20px; }
@@ -182,7 +183,26 @@ a:focus, a:hover { cursor: pointer; }
 .pull-15px { left: -15px; position: relative; }
 .push-15px { left: 15px; position: relative; }
 .push-20px { left: 20px; position: relative; }
-.welcometext { font-size: 16px; font-weight: bold; position: absolute; bottom: 0; right: 10px; }
+.welcometitle {
+    color: #5b6773;
+    font-family: 'Prime', sans-serif;
+    font-weight: 300;
+    text-decoration: none;
+    font-size: 38px;
+}
+.welcometext, .welcometext a {
+    color: #5b6773;
+    font-family: 'Ubuntu', sans-serif;;
+    font-weight: 300;
+    text-decoration: none;
+    font-size: 22px;
+}
+.welcometext a {
+    position: relative;
+    top: 40px;
+    padding: 5px 40px 5px 40px;
+    background: #7edaef;
+}
 .welcomevideo { position: relative; }
 .welcomevideocontainer { margin: 10px 0; }
 .socialbanner { height: 100px; position: relative; top: -10px; }
@@ -537,10 +557,10 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMA
 .inputtext, .narrowinputtitle, .bidinputtitle, .narrowinputtext, .inputtextpct, .inputwidetext, .inputfullwidetextshort,
         .sideinputtext, .sideinputtitle, .sideinputtextarea,
         .inputselect, .inputmedselect, .inputwidewithvalidate
-{ font-weight: bold; color: #f8f8f8 !important; background: #49515a !important; }
+{ font-weight: normal; color: #7c7f81 !important; background: #fefefe !important; border: none; border-bottom: 1px solid #d9d9d9; }
 .inputtext, .inputtextpct, .inputwidetext, .inputfullwidetextshort, .sideinputtext, .sideinputtextarea,
         .inputselect, .inputmedselect, .narrowinputtext, .inputwidewithvalidate
-{ font-size: 14px !important; }
+{ font-size: 16px !important; }
 .inputwidetext { width: 420px !important; }
 .categoryselect { padding: 5px; width: 432px !important; height: 29px; }
 .inputmedtext { font-weight: bold; color: #f8f8f8 !important; background: #49515a !important; font-size: 14px !important; width: 230px !important; }
@@ -629,15 +649,21 @@ width: 740px !important;
 
 /* searchbar styles */
 .searchtext {
-width: 250px !important;
+width: 160px !important;
 float: left;
-       margin-top: 12px !important;
+    position: relative;
+    top: -42px;
        margin-right: 10px !important;
-       font-weight: normal !important;
+       font-weight: 300 !important;
+    font-family: Ubuntu, sans-serif !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid #d9d9d9 !important;
 }
 .searchbutton {
 float: left;
-       margin-top: 12px;
+       margin-top: 28px;
 }
 .searchbutton:hover { cursor: pointer; }
 
@@ -1093,7 +1119,9 @@ background-image: url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAM
 .headerlogo { margin-top: 14px; }
 
 /* texture background images textures */
-body,
+body {
+    background: url(../img/bck_2.png);
+}
         .tile, .companybannertile, .companyhalftile, .boxpanel,
         .bmcinfo, .ipinfo, .tileinfo, .sideinfo, .bmcborder,
         .bmcinfodisplay, .bmcinfodisplayvaluepropositions, .titleinfodisplay, .sideinfodisplay,
@@ -1102,7 +1130,7 @@ body,
         .sideboxselected,
         .buttonbg, .smallbuttonbg
 {
-background: #fff;
+background: #fefefe;
 }
 .companyheader
 {
@@ -1110,7 +1138,7 @@ background: #eee;
 }
 .header, .notificationtitle
 {
-background: #444;
+background: #fefefe;
 }
 .inputbutton, .smallinputbutton
 {
@@ -1462,9 +1490,11 @@ color: #ccc;
 background: #276400;
 }
 /* tim fonts */
+/*
 .companybannertitle, .companybannertiletitle, .welcometitle, .bannertextsmall {
         font-family: "Adelle","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
+*/
 
 /* downloads */
 .downloadline { padding-top: 10px; clear: both; }
@@ -1662,21 +1692,21 @@ width: 292px;
 
 /* addlisting and title pages */
 .addlistingtitle { 
-    font-family: "Adelle","Helvetica Neue",Helvetica,Arial,sans-serif;
+    /* font-family: "Adelle","Helvetica Neue",Helvetica,Arial,sans-serif; */
     text-align: center;
     color: #666;
     font-size: 30px;
     margin-top: 20px;
 }
 .addlistingsubtitle {
-    font-family: "Adelle","Helvetica Neue",Helvetica,Arial,sans-serif;
+    /* font-family: "Adelle","Helvetica Neue",Helvetica,Arial,sans-serif; */
     text-align:center;
     color:#666;
     font-size:18px;
     margin-top:5px;
 }
 .addlistingsubtitlerightcol {
-    font-family: "Adelle","Helvetica Neue",Helvetica,Arial,sans-serif;
+    /* font-family: "Adelle","Helvetica Neue",Helvetica,Arial,sans-serif; */
     text-align:center;
     color:#666;
     font-size:18px;
