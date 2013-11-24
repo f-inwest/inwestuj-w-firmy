@@ -248,13 +248,13 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
 	  	      <include name="css/*"/>
 	  	  </fileset>
 	  	</copy>
-<!-- 	  	<replace dir="war/en" token="src='js/" value="src='en/js/">
+ 	  	<replace dir="war/en" token="src='js/" value="src='en/js/">
 			<include name="**/*.html"/>
 		</replace>
 	  	<replace dir="war/en" token="href='css/" value="href='en/css/">
 			<include name="**/*.html"/>
 		</replace>
- -->	  		
+
 	  	<filterWithEncoding filtersfile="pl.properties" encoding="UTF-8"/>
 	  	<copy todir="war/pl" filtering="true" outputencoding="UTF-8" encoding="UTF-8">
 	  	  <fileset dir="html5-boilerplate/publish">
@@ -277,13 +277,13 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
 	  	      <include name="css/*"/>
 	  	  </fileset>
 	  	</copy>
-<!-- 	  	<replace dir="war/pl" token="src='js/" value="src='pl/js/">
+ 	  	<replace dir="war/pl" token="src='js/" value="src='pl/js/">
 			<include name="**/*.html"/>
 		</replace>
 	  	<replace dir="war/pl" token="href='css/" value="href='pl/css/">
 			<include name="**/*.html"/>
 		</replace>
- -->	</target>
+	</target>
   
 	<target name="ensure-test-name" unless="test">
 	    <fail message="You must run this target with -Dtest=fully.specified.class.Name"/>
