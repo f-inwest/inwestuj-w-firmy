@@ -63,7 +63,6 @@ import eu.finwest.datamodel.Vote;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.UserVO;
-import eu.finwest.web.LangVersion;
 import eu.finwest.web.ListingFacade;
 import eu.finwest.web.controllers.ListingController;
 
@@ -583,7 +582,7 @@ public class MockDataBuilder {
 		categories.add(new Category(6, "Environmental", "Środowisko"));
 		categories.add(new Category(7, "Finance", "Finanse"));
 		categories.add(new Category(8, "Hardware", "Sprzęt komp."));
-		categories.add(new Category(9, "Healthcare", "Ochrona zrowia"));
+		categories.add(new Category(9, "Healthcare", "Ochrona zdrowia"));
 		categories.add(new Category(10, "Industrial", "Przemysł"));
 		categories.add(new Category(11, "Internet", "Internet"));
 		categories.add(new Category(12, "Manufacturing", "Produkcja"));

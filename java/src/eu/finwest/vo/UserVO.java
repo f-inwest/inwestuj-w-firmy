@@ -57,7 +57,6 @@ public class UserVO extends BaseVO {
 	@JsonProperty("admin") private boolean admin;
 	@JsonProperty("avatar") private String avatar;
 	private Map<String, String> locationHeaders;
-	@JsonIgnore private LangVersion langVersion;
 	
 	public UserVO() {
 	}
@@ -239,11 +238,5 @@ public class UserVO extends BaseVO {
 	}
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
-	}
-	public LangVersion getLangVersion() {
-		return langVersion;
-	}
-	public void setLangVersion(LangVersion langVersion) {
-		this.langVersion = langVersion;
 	}
 }

@@ -38,12 +38,13 @@ public class FrontController extends HttpServlet {
 	private static final String ACCEPT_LANGUAGE = "Accept-Language";
 	private static final String SET_LANGUAGE = "set-lang";
 	private static final String LANGUAGE_COOKIE = "SELECTED_LANGUAGE";
+	
+	private static final ThreadLocal<LangVersion> langVersion = new ThreadLocal<LangVersion>();
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String pathInfo = request.getPathInfo();
 		log.log(Level.INFO, ">>>>>>> Path info: " + pathInfo);
-		
 		if ("GET".equals(request.getMethod()) && !"true".equalsIgnoreCase(request.getHeader("X-AppEngine-Cron"))
 				&& "inwestuj-w-firmy.appspot.com".equals(request.getServerName())) {
 			String redirectUrl = request.getScheme() + "://www.inwestujwfirmy.pl" + request.getServletPath();
@@ -56,57 +57,61 @@ public class FrontController extends HttpServlet {
 			return;
 		}
 		
-		LangVersion langVersion = getVersionFolder(request, response);
-
-		ModelDrivenController controller = null;
-		HttpHeaders headers = null;
-		if (pathInfo.startsWith("/user")) {
-			controller = new UserController();
-		} else if (pathInfo.startsWith("/listing")) {
-			controller = new ListingController();
-		} else if (pathInfo.startsWith("/comment")) {
-			controller = new CommentController();
-		} else if (pathInfo.startsWith("/system")) {
-			controller = new SystemController();
-		} else if (pathInfo.startsWith("/file")) {
-			controller = new FileController();
-		} else if (pathInfo.startsWith("/task")) {
-			controller = new TaskController();
-		} else if (pathInfo.startsWith("/notification")) {
-			controller = new NotificationController();
-		} else if (pathInfo.startsWith("/monitor")) {
-			controller = new MonitorController();
-		} else if (pathInfo.startsWith("/cron")) {
-			controller = new CronTaskController();
-		} else {
-			log.log(Level.WARNING, "Unknown action '" + pathInfo + "'");
-		}
-
-		if (controller != null) {
-			controller.setLangVersion(langVersion);
-			headers = ((ModelDrivenController)controller).execute(request);
-			if (controller.getModel() != null) {
+		try {
+			langVersion.set(getVersionFolder(request, response));
+	
+			ModelDrivenController controller = null;
+			HttpHeaders headers = null;
+			if (pathInfo.startsWith("/user")) {
+				controller = new UserController();
+			} else if (pathInfo.startsWith("/listing")) {
+				controller = new ListingController();
+			} else if (pathInfo.startsWith("/comment")) {
+				controller = new CommentController();
+			} else if (pathInfo.startsWith("/system")) {
+				controller = new SystemController();
+			} else if (pathInfo.startsWith("/file")) {
+				controller = new FileController();
+			} else if (pathInfo.startsWith("/task")) {
+				controller = new TaskController();
+			} else if (pathInfo.startsWith("/notification")) {
+				controller = new NotificationController();
+			} else if (pathInfo.startsWith("/monitor")) {
+				controller = new MonitorController();
+			} else if (pathInfo.startsWith("/cron")) {
+				controller = new CronTaskController();
 			} else {
-				log.log(Level.WARNING, "Returned object is NULL");
+				log.log(Level.WARNING, "Unknown action '" + pathInfo + "'");
 			}
-			if (headers != null) {
-				if (headers.apply(request, response, controller.getModel()) != null) {
-					if (request.getRequestURI().endsWith(".html")) {
-						// default is plain/text
-						controller.generateHtml(response);
-					} else {
-						// default is JSON
-						response.setContentType("application/json");
-						controller.generateJson(response);
-					}
+	
+			if (controller != null) {
+				controller.setLangVersion(langVersion.get());
+				headers = ((ModelDrivenController)controller).execute(request);
+				if (controller.getModel() != null) {
+				} else {
+					log.log(Level.WARNING, "Returned object is NULL");
 				}
-			} else if (StringUtils.endsWith(pathInfo, ".html")) {
-				response.setContentType("text/html");
-				IOUtils.copy(new FileInputStream(versionedRelative(langVersion, pathInfo)), response.getOutputStream());
+				if (headers != null) {
+					if (headers.apply(request, response, controller.getModel()) != null) {
+						if (request.getRequestURI().endsWith(".html")) {
+							// default is plain/text
+							controller.generateHtml(response);
+						} else {
+							// default is JSON
+							response.setContentType("application/json");
+							controller.generateJson(response);
+						}
+					}
+				} else if (StringUtils.endsWith(pathInfo, ".html")) {
+					response.setContentType("text/html");
+					IOUtils.copy(new FileInputStream(versionedRelative(langVersion.get(), pathInfo)), response.getOutputStream());
+				}
+			} else {
+				handleStaticFiles(request, response, pathInfo, langVersion.get());
+				// after this is called do not modify output
 			}
-		} else {
-			handleStaticFiles(request, response, pathInfo, langVersion);
-			// after this is called do not modify output
+		} finally {
+			langVersion.remove();
 		}
 	}
 
@@ -161,6 +166,7 @@ public class FrontController extends HttpServlet {
 		if (request.getParameter(SET_LANGUAGE) != null) {
 			String version = request.getParameter(SET_LANGUAGE);
 			if ("en".equals(version) || "pl".equals(version)) {
+				log.info("Setting language cookie to: " + version);
 				response.addCookie(new Cookie(LANGUAGE_COOKIE, version));
 				return "en".equals(version) ? LangVersion.EN : LangVersion.PL;
 			}
@@ -178,8 +184,10 @@ public class FrontController extends HttpServlet {
 		} else {
 			if (langCookie == null)
 				log.info("Language cookie not set");
-			else
+			else {
 				log.info("Language cookie set to not handled value: " + langCookie);
+				langCookie = null;
+			}
 		}
 		
 		String version = "en";
@@ -201,6 +209,10 @@ public class FrontController extends HttpServlet {
 		} else {
 			log.warning("Header " + ACCEPT_LANGUAGE + " not passed!");
 		}
+		if (langCookie == null) {
+			log.info("Setting language cookie to: " + version);
+			response.addCookie(new Cookie(LANGUAGE_COOKIE, version));
+		}
 		return "en".equals(version) ? LangVersion.EN : LangVersion.PL;
 	}
 	
@@ -219,5 +231,9 @@ public class FrontController extends HttpServlet {
 		} else {
 			return "/" + version.toString().toLowerCase() + (path.startsWith("/") ? "" : "/") + path;
 		}
+	}
+	
+	public static LangVersion getLangVersion() {
+		return langVersion.get();
 	}
 }

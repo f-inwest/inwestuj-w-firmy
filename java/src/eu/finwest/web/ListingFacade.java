@@ -172,7 +172,7 @@ public class ListingFacade {
 			Monitor monitor = getDAO().getListingMonitor(loggedInUser.toKeyId(), newListing.toKeyId());
 			applyListingData(loggedInUser, newListing, monitor);
 			result.setListing(newListing);
-			result.setCategories(getCategories(loggedInUser.getLangVersion()));
+			result.setCategories(getCategories());
 
     		String[] url = ServiceFacade.instance().createUploadUrls(loggedInUser, "/file/upload/" + newListing.getId() + "/", 1);
     		newListing.setUploadUrl(url[0]);
@@ -232,7 +232,7 @@ public class ListingFacade {
 			ListingVO listing = DtoToVoConverter.convert(newListing);
 			applyListingData(loggedInUser, listing, monitor);
 			result.setListing(listing);
-			result.setCategories(getCategories(loggedInUser.getLangVersion()));
+			result.setCategories(getCategories());
 		}
 		return result;
 	}
@@ -1908,8 +1908,8 @@ public class ListingFacade {
 		}
 	}
 
-	private Listing updateListingDoc(Listing listing, ListingDoc docDTO) {
-		listing = getDAO().getListing(listing.id);
+	private Listing updateListingDoc(Listing listingToUpdate, ListingDoc docDTO) {
+		Listing listing = getDAO().getListing(listingToUpdate.id);
 		Key<ListingDoc> replacedDocId = null;
 		switch(docDTO.type) {
 		case BUSINESS_PLAN:
@@ -1926,6 +1926,7 @@ public class ListingFacade {
 			break;
 		case LOGO:
 			replacedDocId = listing.logoId;
+			listing.logoBase64 = listingToUpdate.logoBase64;
 			listing.logoId = new Key<ListingDoc>(ListingDoc.class, docDTO.id);
 			break;
 		case PIC1:
@@ -2139,6 +2140,10 @@ public class ListingFacade {
 		return DtoToVoConverter.convert(getDAO().getListingDocument(BaseVO.toKeyId(docId)));
 	}
 
+	public Map<String, String> getCategories() {
+		return getCategories(FrontController.getLangVersion());
+	}
+	
 	public Map<String, String> getCategories(LangVersion lang) {
 		List<Category> categories = getDAO().getCategories();
 

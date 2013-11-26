@@ -108,10 +108,6 @@ public abstract class ModelDrivenController {
 			loggedInUser.setLocationHeaders(locationHeaders);
 		}
 		
-		if (loggedInUser != null) {
-			loggedInUser.setLangVersion(langVersion);
-		}
-
 		command = decomposeRequest(request.getPathInfo());
 
 		HttpHeaders headers = null;
