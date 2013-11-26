@@ -6,7 +6,7 @@
             <img class="headerlogoimg" src="img/logo.png"/>
         </a>
     </div>
-    <div class="span-8 headerrow headerrowcenter last">
+    <div class="span-7 headerrow headerrowcenter last">
       <a href="discover-page.html"><span class="headerlink hoverlink headerlinknoborder">@lang_find@</span></a>
       <a href="nearby-page.html"><span class="headerlink"><span class="hoverlink">@lang_nearby@</span></span></a>
       <a href="add-listing-page.html"><span class="headerlink"><span class="hoverlink">@lang_add@</span></span></a>
@@ -21,7 +21,7 @@
     </div>
 
     <!-- not logged in -->
-    <div class="span-5 last loginspan headerrow initialhidden" id="headernotloggedin">
+    <div class="span-6 last loginspan headerrow initialhidden" id="headernotloggedin">
         <div>
             <a href="/login-page.html">
                 <span class="headerlink headerlinkright">@lang_signin@</span>
@@ -39,23 +39,23 @@
     </div>
 
     <!-- logged in -->
-    <div class="span-5 last loginspan headerrow initialhidden headerloggedin" id="headerloggedin">
-        <div>
+    <div class="span-6 last loginspan headerrow initialhidden" id="headerloggedin">
+        <div class="headericonset">
             <a id="logoutlink" href="">
-                <div class="headericon headerlogout" title="Logout"></div>
+                <div class="headericon headerlogout button-content" title="Logout"></div>
             </a>
             <a href="/notifications-page.html">
-                <div class="headericon headernotifications" title="Notifications">
+                <div class="headericon headernotifications button-content" title="Notifications">
                     <div class="headernum" id="headernumnotifications"></div>
                 </div>
             </a>
             <a href="/message-group-page.html">
-                <div class="headericon headermessages" title="Messages">
+                <div class="headericon headermessages button-content" title="Messages">
                     <div class="headernum" id="headernummessages"></div>
                 </div>
             </a>
             <a href="/profile-page.html">
-                <div title="View Your Profile" class="profileavatar headeravatar" id="headeravatar"></div>
+                <div title="View Your Profile" class="headeravatar button-content" id="headeravatar"></div>
             </a>
         </div>
     </div>
