@@ -159,7 +159,7 @@ a:focus, a:hover { cursor: pointer; }
 .headerlinknoborder { border-left: none; }
 .headerlinkright { border-left: none; padding-left: 0; padding-right: 0; }
 .headerlogoimg { padding-top: 24px; }
-.headersearchrow { background: url(../img/lupa.png) no-repeat; width: 200px; }
+.headersearchrow { width: 200px; }
 .logotextblue { position: relative; font-weight: bold; font-size: 24px; top: 8px; color: #32aff6; }
 .logotextgrey { position: relative; font-weight: bold; font-size: 24px; top: 8px; color: #f8f8f8; }
 .headerprofile { float: right; text-align: right; }
@@ -218,8 +218,10 @@ a:focus, a:hover { cursor: pointer; }
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
 .welcomeverticalbar2 {
-    background: #5B6773;
     top: 130px;
+}
+.welcomeverticalbargrey {
+    background: #5B6773;
 }
 .welcomeverticalline {
     height: 310px;
@@ -264,6 +266,7 @@ a:focus, a:hover { cursor: pointer; }
     top: 0;
     position: absolute;
     background: url(../img/slide_s222.png) no-repeat;
+    pointer-events: none;
 }
 .bannership {
     position: absolute;
@@ -741,7 +744,7 @@ float: left;
 }
 .searchbutton {
 float: left;
-       margin-top: 28px;
+       margin-top: 29px;
 }
 .searchbutton:hover { cursor: pointer; }
 

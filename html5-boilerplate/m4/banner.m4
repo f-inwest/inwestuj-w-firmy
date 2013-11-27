@@ -12,17 +12,17 @@
             <div class="span-1">
                 <div class="welcomeverticalline"></div>
                 <a href="#" class="welcomeverticalbar">@lang_investors@</a>
-                <a href="#" class="welcomeverticalbar welcomeverticalbar2">@lang_innovators@</a>
+                <a href="#" class="welcomeverticalbar welcomeverticalbar2 welcomeverticalbargrey">@lang_innovators@</a>
             </div>
 
             <div class="span-20 push-1">
                 <div class="welcometitle" id="welcometitle">
-                    <div id="investorsmessage">@lang_investorsmessage@</div>
-                    <div id="innovatorsmessage" class="initialhidden">@lang_innovatorsmessage@</div>
+                    <div class="welcomemessage">@lang_investorsmessage@</div>
+                    <div class="welcomemessage initialhidden">@lang_innovatorsmessage@</div>
                 </div>
                 <div class="welcometext" id="welcometext">
-                    <a id="investorslink" href="/about-page.html" class="welcomelink">@lang_investorslink@</a>
-                    <a id="innovatorslink" href="/about-page.html" class="welcomelink initialhidden">@lang_innovatorslink@</a>
+                    <a href="/discover-page.html" class="welcomemessage welcomelink">@lang_investorslink@</a>
+                    <a href="/add-listing-page.html" class="welcomemessage welcomelink initialhidden">@lang_innovatorslink@</a>
                 </div>
             </div>
 

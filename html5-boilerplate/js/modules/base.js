@@ -1791,10 +1791,23 @@ pl.implement(DiscoverPageClass,{
     loadPage: function() {
         var self = this,
             complete = function(json) {
-                var toggleInvestorsInnovators = function() {
-                        pl('#investorslink, #innovatorslink, #investorsmessage, #innovatorsmessage').toggle('initialhidden');
-                    });
-                pl('#investorslink').addListener('click', toggleInvestorsInnovators);
+                pl('.welcomeverticalbar').bind({
+                    click: function() {
+                        pl('.welcomemessage').each(function(){
+                            if(pl(this).hasClass('initialhidden')) {
+                                pl(this).removeClass('initialhidden');
+                            }
+                            else{
+                                pl(this).addClass('initialhidden');
+                            }});
+                        pl('.welcomeverticalbar').each(function(){
+                            if(pl(this).hasClass('welcomeverticalbargrey')) {
+                                pl(this).removeClass('welcomeverticalbargrey');
+                            }
+                            else{
+                                pl(this).addClass('welcomeverticalbargrey');
+                            }});
+                    }});
                 (new HeaderClass()).setLogin(json);
                 self.display(json);
                 pl('.preloader').hide();
@@ -1975,17 +1988,30 @@ pl.implement(MainPageClass,{
                     categories = json.categories || {},
                     locations = json.top_locations || {},
                     categoryList = new BaseListClass(categories, 'category', 1, 'category'),
-                    locationList = new BaseListClass(locations, 'location', 1, 'location'),
-                    toggleInvestorsInnovators = function() {
-                        pl('#investorslink, #innovatorslink, #investorsmessage, #innovatorsmessage').toggle('initialhidden');
-                    });
+                    locationList = new BaseListClass(locations, 'location', 1, 'location');
                 header.setLogin(json);
                 categoryList.display();
                 locationList.display();
                 companyList.storeList(json);
                 pl('.preloader').hide();
                 pl('.wrapper').show();
-                pl('#investorslink').addListener('click', toggleInvestorsInnovators);
+                pl('.welcomeverticalbar').bind({
+                    click: function() {
+                        pl('.welcomemessage').each(function(){
+                            if(pl(this).hasClass('initialhidden')) {
+                                pl(this).removeClass('initialhidden');
+                            }
+                            else{
+                                pl(this).addClass('initialhidden');
+                            }});
+                        pl('.welcomeverticalbar').each(function(){
+                            if(pl(this).hasClass('welcomeverticalbargrey')) {
+                                pl(this).removeClass('welcomeverticalbargrey');
+                            }
+                            else{
+                                pl(this).addClass('welcomeverticalbargrey');
+                            }});
+                    }});
             },
             basePage = new BaseCompanyListPageClass();
         basePage.loadPage(completeFunc);
