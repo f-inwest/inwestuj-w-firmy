@@ -15,6 +15,8 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Indexed;
 import com.googlecode.objectify.annotation.Unindexed;
 
+import eu.finwest.web.LangVersion;
+
 /**
  * @author "Grzegorz Nittner" <grzegorz.nittner@gmail.com>
  *
@@ -35,6 +37,7 @@ public class ListingStats extends BaseObject<ListingStats> {
 		this.modified = new Date();
 	}
 
+	public LangVersion lang;
 	public Key<Listing> listing;
 	public Listing.State state;
 	public Listing.Type type;

@@ -155,6 +155,7 @@ public class ListingFacade {
 			result.setErrorMessage("Only logged in user can create listing");
 		} else {
 			Listing l = new Listing();
+			l.lang = FrontController.getLangVersion();
 			l.state = Listing.State.NEW;
 			l.owner = new Key<SBUser>(loggedInUser.getId());
 			l.contactEmail = loggedInUser.getEmail();
@@ -202,6 +203,7 @@ public class ListingFacade {
 				return result;
 			} else {
 				newListing = new Listing();
+				newListing.lang = FrontController.getLangVersion();
 				newListing.state = Listing.State.NEW;
 				newListing.owner = new Key<SBUser>(loggedInUser.getId());
 				newListing.contactEmail = loggedInUser.getEmail();
@@ -1074,8 +1076,8 @@ public class ListingFacade {
 			return result;
 		} else if (loggedInUser.isAdmin() && StringUtils.isNotEmpty(listingId)) {
 			listingKey = ListingVO.toKeyId(listingId);
-		} else if (StringUtils.equals(loggedInUser.getEditedListing(), listingId)
-				|| (StringUtils.isNotEmpty(loggedInUser.getEditedListing()) && StringUtils.isEmpty(listingId))) {
+		} else if (listingId != null && (StringUtils.equals(loggedInUser.getEditedListing(), listingId)
+				|| (StringUtils.isNotEmpty(loggedInUser.getEditedListing()) && StringUtils.isEmpty(listingId)))) {
 			listingKey = ListingVO.toKeyId(loggedInUser.getEditedListing());
 		} else {
 			log.info("Deletion not successful, user can only delete own listings");
@@ -1672,6 +1674,7 @@ public class ListingFacade {
         Map<String, Category> categories = new HashMap<String, Category>();
         for(Category category : c) {
             category.count = 0;
+            category.countPl = 0;
             categories.put(category.name, category);
         }
         log.log(Level.INFO, "Calculated count statistics for " + c.size() + " categories");
@@ -1684,17 +1687,19 @@ public class ListingFacade {
 			if (listing.state == Listing.State.ACTIVE) {
 				listingLocs.add(new ListingLocation(listing));
 				// updating top locations data
-				Location loc = locations.get(listing.briefAddress);
+				Location loc = locations.get(listing.lang + listing.briefAddress);
 				if (loc != null) {
 					loc.value++;
 				} else {
-					locations.put(listing.briefAddress, new Location(
-							listing.briefAddress));
+					locations.put(listing.lang + listing.briefAddress, new Location(listing.lang, listing.briefAddress));
 				}
 				// updating top categories data
 				Category cat = categories.get(listing.category);
 				if (cat != null) {
-					cat.count++;
+					if (listing.lang == LangVersion.EN)
+						cat.count++;
+					else
+						cat.countPl++;
 				}
 			}
 		}

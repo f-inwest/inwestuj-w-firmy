@@ -172,12 +172,20 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
+    - name: lang
+    - name: listedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
     - name: owner
     - name: state
 
 - kind: Listing
   ancestor: no
   properties:
+    - name: lang
     - name: state
     - name: listedOn
       direction: desc
@@ -185,6 +193,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
+    - name: lang
     - name: state
     - name: closingOn
       direction: asc
@@ -192,6 +201,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
+    - name: lang
     - name: state
     - name: posted
       direction: desc
@@ -199,6 +209,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
+    - name: lang
     - name: category
     - name: listedOn
       direction: desc
@@ -206,6 +217,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
+    - name: lang
     - name: country
     - name: listedOn
       direction: desc
@@ -213,6 +225,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
+    - name: lang
     - name: usState
     - name: listedOn
       direction: desc
@@ -220,6 +233,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
+    - name: lang
     - name: city
     - name: listedOn
       direction: desc
@@ -227,6 +241,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
+    - name: lang
     - name: country
     - name: usState
     - name: listedOn
@@ -235,6 +250,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
+    - name: lang
     - name: country
     - name: city
     - name: listedOn
@@ -243,6 +259,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
+    - name: lang
     - name: usState
     - name: city
     - name: listedOn
@@ -251,6 +268,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
+    - name: lang
     - name: country
     - name: usState
     - name: city
@@ -260,6 +278,7 @@ indexes:
 - kind: ListingStats
   ancestor: no
   properties:
+    - name: lang
     - name: state
     - name: score
       direction: desc
@@ -267,6 +286,7 @@ indexes:
 - kind: ListingStats
   ancestor: no
   properties:
+    - name: lang
     - name: state
     - name: numberOfBids
       direction: desc
@@ -274,6 +294,7 @@ indexes:
 - kind: ListingStats
   ancestor: no
   properties:
+    - name: lang
     - name: state
     - name: numberOfComments
       direction: desc
@@ -281,6 +302,7 @@ indexes:
 - kind: ListingStats
   ancestor: no
   properties:
+    - name: lang
     - name: state
     - name: valuation
       direction: desc
@@ -288,6 +310,7 @@ indexes:
 - kind: ListingStats
   ancestor: no
   properties:
+    - name: lang
     - name: askedForFunding
     - name: state
     - name: score

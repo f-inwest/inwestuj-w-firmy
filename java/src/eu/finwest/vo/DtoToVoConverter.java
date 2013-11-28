@@ -24,6 +24,7 @@ import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Vote;
+import eu.finwest.web.LangVersion;
 
 /**
  * Helper class which converts DTO objects to VO objects.
@@ -148,6 +149,7 @@ public class DtoToVoConverter {
 		}
 		ListingVO listing = new ListingVO();
 		listing.setId(new Key<Listing>(Listing.class, listingDTO.id).getString());
+		listing.setLang(listingDTO.lang != null ? listingDTO.lang.toString() : LangVersion.EN.toString());
 		listing.setModified(listingDTO.modified);
 		listing.setCreated(listingDTO.created);
 		listing.setClosingOn(listingDTO.closingOn);
@@ -249,6 +251,7 @@ public class DtoToVoConverter {
 		}
 		ListingTileVO listing = new ListingTileVO();
 		listing.setId(new Key<Listing>(Listing.class, listingDTO.id).getString());
+		listing.setLang(listingDTO.lang.toString());
 		listing.setModified(listingDTO.modified);
 		listing.setCreated(listingDTO.created);
 		listing.setClosingOn(listingDTO.closingOn);

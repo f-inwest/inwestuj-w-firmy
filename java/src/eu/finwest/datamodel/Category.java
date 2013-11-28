@@ -18,6 +18,7 @@ public class Category {
 	public String name;
 	public String namePl;
 	public int count = 0;
+	public int countPl = 0;
 	
 	public Category() {
 	}
@@ -29,6 +30,6 @@ public class Category {
 	}
 	
 	public String toString() {
-		return "Category(id=" + id + ", name=" + name + ", namePl=" + namePl + ", count=" + count + ")";
+		return "Category(id=" + id + ", name=" + name + ", namePl=" + namePl + ", count=" + count + ", countPl=" + countPl + ")";
 	}
 }

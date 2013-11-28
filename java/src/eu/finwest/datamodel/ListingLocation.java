@@ -10,6 +10,8 @@ import com.googlecode.objectify.annotation.Cached;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Unindexed;
 
+import eu.finwest.web.LangVersion;
+
 /**
  * This entity is not cached separately.
  * All location list is stored as one entity in memcache.
@@ -23,6 +25,7 @@ public class ListingLocation extends BaseObject<ListingLocation> {
 	}
 	public ListingLocation(Listing listing) {
 		this.id = listing.id;
+		this.lang = listing.lang;
 		this.latitude = listing.latitude;
 		this.longitude = listing.longitude;
 	}
@@ -30,6 +33,7 @@ public class ListingLocation extends BaseObject<ListingLocation> {
 		return new Key<ListingLocation>(ListingLocation.class, id);
 	}
 	@Id public Long id;
+	public LangVersion lang;
 	public Double latitude;
 	public Double longitude;
 	

@@ -36,6 +36,7 @@ public class ListingVO extends ListingTileVO implements Serializable {
 	public static final List<String> FETCHED_PROPERTIES = Arrays.asList(new String[] {"business_plan_url", 
 			"presentation_url", "financials_url", "logo_url", "pic1_url", "pic2_url", "pic3_url", "pic4_url", "pic5_url"});
 	
+	@JsonProperty("lang") private String lang;
 	@JsonProperty("previous_val") private int previousValuation;
 	@JsonProperty("valuation") private int valuation;
 	@JsonProperty("median_valuation") private int medianValuation;
@@ -772,5 +773,13 @@ public class ListingVO extends ListingTileVO implements Serializable {
 
 	public void setValuationData(String valuationData) {
 		this.valuationData = valuationData;
+	}
+
+	public String getLang() {
+		return lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
 	}
 }

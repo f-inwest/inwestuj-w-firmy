@@ -14,6 +14,7 @@ import eu.finwest.vo.ListingVO;
 import eu.finwest.web.DocService;
 import eu.finwest.web.HttpHeaders;
 import eu.finwest.web.HttpHeadersImpl;
+import eu.finwest.web.LangVersion;
 import eu.finwest.web.ListingFacade;
 import eu.finwest.web.ModelDrivenController;
 

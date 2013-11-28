@@ -24,6 +24,7 @@ public class ListingTileVO extends BaseVO implements UserDataUpdatable, Serializ
 	
 	@JsonProperty("num") protected int orderNumber;
 	@JsonProperty("listing_id")	protected String id;
+	@JsonProperty("lang") protected String lang;
 	@JsonProperty("title") protected String name;
 	@JsonProperty("asked_fund") protected boolean askedForFunding;
 	@JsonProperty("suggested_amt") protected int suggestedAmount;
@@ -296,5 +297,13 @@ public class ListingTileVO extends BaseVO implements UserDataUpdatable, Serializ
 	@Override
 	public void setUserNickname(String userNickname) {
 		this.ownerName = userNickname;
+	}
+
+	public String getLang() {
+		return lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
 	}
 }

@@ -19,6 +19,7 @@ import eu.finwest.vo.QuestionAnswerVO;
 import eu.finwest.vo.SystemPropertyVO;
 import eu.finwest.vo.UserVO;
 import eu.finwest.vo.VoteVO;
+import eu.finwest.web.LangVersion;
 
 /**
  * Helper classes which converts VO objects to model objects.
@@ -58,6 +59,7 @@ public class VoToModelConverter {
 		if (!StringUtils.isEmpty(listingVO.getId())) {
 			listing.id = listingVO.toKeyId();
 		}
+		listing.lang = LangVersion.valueOf(listingVO.getLang());
 		listing.modified = listingVO.getModified();
 		listing.created = listingVO.getCreated();
 		listing.closingOn = listingVO.getClosingOn();

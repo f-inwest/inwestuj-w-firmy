@@ -18,6 +18,7 @@ import com.googlecode.objectify.annotation.Unindexed;
 import com.googlecode.objectify.condition.IfNotNull;
 
 import eu.finwest.util.ListingToStringStyle;
+import eu.finwest.web.LangVersion;
 
 /**
  * @author "Grzegorz Nittner" <grzegorz.nittner@gmail.com>
@@ -58,6 +59,8 @@ public class Listing extends BaseObject<Listing> {
 		return new Key<Listing>(Listing.class, id);
 	}
 	@Id public Long id;
+	
+	@Indexed public LangVersion lang;
 	
 	public Date modified;
 	@PrePersist void updateModifiedDate() {
