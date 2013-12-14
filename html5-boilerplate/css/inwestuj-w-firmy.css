@@ -284,7 +284,7 @@ a:focus, a:hover { cursor: pointer; }
 /* company banner styles */
 .companyheader { width: 100%; height: 150px; border-bottom: 1px solid #ccc; padding: 20px 0; }
 .companybanner { height: 150px; position: relative; }
-.companybannertile { height: 150px; width: 626px; position: relative; overflow: hidden; margin-bottom: 10px; }
+.companybannertile { height: 150px; width: 626px; position: relative; overflow: hidden; margin-bottom: 15px; }
 .companybannertilenoborder { height:150px;overflow:hidden;position:relative;top:-9px; }
 .companybannertitle { font-size: 43px; font-weight: normal; margin-bottom: -15px; position: relative; top: -11px; width: 580px; height: 60px; overflow: hidden; left: -3px; }
 .companybannertiletitle { font-size: 36px; height: 48px; top: 0; left: -2px; margin-bottom: 0; overflow: hidden; width: 450px; }
@@ -382,37 +382,45 @@ a:focus, a:hover { cursor: pointer; }
     margin-bottom: 20px;
     padding: 30px;
 }
-.content-initial {
-    margin-top: 20px;
+.header-initial {
+    margin-top: 15px;
 }
 .header-content {
 /*    position: absolute; */
     font-family: 'Ubuntu', sans-serif;
+    /*font-size: 14px;*/
     font-size: 22px;
+    /*font-weight: 400;*/
     font-weight: 300;
     color: #5b6773;
     /*width: 635px;*/
-    width: 626px;
+    width: 627px;
     /*background: #ffffff url(../img/header-content-bck.png) no-repeat right top;*/
     background: #ffffff url(../img/header-content-bck.png) no-repeat left top;
     background-image: url(../img/header-content-bck.png);
     /*left: 0px;*/
-    left: -30px;
+    /*left: -30px;*/
     height: 30px;
+    /*line-height: 22px;*/
     line-height: 22px;
     position: relative;
+    margin-bottom: 15px;
 }
 .header-title {
     position: relative;
     margin-left: 20px;
     top: 4px;
+    padding-left: 10px;
+}
+.header-content-right {
+    width: 302px;
 }
 .more {
     position: relative;
     max-width: 250px;
     margin-bottom: 50px;
     margin-top: 10px;
-    height: 30px;
+    height: 29px;
     border: 1px;
     border-style: solid;
     border-color: #7EDAEF;
@@ -433,7 +441,9 @@ a:focus, a:hover { cursor: pointer; }
 }
 .more-header {
     margin-top: 0;
-    top: -31px;
+}
+.existing-listing-wrapper {
+    height: 62px;
 }
 
 /* icons */
@@ -966,7 +976,7 @@ transition: height 300ms;
 width: 302px;
 border: 1px solid #cccccc;
 background: none;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
 overflow: hidden;
           min-height: 21px;
 }
