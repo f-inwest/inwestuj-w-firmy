@@ -20,9 +20,11 @@ include(banner.m4)
 </div>
 
 <div class="span-24 initialhidden wrapper">
-    <div class="initialhidden" id="existinglisting">
-        <div class="addlistingtitle">You have a pending listing</div>
-        <div class="addlistingbutton investbutton" id="editlisting">EDIT LISTING</div>
+    <div class="initialhidden content-sub content-initial" id="existinglisting">
+        <div class="header-content">
+            <span class="header-title">@lang_pending_listing_msg@</span>
+        </div>
+        <a class="more more-header">@lang_edit_listing@</a>
     </div>
 </div>
 

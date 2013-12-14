@@ -96,7 +96,6 @@ a:focus, a:hover { cursor: pointer; }
 .hoverlink:hover { cursor: pointer; }
 .inputbutton:hover { cursor: pointer; }
 .smallinputbutton:hover { cursor: pointer; }
-.investbutton:hover { cursor: pointer; }
 .sideboxbutton:hover { cursor: pointer; }
 .nohover:hover { cursor: default; }
 
@@ -247,7 +246,6 @@ a:focus, a:hover { cursor: pointer; }
     padding: 5px 40px 5px 40px;
     color: #fefefe !important;
     background: url(../img/slide_button.png) right no-repeat;
-
 }
 .welcomevideo { position: relative; }
 .welcomevideocontainer { margin: 10px 0; }
@@ -375,6 +373,68 @@ a:focus, a:hover { cursor: pointer; }
 .halftiledays, .halftiledaystext { top: 2px; }
 .halftiletype, .halftiletypetext { top: 118px; }
 .halftiletypetext { font-size: 16px; }
+
+/* content styles */
+.content-sub {
+    background: #FFFFFF;
+    width: 566px;
+    /*width: 575px;*/
+    margin-bottom: 20px;
+    padding: 30px;
+}
+.content-initial {
+    margin-top: 20px;
+}
+.header-content {
+/*    position: absolute; */
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: #5b6773;
+    /*width: 635px;*/
+    width: 626px;
+    /*background: #ffffff url(../img/header-content-bck.png) no-repeat right top;*/
+    background: #ffffff url(../img/header-content-bck.png) no-repeat left top;
+    background-image: url(../img/header-content-bck.png);
+    /*left: 0px;*/
+    left: -30px;
+    height: 30px;
+    line-height: 22px;
+    position: relative;
+}
+.header-title {
+    position: relative;
+    margin-left: 20px;
+    top: 4px;
+}
+.more {
+    position: relative;
+    max-width: 250px;
+    margin-bottom: 50px;
+    margin-top: 10px;
+    height: 30px;
+    border: 1px;
+    border-style: solid;
+    border-color: #7EDAEF;
+    text-decoration: none;
+    display: block;
+    color: #7EDAEF;
+    line-height: 30px;
+    padding: 0 10px 0 10px;
+    text-align: center;
+    float: right;
+    transition: background 0.5s, color 0.5s;
+    background: #ffffff;
+}
+.more:hover, .more:active {
+    transition: background 0.5s, color 0.5s;
+    background: #7EDAEF;
+    color: #ffffff;
+}
+.more-header {
+    margin-top: 0;
+    top: -31px;
+}
 
 /* icons */
 .facebook { background-position: 0px 0px; }
@@ -1516,23 +1576,6 @@ transition: left 500ms;
 .picblank { background: none; }
 
 /* tim improvements */
-.investbutton {
-background: #87c442;
-border: 1px solid #70b030 !important;
-color: #fff;
-       margin-top: 35px;
-       font-size: 30px;
-       padding-top: 10px;
-       text-align: center;
-       font-weight: 900;
-       padding-bottom: 10px;
-}
-.investbuttonsmall {
-        font-size: 14px;
-        margin-top: 0;
-        font-weight: 700;
-padding: 14px 0 10px;
-}
 .boxtitleside {
         margin-bottom: 2px;
         padding-left: 15px;
@@ -1542,34 +1585,6 @@ clear: both;
 position: relative;
 }
 /* tim part two */
-.investbutton {
-        border-top: 1px solid #70b030;
-background: #87c442;
-background: -webkit-gradient(linear, left top, left bottom, from(#579412), to(#87c442));
-background: -webkit-linear-gradient(top, #579412, #87c442);
-background: -moz-linear-gradient(top, #579412, #87c442);
-background: -ms-linear-gradient(top, #579412, #87c442);
-background: -o-linear-gradient(top, #579412, #87c442);
-            -webkit-border-radius: 2px;
-            -moz-border-radius: 2px;
-            border-radius: 2px;
-            -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
-            -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
-            box-shadow: rgba(0,0,0,1) 0 1px 0;
-            text-shadow: rgba(0,0,0,.4) 0 1px 0;
-color: #f8f8f8;
-       text-decoration: none;
-       vertical-align: middle;
-}
-.investbutton:hover {
-        border-top-color: #377402;
-background: #377402;
-color: #ccc;
-}
-.investbutton:active {
-        border-top-color: #276400;
-background: #276400;
-}
 /* tim fonts */
 /*
 .companybannertitle, .companybannertiletitle, .welcometitle, .bannertextsmall {
@@ -1794,11 +1809,40 @@ width: 292px;
     margin-top: -10px;
     margin-bottom: 35px;
 }
+/*
 .addlistingbutton {
     text-align: center;
     width: 300px;
     margin: 20px auto;
+    height: 40px;
+    color: #fefefe !important;
+    background: url(../img/slide_button.png) right no-repeat;
 }
+*/
+.investbutton, .investbuttonsmall {
+    display: block;
+    background: #FFFFFF;
+    border: 1px;
+    border-style: solid;
+    border-color: #7edaef;
+    padding-left: 20px;
+    color: #7edaef;
+    text-decoration: none;
+    height: 30px;
+    line-height: 30px;
+    transition: background 0.5s, color 0.5s
+    text-align: center;
+    padding-left: 0px !important;
+}
+/*
+.investbuttonsmall {
+    font-size: 14px;
+    margin-top: 0;
+    font-weight: 700;
+    padding: 14px 0 10px;
+}
+*/
+.investbutton:hover { cursor: pointer; }
 .addlistingmsg {
     text-align: center;
     font-size: 30px;
