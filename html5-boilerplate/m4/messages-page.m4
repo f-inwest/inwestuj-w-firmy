@@ -19,7 +19,9 @@ include(header.m4)
 
 <div class="span-24 initialhidden wrapper">
 
-    <div class="boxtitle smokegrey clear">YOUR CONVERSATION WITH <span id="from_user_nickname_upper"></span></div>
+    <div class="header-content">
+        <div class="header-title">@lang_your_conversations_with@ <span id="from_user_nickname_upper"></span></div>
+    </div>
     <div class="boxpanel boxpanelfull" id="messagelistparent">
 
         <div class="commentline addcommentline initialhidden" id="messagesend">

@@ -39,17 +39,23 @@ include(banner.m4)
 
         <div class="span-16">
             <div id="edited_listing_wrapper" class="initialhidden">
-                <div class="boxtitle smokegrey">YOUR PENDING LISTING</div>
+                <div class="header-content">
+                    <div class="header-title">@lang_your_pending_listing@</div>
+                </div>
                 <div id="edited_listing"></div>
             </div>
 
              <div id="active_listings_wrapper" class="initialhidden">
-                <div class="boxtitle smokegrey">YOUR ACTIVE LISTINGS</div>
+                <div class="header-content">
+                    <div class="header-title">@lang_your_active_listings@</div>
+                </div>
                 <div id="active_listings"></div>
             </div>
 
             <div id="monitored_listings_wrapper" class="initialhidden">
-                <div class="boxtitle smokegrey">WATCHING</div>
+                <div class="header-content">
+                    <div class="header-title">@lang_watching@</div>
+                </div>
                 <div id="monitored_listings"></div>
             </div>
 

@@ -568,25 +568,24 @@ pl.implement(MicroListingClass, {
 
 function CompanyFormatClass() {}
 CompanyFormatClass.prototype.daysText = function(listing) {
-    var daystext = '',
-        daysago;
+    var daystext = '';
     if (listing.status === 'new') {
-        daystext = 'Awaiting submission';
+        daystext = '@lang_awaiting_submission@';
     }
     else if (listing.status === 'posted') {
-        daystext = 'Awaiting approval';
+        daystext = '@lang_awaiting_approval@';
     }
-    else if (listing.status === 'active' && listing.asked_fund) {
-        daystext = 'Bidding open';
-    }
-    else if (listing.status === 'active' && !listing.asked_fund && listing.listing_date) {
-        daysago = DateClass.prototype.daysBetween(DateClass.prototype.dateFromYYYYMMDD(listing.listing_date), DateClass.prototype.todayDate());
-        daystext = daysago === 0 ? 'Listed today' : 'Listed ' + daysago + ' day' + (daysago > 1 ? 's' : '') + ' ago';
+    else if (listing.status === 'active' && listing.listing_date) {
+        daystext = CompanyFormatClass.prototype.agoText(listing);
     }
     else {
         daystext = SafeStringClass.prototype.ucfirst(listing.status);
     }
     return daystext;
+};
+CompanyFormatClass.prototype.agoText = function(listing) {
+    var daysago = DateClass.prototype.daysBetween(DateClass.prototype.dateFromYYYYMMDD(listing.listing_date), DateClass.prototype.todayDate());
+    return daysago === 0 ? '@lang_today@' : daysago + ' ' + (daysago === 1 ? '@lang_day_ago@' : '@lang_days_ago@');
 };
 CompanyFormatClass.prototype.suggestedText = function(listing) {
     var suggested_text = '',
@@ -595,23 +594,33 @@ CompanyFormatClass.prototype.suggestedText = function(listing) {
     if (listing.asked_fund && listing.suggested_amt && listing.suggested_pct) {
         suggested_amt = CurrencyClass.prototype.format(listing.suggested_amt);
         suggested_pct = PercentClass.prototype.format(listing.suggested_pct) + '%';
-        suggested_text = suggested_amt + ' for ' + suggested_pct;
+        suggested_text = suggested_amt + ' @ ' + suggested_pct;
     }
     else {
-        suggested_text = 'Not raising funds';
+        suggested_text = '@lang_not_raising_funds@';
     }
     return suggested_text;
 };
 CompanyFormatClass.prototype.financeLine = function(listing) {
     var finance_line = '';
     if (listing.asked_fund && listing.suggested_amt && listing.suggested_pct) {
-        finance_line = CompanyFormatClass.prototype.daysText(listing) + ' at ' + CompanyFormatClass.prototype.suggestedText(listing);
+        finance_line = CompanyFormatClass.prototype.daysText(listing) + ' @ ' + CompanyFormatClass.prototype.suggestedText(listing);
     }
     else {
         finance_line = CompanyFormatClass.prototype.daysText(listing);
     }
     return finance_line;
 };
+CompanyFormatClass.prototype.summaryLine = function(listing) {
+    var summary_line = '';
+    summary_line += listing.profile_username || 'anonymous';
+    summary_line += ' ~ ';
+    summary_line += CompanyFormatClass.prototype.suggestedText(listing);
+    summary_line += ' ~ ';
+    summary_line += CompanyFormatClass.prototype.daysText(listing);
+    return summary_line;
+};
+
 
 /* company list stuff follows */
 function CompanyTileClass(options) {
@@ -657,6 +666,7 @@ pl.implement(CompanyTileClass, {
         stagetext = this.stage && this.stage !== 'established' ? this.stage : '';
         typetext = this.type === 'application' ? this.type + ' ' + stagetext : (stagetext || 'company');
         this.catlinked = categorytext + platformprefix + platformtext + typetext;
+        this.summary = json.summary;
 
         addr = json.brief_address;
         this.brief_address = json.brief_address
@@ -677,6 +687,7 @@ pl.implement(CompanyTileClass, {
         this.categoryaddresstext = this.catlinked + this.addrlinked + profilelinked;
         this.suggested_text = CompanyFormatClass.prototype.suggestedText(json);
         this.finance_line = CompanyFormatClass.prototype.financeLine(json);
+        this.summary_line = CompanyFormatClass.prototype.summaryLine(json);
         this.mantra = json.mantra || 'No Mantra';
         this.mantraplussuggest = this.mantra + '<br/>' + this.suggested_text;
         this.url = '/company-page.html?id=' + json.listing_id;
@@ -744,13 +755,12 @@ pl.implement(CompanyTileClass, {
     <div class="companybannerlogo tileimg fulltileimg noimage hoverlink" style="' + this.imgStyle + '"></div>\
 ' + this.closeanchor + '\
 ' + this.openanchor + '\
-    <div class="companybannertitle companybannertiletitle ' + (this.name && this.name.length > 20 ? 'companybannertiletitlelong ' : '') + 'hoverlink">' + this.name + '</div>\
+    <div class="companybannertiletitle hoverlink">' + this.name + '</div>\
 ' + this.closeanchor + '\
-    <div class="companybannertextgrey companybannermapline">\
-        ' + this.categoryaddresstext + '\
+    <div class="companybannersummaryline">\
+        ' + this.summary_line + '\
     </div>\
-    <div class="companybannertextgrey">' + this.finance_line + '</div>\
-    <div class="companybannertextgrey companybannermantratile">' + this.mantra + '</div>\
+    <div class="companybannerdescription">' + this.summary + '</div>\
 </div>\
 ';
     },
@@ -866,10 +876,10 @@ pl.implement(CompanyListClass, {
             }
         }
         if (more_results_url) {
-            html += '<div class="showmore hoverlink" id="moreresults"><span class="initialhidden" id="moreresultsurl">' + more_results_url + '</span><span id="moreresultsmsg">More...</span></div>\n';
+            html += '<div class="header-content header-initial" id="moreresults"><span class="initialhidden" id="moreresultsurl">' + more_results_url + '</span><span id="moreresultmsg" class="more more-header initialhidden">@lang_see_all@</span></div>\n';
         }
         else if (seeall) {
-            html += '<div class="showmore"><a href="' + this.options.seeall + '">@lang_see_all@...</a></div>\n';
+            html += '<div class="header-content header-initial"><a href="' + this.options.seeall + '" class="more more-header">@lang_see_all@</a></div>\n';
         }
         pl('#'+this.options.companydiv).html(html);
         if (more_results_url) {
@@ -963,7 +973,7 @@ pl.implement(BaseCompanyListPageClass,{
     },
     loadPage: function(completeFunc) {
         var titleroot = (this.type === 'category' || this.type === 'location') ? this.val.toUpperCase() : this.type.toUpperCase(),
-            title = this.type === 'keyword' ? '@lang_search_results' : ((this.type === 'location') ? '@long_projects_in@' + ' ' + titleroot : titleroot + ' ' + '@lang_projects'),
+            title = this.type === 'keyword' ? '@lang_search_results@' : ((this.type === 'location') ? '@lang_projects_in@' + ' ' + titleroot : titleroot + ' ' + '@lang_projects@'),
             ajax;
         this.setListingSearch();
         ajax = new AjaxClass(this.url, 'companydiv', completeFunc);
@@ -1011,21 +1021,24 @@ pl.implement(ListClass, {
         return str.length > 1 ? str.substr(0,1).toUpperCase() + str.substr(1) : str.toUpperCase();
     },
     spreadOverOneCol: function(list, divcol1) {
-        var htmlCol1 = '',
+        var self = this,
+            htmlCol1 = '',
             i,
             item,
             name,
-            count,
+            value,
+            visibleName,
             itemurl;
         for (i = 0; i < list.length; i++) {
             item = list[i];
             name = item[0];
-            count = item[1];
-            itemurl = '/main-page.html?type=' + this.options.type + '&amp;val=' + encodeURIComponent(name);
+            value = item[1];
+            visibleName = self.options.type === 'category' ? value : name;
+            itemurl = '/main-page.html?type=' + self.options.type + '&amp;val=' + encodeURIComponent(name);
             htmlCol1 +=
                  '<a href="' + itemurl + '" class="hoverlink">'
                 +   '<li>'
-                +     '<span class="sideboxlistname last">' + name + '</span>'
+                +     '<span class="sideboxlistname last">' + visibleName + '</span>'
                 +   '</li>'
                 + '</a>';
         }

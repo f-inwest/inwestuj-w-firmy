@@ -22,7 +22,9 @@ include(header.m4)
 
 <div class="container">
 <div class="span-24 nearbywrapper">
-    <div class="boxtitle smokegrey" id="listingstitle">NEARBY LISTINGS</div>
+    <div class="header-content">
+        <div class="header-title" id="listingstitle">@lang_nearby_listings@</div>
+    </div>
 
     <div id="mappanel" class="boxpanel nearbypanel">
         <div id="map" class="nearbymap">

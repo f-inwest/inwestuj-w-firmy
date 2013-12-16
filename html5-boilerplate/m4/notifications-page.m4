@@ -22,7 +22,10 @@ include(header.m4)
 
     <div id="notificationmsg"></div>
 
-    <div class="boxtitle smokegrey clear">YOUR NOTIFICATIONS</div>
+    <div class="header-content">
+        <div class="header-title">@lang_your_notifications@</div>
+    </div>
+
     <div class="boxpanel boxpanelfull" id="notifylist">
     </div>
 

@@ -22,7 +22,9 @@ companybannermacro(`', `', `', `', `', `', `companynavselected')
 <div class="container initialhidden wrapper">
 
     <div class="span-24 initialhidden" id="qandaswrapper">
-        <div class="boxtitle smokegrey clear">QUESTIONS AND ANSWERS WITH THE OWNER</div>
+        <div class="header-content">
+            <div class="header-title">@lang_questions_and_answers_with_the_owner@</div>
+        </div>
         <div class="boxpanel boxpanelfull" id="qandalistparent">
 
             <div class="commentline addcommentline initialhidden" id="addqandabox">

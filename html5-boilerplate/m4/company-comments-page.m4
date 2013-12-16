@@ -22,7 +22,9 @@ companybannermacro(`', `', `', `', `', `companynavselected', `')
 <div class="container initialhidden wrapper">
 
     <div class="span-24 initialhidden" id="commentswrapper">
-        <div class="boxtitle smokegrey clear">PUBLIC COMMENTS</div>
+        <div class="header-content">
+            <div class="header-title">@lang_public_comments@</div>
+        </div>
         <div class="boxpanel boxpanelfull" id="commentlistparent">
 
             <div class="commentline addcommentline initialhidden" id="addcommentbox">

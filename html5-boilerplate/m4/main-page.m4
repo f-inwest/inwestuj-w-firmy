@@ -21,7 +21,9 @@ include(banner.m4)
 
 <!-- left column -->
 <div class="span-16">
-    <div class="boxtitle smokegrey" id="listingstitle"></div>
+    <div class="header-content">
+        <div class="header-title" id="listingstitle"></div>
+    </div>
     <div id="companydiv"></div>
 </div>
 <!-- end left column -->

@@ -335,6 +335,22 @@ a:focus, a:hover { cursor: pointer; }
     height: 60px;
     line-height: 19px;
 }
+.companybannersummaryline {
+    height: 21px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: #4DC6E1;
+}
+.companybannerdescription {
+    font-family: 'Ubuntu',sans-serif;
+    font-weight: 400;
+    color: #5b6773;
+    height: 100px;
+    overflow: hidden;
+    line-height: 20px;
+}
 .companybannerfollow { position: absolute; top: 0; right: 10px; }
 .companybannerfollowbtn { clear: both; float: right; margin-left: 10px !important; }
 .companybannersubmitbtn {
@@ -1155,7 +1171,22 @@ width: 302px;
 }
 .mapaddresstext { font-weight: bold; }
 .addresstext { color: #555; font-size: 12px; font-weight: normal; padding-bottom: 8px; padding-top: 8px; margin-left: 13px; }
-.showmore { float: right; margin-right: 10px; font-weight: bold; margin-bottom: 5px; margin-top: -5px; }
+.showmore {
+    float: right;
+    margin-right: 15px;
+    margin-bottom: 5px;
+    margin-top: -5px;
+    line-height: 30px;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration: none;
+    color: #fefefe;
+}
+.showmore a {
+    color: #fefefe;
+}
+
 .profilelistshowmore { padding-right: 165px; padding-top: 20px; }
 
 /* bids */
