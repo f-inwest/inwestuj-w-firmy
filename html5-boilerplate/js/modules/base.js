@@ -739,6 +739,7 @@ pl.implement(CompanyTileClass, {
     makeFullWidthHtml: function() {
         return '\
 <div class="' + this.companybannertileclass + ' last">\
+    <div class="companybannertitlemarker"></div>\
 ' + this.openanchor + '\
     <div class="companybannerlogo tileimg fulltileimg noimage hoverlink" style="' + this.imgStyle + '"></div>\
 ' + this.closeanchor + '\

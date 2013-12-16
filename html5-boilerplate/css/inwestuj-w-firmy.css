@@ -88,7 +88,7 @@ body { font-size: 16px; font-weight: normal; font-family: Ubuntu, sans-serif; fo
 /* link styles */
 a:link, a:visited {
     text-decoration: none;
-    color: #55a4f2;
+    /* color: #7edaef; */
 }
 a:focus, a:hover { cursor: pointer; }
 .headerrow a:hover { cursor: pointer; }
@@ -141,9 +141,8 @@ a:focus, a:hover { cursor: pointer; }
     .orderbookdate, .biddate, .investorbiddate, .lastdate
     { color: #666; }
 .darkblue
-    .tilecompany, .companyhalftitle, .companybannertextlink, .formlink, .inputbutton, .smallinputbutton, .footerlink, .loctextinp, .loctext, .showmore a,
-    .sideboxlistname
-    { color: #55a4f2; }
+    .tilecompany, .companyhalftitle, .companybannertextlink, .formlink, .inputbutton, .smallinputbutton, .footerlink, .loctextinp, .loctext, .showmore a
+    { color: #7edaef; }
 .companybannertitle
     { color: #444; }
 
@@ -284,18 +283,51 @@ a:focus, a:hover { cursor: pointer; }
 /* company banner styles */
 .companyheader { width: 100%; height: 150px; border-bottom: 1px solid #ccc; padding: 20px 0; }
 .companybanner { height: 150px; position: relative; }
-.companybannertile { height: 150px; width: 626px; position: relative; overflow: hidden; margin-bottom: 15px; }
+.companybannertile { height: 150px; width: 596px; position: relative; overflow: hidden; margin-bottom: 15px; padding: 15px; }
 .companybannertilenoborder { height:150px;overflow:hidden;position:relative;top:-9px; }
-.companybannertitle { font-size: 43px; font-weight: normal; margin-bottom: -15px; position: relative; top: -11px; width: 580px; height: 60px; overflow: hidden; left: -3px; }
-.companybannertiletitle { font-size: 36px; height: 48px; top: 0; left: -2px; margin-bottom: 0; overflow: hidden; width: 450px; }
-.companybannertitlelong { font-size: 24px; line-height: 24px; top: -1px; height: 49px; margin-bottom: 0; }
-.companybannertiletitlelong { font-size: 24px; line-height: 24px; top: 4px; height: 49px; }
+.companybannertitle {
+    font-size: 43px; font-weight: normal; margin-bottom: -15px; position: relative; top: -11px; width: 580px; height: 60px; overflow: hidden; left: -3px;
+}
+.companybannertiletitle {
+    height: 30px;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 435px;
+    margin-right: 0;
+    padding-right: 0;
+    background: #5B6773;
+    color: #fefefe;
+    line-height: 30px;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: 300;
+    font-size: 16px;
+}
+.companybannertitlemarker {
+    width: 15px;
+    height: 30px;
+    position: absolute;
+    left: 161px;
+    top: 15px;
+    background: #5B6773;
+}
+.companybannertitlelong { /* font-size: 24px; line-height: 24px; top: -1px; height: 49px; margin-bottom: 0; */ }
+.companybannertiletitlelong { /* font-size: 24px; line-height: 24px; top: 4px; height: 49px; */ }
 .companybannertext { font-size: 14px; font-weight: bold; }
 .companybannertextlink { font-size: 14px; margin-left: 4px; }
 .companybannerlink { float: left; margin-right: 5px; }
 .companybannertextgrey { font-size: 14px; width: 830px; }
-.companybannermapline { height: 21px; }
-.companybannerlogo { margin-top: 2px; width: 146px; height: 146px; margin-right: 10px; margin-left: 2px; float: left; margin-right: 20px; }
+.companybannermapline {
+    height: 21px;
+    font-family: 'Ubuntu', sans-serif;
+    size: 12px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #4DC6E1;
+}
+.companybannerlogo { margin-top: 0px; width: 146px; height: 146px; margin-left: 0px; float: left; margin-right: 15px; }
 .companybannermantra { position: absolute; font-size: 14px; width: 830px; bottom:3px; padding-bottom: 18px; left:158px; }
 .companybannermantratile {
     font-style: italic;
@@ -441,6 +473,7 @@ a:focus, a:hover { cursor: pointer; }
 }
 .more-header {
     margin-top: 0;
+    font-size: 16px;
 }
 .existing-listing-wrapper {
     height: 62px;
@@ -984,18 +1017,38 @@ overflow: hidden;
     min-height: 253px;
 }
 .frontsidebox {
-width: 287px;
-       padding-top: 8px;
-       padding-left: 15px;
-       padding-bottom: 8px;
+    width: 287px;
+    padding-top: 0px;
+    padding-left: 15px;
+    padding-bottom: 15px;
 }
 .sidebox p { margin: 5px 10px 10px 10px; text-indent: 0px; font-weight: normal; }
 .uploadbox p { margin: 5px 10px 10px 10px; text-indent: 0px; font-weight: normal; }
 .sideboxcol1 { width: 150px; float: left; margin-right: 0; }
 .sideboxcol2 { width: 150px; float: left; }
 .sideboxcolfull { width: 292px; float: left; margin-right: 10px; }
-.sideboxlist { list-style: none; list-style-position: inside; margin: 0; padding: 0; font-weight: bold; }
-.sideboxlist li { margin-left: 10px; text-indent: -10px; }
+.sideboxlist { list-style: none; list-style-position: inside; margin: 0; padding: 0; }
+/* .sideboxlist li { margin-left: 10px; text-indent: -10px; } */
+.sideboxlist li {
+    margin-left: 0px;
+    text-indent: 14px;
+    margin-top: 15px;
+    height: 29px;
+    border: 1px;
+    border-style: solid;
+    border-color: #7EDAEF;
+    text-decoration: none;
+    line-height: 30px;
+    margin-right: 19px;
+    color: #7edaef !important;
+    transition: background 0.5s, color 0.5s;
+    background: #ffffff !important;
+}
+.sideboxlist li:hover, .sideboxlist li:active {
+    transition: background 0.5s, color 0.5s;
+    background: #7EDAEF !important;
+    color: #ffffff !important;
+}
 .sideboxlistnum { font-size: 18px; line-height: 27px; clear: both; }
 .sideboxlistname { line-height: 27px; font-weight: normal; }
 .sideboxcompanylink { width: 298px; float: left; margin-left: 2px; }
@@ -1720,7 +1773,7 @@ width: 292px;
     top: 10px;
     left: 10px;
 }
-.profilelistusername { font-size: 18px; font-weight: bold; color: #55a4f2; }
+.profilelistusername { font-size: 18px; font-weight: bold; color: #7edaef; }
 .profilelistemail { padding-left: 10px; color: #666; }
 .profileliststatus { padding-left: 10px; color: #666; font-style: italic; }
 .profilelistadmin { padding-left: 10px; color: #666; font-weight: bold; }
@@ -1776,7 +1829,7 @@ width: 292px;
     margin-top: 20px;
     background: #e4e4e4;
     border: 1px solid #70b030;
-    color: #55a4f2;
+    color: #7edaef;
     width: 150px;
     height: 30px;
     font-size: 18px;
