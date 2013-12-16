@@ -23,7 +23,7 @@ public class DiscoverListingsVO extends BaseResultVO implements UserDataUpdatabl
 	@JsonProperty("monitored_listings") private List<ListingTileVO> monitoredListings;
 	@JsonProperty("users_listings") private List<ListingTileVO> usersListings;
 	@JsonProperty("edited_listing") private ListingVO editedListing;
-	@JsonProperty("categories") private Map<String, Integer> categories;
+	@JsonProperty("categories") private Map<String, String> categories;
 	@JsonProperty("top_locations") private Map<String, Integer> topLocations;
 	
 	public void updateUserData() {
@@ -38,10 +38,10 @@ public class DiscoverListingsVO extends BaseResultVO implements UserDataUpdatabl
 		UserMgmtFacade.instance().updateUserData(updatable);
 	}
 
-	public Map<String, Integer> getCategories() {
+	public Map<String, String> getCategories() {
 		return categories;
 	}
-	public void setCategories(Map<String, Integer> categories) {
+	public void setCategories(Map<String, String> categories) {
 		this.categories = categories;
 	}
 	public Map<String, Integer> getTopLocations() {

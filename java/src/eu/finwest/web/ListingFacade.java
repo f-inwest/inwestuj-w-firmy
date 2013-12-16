@@ -2159,13 +2159,13 @@ public class ListingFacade {
 		return result;
 	}
 
-	public Map<String, Integer> getTopCategories() {
+	public Map<String, String> getTopCategories() {
 		List<Category> categories = getDAO().getCategories();
 
-		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
+		Map<String, String> result = new LinkedHashMap<String, String>();
 		for (Category cat : categories) {
 			if (cat.count > 0) {
-				result.put(cat.name, cat.count);
+				result.put(cat.name, FrontController.getLangVersion() == LangVersion.EN ? cat.name : cat.namePl);
 			}
 		}
 		return result;

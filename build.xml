@@ -156,7 +156,7 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
   	  <length file="war/pl/error-page.html" length="10240" when="greater"/>
   	</condition>
   	<fail if="error-page-too-large-pl" message="Error page is too large! Check size of the file war/pl/error-page.html"/>
-  	</target>
+  </target>
 
   <target name="compile-java" depends="check-appengine-home, copyjars"
       description="Compiles Java source and copies other source files to the WAR.">

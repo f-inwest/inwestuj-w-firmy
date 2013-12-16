@@ -24,7 +24,7 @@ public class UserListingsVO extends BaseResultVO implements UserDataUpdatableCon
 	@JsonProperty("monitored_listings") private List<ListingTileVO> commentedListings;
 	@JsonProperty("edited_listing") private ListingVO editedListing;
 	@JsonProperty("notifications") private List<NotificationVO> notifications;
-	@JsonProperty("categories") private Map<String, Integer> categories;
+	@JsonProperty("categories") private Map<String, String> categories;
 	@JsonProperty("top_locations") private Map<String, Integer> topLocations;
 	@JsonProperty("admin_posted_listings") private List<ListingTileVO> adminPostedListings;
 	@JsonProperty("admin_frozen_listings") private List<ListingTileVO> adminFrozenListings;
@@ -43,10 +43,10 @@ public class UserListingsVO extends BaseResultVO implements UserDataUpdatableCon
 		UserMgmtFacade.instance().updateUserData(updatable);
 	}
 
-	public Map<String, Integer> getCategories() {
+	public Map<String, String> getCategories() {
 		return categories;
 	}
-	public void setCategories(Map<String, Integer> categories) {
+	public void setCategories(Map<String, String> categories) {
 		this.categories = categories;
 	}
 	public Map<String, Integer> getTopLocations() {

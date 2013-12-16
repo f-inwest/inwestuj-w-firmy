@@ -22,7 +22,7 @@ public class ListingListVO extends BaseResultVO implements UserDataUpdatableCont
 	@JsonProperty("notifications") private List<NotificationVO> notifications;
 	@JsonProperty("listings_props")	private ListPropertiesVO listingsProperties;
 	@JsonProperty("profile") private UserBasicVO user;
-	@JsonProperty("categories") private Map<String, Integer> categories;
+	@JsonProperty("categories") private Map<String, String> categories;
 	@JsonProperty("top_locations") private Map<String, Integer> topLocations;
 
 	public void updateUserData() {
@@ -51,10 +51,10 @@ public class ListingListVO extends BaseResultVO implements UserDataUpdatableCont
 	public UserBasicVO getUser() {
 		return user;
 	}
-	public Map<String, Integer> getCategories() {
+	public Map<String, String> getCategories() {
 		return categories;
 	}
-	public void setCategories(Map<String, Integer> categories) {
+	public void setCategories(Map<String, String> categories) {
 		this.categories = categories;
 	}
 	public Map<String, Integer> getTopLocations() {
