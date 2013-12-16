@@ -10,23 +10,28 @@
     -->
 
     <div class="initialhidden" id="categorywrapper">
-    <div class="boxtitle boxtitleside">@lang_categories@</div>
-    <div class="sidebox frontsidebox categorysidebox">
-        <span class="attention" id="categorymsg"></span>
-        <span class="sideboxcolfull clear">
-            <ul class="sideboxlist" id="categorydivcol1"></ul>
-        </span>
-    </div>
+        <div class="header-content header-content-right">
+            <div class="header-title">@lang_categories@</div>
+        </div>
+        <div class="sidebox frontsidebox categorysidebox">
+            <span class="attention" id="categorymsg"></span>
+            <span class="sideboxcolfull clear">
+                <ul class="sideboxlist" id="categorydivcol1"></ul>
+            </span>
+        </div>
     </div>
     
     <div class="initialhidden" id="locationwrapper"> 
-    <div class="boxtitle boxtitleside">@lang_locations@</div>
-    <div class="sidebox frontsidebox">
-        <span class="attention" id="locationmsg"></span>
-        <span class="sideboxcolfull clear">
-            <ul class="sideboxlist" id="locationdivcol1"></ul>
-        </span>
+        <div class="header-content header-content-right">
+            <div class="header-title">@lang_locations@</div>
+        </div>
+        <div class="sidebox frontsidebox">
+            <span class="attention" id="locationmsg"></span>
+            <span class="sideboxcolfull clear">
+                <ul class="sideboxlist" id="locationdivcol1"></ul>
+            </span>
+        </div>
     </div>
-    </div>
+
 </div> <!-- end right column -->
 '

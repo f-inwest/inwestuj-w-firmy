@@ -19,22 +19,28 @@ include(banner.m4)
     <div class="preloadericon"></div>
 </div>
 
-<div class="span-24 initialhidden wrapper">
-    <div class="initialhidden" id="existinglisting">
-        <div class="addlistingtitle">You have a pending listing</div>
-        <div class="addlistingbutton investbutton" id="editlisting">EDIT LISTING</div>
+<div class="span-24 initialhidden wrapper existing-listing-wrapper">
+    <div class="header-content header-initial id="existinglisting">
+        <span class="header-title">@lang_pending_listing_msg@</span>
+        <a class="more more-header" id="editlisting">@lang_edit_listing@</a>
     </div>
 </div>
 
 <div class="span-16 initialhidden wrapper">
-    <div class="boxtitle">@lang_top_listings@</div>
+    <div class="header-content">
+        <div class="header-title">@lang_top_listings@</div>
+    </div>
     <div id="top_listings"></div>
 
-    <div class="boxtitle">@lang_just_listed@</div>
+    <div class="header-content">
+        <div class="header-title">@lang_just_listed@</div>
+    </div>
     <div id="latest_listings"></div>
 
     <div id="monitored_listings_wrapper" class="initialhidden">
-        <div class="boxtitle">@lang_watching@</div>
+        <div class="header-content">
+            <div class="header-title">@lang_watching@</div>
+        </div>
         <div id="monitored_listings"></div>
     </div>
  </div> 
