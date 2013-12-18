@@ -26,26 +26,37 @@ body.nearby-page > #wrap > #main > div.container > div.nearbywrapper { height: 1
 * html .clearfix { height: 1%; }
 .clearfix { display: block; }
 .footercontainer {
-    background: #ddd;
     border-top: 1px dashed #ccc;
-    height: 210px;
+    height: 400px;
+    position: relative;
+    background: #ffffff url(../img/footer-bck-3.png) no-repeat right top;
+    background-position: 50% 50%;
 }
 .footercol {
     color: #444 !important;
     font-size: 14px;
-    height: 160px;
-    padding-top: 20px;
+    height: 200px;
+    padding-top: 40px;
     width: 200px;
 }
 .footercol a { display: block; }
 .footertext { position: relative; font-weight: bold; font-size: 12px; top: 5px; }
 .footerlink {
     display: block;
-    font-size: 14px;
-    font-weight: normal;
     margin-top: 5px;
+    text-decoration: none;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: #5b6773;
 }
-.footerlinkheader { margin-bottom: 10px; }
+.footerlinkheader {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    color: #00B3CC;
+    margin-bottom: 10px;
+}
 .footericon {
     float: left;
     width: 32px;
@@ -55,17 +66,43 @@ body.nearby-page > #wrap > #main > div.container > div.nearbywrapper { height: 1
     margin-bottom: 10px;
 }
 .footericonlabel {
-    float: left;
-    padding-top: 4px;
-    font-weight: normal;
+    text-decoration: none;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: #5b6773;
 }
 .footericonlink {
     display: block;
     font-size: 14px;
     font-weight: normal;
-    height: 32px;
-    margin-bottom: 10px;
+    margin-top: 5px;
 }
+.footercopyright {
+    margin-top: 95px;
+    text-decoration: none;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: #5b6773;
+    width: 280px;
+    overflow-y: visible;
+}
+.stopka-ue-poland {
+    margin-top: 75px;
+    width: 120px;
+    height: 60px;
+    background: url(../img/stopka-ue-poland.png) no-repeat;
+}
+.stopka-ue-eu {
+    margin-top: 75px;
+    width: 140px;
+    height: 60px;
+    background: url(../img/stopka-ue-eu.png) no-repeat;
+}
+
+
+
 .copyrighttext { font-size: 12px; color: #130f30 !important; }
 .normal { color: #666 !important; }
 .successful { color: #129906 !important; }
@@ -141,7 +178,7 @@ a:focus, a:hover { cursor: pointer; }
     .orderbookdate, .biddate, .investorbiddate, .lastdate
     { color: #666; }
 .darkblue
-    .tilecompany, .companyhalftitle, .companybannertextlink, .formlink, .inputbutton, .smallinputbutton, .footerlink, .loctextinp, .loctext, .showmore a
+    .tilecompany, .companyhalftitle, .companybannertextlink, .formlink, .inputbutton, .smallinputbutton, .loctextinp, .loctext, .showmore a
     { color: #7edaef; }
 .companybannertitle
     { color: #444; }
