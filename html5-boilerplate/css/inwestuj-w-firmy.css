@@ -190,7 +190,29 @@ a:focus, a:hover { cursor: pointer; }
 .header { width: 100%; height: 150px; background: #fefefe; }
 .headerrow { height: 150px; }
 .headerrowcenter { margin-left: 10px; }
+.headerrowlogin {
+    color: #fefefe;
+    background: url('../img/tlo-menu.png') no-repeat;
+    width: 105px;
+    height: 40px;
+    margin-left: -15px;
+    margin-top: 30px;
+    margin-right: 140px;
+}
+.headerrowlogintext {
+    display: block;
+    margin-top: 9px;
+    margin-left: 15px;
+}
+.headerrowlogintext:hover {
+    color: #eefece !important;
+    transition: color .25s;
+}
 .headertext, .headerlink { position: relative; float: left; font-size: 16px; padding: 39px 10px 0 10px;  }
+.headerlink:hover {
+    color: #eefece !important;
+    transition: color .25s;
+}
 .headerlinknoborder { border-left: none; }
 .headerlinkright { border-left: none; padding-left: 0; padding-right: 0; }
 .headerlogoimg { padding-top: 24px; }
@@ -252,6 +274,10 @@ a:focus, a:hover { cursor: pointer; }
     -o-transform: rotate(-90deg);
     filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 }
+.welcomeverticalbar:hover {
+    color: #eefece !important;
+    transition: color .25s;
+}
 .welcomeverticalbar2 {
     top: 130px;
 }
@@ -282,6 +308,10 @@ a:focus, a:hover { cursor: pointer; }
     padding: 5px 40px 5px 40px;
     color: #fefefe !important;
     background: url(../img/slide_button.png) right no-repeat;
+}
+.welcomelink:hover {
+    color: #eefece !important;
+    transition: color .25s;
 }
 .welcomevideo { position: relative; }
 .welcomevideocontainer { margin: 10px 0; }
@@ -341,6 +371,10 @@ a:focus, a:hover { cursor: pointer; }
     font-family: 'Ubuntu', sans-serif;
     font-weight: 300;
     font-size: 16px;
+}
+.companybannertiletitle:hover {
+    color: #eefece !important;
+    transition: color .25s;
 }
 .companybannertitlemarker {
     width: 15px;
@@ -516,11 +550,11 @@ a:focus, a:hover { cursor: pointer; }
     padding: 0 10px 0 10px;
     text-align: center;
     float: right;
-    transition: background 0.5s, color 0.5s;
+    transition: background 0.25s, color 0.25s;
     background: #ffffff;
 }
 .more:hover, .more:active {
-    transition: background 0.5s, color 0.5s;
+    transition: background 0.25s, color 0.25s;
     background: #7EDAEF;
     color: #ffffff;
 }
@@ -1094,11 +1128,11 @@ overflow: hidden;
     line-height: 30px;
     margin-right: 19px;
     color: #7edaef !important;
-    transition: background 0.5s, color 0.5s;
+    transition: background 0.25s, color 0.25s;
     background: #ffffff !important;
 }
 .sideboxlist li:hover, .sideboxlist li:active {
-    transition: background 0.5s, color 0.5s;
+    transition: background 0.25s, color 0.25s;
     background: #7EDAEF !important;
     color: #ffffff !important;
 }
@@ -1961,7 +1995,7 @@ width: 292px;
     text-decoration: none;
     height: 30px;
     line-height: 30px;
-    transition: background 0.5s, color 0.5s
+    transition: background 0.25s, color 0.25s
     text-align: center;
     padding-left: 0px !important;
 }

@@ -11,17 +11,15 @@
       <a href="nearby-page.html"><span class="headerlink"><span class="hoverlink">@lang_nearby@</span></span></a>
       <a href="add-listing-page.html"><span class="headerlink"><span class="hoverlink">@lang_add@</span></span></a>
     </div>
-
-    <div class="span-6 headerrow headersearchrow">
-        <form id="searchform" action="/main-page.html">
-            <input type="hidden" name="type" value="keyword"></input>
-            <input type="image" class="searchbutton" alt="search" width="200px" height="42px" title="" src="/img/lupa.png" ></input>
-            <input type="text" class="text inputtext searchtext" name="searchtext" id="searchtext" value=""></input>
-        </form>
+    <a href="login-page.html">
+    <div class="span-2 headerrow headerrowlogin last initialhidden" id="headernotloggedin">
+      <span class="headerrowlogintext"><span class="hoverlink">@lang_signin@</span></span>
     </div>
-
-    <!-- not logged in -->
+    </a>
+    <!-- not logged in
     <div class="span-6 last loginspan headerrow initialhidden" id="headernotloggedin">
+      <a href="add-listing-page.html"><span class="headerlink"><span class="hoverlink">@lang_add@</span></span></a>
+
         <div>
             <a href="/login-page.html">
                 <span class="headerlink headerlinkright">@lang_signin@</span>
@@ -36,6 +34,15 @@
                 <div class="headericon headerfbsignin"></div>
             </a>
         </div>
+    </div>
+    -->
+
+    <div class="span-6 headerrow headersearchrow">
+        <form id="searchform" action="/main-page.html">
+            <input type="hidden" name="type" value="keyword"></input>
+            <input type="image" class="searchbutton" alt="search" width="200px" height="42px" title="" src="/img/lupa.png" ></input>
+            <input type="text" class="text inputtext searchtext" name="searchtext" id="searchtext" value=""></input>
+        </form>
     </div>
 
     <!-- logged in -->
