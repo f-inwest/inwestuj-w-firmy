@@ -429,6 +429,18 @@ pl.implement(HeaderClass, {
         else {
             this.setLoggedOut(login_url, twitter_login_url, fb_login_url);
         }
+        pl('#login').bind('click', function() {
+            pl('#login').attr({'value': ''});
+        });
+        pl('#passw').bind('click', function() {
+            pl('#passw').attr({'value': ''});
+        });
+        pl('#headerloginlink').bind('click', function() {
+            pl('#light, #fade').show();
+        });
+        pl('#login-close-box, #fade').bind('click', function() {
+           pl('#light, #fade').hide();
+        });
     },
     setLoggedIn: function(profile, logout_url) {
         var num_notifications = profile.num_notifications || 0,
@@ -458,19 +470,19 @@ pl.implement(HeaderClass, {
         pl('#headerloggedin').show();
     },
     setLoggedOut: function(login_url, twitter_login_url, fb_login_url) {
-        if (login_url) {
+        //if (login_url) {
             pl('#loginlink').attr({href: login_url});
-            if (twitter_login_url) {
+            //if (twitter_login_url) {
                 pl('#twitter_loginlink').attr({href: twitter_login_url}).show();
-            } else {
-                pl('#twitter_loginlink').hide();
-            }
-            if (fb_login_url) {
+            //} else {
+            //    pl('#twitter_loginlink').hide();
+            //}
+            //if (fb_login_url) {
                 pl('#fb_loginlink').attr({href: fb_login_url}).show();
-            } else {
-                pl('#fb_loginlink').hide();
-            }
-        }
+            //} else {
+            //    pl('#fb_loginlink').hide();
+            //}
+        //}
         pl('#headernotloggedin').show();
     }
 });
