@@ -89,6 +89,8 @@ public class Listing extends BaseObject<Listing> {
 	public String platform;
 	public Stage stage = Stage.STARTUP;
 	
+	@Indexed public String campaign;
+	
 	/** Notes stored by system */
 	public String notes;
 	

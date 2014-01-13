@@ -24,6 +24,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 
 import eu.finwest.dao.MessageObjectifyDatastoreDAO;
 import eu.finwest.dao.ObjectifyDatastoreDAO;
+import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingDoc;
 import eu.finwest.datamodel.Monitor;
@@ -67,6 +68,7 @@ public class HelloServlet extends HttpServlet {
 	}
 
 	DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy/MM/dd HH:mm");
+	DateTimeFormatter fmt2 = DateTimeFormat.forPattern("yyyyMMddHHmm");
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
@@ -109,8 +111,7 @@ public class HelloServlet extends HttpServlet {
 //			}
 			out.println("<a href=\"/setup/\">Setup page</a></p>");
 
-			ListPropertiesVO listProperties = new ListPropertiesVO();
-			listProperties.setMaxResults(1);
+			ListPropertiesVO listProperties = new ListPropertiesVO(1);
 			List<Listing> listings = datastore.getAllListings();
 			Listing topListing = listings != null ? listings.get(0) : new Listing();
 
@@ -132,6 +133,19 @@ public class HelloServlet extends HttpServlet {
 			out.println("<form method=\"POST\" action=\"/user/request_dragon/.json\"><input type=\"submit\" value=\"Request Dragon badge for " + currentUser.getEmail() + "\"/></form>");
 			out.println("<form method=\"POST\" action=\"/user/promote_to_dragon/.json\"><textarea name=\"id\" rows=\"1\" cols=\"50\">"
 					+ currentUser.getId() + "</textarea><input type=\"submit\" value=\"Promote user to Dragon\"/></form>");
+			
+			for (Campaign camp : datastore.getUserCampaigns(currentUser.toKeyId(), new ListPropertiesVO(10))) {
+				out.println("<p style=\"background: none repeat scroll 0% 0% rgb(220, 220, 220);\">");
+				out.println("" + camp.subdomain + " (" + camp.name + ") active from " + fmt.print(camp.activeFrom.getTime()) + " to " + fmt.print(camp.activeTo.getTime()));
+				out.println("</p>");
+				out.println("<form method=\"POST\" action=\"/user/store_campaign/.json\"><textarea name=\"campaign\" rows=\"3\" cols=\"120\">"
+							+ "{\"subdomain\":\"" + camp.subdomain + "\", \"name\":\"" + camp.name + "\", \"description\":\"" + camp.description
+							+ "\", \"comment\":\"" + camp.comment
+							+ "\", \"active_from\":\"" + fmt.print(camp.activeFrom.getTime()) + "\", \"active_to\":\"" + fmt.print(camp.activeTo.getTime())
+							+ "\", \"public_browsing\":\"" + camp.publicBrowsing + "\", \"admins\":\"" + camp.admins
+							+ "\", \"allowed_languages\":\"" + camp.allowedLanguage + "\"}"
+							+ "</textarea><input type=\"submit\" value=\"Update campaign " + camp.subdomain + "\"/></form>");
+			}
 
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Listings API:</p>");
 			out.println("<a href=\"/listings/discover/.json\">Discover listings</a><br/>");

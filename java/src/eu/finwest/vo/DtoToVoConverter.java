@@ -13,6 +13,7 @@ import com.googlecode.objectify.Key;
 
 import eu.finwest.datamodel.Bid;
 import eu.finwest.datamodel.BidUser;
+import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Comment;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingDoc;
@@ -190,6 +191,8 @@ public class DtoToVoConverter {
 		listing.setLongitude(listingDTO.longitude);
 
 		listing.setBriefAddress(listingDTO.briefAddress);
+		
+		listing.setCampaign(listingDTO.campaign);
 
 		// calculating days left and days ago
 		if (listingDTO.listedOn != null) {
@@ -774,6 +777,38 @@ public class DtoToVoConverter {
     		listingDTO.city = listingDTO.city.toLowerCase();
 		}
 		listingDTO.briefAddress = briefAddress;
+	}
+
+	public static CampaignVO convert(Campaign campaign) {
+		if (campaign == null) {
+			return null;
+		}
+		CampaignVO campaignVO = new CampaignVO();
+		campaignVO.setId(campaign.id != null ? new Key<Campaign>(Campaign.class, campaign.id).getString() : "");
+		campaignVO.setActiveFrom(campaign.activeFrom);
+		campaignVO.setActiveTo(campaign.activeTo);
+		campaignVO.setAdmins(campaign.admins);
+		campaignVO.setAllowedLanguage(campaign.allowedLanguage.toString());
+		campaignVO.setComment(campaign.comment);
+		campaignVO.setCreator(campaign.creatorName);
+		campaignVO.setCreated(campaign.created);
+		campaignVO.setDescription(campaign.description);
+		campaignVO.setName(campaign.name);
+		campaignVO.setPublicBrowsing(campaign.publicBrowsing);
+		campaignVO.setSubdomain(campaign.subdomain);
+		return campaignVO;
+	}
+
+	public static List<CampaignVO> convertCampaigns(List<Campaign> userCampaignsDto) {
+		if (userCampaignsDto == null) {
+			return null;
+		}
+		List<CampaignVO> campaignVoList = new ArrayList<CampaignVO>();
+		for (Campaign campaignDTO : userCampaignsDto) {
+			CampaignVO campaignVO = convert(campaignDTO);
+			campaignVoList.add(campaignVO);
+		}
+		return campaignVoList;
 	}
 
 }

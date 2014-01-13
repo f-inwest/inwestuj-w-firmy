@@ -16,6 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import eu.finwest.dao.ObjectifyDatastoreDAO;
+import eu.finwest.datamodel.Campaign;
+import eu.finwest.vo.CampaignVO;
+import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.web.controllers.CommentController;
 import eu.finwest.web.controllers.CronTaskController;
 import eu.finwest.web.controllers.FileController;
@@ -40,6 +44,7 @@ public class FrontController extends HttpServlet {
 	private static final String LANGUAGE_COOKIE = "SELECTED_LANGUAGE";
 	
 	private static final ThreadLocal<LangVersion> langVersion = new ThreadLocal<LangVersion>();
+	private static final ThreadLocal<CampaignVO> campaign = new ThreadLocal<CampaignVO>();
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -59,6 +64,7 @@ public class FrontController extends HttpServlet {
 		
 		try {
 			langVersion.set(getVersionFolder(request, response));
+			campaign.set(getCampaign(request));
 	
 			ModelDrivenController controller = null;
 			HttpHeaders headers = null;
@@ -233,7 +239,40 @@ public class FrontController extends HttpServlet {
 		}
 	}
 	
+	private CampaignVO getCampaign(HttpServletRequest request) {
+		String nameParts[] = request.getServerName().split("\\.");
+		String campaignName = null;
+		if (nameParts.length <= 1) {
+			// subdomain is not provided
+		} else if ("localhost".equals(nameParts[nameParts.length - 1])) {
+			// accessed campaign.localhost
+			campaignName = nameParts[nameParts.length - 2];			
+		} else {
+			if (nameParts.length == 2) {
+				// accessed inwestujwfirmy.pl
+			} else {
+				// accessed campaign.inwestujwfirmy.pl
+				campaignName = nameParts[nameParts.length - 3];
+			}
+		}
+		if ("www".equals(campaignName)) {
+			campaignName = null;
+		}
+		if (campaignName != null) {
+			Campaign campaign = ObjectifyDatastoreDAO.getInstance().getCampaignByDomain(campaignName);
+			log.log(Level.INFO, "CampaignName: " + campaignName + ", campaign: " + campaign + " " + request.getServerName() + " " + request.getMethod() + " " + request.getPathInfo());
+			return DtoToVoConverter.convert(campaign);
+		} else {
+			log.log(Level.INFO, "CampaignName: NONE " + request.getServerName() + " " + request.getMethod() + " " + request.getPathInfo());
+			return null;
+		}
+	}
+	
 	public static LangVersion getLangVersion() {
 		return langVersion.get();
+	}
+	
+	public static CampaignVO getCampaign() {
+		return campaign.get();
 	}
 }

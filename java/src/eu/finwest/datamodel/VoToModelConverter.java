@@ -9,6 +9,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.googlecode.objectify.Key;
 
+import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.CommentVO;
 import eu.finwest.vo.ListingDocumentVO;
 import eu.finwest.vo.ListingPropertyVO;
@@ -69,6 +70,7 @@ public class VoToModelConverter {
 		listing.owner = (Key<SBUser>)stringToKey(listingVO.getOwner());
 		listing.contactEmail = listingVO.getContactEmail();
 		listing.founders = listingVO.getFounders();
+		listing.campaign = listingVO.getCampaign();
 		listing.askedForFunding = listingVO.isAskedForFunding();
 		listing.suggestedValuation = listingVO.getSuggestedValuation();
 		listing.suggestedPercentage = listingVO.getSuggestedPercentage();
@@ -161,6 +163,8 @@ public class VoToModelConverter {
 			listing.city = property.getPropertyValue();
 		} else if (name.equalsIgnoreCase("currency")) {
 			listing.currency = Listing.Currency.valueOf(property.getPropertyValue().toUpperCase());
+		} else if (name.equalsIgnoreCase("campaign")) {
+			listing.campaign = property.getPropertyValue().toLowerCase();
 		} else if (name.equalsIgnoreCase("has_bmc")) {
 			listing.hasBmc = BooleanUtils.toBoolean(property.getPropertyValue());
 		} else if (name.equalsIgnoreCase("has_ip")) {
@@ -340,6 +344,21 @@ public class VoToModelConverter {
 		return monitor;
 	}
 	
+	public static Campaign convert(CampaignVO campaignVO) {
+		Campaign campaign = new Campaign();
+		campaign.activeFrom = campaignVO.getActiveFrom();
+		campaign.activeTo = campaignVO.getActiveTo();
+		campaign.admins = campaignVO.getAdmins();
+		campaign.allowedLanguage = Campaign.Language.valueOf(campaignVO.getAllowedLanguage());
+		campaign.comment = campaignVO.getComment();
+		campaign.creatorName = campaignVO.getCreator();
+		campaign.description = campaignVO.getDescription();
+		campaign.name = campaignVO.getName();
+		campaign.publicBrowsing = campaignVO.isPublicBrowsing();
+		campaign.subdomain = campaignVO.getSubdomain();
+		return campaign;
+	}
+	
 	public static List<Listing> convertListings(List<ListingVO> bpVOList) {
 		List<Listing> bpDtoList = new ArrayList<Listing>();
 		for (ListingVO bpVO : bpVOList) {
@@ -384,4 +403,5 @@ public class VoToModelConverter {
 		}
 		return qaDtoList;
 	}
+
 }

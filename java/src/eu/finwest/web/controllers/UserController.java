@@ -15,6 +15,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import eu.finwest.util.TwitterHelper;
+import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.PrivateMessageListVO;
 import eu.finwest.vo.PrivateMessageUserListVO;
@@ -84,6 +85,8 @@ public class UserController extends ModelDrivenController {
 				return promoteToDragon(request);
 			} else if("request_dragon".equalsIgnoreCase(getCommand(1))) {
 				return requestDragon(request);
+			} else if("store_campaign".equalsIgnoreCase(getCommand(1))) {
+				return storeCampaign(request);
 			}
 		}
 		return null;
@@ -353,6 +356,24 @@ public class UserController extends ModelDrivenController {
 		
 		model = UserMgmtFacade.instance().requestEmailAccess(getLoggedInUser(), email, url);
 		
+		return headers;
+	}
+	
+	private HttpHeaders storeCampaign(HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
+		HttpHeaders headers = new HttpHeadersImpl("store_campaign");
+
+		ObjectMapper mapper = new ObjectMapper();
+		log.log(Level.INFO, "Parameters: " + request.getParameterMap());
+		String messageString = request.getParameter("campaign");
+		if (!StringUtils.isEmpty(messageString)) {
+			CampaignVO campaign = mapper.readValue(messageString, CampaignVO.class);
+			
+			campaign = UserMgmtFacade.instance().storeCampaign(getLoggedInUser(), campaign);
+			model = campaign;
+		} else {
+			log.severe("Missing campaign json parameter!");
+			headers.setStatus(500);
+		}
 		return headers;
 	}
 

@@ -19,6 +19,7 @@ import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.dao.StartuplyCache;
 import eu.finwest.datamodel.Bid;
 import eu.finwest.datamodel.BidUser;
+import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Category;
 import eu.finwest.datamodel.Comment;
 import eu.finwest.datamodel.Listing;
@@ -55,6 +56,7 @@ public class WarmupListener implements ServletContextListener {
 		ObjectifyService.register(SBUser.class);
 		ObjectifyService.register(Listing.class);
 		ObjectifyService.register(UserStats.class);
+		ObjectifyService.register(Campaign.class);
 		ObjectifyService.register(Comment.class);
 		ObjectifyService.register(ListingDoc.class);
 		ObjectifyService.register(ListingStats.class);

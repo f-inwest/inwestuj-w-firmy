@@ -22,6 +22,7 @@ public class UserListingsForAdminVO extends BaseResultVO implements UserDataUpda
 	@JsonProperty("frozen_listings") private List<ListingTileVO> frozenListings;
 	@JsonProperty("closed_listings") private List<ListingTileVO> closedListings;
 	@JsonProperty("edited_listing") private ListingVO editedListing;
+	@JsonProperty("owned_campaigns") private List<CampaignVO> ownedCampaigns;
 
 	public void updateUserData() {
 		List<UserDataUpdatable> updatable = new ArrayList<UserDataUpdatable>();
@@ -68,5 +69,11 @@ public class UserListingsForAdminVO extends BaseResultVO implements UserDataUpda
 	}
 	public void setUser(UserVO user) {
 		this.user = user;
+	}
+	public List<CampaignVO> getOwnedCampaigns() {
+		return ownedCampaigns;
+	}
+	public void setOwnedCampaigns(List<CampaignVO> ownedCampaigns) {
+		this.ownedCampaigns = ownedCampaigns;
 	}
 }
