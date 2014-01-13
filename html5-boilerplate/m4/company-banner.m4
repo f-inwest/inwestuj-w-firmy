@@ -1,6 +1,10 @@
 define(`companybannermacro', `
 <div class="companyheader">
-    <div class="container">
+
+    <div class="copmanyheaderboatwrapper">
+        <div class="companyheaderboat"></div>
+    </div>
+    <div class="container companybannercontainer">
         <div class="companybanner span-24">
 
             <div class="span-24 preloader preloadercompanybanner">

@@ -503,7 +503,22 @@ a:focus, a:hover { cursor: pointer; }
 
 /* company banner styles */
 .companyheader { width: 100%; height: 150px; border-bottom: 1px solid #ccc; padding: 20px 0; }
-.companybanner { height: 150px; position: relative; }
+.companyheaderboatwrapper {
+    background: #fefefe;
+    width: 100%;
+    height: 175px;
+    position: absolute;
+    top: 70px;
+}
+.companyheaderboat {
+    background: url(../img/header_page.png);
+    background-position-x: -400px;
+    height: 248px;
+    background-repeat: repeat-x;
+    background-position-y: -75px;
+}
+.companybanner { height: 150px; position: relative; background: #fefefe; }
+.companybannercontainer { margin-top: 115px; }
 .companybannertile { height: 150px; width: 596px; position: relative; overflow: hidden; margin-bottom: 15px; padding: 15px; }
 .companybannertilenoborder { height:150px;overflow:hidden;position:relative;top:-9px; }
 .companybannertitle {
@@ -1559,10 +1574,6 @@ body {
         .buttonbg, .smallbuttonbg
 {
 background: #fefefe;
-}
-.companyheader
-{
-background: #eee;
 }
 .header, .notificationtitle
 {
