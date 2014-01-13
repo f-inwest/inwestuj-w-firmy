@@ -28,6 +28,11 @@ public class ListPropertiesVO {
 	private String requestPathInfo;
 	private Map<String, String> parameters = new HashMap<String, String>();
 
+	public ListPropertiesVO() {
+	}
+	public ListPropertiesVO(int maxResults) {
+		this.maxResults = maxResults;
+	}
     public void updateMoreResultsUrl() {
         updateMoreResultsUrl(startIndex + numberOfResults);
     }

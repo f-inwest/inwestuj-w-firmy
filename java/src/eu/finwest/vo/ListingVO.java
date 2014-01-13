@@ -44,6 +44,7 @@ public class ListingVO extends ListingTileVO implements Serializable {
 	@JsonProperty("founders") private String founders;
 	@JsonProperty("contact_email") private String contactEmail;
 	@JsonProperty("address") private String address;
+	@JsonProperty("campaign") private String campaign;
 	@JsonProperty("num_comments") private long numberOfComments;
 	@JsonProperty("num_bids") private long numberOfBids;
     @JsonProperty("num_qandas") private long numberOfQuestions;
@@ -782,4 +783,13 @@ public class ListingVO extends ListingTileVO implements Serializable {
 	public void setLang(String lang) {
 		this.lang = lang;
 	}
+
+	public String getCampaign() {
+		return campaign;
+	}
+
+	public void setCampaign(String campaign) {
+		this.campaign = campaign;
+	}
+	
 }

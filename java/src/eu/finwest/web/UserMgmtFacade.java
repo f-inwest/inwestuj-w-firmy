@@ -24,12 +24,15 @@ import com.google.appengine.api.users.UserServiceFactory;
 import com.googlecode.objectify.Key;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
+import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.UserStats;
+import eu.finwest.datamodel.VoToModelConverter;
 import eu.finwest.util.FacebookUser;
 import eu.finwest.util.ImageHelper;
 import eu.finwest.vo.BaseVO;
+import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ErrorCodes;
 import eu.finwest.vo.ListPropertiesVO;
@@ -206,6 +209,9 @@ public class UserMgmtFacade {
 			result.setActiveListings(activeListings);
 			allListings.addAll(activeListings);
 		}
+		
+		List<CampaignVO> ownedCampaings = DtoToVoConverter.convertCampaigns(getDAO().getUserCampaigns(user.toKeyId(), new ListPropertiesVO(10)));
+		result.setOwnedCampaigns(ownedCampaings);
 
 		if (loggedInUser != null && (loggedInUser.isAdmin() || user.toKeyId() == loggedInUser.toKeyId())) {
 			props = new ListPropertiesVO();
@@ -804,4 +810,24 @@ public class UserMgmtFacade {
 			}
 		}
 	}
+
+	public CampaignVO storeCampaign(UserVO loggedInUser, CampaignVO campaign) {
+		if (loggedInUser == null || !(loggedInUser.isAccreditedInvestor() || loggedInUser.isAdmin())) {
+			return null;
+		}
+		Campaign existingCampaign = getDAO().getCampaignByDomain(campaign.getSubdomain());
+		if (existingCampaign != null && existingCampaign.creator.getId() != loggedInUser.toKeyId()) {
+			return null;
+		}
+		Campaign newCampaign = VoToModelConverter.convert(campaign);
+		log.info("Updating campaign " + newCampaign + " with new data " + campaign + " by " + loggedInUser.getName());
+		if (existingCampaign == null) {
+			newCampaign.creator = new Key<SBUser>(loggedInUser.getId());
+			newCampaign.creatorName = loggedInUser.getName();
+			newCampaign.subdomain = campaign.getSubdomain();
+		}
+		campaign = DtoToVoConverter.convert(getDAO().storeCampaign(newCampaign));
+		return campaign;
+	}
+
 }

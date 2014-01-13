@@ -44,6 +44,7 @@ import com.googlecode.objectify.ObjectifyService;
 
 import eu.finwest.datamodel.Bid;
 import eu.finwest.datamodel.BidUser;
+import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Category;
 import eu.finwest.datamodel.Comment;
 import eu.finwest.datamodel.Listing;
@@ -175,6 +176,10 @@ public class MockDataBuilder {
 		QueryResultIterable<Key<UserStats>> us = getOfy().query(UserStats.class).fetchKeys();
 		output.append("Deleted user stats: " + us.toString() + "</br>");
 		getOfy().delete(us);
+		
+		QueryResultIterable<Key<Campaign>> ca = getOfy().query(Campaign.class).fetchKeys();
+		output.append("Deleted campaigns: " + ca.toString() + "</br>");
+		getOfy().delete(ca);
 
 		QueryResultIterable<Key<Listing>> l = getOfy().query(Listing.class).fetchKeys();
 		output.append("Deleted listings: " + l.toString() + "</br>");
@@ -269,6 +274,8 @@ public class MockDataBuilder {
 
 			getOfy().put(createCategories());
 		}
+		
+		List<Campaign> campaigns = createMockCampaigns(users);
 
 		List<Listing> listings = createMockListings(users);
 
@@ -311,7 +318,59 @@ public class MockDataBuilder {
 		return output.toString();
 	}
 
-    public String importAngelListData(String fromId, String toId) {
+    private List<Campaign> createMockCampaigns(List<SBUser> users) {
+    	List<Campaign> list = new ArrayList<Campaign>();
+    	Campaign c = new Campaign();
+    	c.activeFrom = new Date();
+    	c.activeTo = new Date(new Date().getTime() + 180L * 24 * 60 * 60 * 1000);
+    	c.name = "Test Campaign";
+    	c.description = "This campaign was created for test purposes";
+    	c.comment = "Comment on test campaign";
+    	c.allowedLanguage = Campaign.Language.PL;
+    	c.creator = new Key<SBUser>(SBUser.class, GREG.toKeyId());
+    	c.creatorName = GREG.getName();
+    	c.created = new Date();
+    	c.mockData = true;
+    	c.publicBrowsing = false;
+    	c.subdomain = "test";
+    	list.add(c);
+    	
+    	c = new Campaign();
+    	c.activeFrom = new Date();
+    	c.activeTo = new Date(new Date().getTime() + 10 * 1000);
+    	c.name = "Test2 Campaign";
+    	c.description = "This campaign was created for test purposes - it should be inactive";
+    	c.comment = "Comment on test campaign";
+    	c.allowedLanguage = Campaign.Language.ALL;
+    	c.creator = new Key<SBUser>(SBUser.class, JOHN.toKeyId());
+    	c.creatorName = JOHN.getName();
+    	c.created = new Date();
+    	c.mockData = true;
+    	c.publicBrowsing = false;
+    	c.subdomain = "test2";
+    	list.add(c);
+    	
+    	c = new Campaign();
+    	c.activeFrom = new Date();
+    	c.activeTo = new Date(new Date().getTime() + 180 * 24 * 60 * 60 * 1000);
+    	c.name = "Test3 Campaign";
+    	c.description = "This campaign was created for test purposes - public browsing";
+    	c.comment = "Comment on test campaign";
+    	c.allowedLanguage = Campaign.Language.EN;
+    	c.creator = new Key<SBUser>(SBUser.class, AHMED.toKeyId());
+    	c.creatorName = AHMED.getName();
+    	c.created = new Date();
+    	c.mockData = true;
+    	c.publicBrowsing = true;
+    	c.subdomain = "test3";
+    	list.add(c);
+    	
+    	getOfy().put(list);
+    	
+		return list;
+	}
+
+	public String importAngelListData(String fromId, String toId) {
         isIdInitialized = false; // reset
         StringBuffer output = new StringBuffer();
         List<SBUser> users = createAngelListUsers();
@@ -458,6 +517,16 @@ public class MockDataBuilder {
 		}
 		if (delete) {
 			getOfy().delete(userStatKeys);
+		}
+
+		List<Key<Campaign>> campaignKeys = new ArrayList<Key<Campaign>>();
+		CollectionUtils.addAll(campaignKeys, getOfy().query(Campaign.class).fetchKeys().iterator());
+		outputBuffer.append("<p>Campaigns (" + campaignKeys.size() + "):</p>");
+		for (Campaign obj : getOfy().get(campaignKeys).values()) {
+			outputBuffer.append(obj).append("<br/>");
+		}
+		if (delete) {
+			getOfy().delete(campaignKeys);
 		}
 
 		List<Key<Category>> catKeys = new ArrayList<Key<Category>>();

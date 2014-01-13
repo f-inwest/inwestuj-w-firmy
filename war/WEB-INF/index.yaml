@@ -434,3 +434,10 @@ indexes:
     - name: listing
     - name: created
       direction: desc
+
+- kind: Campaign
+  ancestor: no
+  properties:
+    - name: owner
+    - name: created
+      direction: desc

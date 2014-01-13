@@ -141,6 +141,7 @@ public abstract class ModelDrivenController {
 						((BaseResultVO) model).setTwitterLoginUrl(TwitterHelper.getLoginUrl(request));
 					}
 				}
+				((BaseResultVO) model).setCampaign(FrontController.getCampaign());
 
 				if (((BaseResultVO) model).getErrorCode() != ErrorCodes.OK) {
 					headers.setStatus(500);

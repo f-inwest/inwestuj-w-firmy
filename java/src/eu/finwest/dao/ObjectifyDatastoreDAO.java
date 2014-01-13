@@ -30,6 +30,7 @@ import com.googlecode.objectify.ObjectifyService;
 import com.googlecode.objectify.Query;
 
 import eu.finwest.datamodel.Bid;
+import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Category;
 import eu.finwest.datamodel.Comment;
 import eu.finwest.datamodel.Listing;
@@ -1445,4 +1446,58 @@ public class ObjectifyDatastoreDAO {
 		}
 		return users;
 	}
+
+	public Campaign createCampaign(Campaign campaign) {
+		campaign.created = new Date();
+		getOfy().put(campaign);
+		return campaign;
+	}
+	
+	public Campaign storeCampaign(Campaign newCampaign) {
+		try {
+			Campaign campaign = getCampaignByDomain(newCampaign.subdomain);
+			if (campaign == null) {
+				campaign = new Campaign();
+				campaign.created = new Date();
+				campaign.creator = newCampaign.creator;
+				campaign.creatorName = newCampaign.creatorName;
+				campaign.subdomain = newCampaign.subdomain;
+			}
+			campaign.activeFrom = newCampaign.activeFrom;
+			campaign.activeTo = newCampaign.activeTo;
+			campaign.admins = newCampaign.admins;
+			campaign.allowedLanguage = newCampaign.allowedLanguage;
+			campaign.comment = newCampaign.comment;
+			campaign.description = newCampaign.description;
+			campaign.logoId = newCampaign.logoId;
+			campaign.mockData = newCampaign.mockData;
+			campaign.modified = new Date();
+			campaign.name = newCampaign.name;
+			campaign.publicBrowsing = newCampaign.publicBrowsing;
+			getOfy().put(campaign);
+			return campaign;
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Campaign with id '" + newCampaign.id + "' not found!");
+			return null;
+		}
+	}
+
+    public Campaign getCampaignByDomain(String subdomain) {
+    	Campaign campaign = getOfy().query(Campaign.class).filter("subdomain =", subdomain).get();
+        log.info("Campaign for subdomain " + subdomain + " is " + campaign);
+        return campaign;
+    }
+
+	public List<Campaign> getUserCampaigns(long userId, ListPropertiesVO listingProperties) {
+		log.info("Fetching campaigns for user " + userId + " (maxResults=" + listingProperties.getMaxResults() + ")");
+		Query<Campaign> query = getOfy().query(Campaign.class)
+				.filter("creator =", new Key<SBUser>(SBUser.class, userId));
+        query.order("-created")
+       			.chunkSize(listingProperties.getMaxResults())
+       			.prefetchSize(listingProperties.getMaxResults());
+		List<Key<Campaign>> keyList = new CursorHandler<Campaign>().handleQuery(listingProperties, query);
+		List<Campaign> campaigns = new ArrayList<Campaign>(getOfy().get(keyList).values());
+		return campaigns;
+	}
+
 }

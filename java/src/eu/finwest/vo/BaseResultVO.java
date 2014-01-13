@@ -19,6 +19,7 @@ public class BaseResultVO {
 	@JsonProperty("twitter_login_url") private String twitterLoginUrl;
 	@JsonProperty("fb_login_url") private String facebookLoginUrl;
 	
+	@JsonProperty("campaign") private CampaignVO campaign;
 	@JsonProperty("error_code") private int errorCode = ErrorCodes.OK;
 	@JsonProperty("error_msg") private String errorMessage;
 
@@ -69,5 +70,11 @@ public class BaseResultVO {
 	}
 	public void setFacebookLoginUrl(String facebookLoginUrl) {
 		this.facebookLoginUrl = facebookLoginUrl;
+	}
+	public CampaignVO getCampaign() {
+		return campaign;
+	}
+	public void setCampaign(CampaignVO campaign) {
+		this.campaign = campaign;
 	}
 }
