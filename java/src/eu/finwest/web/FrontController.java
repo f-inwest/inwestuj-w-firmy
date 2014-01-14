@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,6 +46,8 @@ public class FrontController extends HttpServlet {
 	
 	private static final ThreadLocal<LangVersion> langVersion = new ThreadLocal<LangVersion>();
 	private static final ThreadLocal<CampaignVO> campaign = new ThreadLocal<CampaignVO>();
+	
+	private static final CampaignVO MAIN_CAMPAIGN = createMainCampaign();
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -259,12 +262,18 @@ public class FrontController extends HttpServlet {
 			campaignName = null;
 		}
 		if (campaignName != null) {
-			Campaign campaign = ObjectifyDatastoreDAO.getInstance().getCampaignByDomain(campaignName);
-			log.log(Level.INFO, "CampaignName: " + campaignName + ", campaign: " + campaign + " " + request.getServerName() + " " + request.getMethod() + " " + request.getPathInfo());
-			return DtoToVoConverter.convert(campaign);
+			campaignName = campaignName.toLowerCase();
+			if (StringUtils.equals(campaignName, getCampaign().getSubdomain())) {
+				log.log(Level.INFO, "CampaignName: " + campaignName + ", campaign: " + getCampaign() + ", same as previous.");
+				return getCampaign();
+			} else {
+				Campaign campaign = ObjectifyDatastoreDAO.getInstance().getCampaignByDomain(campaignName);
+				log.log(Level.INFO, "CampaignName: " + campaignName + ", campaign: " + campaign + " " + request.getServerName() + " " + request.getMethod() + " " + request.getPathInfo());
+				return DtoToVoConverter.convert(campaign);
+			}
 		} else {
 			log.log(Level.INFO, "CampaignName: NONE " + request.getServerName() + " " + request.getMethod() + " " + request.getPathInfo());
-			return null;
+			return MAIN_CAMPAIGN;
 		}
 	}
 	
@@ -273,6 +282,19 @@ public class FrontController extends HttpServlet {
 	}
 	
 	public static CampaignVO getCampaign() {
-		return campaign.get();
+		CampaignVO c = campaign.get();
+		return c == null ? MAIN_CAMPAIGN : c;
+	}
+	
+	private static final CampaignVO createMainCampaign() {
+		CampaignVO campaign = new CampaignVO();
+		campaign.setName("Main campaign");
+		campaign.setCreator("Admin");
+		campaign.setActiveFrom(new Date(0));
+		campaign.setActiveTo(new Date(0));
+		campaign.setDescription("Main campaign");
+		campaign.setId(null);
+		campaign.setSubdomain(null);
+		return campaign;
 	}
 }

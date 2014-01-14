@@ -163,6 +163,7 @@ public class ListingFacade {
 			l.askedForFunding = false; // by default don't ask for funding
 			l.suggestedAmount = 20000;
 			l.suggestedPercentage = 5;
+			l.campaign = FrontController.getCampaign().getSubdomain();
 			prefillLocation(l, loggedInUser.getLocationHeaders());
 			l.created = new Date();
 			ListingVO newListing = DtoToVoConverter.convert(getDAO().createListing(l));
@@ -753,6 +754,13 @@ public class ListingFacade {
 			log.log(Level.INFO, "User '" + loggedInUser + "' is not an owner of listing " + dbListing, new Exception("Not listing owner"));
 			returnValue.setErrorMessage("User is not an owner of the listing");
 			returnValue.setErrorCode(ErrorCodes.NOT_AN_OWNER);
+			return returnValue;
+		}
+		if (FrontController.getCampaign() != null && !FrontController.getCampaign().getSubdomain().equals(dbListing.campaign)) {
+			log.log(Level.INFO, "User in campaign mode but listing doesn't have campaign selected or is different (user campaign "
+					+ FrontController.getCampaign().getSubdomain() + ", listing's campaign " + dbListing.campaign + ")", new Exception("Not valid state"));
+			returnValue.setErrorMessage("Listing doesn't have valid campaign selected.");
+			returnValue.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
 			return returnValue;
 		}
 

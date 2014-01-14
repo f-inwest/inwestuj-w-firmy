@@ -1458,10 +1458,10 @@ public class ObjectifyDatastoreDAO {
 			Campaign campaign = getCampaignByDomain(newCampaign.subdomain);
 			if (campaign == null) {
 				campaign = new Campaign();
-				campaign.created = new Date();
+				campaign.created = campaign.modified = new Date();
 				campaign.creator = newCampaign.creator;
 				campaign.creatorName = newCampaign.creatorName;
-				campaign.subdomain = newCampaign.subdomain;
+				campaign.subdomain = StringUtils.lowerCase(newCampaign.subdomain);
 			}
 			campaign.activeFrom = newCampaign.activeFrom;
 			campaign.activeTo = newCampaign.activeTo;
@@ -1483,7 +1483,7 @@ public class ObjectifyDatastoreDAO {
 	}
 
     public Campaign getCampaignByDomain(String subdomain) {
-    	Campaign campaign = getOfy().query(Campaign.class).filter("subdomain =", subdomain).get();
+    	Campaign campaign = getOfy().query(Campaign.class).filter("subdomain =", subdomain.toLowerCase()).get();
         log.info("Campaign for subdomain " + subdomain + " is " + campaign);
         return campaign;
     }

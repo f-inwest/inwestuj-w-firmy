@@ -105,5 +105,4 @@ public class CampaignVO extends BaseVO implements Serializable {
 	public void setAllowedLanguage(String allowedLanguage) {
 		this.allowedLanguage = allowedLanguage;
 	}
-
 }
