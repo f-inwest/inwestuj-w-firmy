@@ -38,6 +38,7 @@ public class ListingStats extends BaseObject<ListingStats> {
 	}
 
 	public LangVersion lang;
+	public String campaign;
 	public Key<Listing> listing;
 	public Listing.State state;
 	public Listing.Type type;

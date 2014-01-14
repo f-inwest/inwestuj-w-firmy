@@ -172,7 +172,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: listedOn
       direction: desc
 
@@ -185,7 +185,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: state
     - name: listedOn
       direction: desc
@@ -193,7 +193,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: state
     - name: closingOn
       direction: asc
@@ -201,7 +201,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: state
     - name: posted
       direction: desc
@@ -209,7 +209,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: category
     - name: listedOn
       direction: desc
@@ -217,7 +217,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: country
     - name: listedOn
       direction: desc
@@ -225,7 +225,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: usState
     - name: listedOn
       direction: desc
@@ -233,7 +233,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: city
     - name: listedOn
       direction: desc
@@ -241,7 +241,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: country
     - name: usState
     - name: listedOn
@@ -250,7 +250,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: country
     - name: city
     - name: listedOn
@@ -259,7 +259,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: usState
     - name: city
     - name: listedOn
@@ -268,7 +268,7 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: country
     - name: usState
     - name: city
@@ -278,7 +278,7 @@ indexes:
 - kind: ListingStats
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: state
     - name: score
       direction: desc
@@ -286,7 +286,7 @@ indexes:
 - kind: ListingStats
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: state
     - name: numberOfBids
       direction: desc
@@ -294,7 +294,7 @@ indexes:
 - kind: ListingStats
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: state
     - name: numberOfComments
       direction: desc
@@ -302,7 +302,7 @@ indexes:
 - kind: ListingStats
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: state
     - name: valuation
       direction: desc
@@ -310,7 +310,7 @@ indexes:
 - kind: ListingStats
   ancestor: no
   properties:
-    - name: lang
+    - name: campaign
     - name: askedForFunding
     - name: state
     - name: score

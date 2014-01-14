@@ -26,6 +26,7 @@ import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Vote;
 import eu.finwest.web.LangVersion;
+import eu.finwest.web.ListingFacade;
 
 /**
  * Helper class which converts DTO objects to VO objects.
@@ -185,6 +186,7 @@ public class DtoToVoConverter {
 		listing.setMantra(listingDTO.mantra);
 		listing.setWebsite(listingDTO.website);
 		listing.setCategory(listingDTO.category);
+		listing.setCategoryValue(ListingFacade.instance().getCategoryLabel(listingDTO.category));
 
 		listing.setAddress(listingDTO.address);
 		listing.setLatitude(listingDTO.latitude);
@@ -273,6 +275,7 @@ public class DtoToVoConverter {
 		listing.setMantra(listingDTO.mantra);
 		listing.setWebsite(listingDTO.website);
 		listing.setCategory(listingDTO.category);
+		listing.setCategoryValue(ListingFacade.instance().getCategoryLabel(listingDTO.category));
 		listing.setType(listingDTO.type.toString());
         listing.setPlatform(listingDTO.platform != null ? listingDTO.platform.toString() : null);
         listing.setStage(listingDTO.stage != null ? listingDTO.stage.toString() : null);

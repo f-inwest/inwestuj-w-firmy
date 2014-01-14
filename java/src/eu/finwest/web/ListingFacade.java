@@ -97,6 +97,7 @@ public class ListingFacade {
 
 	public static enum UpdateReason {NEW_BID, BID_UPDATE, NEW_COMMENT, DELETE_COMMENT, NEW_MONITOR, DELETE_MONITOR, QUESTION_ANSWERED, NONE};
 	public static final String MEMCACHE_ALL_LISTING_LOCATIONS = "AllListingLocations";
+	public static final String MEMCACHE_CATEGORIES = "Categories";
 
 	private final static int PICTURE_HEIGHT = 452;
 	private final static int PICTURE_WIDTH = 622;
@@ -132,6 +133,10 @@ public class ListingFacade {
 	}
 
 	private ListingFacade() {
+		Map<String, Category> categoriesMap = fetchCategories();
+		
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		mem.put(MEMCACHE_CATEGORIES, categoriesMap);
 	}
 
 	private ObjectifyDatastoreDAO getDAO() {
@@ -142,6 +147,39 @@ public class ListingFacade {
 		return NotificationObjectifyDatastoreDAO.getInstance();
 	}
 
+	private Map<String, Category> fetchCategories() {
+		List<Category> c = getDAO().getCategories();
+        log.log(Level.INFO, "Starting category calculation for " + c.size() + " categories");
+        Map<String, Category> categories = new HashMap<String, Category>();
+        for(Category category : c) {
+            category.count = 0;
+            category.countPl = 0;
+            categories.put(category.name, category);
+        }
+        log.log(Level.INFO, "Calculated count statistics for " + c.size() + " categories");
+		return categories;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Category> getCategoriesMap() {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		return (Map<String, Category>)mem.get(MEMCACHE_CATEGORIES);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String getCategoryLabel(String category) {
+		if (category == null) {
+			return null;
+		}
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Category cat = ((Map<String, Category>)mem.get(MEMCACHE_CATEGORIES)).get(category);
+		if (cat == null) {
+			log.log(Level.WARNING, "@@@@@@@@@@@@@@@@@@@ Category '" + category + "' doesn't exist!!!");
+			return null;
+		}
+		return FrontController.getLangVersion() == LangVersion.PL ? cat.namePl : cat.name;
+	}
+	
 	/**
 	 * Creates new listing.
 	 * Sets loggedin user as the owner of the listing.
@@ -156,6 +194,7 @@ public class ListingFacade {
 		} else {
 			Listing l = new Listing();
 			l.lang = FrontController.getLangVersion();
+			l.campaign = FrontController.getCampaign().getSubdomain();
 			l.state = Listing.State.NEW;
 			l.owner = new Key<SBUser>(loggedInUser.getId());
 			l.contactEmail = loggedInUser.getEmail();
@@ -163,7 +202,6 @@ public class ListingFacade {
 			l.askedForFunding = false; // by default don't ask for funding
 			l.suggestedAmount = 20000;
 			l.suggestedPercentage = 5;
-			l.campaign = FrontController.getCampaign().getSubdomain();
 			prefillLocation(l, loggedInUser.getLocationHeaders());
 			l.created = new Date();
 			ListingVO newListing = DtoToVoConverter.convert(getDAO().createListing(l));
@@ -205,6 +243,7 @@ public class ListingFacade {
 			} else {
 				newListing = new Listing();
 				newListing.lang = FrontController.getLangVersion();
+				newListing.campaign = FrontController.getCampaign().getSubdomain();
 				newListing.state = Listing.State.NEW;
 				newListing.owner = new Key<SBUser>(loggedInUser.getId());
 				newListing.contactEmail = loggedInUser.getEmail();
@@ -1677,15 +1716,7 @@ public class ListingFacade {
 	}
 
     public String updateAllAggregateStatistics() {
-        List<Category> c = getDAO().getCategories();
-        log.log(Level.INFO, "Starting category calculation for " + c.size() + " categories");
-        Map<String, Category> categories = new HashMap<String, Category>();
-        for(Category category : c) {
-            category.count = 0;
-            category.countPl = 0;
-            categories.put(category.name, category);
-        }
-        log.log(Level.INFO, "Calculated count statistics for " + c.size() + " categories");
+        Map<String, Category> categories = getCategoriesMap();
 
         Map<String, Location> locations = new HashMap<String, Location>();
         List<Listing> listings = getDAO().getAllListingsInternal();
@@ -1718,8 +1749,8 @@ public class ListingFacade {
 
         StringBuffer buf = new StringBuffer();
         buf.append("Categories:</br>\n<ul>\n");
-        for (Category cat : c) {
-        	buf.append("<li>").append(cat.name).append("\n");
+        for (Category cat : categories.values()) {
+        	buf.append("<li>").append(cat).append("\n");
         }
         buf.append("</ul>\nLocations:</br>\n<ul>\n");
         for (Location loc : locations.values()) {

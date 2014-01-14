@@ -1,5 +1,7 @@
 package eu.finwest.datamodel;
 
+import java.io.Serializable;
+
 import javax.persistence.Id;
 
 import com.googlecode.objectify.annotation.Cached;
@@ -13,7 +15,9 @@ import com.googlecode.objectify.annotation.Indexed;
 @Entity
 @Indexed
 @Cached(expirationSeconds=30*24*60*30)
-public class Category {
+public class Category implements Serializable {
+	private static final long serialVersionUID = 21465473476765L;
+	
 	@Id public Long id;
 	public String name;
 	public String namePl;

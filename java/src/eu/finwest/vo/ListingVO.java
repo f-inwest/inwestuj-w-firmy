@@ -37,6 +37,7 @@ public class ListingVO extends ListingTileVO implements Serializable {
 			"presentation_url", "financials_url", "logo_url", "pic1_url", "pic2_url", "pic3_url", "pic4_url", "pic5_url"});
 	
 	@JsonProperty("lang") private String lang;
+	@JsonProperty("campaign") private String campaign;
 	@JsonProperty("previous_val") private int previousValuation;
 	@JsonProperty("valuation") private int valuation;
 	@JsonProperty("median_valuation") private int medianValuation;
@@ -44,7 +45,6 @@ public class ListingVO extends ListingTileVO implements Serializable {
 	@JsonProperty("founders") private String founders;
 	@JsonProperty("contact_email") private String contactEmail;
 	@JsonProperty("address") private String address;
-	@JsonProperty("campaign") private String campaign;
 	@JsonProperty("num_comments") private long numberOfComments;
 	@JsonProperty("num_bids") private long numberOfBids;
     @JsonProperty("num_qandas") private long numberOfQuestions;

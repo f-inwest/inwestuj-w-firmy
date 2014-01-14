@@ -48,7 +48,6 @@ import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.Vote;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.web.FrontController;
-import eu.finwest.web.LangVersion;
 import eu.finwest.web.ListingFacade;
 
 /**
@@ -328,6 +327,7 @@ public class ObjectifyDatastoreDAO {
 			listingStats = new ListingStats();
 			listingStats.id = listingId;
 			listingStats.lang = listing.lang;
+			listingStats.campaign = listing.campaign;
 			listingStats.listing = new Key<Listing>(Listing.class, listingId);
 			listingStats.previousValuation = listing.suggestedValuation;
 			listingStats.previousValuationDate = listing.listedOn;
@@ -684,9 +684,9 @@ public class ObjectifyDatastoreDAO {
         return listings;
     }
 
-    public List<Listing> getAllListingsInternal(LangVersion lang) { // use with care
+    public List<Listing> getAllListingsInternal(String campaign) { // use with care
         QueryResultIterable<Key<Listing>> listingsIt = getOfy().query(Listing.class)
-        		.filter("lang =", lang)
+        		.filter("campaign =", campaign)
                 .order("-listedOn")
                 .fetchKeys();
         List<Listing> listings = new ArrayList<Listing>(getOfy().get(listingsIt).values());
@@ -719,7 +719,7 @@ public class ObjectifyDatastoreDAO {
 
 	public List<Long> getListingsIdsForCategory(String category, ListPropertiesVO listingProperties) {
 		QueryResultIterable<Key<Listing>> listingsIt = getOfy().query(Listing.class)
-				.filter("lang =", FrontController.getLangVersion())
+				.filter("campaign =", FrontController.getCampaign().getSubdomain())
 				.filter("category =", category)
 				.order("-listedOn")
                 .limit(listingProperties.getMaxResults() * 2)
@@ -734,7 +734,7 @@ public class ObjectifyDatastoreDAO {
 	}
 
 	public List<Long> getListingsIdsForLocation(String country, String state, String city, ListPropertiesVO listingProperties) {
-		Query<Listing> query = getOfy().query(Listing.class).filter("lang =", FrontController.getLangVersion());
+		Query<Listing> query = getOfy().query(Listing.class).filter("campaign =", FrontController.getCampaign().getSubdomain());
 		if (country != null) {
 			query = query.filter("country =", country);
 		}
@@ -772,7 +772,7 @@ public class ObjectifyDatastoreDAO {
 
     public List<Listing> getListingsForCategory(String category, ListPropertiesVO listingProperties) {
         Query<Listing> query = getOfy().query(Listing.class)
-        	.filter("lang =", FrontController.getLangVersion())
+        	.filter("campaign =", FrontController.getCampaign().getSubdomain())
             .filter("state =", Listing.State.ACTIVE)
             .order("-listedOn")
             .chunkSize(listingProperties.getMaxResults())
@@ -787,7 +787,7 @@ public class ObjectifyDatastoreDAO {
 
     public List<Listing> getListingsForLocation(String country, String state, String city, ListPropertiesVO listingProperties) {
         Query<Listing> query = getOfy().query(Listing.class)
-        	.filter("lang =", FrontController.getLangVersion())
+        	.filter("campaign =", FrontController.getCampaign().getSubdomain())
             .filter("state =", Listing.State.ACTIVE)
             .order("-listedOn")
             .chunkSize(listingProperties.getMaxResults())
@@ -808,7 +808,7 @@ public class ObjectifyDatastoreDAO {
 
 	public List<Listing> getTopListings(ListPropertiesVO listingProperties) {
 		Query<ListingStats> query = getOfy().query(ListingStats.class)
-				.filter("lang =", FrontController.getLangVersion())
+				.filter("campaign =", FrontController.getCampaign().getSubdomain())
 				.filter("state =", Listing.State.ACTIVE)
                 //.filter("askedForFunding =", true)
 				.order("-score")
@@ -827,7 +827,7 @@ public class ObjectifyDatastoreDAO {
 
 	public List<Listing> getPostedListings(ListPropertiesVO listingProperties) {
 		Query<Listing> query = getOfy().query(Listing.class)
-				.filter("lang =", FrontController.getLangVersion())
+				.filter("campaign =", FrontController.getCampaign().getSubdomain())
 				.filter("state =", Listing.State.POSTED)
                 .order("-posted")
                 .chunkSize(listingProperties.getMaxResults())
@@ -839,7 +839,7 @@ public class ObjectifyDatastoreDAO {
 
 	public List<Listing> getActiveListings(ListPropertiesVO listingProperties) {
 		Query<Listing> query = getOfy().query(Listing.class)
-				.filter("lang =", FrontController.getLangVersion())
+				.filter("campaign =", FrontController.getCampaign().getSubdomain())
 				.filter("state =", Listing.State.ACTIVE)
 				.order("-listedOn")
                 .chunkSize(listingProperties.getMaxResults())
@@ -851,7 +851,7 @@ public class ObjectifyDatastoreDAO {
 
 	public List<Listing> getFrozenListings(ListPropertiesVO listingProperties) {
 		Query<Listing> query = getOfy().query(Listing.class)
-				.filter("lang =", FrontController.getLangVersion())
+				.filter("campaign =", FrontController.getCampaign().getSubdomain())
 				.filter("state =", Listing.State.FROZEN)
 				.order("-listedOn")
                 .chunkSize(listingProperties.getMaxResults())
@@ -863,7 +863,7 @@ public class ObjectifyDatastoreDAO {
 
 	public List<Listing> getMostValuedListings(ListPropertiesVO listingProperties) {
 		Query<ListingStats> query = getOfy().query(ListingStats.class)
-				.filter("lang =", FrontController.getLangVersion())
+				.filter("campaign =", FrontController.getCampaign().getSubdomain())
 				.filter("state =", Listing.State.ACTIVE)
 				.order("-valuation")
                 .chunkSize(listingProperties.getMaxResults())
@@ -881,7 +881,7 @@ public class ObjectifyDatastoreDAO {
 
 	public List<Listing> getMostDiscussedListings(ListPropertiesVO listingProperties) {
 		Query<ListingStats> query = getOfy().query(ListingStats.class)
-				.filter("lang =", FrontController.getLangVersion())
+				.filter("campaign =", FrontController.getCampaign().getSubdomain())
 				.filter("state =", Listing.State.ACTIVE)
 				.order("-numberOfComments")
                 .chunkSize(listingProperties.getMaxResults())
@@ -899,7 +899,7 @@ public class ObjectifyDatastoreDAO {
 
 	public List<Listing> getMostPopularListings(ListPropertiesVO listingProperties) {
 		Query<ListingStats> query = getOfy().query(ListingStats.class)
-				.filter("lang =", FrontController.getLangVersion())
+				.filter("campaign =", FrontController.getCampaign().getSubdomain())
 				.filter("state =", Listing.State.ACTIVE)
 				.order("-numberOfVotes")
                 .chunkSize(listingProperties.getMaxResults())
@@ -917,7 +917,7 @@ public class ObjectifyDatastoreDAO {
 
 	public List<Listing> getLatestListings(ListPropertiesVO listingProperties) {
 		Query<Listing> query = getOfy().query(Listing.class)
-				.filter("lang =", FrontController.getLangVersion())
+				.filter("campaign =", FrontController.getCampaign().getSubdomain())
 				.filter("state =", Listing.State.ACTIVE)
 				.order("-listedOn")
                 .chunkSize(listingProperties.getMaxResults())
@@ -929,7 +929,7 @@ public class ObjectifyDatastoreDAO {
 
 	public List<Listing> getClosingListings(ListPropertiesVO listingProperties) {
 		Query<Listing> query = getOfy().query(Listing.class)
-				.filter("lang =", FrontController.getLangVersion())
+				.filter("campaign =", FrontController.getCampaign().getSubdomain())
 				.filter("state =", Listing.State.ACTIVE)
 				.order("closingOn")
                 .chunkSize(listingProperties.getMaxResults())

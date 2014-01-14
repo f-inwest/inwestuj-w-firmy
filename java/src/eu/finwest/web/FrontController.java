@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Campaign;
+import eu.finwest.datamodel.Campaign.Language;
 import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.web.controllers.CommentController;
@@ -47,7 +48,8 @@ public class FrontController extends HttpServlet {
 	private static final ThreadLocal<LangVersion> langVersion = new ThreadLocal<LangVersion>();
 	private static final ThreadLocal<CampaignVO> campaign = new ThreadLocal<CampaignVO>();
 	
-	private static final CampaignVO MAIN_CAMPAIGN = createMainCampaign();
+	private static final CampaignVO PL_CAMPAIGN = createMainCampaign(Language.PL);
+	private static final CampaignVO EN_CAMPAIGN = createMainCampaign(Language.EN);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -272,8 +274,8 @@ public class FrontController extends HttpServlet {
 				return DtoToVoConverter.convert(campaign);
 			}
 		} else {
-			log.log(Level.INFO, "CampaignName: NONE " + request.getServerName() + " " + request.getMethod() + " " + request.getPathInfo());
-			return MAIN_CAMPAIGN;
+			log.log(Level.INFO, "CampaignName: main " + getLangVersion() + " " + request.getServerName() + " " + request.getMethod() + " " + request.getPathInfo());
+			return getLangVersion() == LangVersion.PL ? PL_CAMPAIGN : EN_CAMPAIGN;
 		}
 	}
 	
@@ -283,18 +285,19 @@ public class FrontController extends HttpServlet {
 	
 	public static CampaignVO getCampaign() {
 		CampaignVO c = campaign.get();
-		return c == null ? MAIN_CAMPAIGN : c;
+		return c == null ? (getLangVersion() == LangVersion.PL ? PL_CAMPAIGN : EN_CAMPAIGN) : c;
 	}
 	
-	private static final CampaignVO createMainCampaign() {
+	private static final CampaignVO createMainCampaign(Language language) {
 		CampaignVO campaign = new CampaignVO();
-		campaign.setName("Main campaign");
+		campaign.setName("Main " + language + " campaign");
 		campaign.setCreator("Admin");
 		campaign.setActiveFrom(new Date(0));
 		campaign.setActiveTo(new Date(0));
-		campaign.setDescription("Main campaign");
+		campaign.setDescription("Main " + language + " campaign");
 		campaign.setId(null);
-		campaign.setSubdomain(null);
+		campaign.setSubdomain(language.name().toLowerCase());
+		campaign.setAllowedLanguage(language.toString());
 		return campaign;
 	}
 }

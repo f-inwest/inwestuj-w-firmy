@@ -994,7 +994,7 @@ public class MockDataBuilder {
 				"Better than free newspaper", "Maybe Tim Armstrong, AOL, and Patch will prove it wrong, but to this point nobody has been able to crack the local news market and make a sustainable business. In theory creating a network of local news sites that people care about is a good idea. You build a community, there's a baked in advertising group with local businesses, and classifieds. But, it appears to be too niche to scale into a big business.");
 		listings.add(bp); // 10
 
-		bp = prepareListing(EN, AHMED, "Micropayments", Listing.State.ACTIVE, "Financial", 5000, 49,
+		bp = prepareListing(EN, AHMED, "Micropayments", Listing.State.ACTIVE, "Finance", 5000, 49,
 				"We can trasfer even a penny", "Micropayments are one idea that's tossed around to solve the problem of paying for content on the Web. If you want to read a New York Times story it would only cost a nickel! Or on Tumblr, if you want to tip a blogger or pay for a small design you could with ease. So far, these micropayment plans have not worked.");
 		listings.add(bp); // 11
 
@@ -1026,7 +1026,7 @@ public class MockDataBuilder {
 				"Mobile garage makes any car greener", "Colorado-based Green Garage specializes in \"green-tuning\" cars to run cleaner, greener and cheaper through sustainable, energy-saving automotive maintenance and repair products. The full-service company begins by bringing the garage to the customer's front door with a valet service whereby it picks up the car, green-tunes it and then drops it off again. Given where the automotive industry began on the sustainability spectrum, it seems safe to say there's plenty of room for improvement, and that's just what we're beginning to see.");
 		listings.add(bp); // 18
 
-		bp = prepareListing(EN, JOHN, "Plan Retirement", Listing.State.CLOSED, "Financial", 35000, 20,
+		bp = prepareListing(EN, JOHN, "Plan Retirement", Listing.State.CLOSED, "Finance", 35000, 20,
 				"We'll plan your retirement", "People who retire need advice in terms of managing their finances, savings and contingency planning.  With lots of people retiring, a Retirement Planning business can be an ideal opportunity for someone who is good at managing personal finances.");
 		listings.add(bp); // 19
 
@@ -1200,7 +1200,7 @@ public class MockDataBuilder {
             "Electronics",
             "Energy",
             "Environmental",
-            "Financial",
+            "Finance",
             "Hardware",
             "Healthcare",
             "Industrial",
@@ -1609,6 +1609,7 @@ public class MockDataBuilder {
 		Listing bp = new Listing();
 		bp.id = id();
 		bp.lang = lang;
+		bp.campaign = lang == LangVersion.PL ? "pl" : "en";
 		bp.name = name;
 		bp.summary = summary;
 		bp.mantra = mantra;

@@ -41,6 +41,7 @@ public class ListingTileVO extends BaseVO implements UserDataUpdatable, Serializ
 	@JsonProperty("summary") protected String summary;
 	@JsonProperty("website") protected String website;
 	@JsonProperty("category") protected String category;
+	@JsonProperty("category_val") protected String categoryValue;
 	@JsonProperty("type") @JsonSerialize(using=LowecaseSerializer.class) protected String type;
 	@JsonProperty("platform") @JsonSerialize(using=LowecaseSerializer.class) protected String platform;
 	@JsonProperty("stage") @JsonSerialize(using=LowecaseSerializer.class) protected String stage;
@@ -198,6 +199,14 @@ public class ListingTileVO extends BaseVO implements UserDataUpdatable, Serializ
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public String getCategoryValue() {
+		return categoryValue;
+	}
+
+	public void setCategoryValue(String categoryValue) {
+		this.categoryValue = categoryValue;
 	}
 
 	public boolean isAskedForFunding() {
