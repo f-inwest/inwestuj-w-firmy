@@ -321,7 +321,7 @@ a:focus, a:hover { cursor: pointer; }
     .boxpanel p,
     .uneditabletext,
     .doclabel, .aboutlabel,
-    .companynav, .companynavselected, .companybannerlink,
+    .companynav, .companybannerlink,
     .notifylink, .messagelink, .profilelink,
     .titleinfo, .sideinfo, .bmcinfo, .ipinfo,
     .sidebox,
@@ -332,6 +332,9 @@ a:focus, a:hover { cursor: pointer; }
 .darkblue
     .tilecompany, .companyhalftitle, .companybannertextlink, .formlink, .inputbutton, .smallinputbutton, .loctextinp, .loctext, .showmore a
     { color: #7edaef; }
+.companybannertextlink:visited {
+    text-decoration: none;
+}
 .companybannertitle
     { color: #444; }
 
@@ -502,7 +505,12 @@ a:focus, a:hover { cursor: pointer; }
 .facebookbanner { height: 40px; top: 74px; position: absolute; overflow: visible; }
 
 /* company banner styles */
-.companyheader { width: 100%; height: 150px; border-bottom: 1px solid #ccc; padding: 20px 0; }
+.companyheader {
+    width: 100%;
+    height: 275px;
+    border-bottom: 1px solid #ccc;
+    padding: 20px 0;
+}
 .companyheaderboatwrapper {
     background: #fefefe;
     width: 100%;
@@ -517,8 +525,9 @@ a:focus, a:hover { cursor: pointer; }
     background-repeat: repeat-x;
     background-position-y: -75px;
 }
-.companybanner { height: 150px; position: relative; background: #fefefe; }
-.companybannercontainer { margin-top: 115px; }
+.companybanner { height: 176px; position: relative; background: #fefefe; }
+.companybannerwrapper { height: 146px; padding: 15px; }
+.companybannercontainer { margin-top: 92px; }
 .companybannertile { height: 150px; width: 596px; position: relative; overflow: hidden; margin-bottom: 15px; padding: 15px; }
 .companybannertilenoborder { height:150px;overflow:hidden;position:relative;top:-9px; }
 .companybannertitle {
@@ -556,7 +565,6 @@ a:focus, a:hover { cursor: pointer; }
 .companybannertitlelong { /* font-size: 24px; line-height: 24px; top: -1px; height: 49px; margin-bottom: 0; */ }
 .companybannertiletitlelong { /* font-size: 24px; line-height: 24px; top: 4px; height: 49px; */ }
 .companybannertext { font-size: 14px; font-weight: bold; }
-.companybannertextlink { font-size: 14px; margin-left: 4px; }
 .companybannerlink { float: left; margin-right: 5px; }
 .companybannertextgrey { font-size: 14px; width: 830px; }
 .companybannermapline {
@@ -591,8 +599,49 @@ a:focus, a:hover { cursor: pointer; }
     overflow: hidden;
     line-height: 20px;
 }
-.companybannerfollow { position: absolute; top: 0; right: 10px; }
-.companybannerfollowbtn { clear: both; float: right; margin-left: 10px !important; }
+.companybannerfold {
+    background: url(../img/rozek-opis.png);
+    width: 40px;
+    height: 41px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.companybannerlinks {
+    position: absolute;
+    right: 15px;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 14px !important;
+    font-weight: 300;
+    color: #5b6773;
+    text-align: right;
+    bottom: 15px;
+}
+.companybannerfollow {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 282px;
+}
+.companybannerfollowbtn {
+    margin-left: 0;
+    height: 29px;
+    border: 1px;
+    border-style: solid;
+    border-color: #7edaef;
+    text-decoration: none;
+    line-height: 30px;
+    color: #7edaef!important;
+    transition: background .25s,color .25s;
+    background: #fff!important;
+    width: 282px;
+    text-align: center;
+}
+.companybannerfollowbtn:hover, .companybannerfollowbtn:active {
+    transition: background 0.25s, color 0.25s;
+    background: #7EDAEF !important;
+    color: #ffffff !important;
+}
 .companybannersubmitbtn {
     clear: both;
     float: right;
@@ -608,7 +657,7 @@ a:focus, a:hover { cursor: pointer; }
     padding-top: 45px;
     width: 200px;
 }
-.companybannermantra2 { font-style: italic; line-height: 18px; padding-top: 2px; }
+.companybannermantra2 { font-style: italic; padding-top: 2px; }
 .companynavcontainer {
     position: absolute;
     bottom: 0;
@@ -631,15 +680,6 @@ a:focus, a:hover { cursor: pointer; }
     border-bottom: none;
 }
 .companynavlast { margin-right: 0; }
-.companynavselected {
-    background: #fff !important;
-    border: 1px solid #ccc;
-    border-width: 1px 1px 0;
-    color: #444;
-    height: 31px;
-    padding-left: 4px;
-    padding-right: 4px;
-}
 .companynavpresentation {
     width: 110px;
 }
@@ -693,6 +733,34 @@ a:focus, a:hover { cursor: pointer; }
     line-height: 22px;
     position: relative;
     margin-bottom: 15px;
+}
+.company-menu {
+    width: 950px;
+}
+.company-menu-link {
+    text-decoration: none;
+    color: #4dc6e1;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 14px !important;
+    font-weight: 400;
+    display: block;
+    padding: 0 20px 0 20px;
+    float: left;
+    line-height: 30px;
+}
+.company-menu-link:hover {
+    color: #fefefe;
+    background: #5b6773;
+}
+.company-nav-selected {
+    color: #fefefe;
+    background: #5b6773;
+}
+.company-side-menu-container {
+    margin-top: 35px;
+    background: #fefefe;
+    padding: 15px;
+    width: 280px;
 }
 .header-title {
     position: relative;
@@ -1230,12 +1298,12 @@ transition: height 300ms;
 .boxselected { background: #fff; }
 .sideboxselected { background: #fff !important; }
 .sidebox {
-width: 302px;
-border: 1px solid #cccccc;
-background: none;
-            margin-bottom: 15px;
-overflow: hidden;
-          min-height: 21px;
+    width: 302px;
+    border: 1px solid #cccccc;
+    background: none;
+    margin-bottom: 15px;
+    overflow: hidden;
+    min-height: 21px;
 }
 .categorysidebox {
     min-height: 253px;
@@ -1961,6 +2029,10 @@ width: 292px;
 .toppreviewbutton {
     margin: 35px 6px 25px auto;
     width: 120px;
+}
+.company-menu-sidebox {
+    width: 280px;
+    text-align: center;
 }
 
 /* profiles */

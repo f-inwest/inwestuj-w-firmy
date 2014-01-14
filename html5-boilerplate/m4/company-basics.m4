@@ -27,23 +27,23 @@ include(images-panel.m4)
 
     </div>
 
-    <div class="span-8 last">
+    <div class="company-side-menu-container span-8 last">
         <a href="#" id="investlink">
-            <div class="sidebox investbutton initialhidden" id="investbutton">INVEST</div>
+            <div class="sidebox company-menu-sidebox investbutton initialhidden" id="investbutton">INVEST</div>
         </a>
 
         <a href="/new-listing-basics-page.html">
-            <div class="sidebox investbutton gotobutton initialhidden" id="editbutton">&lt;&lt; Revise Info</div>
+            <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden" id="editbutton">&lt;&lt; Revise Info</div>
         </a>
 
-        <div class="sidebox investbutton gotobutton" id="valuationbutton">Go To Valuation</div>
+        <div class="sidebox company-menu-sidebox investbutton gotobutton" id="valuationbutton">Go To Valuation</div>
 
-        <div class="sidebox investbutton gotobutton" id="modelbutton">Go To Business Model</div>
+        <div class="sidebox company-menu-sidebox investbutton gotobutton" id="modelbutton">Go To Business Model</div>
 
-        <div class="sidebox investbutton gotobutton" id="presentationbutton">Go To Presentation</div>
+        <div class="sidebox company-menu-sidebox investbutton gotobutton" id="presentationbutton">Go To Presentation</div>
 
         <div class="boxtitle boxtitleside">ASKING</div>
-        <div class="sidebox uneditabletext askingbox">
+        <div class="sidebox company-menu-sidebox uneditabletext askingbox">
             <div class="sideboxdesc suggestedmsg" id="suggestedmsg"></div>
             <div class="suggestedinfo" id="suggestedinfo">
                 <div class="sideboxtitlecompact sideboxnum" id="suggested_amt"></div>
@@ -54,12 +54,12 @@ include(images-panel.m4)
         </div>
 
         <a href="/new-listing-financials-page.html">
-            <div class="sidebox investbutton gotobutton initialhidden" id="fundingbutton">Ask for Funding</div>
+            <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden" id="fundingbutton">Ask for Funding</div>
         </a>
 
         <div class="initialhidden" id="documentboxwrapper">
         <div class="boxtitle boxtitleside">DOCUMENTS</div>
-        <div class="sidebox documentbox" id="documentbox">
+        <div class="sidebox company-menu-sidebox documentbox" id="documentbox">
                 <div class="downloadline hoverlink initialhidden" id="presentationwrapper">
                     <a href="#" id="presentationlink">
                         <div class="downloadicon"></div>
@@ -81,13 +81,13 @@ include(images-panel.m4)
         </div>
         </div>
 
-        <div class="sidebox investbutton gotobutton initialhidden" id="adddocumentbutton">Add Document</div>
-        <div class="sidebox investbutton gotobutton initialhidden" id="requestpresentationbutton">Request Powerpoint/PDF Presentation</div>
-        <div class="sidebox investbutton gotobutton initialhidden" id="requestbusinessplanbutton">Request Business Plan</div>
-        <div class="sidebox investbutton gotobutton initialhidden" id="requestfinancialsbutton">Request Financial Statements</div>
+        <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden" id="adddocumentbutton">Add Document</div>
+        <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden" id="requestpresentationbutton">Request Powerpoint/PDF Presentation</div>
+        <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden" id="requestbusinessplanbutton">Request Business Plan</div>
+        <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden" id="requestfinancialsbutton">Request Financial Statements</div>
 
         <div class="boxtitle boxtitleside">LOCATION</div>
-        <div class="sidebox">
+        <div class="sidebox company-menu-sidebox ">
             <div class="addresstext darkgrey" id="fulladdress"></div>
             <div class="sideboxmap">
                 <a href="#" class="formlink hoverlink" target="_blank" id="addresslink">
@@ -97,7 +97,7 @@ include(images-panel.m4)
         </div>
 
         <div class="boxtitle boxtitleside">SHARE</div>
-        <div class="sidebox socialsidebox" id="socialsidebox">
+        <div class="sidebox socialsidebox company-menu-sidebox" id="socialsidebox">
 
             <div class="twitterbanner" id="twitterbanner">
                 <a href="https://twitter.com/share" class="twitter-share-button" data-via="inwestuj-w-firmy">Tweet</a>

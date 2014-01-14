@@ -1,7 +1,7 @@
 define(`companybannermacro', `
 <div class="companyheader">
 
-    <div class="copmanyheaderboatwrapper">
+    <div class="companyheaderboatwrapper">
         <div class="companyheaderboat"></div>
     </div>
     <div class="container companybannercontainer">
@@ -14,69 +14,61 @@ define(`companybannermacro', `
 
             <div class="initialhidden companybannerwrapper">
 
+                <div class="companybannerfold"></div>
+
                 <div class="companybannerlogo tileimg noimage" id="companylogo"></div>
     
                 <p class="companybannertitle" id="title"></p>
-                <div class="companybannertextgrey">
-                    <span id="categoryaddresstext"></span><span> </span><span id="admintext"></span>
-                    <a class="companybannertextlink hoverlink initialhidden" href="" id="sendmessagelink"><span style="color:#666;">&middot;</span> send message</a>
-                </div>
-                <div class="companybannertextgrey">
-                    <span id="listing_date_text" class="inputfield" style="margin-right: 1px;"></span>
-                    &nbsp;<a class="companybannertextlink" href="#" target="_blank" id="websitelink">
-                        <span id="domainname" class="companybannertextlink" style="float:left;"></span>
-                        <div class="span-1 linkicon" id="websitelinkicon"></div>
-                    </a>
-                </div>
                 <div class="companybannertextgrey companybannermantra2" id="mantra"></div>
-    
+                <div class="companybannertextgrey">
+                    <span id="listing_financial_text" class="inputfield"></span><br/>
+                    <a class="companybannertextlink hoverlink initialhidden" href="" id="sendmessagelink">@lang_send_message@</a><br/>
+                    <span id="admintext"></span>
+                </div>
+
                 <div class="companybannerfollow">
-                    <div class="companybannerfollowbtn smallinputbutton span-3 darkblue hoverlink initialhidden" id="followbtn"></div>
+                    <div class="companybannerfollowbtn hoverlink initialhidden" id="followbtn"></div>
                     <div class="inputmsg inputfield last companybannerfollowmsg" id="followmsg"></div>
                 </div>
 
                 <div class="companybannerfollow">
-                    <div class="companybannersubmitbtn span-4 smallinputbutton initialhidden" id="submitbutton">SUBMIT &gt;&gt;</div>
+                    <div class="companybannersubmitbtn span-4 smallinputbutton initialhidden" id="submitbutton">@lang_submit_project@ &gt;&gt;</div>
                     <div class="inputmsg last companybannerfollowmsg clear" id="submiterrormsg"></div>
                 </div>
     
+                <div class="companybannerlinks">
+                    <div>@lang_author@: <span id="profile_link_text"></span></div>
+                    <div>@lang_website@:
+                        <a class="companybannertextlink" href="#" target="_blank" id="websitelink">
+                            <span id="domainname" class="companybannertextlink"></span>
+                        </a>
+                    </div>
+                    <div>@lang_category@: <span id="category_link_text"></span></div>
+                    <div>@lang_location@: <span id="address_link_text"></span></div>
+                </div>
             </div>
 
-            <div class="companynavcontainer initialhidden" id="companynavcontainer">
-                <a class="hoverlink companynavlink" href="#" id="basicstab">
-                    <div class="companynav hoverlink $1">
-                        BASICS
-                    </div>
+            <div class="header-content header-initial company-menu" id="companynavcontainer">
+                <a class="hoverlink" href="#" id="basicstab">
+                    <div class="company-menu-link hoverlink $1">@lang_basics@</div>
                 </a>
-                <a class="hoverlink companynavlink" href="#" id="valuationtab">
-                    <div class="companynav hoverlink $2" id="valuationtab">
-                        VALUATION
-                    </div>
+                <a class="hoverlink" href="#" id="valuationtab">
+                    <div class="company-menu-link hoverlink $2">@lang_valuation@</div>
                 </a>
-                <a class="hoverlink companynavlink" href="#" id="modeltab">
-                    <div class="companynav hoverlink $3" id="modeltab">
-                        MODEL
-                    </div>
+                <a class="hoverlink" href="#" id="modeltab">
+                    <div class="company-menu-link hoverlink $3">@lang_model@</div>
                 </a>
-                <a class="hoverlink companynavlink" href="#" id="presentationtab">
-                    <div class="companynav hoverlink companynavpresentation $4" id="presentationtab">
-                        PRESENTATION
-                    </div>
+                <a class="hoverlink" href="#" id="presentationtab">
+                    <div class="company-menu-link hoverlink $4">@lang_presentation@</div>
                 </a>
-                <a class="hoverlink companynavlink" href="#" id="bidstab">
-                    <div class="companynav hoverlink companynavinvestments $5" id="bidstab">
-                        INVESTMENTS <!-- <span id="num_bids"></span> -->
-                    </div>
+                <a class="hoverlink" href="#" id="bidstab">
+                    <div class="company-menu-link hoverlink $5">@lang_investments@<!-- <span id="num_bids"></span> --></div>
                 </a>
-                <a class="hoverlink companynavlink" href="#" id="commentstab">
-                    <div class="companynav hoverlink $6" id="commentstab">
-                        COMMENTS <!-- <span id="num_comments"></span> -->
-                    </div>
+                <a class="hoverlink" href="#" id="commentstab">
+                    <div class="company-menu-link hoverlink $6">@lang_comments@<!-- <span id="num_comments"></span> --></div>
                 </a>
-                <a class="hoverlink companynavlink" href="#" id="questionstab">
-                    <div class="companynav hoverlink $7" id="questionstab">
-                        QUESTIONS <!-- <span id="num_qandas"></span> -->
-                    </div>
+                <a class="hoverlink" href="#" id="questionstab">
+                    <div class="company-menu-link hoverlink $7">@lang_questions@<!-- <span id="num_qandas"></span> --></div>
                 </a>
             </div>
         </div>
