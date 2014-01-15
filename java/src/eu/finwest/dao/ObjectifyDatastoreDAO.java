@@ -48,7 +48,7 @@ import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.Vote;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.web.FrontController;
-import eu.finwest.web.ListingFacade;
+import eu.finwest.web.MemCacheFacade;
 
 /**
  * Datastore implementation which uses Google's AppEngine Datastore through Objectify interfaces.
@@ -578,7 +578,6 @@ public class ObjectifyDatastoreDAO {
 	}
 
 	private void updateListingLocationsAndCategories(Listing listing, Listing.State oldState) {
-		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
 		// all listing locations cache is also modified in method ListingFacade.getAllListingLocations
 
 		// listing activation should allow for editing new listing by the owner
@@ -586,11 +585,7 @@ public class ObjectifyDatastoreDAO {
 			// storing location data
 			ListingLocation loc = new ListingLocation(listing);
 			getOfy().put(loc);
-			@SuppressWarnings("unchecked")
-			List<Object[]> result = (List<Object[]>)mem.get(ListingFacade.MEMCACHE_ALL_LISTING_LOCATIONS);
-			if (result != null) {
-				result.add(new Object[]{loc.getWebKey(), loc.latitude, loc.longitude});
-			}
+			
 			// updating category
 			for (Category cat : getCategories()) {
 				if (cat.name.equals(listing.category)) {
@@ -598,22 +593,10 @@ public class ObjectifyDatastoreDAO {
 					getOfy().put(cat);
 				}
 			}
-			mem.put(ListingFacade.MEMCACHE_ALL_LISTING_LOCATIONS, result);
 		}
 		if (listing.state == Listing.State.CLOSED || listing.state == Listing.State.WITHDRAWN) {
 			getOfy().delete(new ListingLocation(listing));
-			@SuppressWarnings("unchecked")
-			List<Object[]> result = (List<Object[]>)mem.get(ListingFacade.MEMCACHE_ALL_LISTING_LOCATIONS);
-			if (result != null) {
-				Object[] array = null;
-				for (int i = 0; i < result.size(); i++) {
-					array = result.get(i);
-					if (listing.getWebKey().equals(array[0])) {
-						result.remove(i);
-						break;
-					}
-				}
-			}
+			
 			// updating category
 			for (Category cat : getCategories()) {
 				if (cat.name.equals(listing.category)) {
@@ -621,8 +604,8 @@ public class ObjectifyDatastoreDAO {
 					getOfy().put(cat);
 				}
 			}
-			mem.put(ListingFacade.MEMCACHE_ALL_LISTING_LOCATIONS, result);
 		}
+		MemCacheFacade.instance().updateCacheForListing(listing, oldState);
 	}
 
 	public Listing storeListing(Listing listing) {
@@ -1292,6 +1275,13 @@ public class ObjectifyDatastoreDAO {
 		return categories;
 	}
 
+	public List<Category> getInitialCategories() {
+		QueryResultIterable<Key<Category>> catIt = getOfy().query(Category.class)
+				.filter("campaign =", "en").fetchKeys();
+		List<Category> categories = new ArrayList<Category>(getOfy().get(catIt).values());
+		return categories;
+	}
+
 	public void storeLocations(List<Location> locations, List<ListingLocation> listingLocations) {
         log.info("Storing locations: " + locations.size()
         		+ " and listing locations: " + listingLocations.size());
@@ -1305,6 +1295,8 @@ public class ObjectifyDatastoreDAO {
 	}
 
 	public void storeCategories(List<Category> categories) {
+		QueryResultIterable<Key<Category>> catIt = getOfy().query(Category.class).fetchKeys();
+		getOfy().delete(catIt);
 		getOfy().put(categories);
 	}
 

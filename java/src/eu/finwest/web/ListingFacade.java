@@ -6,21 +6,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,8 +47,6 @@ import com.google.appengine.api.images.Image;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.Transform;
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
@@ -96,9 +89,6 @@ public class ListingFacade {
 	private static final Logger log = Logger.getLogger(ListingFacade.class.getName());
 
 	public static enum UpdateReason {NEW_BID, BID_UPDATE, NEW_COMMENT, DELETE_COMMENT, NEW_MONITOR, DELETE_MONITOR, QUESTION_ANSWERED, NONE};
-	public static final String MEMCACHE_ALL_LISTING_LOCATIONS = "AllListingLocations";
-	public static final String MEMCACHE_CATEGORIES = "Categories";
-
 	private final static int PICTURE_HEIGHT = 452;
 	private final static int PICTURE_WIDTH = 622;
 	private final static int LOGO_HEIGHT = 146;
@@ -133,10 +123,7 @@ public class ListingFacade {
 	}
 
 	private ListingFacade() {
-		Map<String, Category> categoriesMap = fetchCategories();
-		
-		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
-		mem.put(MEMCACHE_CATEGORIES, categoriesMap);
+		MemCacheFacade.instance().updateCategories();
 	}
 
 	private ObjectifyDatastoreDAO getDAO() {
@@ -147,37 +134,21 @@ public class ListingFacade {
 		return NotificationObjectifyDatastoreDAO.getInstance();
 	}
 
-	private Map<String, Category> fetchCategories() {
+	private Map<String, Map<String, Category>> fetchCategories() {
 		List<Category> c = getDAO().getCategories();
-        log.log(Level.INFO, "Starting category calculation for " + c.size() + " categories");
-        Map<String, Category> categories = new HashMap<String, Category>();
+        log.log(Level.INFO, "Fetching categories - " + c.size() + " fetched");
+        Map<String, Map<String, Category>> categories = new HashMap<String, Map<String, Category>>();
         for(Category category : c) {
             category.count = 0;
-            category.countPl = 0;
-            categories.put(category.name, category);
+            Map<String, Category> campaignCategories = categories.get(category.campaign);
+            if (campaignCategories == null) {
+            	campaignCategories = new HashMap<String, Category>();
+            	categories.put(category.campaign, campaignCategories);
+            }
+            campaignCategories.put(category.name, category);
         }
-        log.log(Level.INFO, "Calculated count statistics for " + c.size() + " categories");
+        log.log(Level.INFO, "Calculated categories count statistics for " + categories.size() + " campaigns");
 		return categories;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public Map<String, Category> getCategoriesMap() {
-		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
-		return (Map<String, Category>)mem.get(MEMCACHE_CATEGORIES);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public String getCategoryLabel(String category) {
-		if (category == null) {
-			return null;
-		}
-		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
-		Category cat = ((Map<String, Category>)mem.get(MEMCACHE_CATEGORIES)).get(category);
-		if (cat == null) {
-			log.log(Level.WARNING, "@@@@@@@@@@@@@@@@@@@ Category '" + category + "' doesn't exist!!!");
-			return null;
-		}
-		return FrontController.getLangVersion() == LangVersion.PL ? cat.namePl : cat.name;
 	}
 	
 	/**
@@ -1194,8 +1165,8 @@ public class ListingFacade {
 			}
 		}
 
-		result.setCategories(getTopCategories());
-		result.setTopLocations(getTopLocations());
+		result.setCategories(MemCacheFacade.instance().getTopCategories());
+		result.setTopLocations(MemCacheFacade.instance().getTopLocations());
 
 		return result;
 	}
@@ -1269,8 +1240,8 @@ public class ListingFacade {
 			result.setAdminPostedListings(list);
 		}
 
-		result.setCategories(getTopCategories());
-		result.setTopLocations(getTopLocations());
+		result.setCategories(MemCacheFacade.instance().getTopCategories());
+		result.setTopLocations(MemCacheFacade.instance().getTopLocations());
 
 		return result;
 	}
@@ -1313,8 +1284,8 @@ public class ListingFacade {
 		applyShortNotifications(loggedInUser, list);
 		list.setListings(listings);
 		list.setListingsProperties(listProperties);
-		list.setCategories(getTopCategories());
-		list.setTopLocations(getTopLocations());
+		list.setCategories(MemCacheFacade.instance().getTopCategories());
+		list.setTopLocations(MemCacheFacade.instance().getTopLocations());
 
 		return list;
 	}
@@ -1328,8 +1299,8 @@ public class ListingFacade {
 		ListingListVO list = new ListingListVO();
 		list.setListings(listings);
 		list.setListingsProperties(listingProperties);
-		list.setCategories(getTopCategories());
-		list.setTopLocations(getTopLocations());
+		list.setCategories(MemCacheFacade.instance().getTopCategories());
+		list.setTopLocations(MemCacheFacade.instance().getTopLocations());
 
 		return list;
 	}
@@ -1346,8 +1317,8 @@ public class ListingFacade {
 		ListingListVO list = new ListingListVO();
 		list.setListings(listings);
 		list.setListingsProperties(listingProperties);
-		list.setCategories(getTopCategories());
-		list.setTopLocations(getTopLocations());
+		list.setCategories(MemCacheFacade.instance().getTopCategories());
+		list.setTopLocations(MemCacheFacade.instance().getTopLocations());
 
 		return list;
 	}
@@ -1366,8 +1337,8 @@ public class ListingFacade {
 		ListingListVO list = new ListingListVO();
 		list.setListings(listings);
 		list.setListingsProperties(listingProperties);
-		list.setCategories(getTopCategories());
-		list.setTopLocations(getTopLocations());
+		list.setCategories(MemCacheFacade.instance().getTopCategories());
+		list.setTopLocations(MemCacheFacade.instance().getTopLocations());
 
 		return list;
 	}
@@ -1405,8 +1376,8 @@ public class ListingFacade {
 		ListingListVO list = new ListingListVO();
 //		list.setListings(listings);
 		list.setListingsProperties(listingProperties);
-		list.setCategories(getTopCategories());
-		list.setTopLocations(getTopLocations());
+		list.setCategories(MemCacheFacade.instance().getTopCategories());
+		list.setTopLocations(MemCacheFacade.instance().getTopLocations());
 
 		return list;
 	}
@@ -1426,8 +1397,8 @@ public class ListingFacade {
 		ListingListVO list = new ListingListVO();
 		list.setListings(listings);
 		list.setListingsProperties(listingProperties);
-		list.setCategories(getTopCategories());
-		list.setTopLocations(getTopLocations());
+		list.setCategories(MemCacheFacade.instance().getTopCategories());
+		list.setTopLocations(MemCacheFacade.instance().getTopLocations());
 
 		return list;
 	}
@@ -1476,8 +1447,8 @@ public class ListingFacade {
 
 		list.setListings(listings);
 		list.setListingsProperties(listingProperties);
-		list.setCategories(getTopCategories());
-		list.setTopLocations(getTopLocations());
+		list.setCategories(MemCacheFacade.instance().getTopCategories());
+		list.setTopLocations(MemCacheFacade.instance().getTopLocations());
 		list.setUser(new UserBasicVO(user));
 		if (!(isAdmin || ownerListings)) {
 			log.info("Not admin nor owner: removing edited listing data and email");
@@ -1530,8 +1501,8 @@ public class ListingFacade {
 
 		list.setListings(listings);
 		list.setListingsProperties(listingProperties);
-		list.setCategories(getTopCategories());
-		list.setTopLocations(getTopLocations());
+		list.setCategories(MemCacheFacade.instance().getTopCategories());
+		list.setTopLocations(MemCacheFacade.instance().getTopLocations());
 
 		return list;
 	}
@@ -1548,8 +1519,8 @@ public class ListingFacade {
 		ListingListVO list = new ListingListVO();
 		list.setListings(listings);
 		list.setListingsProperties(listingProperties);
-		list.setCategories(getTopCategories());
-		list.setTopLocations(getTopLocations());
+		list.setCategories(MemCacheFacade.instance().getTopCategories());
+		list.setTopLocations(MemCacheFacade.instance().getTopLocations());
 
 		return list;
 	}
@@ -1574,8 +1545,8 @@ public class ListingFacade {
 
 		list.setListings(listings);
 		list.setListingsProperties(listingProperties);
-		list.setCategories(getTopCategories());
-		list.setTopLocations(getTopLocations());
+		list.setCategories(MemCacheFacade.instance().getTopCategories());
+		list.setTopLocations(MemCacheFacade.instance().getTopLocations());
 
 		return list;
 	}
@@ -1594,8 +1565,8 @@ public class ListingFacade {
         }
         list.setListings(listings);
         list.setListingsProperties(listingProperties);
-        list.setCategories(getTopCategories());
-        list.setTopLocations(getTopLocations());
+        list.setCategories(MemCacheFacade.instance().getTopCategories());
+        list.setTopLocations(MemCacheFacade.instance().getTopLocations());
         return list;
     }
 
@@ -1614,8 +1585,8 @@ public class ListingFacade {
         }
         list.setListings(listings);
         list.setListingsProperties(listingProperties);
-        list.setCategories(getTopCategories());
-        list.setTopLocations(getTopLocations());
+        list.setCategories(MemCacheFacade.instance().getTopCategories());
+        list.setTopLocations(MemCacheFacade.instance().getTopLocations());
         return list;
     }
 
@@ -1648,8 +1619,8 @@ public class ListingFacade {
 		}
 		listingsList.setListings(listings);
 		listingsList.setListingsProperties(listingProperties);
-		listingsList.setCategories(getTopCategories());
-		listingsList.setTopLocations(getTopLocations());
+		listingsList.setCategories(MemCacheFacade.instance().getTopCategories());
+		listingsList.setTopLocations(MemCacheFacade.instance().getTopLocations());
 		return listingsList;
 	}
 
@@ -1716,55 +1687,78 @@ public class ListingFacade {
 	}
 
     public String updateAllAggregateStatistics() {
-        Map<String, Category> categories = getCategoriesMap();
-
-        Map<String, Location> locations = new HashMap<String, Location>();
+        Map<String, Category> categories = MemCacheFacade.instance().getInitalCategoriesMap();
         List<Listing> listings = getDAO().getAllListingsInternal();
-        List<ListingLocation> listingLocs = new ArrayList<ListingLocation>();
-        log.log(Level.INFO, "Starting listing calculation for " + listings.size() + " listings");
+
+        Map<String, Map<String, Category>> statCategories = new HashMap<String, Map<String, Category>>();
+        Map<String, Map<String, Location>> locations = new HashMap<String, Map<String, Location>>();
+        Map<String, List<ListingLocation>> listingLocs = new HashMap<String, List<ListingLocation>>();
+        log.log(Level.INFO, "Starting listings stat calculation for " + listings.size() + " listings");
 		for (Listing listing : listings) {
 			if (listing.state == Listing.State.ACTIVE) {
-				listingLocs.add(new ListingLocation(listing));
+				if (!statCategories.containsKey(listing.campaign)) {
+					Map<String, Category> campCategories = new HashMap<String, Category>();
+					for (Category c : categories.values()) {
+						campCategories.put(c.name, c.copyForCampaign(listing.campaign));
+					}
+					statCategories.put(listing.campaign, campCategories);
+					locations.put(listing.campaign, new HashMap<String, Location>());
+					listingLocs.put(listing.campaign, new ArrayList<ListingLocation>());
+				}
+				listingLocs.get(listing.campaign).add(new ListingLocation(listing));
 				// updating top locations data
-				Location loc = locations.get(listing.lang + listing.briefAddress);
+				Map<String, Location> campaignLocations = locations.get(listing.campaign);
+				Location loc = campaignLocations.get(listing.briefAddress);
 				if (loc != null) {
 					loc.value++;
 				} else {
-					locations.put(listing.lang + listing.briefAddress, new Location(listing.lang, listing.briefAddress));
+					campaignLocations.put(listing.briefAddress, new Location(listing.campaign, listing.briefAddress));
 				}
 				// updating top categories data
-				Category cat = categories.get(listing.category);
+				Map<String, Category> campaignCategories = statCategories.get(listing.campaign);
+				Category cat = campaignCategories.get(listing.category);
 				if (cat != null) {
-					if (listing.lang == LangVersion.EN)
-						cat.count++;
-					else
-						cat.countPl++;
+					cat.count++;
+				} else {
+					log.log(Level.WARNING, "Found false category in listing " + listing);
 				}
 			}
 		}
         log.log(Level.INFO, "Generated " + locations.size() + " locations for " + listings.size() + " listings");
 
+        List<Category> allCategories = new ArrayList<Category>();
+        for (Map<String, Category> cats : statCategories.values()) {
+        	allCategories.addAll(cats.values());
+        }
         getDAO().storeCategories(new ArrayList<Category>(categories.values()));
-        getDAO().storeLocations(new ArrayList<Location>(locations.values()), listingLocs);
+        MemCacheFacade.instance().updateCategories(statCategories);
+
+        List<Location> allLocations = new ArrayList<Location>();
+        for (Map<String, Location> locs : locations.values()) {
+        	allLocations.addAll(locs.values());
+        }
+        List<ListingLocation> allListingLocations = new ArrayList<ListingLocation>();
+        for (List<ListingLocation> locs : listingLocs.values()) {
+        	allListingLocations.addAll(locs);
+        }
+        getDAO().storeLocations(allLocations, allListingLocations);
+        MemCacheFacade.instance().updateLocations(allLocations, allListingLocations);
 
         StringBuffer buf = new StringBuffer();
         buf.append("Categories:</br>\n<ul>\n");
-        for (Category cat : categories.values()) {
+        for (Category cat : allCategories) {
         	buf.append("<li>").append(cat).append("\n");
         }
         buf.append("</ul>\nLocations:</br>\n<ul>\n");
-        for (Location loc : locations.values()) {
+        for (Location loc : allLocations) {
         	buf.append("<li>").append(loc.briefAddress).append(" = ").append(loc.value).append("\n");
         }
         buf.append("</ul>\nListing locations:</br>\n<ul>\n");
-        for (ListingLocation loc : listingLocs) {
-        	buf.append("<li>").append(loc.latitude).append(", ").append(loc.longitude).append("\n");
+        for (ListingLocation loc : allListingLocations) {
+        	buf.append("<li>").append(loc.campaign).append(" -> ").append(loc.latitude).append(", ").append(loc.longitude).append("\n");
         }
         buf.append("</ul>\n\n");
         log.log(Level.INFO, "Updated location/category data</br>\n" + buf.toString());
-
-        MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
-		mem.delete(MEMCACHE_ALL_LISTING_LOCATIONS);
 
         return "Updated statistics:</br>\n" + buf.toString();
     }
@@ -1780,8 +1774,7 @@ public class ListingFacade {
 		}
 		buf.append("</ul>\n\n");
 
-		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
-		mem.delete(MEMCACHE_ALL_LISTING_LOCATIONS);
+		MemCacheFacade.instance().clearAllListingLocations();
 
 		log.log(Level.INFO, "Updated stats for " + listings.size() + " listings");
         return "Updated stats for " + listings.size() + " listings.</br>\n" + buf.toString();
@@ -2198,54 +2191,9 @@ public class ListingFacade {
 		return result;
 	}
 
-	public Map<String, String> getTopCategories() {
-		List<Category> categories = getDAO().getCategories();
-
-		Map<String, String> result = new LinkedHashMap<String, String>();
-		for (Category cat : categories) {
-			if (cat.count > 0) {
-				result.put(cat.name, FrontController.getLangVersion() == LangVersion.EN ? cat.name : cat.namePl);
-			}
-		}
-		return result;
-	}
-
-	public Map<String, Integer> getTopLocations() {
-		List<Location> locations = getDAO().getTopLocations();
-
-		Map<String, Integer> result = new LinkedHashMap<String, Integer>();
-		for (Location loc : locations) {
-			result.put(loc.briefAddress, loc.value);
-		}
-		return result;
-	}
-
 	public ListingLocationsVO getAllListingLocations(String latLong) {
-		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
-		@SuppressWarnings("unchecked")
-		List<Object[]> data = (List<Object[]>)mem.get(MEMCACHE_ALL_LISTING_LOCATIONS);
-		if (data == null) {
-			List<ListingLocation> locations = getDAO().getAllListingLocations();
-
-			DecimalFormatSymbols dfs = new DecimalFormatSymbols();
-			dfs.setDecimalSeparator('.');
-			DecimalFormat df = new DecimalFormat("###.######", dfs);
-			data = new ArrayList<Object[]>();
-			Set<String> locationSet = new HashSet<String>();
-
-			String location[] = new String[2];
-			for (ListingLocation loc : locations) {
-				location[0] = df.format(loc.latitude);
-				location[1] = df.format(loc.longitude);
-				while (locationSet.contains(location[0] + location[1])) {
-					location = randomizeLocation(loc, df);
-				}
-				locationSet.add(location[0] + location[1]);
-				data.add(new Object[] {loc.getWebKey(), location[0], location[1]});
-			}
-			// all listing locations cache is also modified in method ObjectifyDatastoreDAO.updateListingStateAndDates
-			mem.put(MEMCACHE_ALL_LISTING_LOCATIONS, data);
-		}
+		List<Object[]> data = MemCacheFacade.instance().getListingLocationsFromCache();
+		
 		ListingLocationsVO result = new ListingLocationsVO();
 		result.setListings(data);
 		if (latLong != null) {
@@ -2261,12 +2209,6 @@ public class ListingFacade {
 		result.setListingsProperties(props);
 
 		return result;
-	}
-
-    private String[] randomizeLocation(ListingLocation loc, DecimalFormat df) {
-    	log.info("Randomizing: " + loc);
-		return new String[] {df.format(loc.latitude + ((double)new Random().nextInt(100)) * 0.000001),
-				df.format(loc.longitude + ((double)new Random().nextInt(100)) * 0.000001)};
 	}
 
 	public void updateMockListingImages(long listingId) {

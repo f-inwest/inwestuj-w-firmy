@@ -6,11 +6,8 @@ package eu.finwest.datamodel;
 import javax.persistence.Id;
 
 import com.googlecode.objectify.Key;
-import com.googlecode.objectify.annotation.Cached;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Unindexed;
-
-import eu.finwest.web.LangVersion;
 
 /**
  * This entity is not cached separately.
@@ -25,7 +22,7 @@ public class ListingLocation extends BaseObject<ListingLocation> {
 	}
 	public ListingLocation(Listing listing) {
 		this.id = listing.id;
-		this.lang = listing.lang;
+		this.campaign = listing.campaign;
 		this.latitude = listing.latitude;
 		this.longitude = listing.longitude;
 	}
@@ -33,7 +30,7 @@ public class ListingLocation extends BaseObject<ListingLocation> {
 		return new Key<ListingLocation>(ListingLocation.class, id);
 	}
 	@Id public Long id;
-	public LangVersion lang;
+	public String campaign;
 	public Double latitude;
 	public Double longitude;
 	

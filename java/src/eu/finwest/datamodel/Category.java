@@ -22,7 +22,7 @@ public class Category implements Serializable {
 	public String name;
 	public String namePl;
 	public int count = 0;
-	public int countPl = 0;
+	public String campaign;
 	
 	public Category() {
 	}
@@ -31,9 +31,18 @@ public class Category implements Serializable {
 		this.id = id;
 		this.name = name;
 		this.namePl = namePl;
+		this.campaign = "en";
+	}
+	
+	public Category copyForCampaign(String campaign) {
+		Category c = new Category();
+		c.name = this.name;
+		c.namePl = this.namePl;
+		c.campaign = campaign;
+		return c;
 	}
 	
 	public String toString() {
-		return "Category(id=" + id + ", name=" + name + ", namePl=" + namePl + ", count=" + count + ", countPl=" + countPl + ")";
+		return "Category(id=" + id + ", name=" + name + ", namePl=" + namePl + ", count=" + count + ", campaign=" + campaign + ")";
 	}
 }

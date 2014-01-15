@@ -15,8 +15,6 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Indexed;
 import com.googlecode.objectify.annotation.Unindexed;
 
-import eu.finwest.web.LangVersion;
-
 /**
  * @author "Grzegorz Nittner" <grzegorz.nittner@gmail.com>
  *
@@ -27,8 +25,8 @@ import eu.finwest.web.LangVersion;
 public class Location extends BaseObject<Location> {
 	public Location() {
 	}
-	public Location(LangVersion lang, String briefAddress) {
-		this.lang = lang;
+	public Location(String campaign, String briefAddress) {
+		this.campaign = campaign;
 		this.briefAddress = briefAddress;
 		this.value = 1;
 	}
@@ -37,7 +35,7 @@ public class Location extends BaseObject<Location> {
 	}
 	@Id public Long id;
 	
-	public LangVersion lang;
+	public String campaign;
 	
 	public Date modified;
 	@PrePersist void updateModifiedDate() {

@@ -45,6 +45,7 @@ import eu.finwest.web.HttpHeaders;
 import eu.finwest.web.HttpHeadersImpl;
 import eu.finwest.web.ListingFacade;
 import eu.finwest.web.ListingImportService;
+import eu.finwest.web.MemCacheFacade;
 import eu.finwest.web.ModelDrivenController;
 import eu.finwest.web.ServiceFacade;
 
@@ -671,13 +672,13 @@ public class ListingController extends ModelDrivenController {
 
     // GET /listings/used_categories
     private HttpHeaders getUsedCategories(HttpServletRequest request) {
-    	model = ListingFacade.instance().getTopCategories();
+    	model = MemCacheFacade.instance().getTopCategories();
         return new HttpHeadersImpl("used_categories").disableCaching();
     }
 
     // GET /listings/locations
     private HttpHeaders getLocations(HttpServletRequest request) {
-    	model = ListingFacade.instance().getTopLocations();
+    	model = MemCacheFacade.instance().getTopLocations();
         return new HttpHeadersImpl("locations").disableCaching();
     }
 

@@ -40,6 +40,7 @@ import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.Vote;
 import eu.finwest.util.TwitterHelper;
 import eu.finwest.web.ListingFacade;
+import eu.finwest.web.MemCacheFacade;
 
 /**
  * @author "Grzegorz Nittner" <grzegorz.nittner@gmail.com>
@@ -105,6 +106,7 @@ public class WarmupListener implements ServletContextListener {
 		log.info("MAIN_JS_FILE = " + MAIN_JS_FILE);
 		log.info("JS_FOLDER = " + JS_FOLDER);
 
+		MemCacheFacade.instance().updateCategories();
 		TwitterHelper.configureTwitterFactory();
 		List<SBUser> users = ObjectifyDatastoreDAO.getInstance().getAllUsers();
 		log.info("Fetched " + users.size() + " users");
