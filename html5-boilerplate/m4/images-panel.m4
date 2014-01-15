@@ -1,6 +1,6 @@
 `
-<div class="boxtitle">
-    <div class="span-2" id="imagetitle">IMAGES</div>
+<div class="header-content header-boxpanel-initial">
+    <div class="span-2" id="imagetitle">@lang_images@</div>
     <div class="span-12">
         <div class="dotnavwrapper">
             <ul class="dotnav dotnavempty" id="pic1nav"><li></li></ul>

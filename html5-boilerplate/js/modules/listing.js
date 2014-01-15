@@ -17,7 +17,7 @@ pl.implement(ListingClass, {
         this.loggedin_profile = json && json.loggedin_profile;
         this.loggedin_profile_id = this.loggedin_profile && this.loggedin_profile.profile_id;
         this.listing_url = 'http://inwestujwfirmy.pl/company-page.html?id=' + this.listing_id;
-        this.listing_public_title = 'Inwestuj w Firmy Listing: ' + this.title;
+        this.listing_public_title = 'Inwestuj w Firmy: ' + this.title;
         if (this.preview) {
             pl('#header').hide();
             pl('#footer').hide();
@@ -74,7 +74,7 @@ pl.implement(ListingClass, {
     },
 
     displayBasics: function() {
-        var html = this.summary ? HTMLMarkup.prototype.stylize(this.summary) : 'Listing summary goes here';
+        var html = this.summary ? HTMLMarkup.prototype.stylize(this.summary) : '@lang_listing_summary_empty@';
         this.displayPics();
         this.displayVideo();
         pl('#summary').html(html);
@@ -128,56 +128,56 @@ pl.implement(ListingClass, {
             url;
         if (this.status === 'new') {
             if (hasValuation) {
-                text = 'Edit Valuation';
+                text = '@lang_valuation@';
             }
             else {
-                text = 'Add Valuation';
+                text = '@lang_valuation@';
             }
             url = '/new-listing-valuation-page.html';
         }
         else if (this.status === 'posted' || this.status === 'active') {
             if (hasValuation) {
                 if (this.loggedin_profile && this.loggedin_profile.profile_id === this.profile_id) {
-                    text = 'Edit Valuation';
+                    text = '@lang_valuation@';
                     url = '/active-listing-valuation-page.html?id=' + this.listing_id;
                 }
                 else {
-                    text = 'Go To Valuation';
+                    text = '@lang_valuation@';
                     url = '/company-valuation-page.html?id=' + this.listing_id;
                 }
             }
             else {
                 if (this.loggedin_profile) {
                     if (this.loggedin_profile.profile_id === this.profile_id) {
-                        text = 'Add Valuation';
+                        text = '@lang_valuation@';
                         url = '/active-listing-valuation-page.html?id=' + this.listing_id;
                     }
                     else {
-                        text = 'Request Valuation';
+                        text = '@lang_request_valuation@';
                         ajax = new AjaxClass('/listing/ask_owner', 'valuationbutton', function() {
                             document.location = '/company-questions-page.html?id=' + self.listing_id;
                         });
                         ajax.setPostData({
                             message: {
                                 listing_id: this.listing_id,
-                                text: 'Could you please add a valuation for this listing?  Thanks.'
+                                text: '@lang_valuation_request_message@'
                             }
                         })
                     }
                 }
                 else {
                     if (this.login_url) {
-                        text = 'Sign In to Request Valuation';
+                        text = '@lang_sign_in_to_request_valuation@';
                         url = '/login-page.html?url=' + encodeURIComponent('/company-page.html?id=' + this.listing_id);
                     }
                     else {
-                        text = 'No Valuation';
+                        text = '@lang_no_valuation@';
                     }
                 }
             }
         }
         else {
-            text = 'No Valuation';
+            text = '@lang_no_valuation@';
         }
         pl('#valuationbutton').text(text);
         if (ajax) {
@@ -201,56 +201,56 @@ pl.implement(ListingClass, {
             url;
         if (this.status === 'new') {
             if (hasBmc) {
-                text = 'Edit Business Model';
+                text = '@lang_model@';
             }
             else {
-                text = 'Add Business Model';
+                text = '@lang_model@';
             }
             url = '/new-listing-bmc-page.html';
         }
         else if (this.status === 'posted' || this.status === 'active') {
             if (hasBmc) {
                 if (this.loggedin_profile && this.loggedin_profile.profile_id === this.profile_id) {
-                    text = 'Edit Business Model';
+                    text = '@lang_model@';
                     url = '/active-listing-bmc-page.html?id=' + this.listing_id;
                 }
                 else {
-                    text = 'Go To Business Model';
+                    text = '@lang_model@';
                     url = '/company-model-page.html?id=' + this.listing_id;
                 }
             }
             else {
                 if (this.loggedin_profile) {
                     if (this.loggedin_profile.profile_id === this.profile_id) {
-                        text = 'Add Business Model';
+                        text = '@lang_model@';
                         url = '/active-listing-bmc-page.html?id=' + this.listing_id;
                     }
                     else {
-                        text = 'Request Business Model';
+                        text = '@lang_request_model@';
                         ajax = new AjaxClass('/listing/ask_owner', 'modelbutton', function() {
                             document.location = '/company-questions-page.html?id=' + self.listing_id;
                         });
                         ajax.setPostData({
                             message: {
                                 listing_id: this.listing_id,
-                                text: 'Could you please add a business model canvas for this listing?  Thanks.'
+                                text: '@lang_model_request_message@'
                             }
                         })
                     }
                 }
                 else {
                     if (this.login_url) {
-                        text = 'Sign In to Request Business Model';
+                        text = '@lang_sign_in_to_request_model@';
                         url = '/login-page.html?url=' + encodeURIComponent('/company-page.html?id=' + this.listing_id);
                     }
                     else {
-                        text = 'No Business Model';
+                        text = '@lang_no_model@';
                     }
                 }
             }
         }
         else {
-            text = 'No Business Model';
+            text = '@lang_no_model@';
         }
         pl('#modelbutton').text(text);
         if (ajax) {
@@ -274,56 +274,56 @@ pl.implement(ListingClass, {
             url;
         if (this.status === 'new') {
             if (hasIp) {
-                text = 'Edit Presentation';
+                text = '@lang_presentation@';
             }
             else {
-                text = 'Add Presentation';
+                text = '@lang_presentation@';
             }
             url = '/new-listing-qa-page.html';
         }
         else if (this.status === 'posted' || this.status === 'active') {
             if (hasIp) {
                 if (this.loggedin_profile && this.loggedin_profile.profile_id === this.profile_id) {
-                    text = 'Edit Presentation';
+                    text = '@lang_presentation@';
                     url = '/active-listing-qa-page.html?id=' + this.listing_id;
                 }
                 else {
-                    text = 'Go To Presentation';
+                    text = '@lang_presentation@';
                     url = '/company-slides-page.html?id=' + this.listing_id;
                 }
             }
             else {
                 if (this.loggedin_profile) {
                     if (this.loggedin_profile.profile_id === this.profile_id) {
-                        text = 'Add Presentation';
+                        text = '@lang_presentation@';
                         url = '/active-listing-qa-page.html?id=' + this.listing_id;
                     }
                     else {
-                        text = 'Request Presentation';
+                        text = '@lang_request_presentation@';
                         ajax = new AjaxClass('/listing/ask_owner', 'modelbutton', function() {
                             document.location = '/company-questions-page.html?id=' + self.listing_id;
                         });
                         ajax.setPostData({
                             message: {
                                 listing_id: this.listing_id,
-                                text: 'Could you please add a presentation for this listing?  Thanks.'
+                                text: '@lang_presentation_request_message@'
                             }
                         })
                     }
                 }
                 else {
                     if (this.login_url) {
-                        text = 'Sign In to Request Presentation';
+                        text = '@lang_sign_in_to_request_presentation@';
                         url = '/login-page.html?url=' + encodeURIComponent('/company-page.html?id=' + this.listing_id);
                     }
                     else {
-                        text = 'No Presentation';
+                        text = '@lang_no_presentation@';
                     }
                 }
             }
         }
         else {
-            text = 'No Presentation';
+            text = '@lang_no_presentation@';
         }
         pl('#presentationbutton').text(text);
         if (ajax) {
@@ -366,7 +366,7 @@ pl.implement(ListingClass, {
                 ajax.setPostData({
                     message: {
                         listing_id: self.listing_id,
-                        text: 'Could you please upload a PowerPoint or PDF Presentation document for this listing?  Thanks.'
+                        text: '@lang_request_presentation_document@'
                     }
                 });
                 pl('#requestpresentationbutton').unbind();
@@ -381,7 +381,7 @@ pl.implement(ListingClass, {
                 ajax.setPostData({
                     message: {
                         listing_id: self.listing_id,
-                        text: 'Could you please upload a Business Plan document for this listing?  Thanks.'
+                        text: '@lang_request_plan_document@'
                     }
                 });
                 pl('#requestbusinessplanbutton').unbind();
@@ -396,7 +396,7 @@ pl.implement(ListingClass, {
                 ajax.setPostData({
                     message: {
                         listing_id: self.listing_id,
-                        text: 'Could you please upload the most recent Financial Statements for this listing?  Thanks.'
+                        text: '@lang_request_statements_document@'
                     }
                 });
                 pl('#requestfinancialsbutton').unbind();
@@ -406,14 +406,14 @@ pl.implement(ListingClass, {
     },
 
     displayMap: function() {
-        this.address = this.address || 'Unknown Address';
+        this.address = this.address || '@lang_unknown_address@';
         //this.addressurl = this.addressurl || 'http://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(this.address);
         this.addressurl = 'http://maps.google.com/maps?q='+this.latitude+','+this.longitude+'+('+encodeURIComponent(this.title)+', '+encodeURIComponent(this.address)+')';
         this.latitude = this.latitude || '51.499117116569';
         this.longitude = this.longitude || '-0.12359619140625';
         //this.mapurl = 'http://ojw.dev.openstreetmap.org/StaticMap/?lat=' + this.latitude + '&lon=' + this.longitude + '&z=5&show=1&fmt=png&w=302&h=302&att=none';
         this.mapurl = 'http://maps.googleapis.com/maps/api/staticmap?center=' + this.latitude + ',' + this.longitude + '&zoom=7&size=302x302&maptype=roadmap&markers=color:blue%7Clabel:' + encodeURI(this.title) + '%7C' + encodeURI(this.address) + '&sensor=false';
-        pl('#fulladdress').html(this.address || 'Unknown Address');
+        pl('#fulladdress').html(this.address || '@lang_unknown_address@');
         pl('#addresslink').attr({href: this.addressurl});
         pl('#mapimg').attr({src: this.mapurl});
     },
@@ -463,25 +463,25 @@ pl.implement(ListingClass, {
             pl('#bidbox').show();
 */
             pl('#suggestedinfo').show();
-            pl('#fundingbutton').text('Revise Funding');
+            pl('#fundingbutton').text('@lang_revise_funding@');
         }
         else {
-            pl('#suggestedmsg').html('NOT SEEKING FUNDING').show();
-            pl('#fundingbutton').text('Ask For Funding');
+            pl('#suggestedmsg').html('@lang_not_seeking_funding@').show();
+            pl('#fundingbutton').text('@lang_ask_for_funding@');
         }
         if (this.status === 'new' || this.status === 'posted') {
             if (this.asked_fund) {
-                pl('#fundingbutton').text('Revise Funding').show();
+                pl('#fundingbutton').text('@lang_revise_funding@').show();
             }
             else {
-                pl('#fundingbutton').text('Ask For Funding').show();
+                pl('#fundingbutton').text('@lang_ask_for_funding@').show();
             }
         }
     },
 
     displaySocial: function() {
         if (this.preview || this.status !== 'active') { // their iframe usage busts during preview
-            pl('#socialsidebox').html('<p>Twitter tweet, Facebook like, and Google Plus +1 buttons will be displayed here once the listing is active</p>');
+            pl('#socialsidebox').html('<p>@lang_social_display_message@</p>');
         }
         else {
             this.displayTwitter();
@@ -559,7 +559,7 @@ pl.implement(ListingClass, {
             click: function() {
                 var complete = function() {
                         pl('#deletebtn, #deletecancelbtn').hide();
-                        pl('#deletemsg').text('Listing deleted, going home...').show();
+                        pl('#deletemsg').text('@lang_listing_deleted_home@').show();
                         setTimeout(function() {
                             window.location = '/';
                         }, 3000);
@@ -599,7 +599,7 @@ pl.implement(ListingClass, {
             click: function() {
                 var complete = function() {
                         pl('#withdrawbtn, #withdrawcancelbtn').hide();
-                        pl('#withdrawmsg').text('Listing withdrawn, reloading...').show();
+                        pl('#withdrawmsg').text('@lang_listing_withdrawn_home@').show();
                         setTimeout(function() {
                             window.location.reload();
                         }, 3000);
@@ -639,7 +639,7 @@ pl.implement(ListingClass, {
             click: function() {
                 var complete = function() {
                         pl('#approvebtn, #approvecancelbtn').hide();
-                        pl('#approvemsg').text('Listing approved, reloading...').show();
+                        pl('#approvemsg').text('@lang_listing_approved_reloading@').show();
                         setTimeout(function() {
                             window.location.reload();
                         }, 3000);
@@ -679,7 +679,7 @@ pl.implement(ListingClass, {
             click: function() {
                 var complete = function() {
                         pl('#sendbackbtn, #sendbackcancelbtn').hide();
-                        pl('#sendbackmsg').text('Listing sent back, reloading...').show();
+                        pl('#sendbackmsg').text('@lang_listing_sent_back_reloading@').show();
                         setTimeout(function() {
                             window.location.reload();
                         }, 3000);
@@ -696,7 +696,7 @@ pl.implement(ListingClass, {
                     pl('#sendbackbtn').hide();
                 }
                 else if (pl('#sendbackcancelbtn').css('display') === 'none') { // first call
-                    pl('#sendbackmsg').text('Are you sure?').show();
+                    pl('#sendbackmsg').text('@lang_are_you_sure@').show();
                     pl('#sendbackcancelbtn').show();
                     pl('#sendbacktext').attr({disabled: 'disabled'});
                 }
@@ -732,7 +732,7 @@ pl.implement(ListingClass, {
             click: function() {
                 var complete = function() {
                         pl('#freezebtn, #freezecancelbtn').hide();
-                        pl('#freezemsg').text('Listing frozen, reloading...').show();
+                        pl('#freezemsg').text('@lang_listing_frozen_reloading@').show();
                         setTimeout(function() {
                             window.location.reload();
                         }, 3000);
@@ -749,7 +749,7 @@ pl.implement(ListingClass, {
                     pl('#freezebtn').hide();
                 }
                 else if (pl('#freezecancelbtn').css('display') === 'none') { // first call
-                    pl('#freezemsg').text('Are you sure?').show();
+                    pl('#freezemsg').text('@lang_are_you_sure@').show();
                     pl('#freezecancelbtn').show();
                     pl('#freezetext').attr({disabled: 'disabled'});
                 }

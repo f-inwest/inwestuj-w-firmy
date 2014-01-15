@@ -1,0 +1,50 @@
+`
+  <div class="container headerrow" style="width: 960px;">
+    <div class="span-6 headerrow hoverlink">
+        <a href="discover-page.html">
+            <img class="headerlogoimg" src="img/logo.png"/>
+        </a>
+    </div>
+    <div class="span-7 headerrow headerrowcenter last">
+      <a href="discover-page.html"><span class="headerlink hoverlink headerlinknoborder">@lang_find@</span></a>
+      <a href="nearby-page.html"><span class="headerlink"><span class="hoverlink">@lang_nearby@</span></span></a>
+      <a href="add-listing-page.html"><span class="headerlink"><span class="hoverlink">@lang_add@</span></span></a>
+    </div>
+    <a href="#" id="headerloginlink">
+    <div class="span-2 headerrow headerrowlogin last initialhidden" id="headernotloggedin">
+      <span class="headerrowlogintext"><span class="hoverlink">@lang_signin@</span></span>
+    </div>
+    </a>
+
+    <div class="span-6 headerrow headersearchrow">
+        <form id="searchform" action="/main-page.html">
+            <input type="hidden" name="type" value="keyword"></input>
+            <input type="image" class="searchbutton" alt="search" width="200px" height="42px" title="" src="/img/lupa.png" ></input>
+            <input type="text" class="text inputtext searchtext" name="searchtext" id="searchtext" value=""></input>
+        </form>
+    </div>
+
+    <!-- logged in -->
+    <div class="span-6 last loginspan headerrow initialhidden" id="headerloggedin">
+        <div class="headericonset">
+            <a id="logoutlink" href="">
+                <div class="headericonbar headerlogout button-content" title="Logout"></div>
+            </a>
+            <a href="/notifications-page.html">
+                <div class="headericonbar headernotifications button-content" title="Notifications">
+                    <div class="headernum" id="headernumnotifications"></div>
+                </div>
+            </a>
+            <a href="/message-group-page.html">
+                <div class="headericonbar headermessages button-content" title="Messages">
+                    <div class="headernum" id="headernummessages"></div>
+                </div>
+            </a>
+            <a href="/profile-page.html">
+                <div title="View Your Profile" class="headeravatar button-content" id="headeravatar"></div>
+            </a>
+        </div>
+    </div>
+
+  </div>
+'

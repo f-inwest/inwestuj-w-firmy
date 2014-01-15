@@ -9,7 +9,7 @@ include(mainhead.m4)
 <div id="wrap">
 <div id="main">
 '
-include(header.m4)
+include(header-main.m4)
 include(banner.m4)
 `
 <div class="container">
