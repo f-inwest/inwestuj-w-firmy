@@ -1730,7 +1730,7 @@ public class ListingFacade {
         for (Map<String, Category> cats : statCategories.values()) {
         	allCategories.addAll(cats.values());
         }
-        getDAO().storeCategories(new ArrayList<Category>(categories.values()));
+        getDAO().storeCategories(new ArrayList<Category>(allCategories));
         MemCacheFacade.instance().updateCategories(statCategories);
 
         List<Location> allLocations = new ArrayList<Location>();

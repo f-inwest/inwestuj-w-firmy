@@ -111,6 +111,7 @@ public class MemCacheFacade {
 		for (Category c : categories) {
 			String campaign = c.campaign;
 			if (campaign == null) {
+				c.campaign = "en";
 				campaign = "en";
 			}
 			Map<String, Category> campCategories = statCategories.get(campaign);
@@ -118,7 +119,7 @@ public class MemCacheFacade {
 				campCategories = new HashMap<String, Category>();
 				statCategories.put(campaign, campCategories);
 			}
-			campCategories.put(c.name, c.copyForCampaign(campaign));
+			campCategories.put(c.name, c);
 		}
 		updateCategories(statCategories);
 	}
@@ -233,13 +234,13 @@ public class MemCacheFacade {
 	public Map<String, Integer> getTopLocations() {
 		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
 		@SuppressWarnings("unchecked")
-		Map<String, Map<String, Integer>> allTopLocations = (Map<String, Map<String, Integer>>)mem.get(MemCacheFacade.MEMCACHE_ALL_LISTING_LOCATIONS);
+		Map<String, Map<String, Integer>> allTopLocations = (Map<String, Map<String, Integer>>)mem.get(MemCacheFacade.MEMCACHE_TOP_LISTING_LOCATIONS);
 		
 		if (allTopLocations == null) {
 			List<Location> locations = getDAO().getTopLocations();
 			allTopLocations = convertTopLocations(locations);
 		}
-		return allTopLocations.get(FrontController.getCampaign());
+		return allTopLocations.get(FrontController.getCampaign().getSubdomain());
 	}
 
 	private Map<String, Map<String, Integer>> convertTopLocations(List<Location> locations) {
