@@ -695,7 +695,7 @@ pl.implement(CompanyTileClass, {
         this.address = json.address || 'No Address';
         locprefix = this.type === 'company' ? 'in' : 'from';
         this.addrlinked = !addr ? '' : ' ' + locprefix + ' <a href="/main-page.html?type=location&val=' + encodeURIComponent(addr) + '">' + addr + '</a>';
-        profilelinked = !json.profile_id ? '' : ' by <a href="/profile-page.html?id=' + json.profile_id + '">' + (json.profile_username || 'owner') + '</a>';
+        profilelinked = !json.profile_id ? '' : '<a href="/profile-page.html?id=' + json.profile_id + '">' + (json.profile_username || '@lang_owner@') + '</a>';
         this.categoryaddresstext = this.catlinked + this.addrlinked + profilelinked;
         this.suggested_text = CompanyFormatClass.prototype.suggestedText(json);
         this.finance_line = CompanyFormatClass.prototype.financeLine(json);

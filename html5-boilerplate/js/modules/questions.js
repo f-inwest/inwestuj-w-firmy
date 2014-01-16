@@ -75,7 +75,7 @@ pl.implement(QuestionClass, {
 
     displaySignIn: function() {
         pl('#addqandabox').before('\
-    <div class="messageline"><p class="indentedtextbox" style="font-weight: bold;">Sign in to ask a question</p></div>\
+    <div class="messageline"><p class="indentedtextbox" style="font-weight: bold;">@lang_sign_in_to_ask@</p></div>\
     <div class="addlistingloginrow">\
         <a id="google_login" href="">\
             <div class="addlistinglogin headericon headersignin"></div>\

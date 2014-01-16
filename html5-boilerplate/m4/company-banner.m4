@@ -38,36 +38,36 @@ define(`companybannermacro', `
     
                 <div class="companybannerlinks">
                     <div>@lang_author@: <span id="profile_link_text"></span></div>
+                    <div>@lang_location@: <span id="address_link_text"></span></div>
+                    <div>@lang_category@: <span id="category_link_text"></span></div>
                     <div>@lang_website@:
                         <a class="companybannertextlink" href="#" target="_blank" id="websitelink">
                             <span id="domainname" class="companybannertextlink"></span>
                         </a>
                     </div>
-                    <div>@lang_category@: <span id="category_link_text"></span></div>
-                    <div>@lang_location@: <span id="address_link_text"></span></div>
                 </div>
             </div>
 
             <div class="header-content header-initial company-menu" id="companynavcontainer">
-                <a class="hoverlink" href="#" id="basicstab">
+                <a class="hoverlink companynavlink" href="#" id="basicstab">
                     <div class="company-menu-link hoverlink $1">@lang_basics@</div>
                 </a>
-                <a class="hoverlink" href="#" id="valuationtab">
+                <a class="hoverlink companynavlink" href="#" id="valuationtab">
                     <div class="company-menu-link hoverlink $2">@lang_valuation@</div>
                 </a>
-                <a class="hoverlink" href="#" id="modeltab">
+                <a class="hoverlink companynavlink" href="#" id="modeltab">
                     <div class="company-menu-link hoverlink $3">@lang_model@</div>
                 </a>
-                <a class="hoverlink" href="#" id="presentationtab">
+                <a class="hoverlink companynavlink" href="#" id="presentationtab">
                     <div class="company-menu-link hoverlink $4">@lang_presentation@</div>
                 </a>
-                <a class="hoverlink" href="#" id="bidstab">
+                <a class="hoverlink companynavlink" href="#" id="bidstab">
                     <div class="company-menu-link hoverlink $5">@lang_investments@<!-- <span id="num_bids"></span> --></div>
                 </a>
-                <a class="hoverlink" href="#" id="commentstab">
+                <a class="hoverlink companynavlink" href="#" id="commentstab">
                     <div class="company-menu-link hoverlink $6">@lang_comments@<!-- <span id="num_comments"></span> --></div>
                 </a>
-                <a class="hoverlink" href="#" id="questionstab">
+                <a class="hoverlink companynavlink" href="#" id="questionstab">
                     <div class="company-menu-link hoverlink $7">@lang_questions@<!-- <span id="num_qandas"></span> --></div>
                 </a>
             </div>

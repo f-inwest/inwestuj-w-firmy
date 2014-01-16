@@ -22,7 +22,7 @@ include(header.m4)
 
     <div id="messagesmsg"></div>
 
-    <div class="header-content">
+    <div class="header-content header-boxpanel-initial header-boxpanel-full">
         <div class="header-title">@lang_your_conversations@</div>
     </div>
     <div class="boxpanel boxpanelfull" id="messagegrouplist"></div>

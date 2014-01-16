@@ -22,16 +22,14 @@ companybannermacro(`', `', `', `', `', `', `companynavselected')
 <div class="container initialhidden wrapper">
 
     <div class="span-24 initialhidden" id="qandaswrapper">
-        <div class="header-content">
-            <div class="header-title">@lang_questions_and_answers_with_the_owner@</div>
-        </div>
+        <div class="header-content header-boxpanel-initial header-boxpanel-full">@lang_questions_and_answers_with_the_owner@</div>
         <div class="boxpanel boxpanelfull" id="qandalistparent">
 
             <div class="commentline addcommentline initialhidden" id="addqandabox">
                 <textarea class="textarea commenttextarea"
-                    id="addqandatext" name="addqandatext" cols="20" rows="5">Put your question to the owner here...</textarea>
+                    id="addqandatext" name="addqandatext" cols="20" rows="5">@lang_put_question_to_owner@</textarea>
                 <div class="addcommentspinner preloadericon initialhidden" id="addqandaspinner"></div>
-                <span class="span-3 inputbutton messagebutton commentreplybutton" id="addqandabtn">SEND</span>
+                <span class="span-3 inputbutton messagebutton commentreplybutton" id="addqandabtn">@lang_send@</span>
                 <p class="commenttext" id="qandamsg"></p>
             </div>
 

@@ -11,7 +11,7 @@
         </div>
     </div>
 </div>
-<div class="boxpanel">
+<div class="boxpanel picpanel">
     <div class="piccontainer">
         <div class="picslideset" id="picslideset">
             <div class="picslide picslide1" id="pic1"></div>

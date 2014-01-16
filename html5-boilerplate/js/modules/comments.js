@@ -35,11 +35,11 @@ pl.implement(CommentClass, {
             this.displayAddCommentBox();
         }
         else if (this.listing.status !== 'active') {
-            pl('#addcommentbox').before('<div class="commentline"><p style="font-weight: bold;">Comments cannot be adding to this listing as it is not active</p></div>');
+            pl('#addcommentbox').before('<div class="commentline"><p style="font-weight: bold;">Comments cannot be added to this listing as it is not active</p></div>');
         }
         else {
             pl('#addcommentbox').before('\
-    <div class="commentline"><p class="indentedtextbox" style="font-weight: bold;">Sign in to post a comment</p></div>\
+    <div class="commentline"><p class="indentedtextbox" style="font-weight: bold;">@lang_sign_in_to_post@</p></div>\
     <div class="addlistingloginrow">\
         <a id="google_login" href="">\
             <div class="addlistinglogin headericon headersignin"></div>\
