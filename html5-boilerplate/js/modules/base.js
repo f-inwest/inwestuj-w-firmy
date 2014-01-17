@@ -922,7 +922,7 @@ pl.implement(CompanyListClass, {
                         }
                         if (more_results_url) {
                             pl('#moreresultsurl').text(more_results_url);
-                            pl('#moreresultsmsg').text('More...');
+                            pl('#moreresultsmsg').text('@lang_more@');
                         }
                         else {
                             pl('#moreresultsmsg').text('');

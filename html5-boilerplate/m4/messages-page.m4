@@ -26,9 +26,9 @@ include(header.m4)
 
         <div class="commentline addcommentline initialhidden" id="messagesend">
             <textarea class="textarea commenttextarea"
-                id="messagetext" name="messagetext" cols="20" rows="5">Put your comment here...</textarea>
+                id="messagetext" name="messagetext" cols="20" rows="5">@lang_put_comment_here@</textarea>
             <div class="addcommentspinner preloadericon initialhidden" id="messagespinner"></div>
-            <span class="span-3 inputbutton messagebutton commentreplybutton" id="messagebtn">SEND</span>
+            <span class="span-3 inputbutton messagebutton commentreplybutton" id="messagebtn">@lang_send@</span>
             <p class="commenttext" id="messagemsg"></p>
         </div>
 

@@ -70,7 +70,7 @@ pl.implement(QuestionClass, {
 
     displayMoreResults: function() {
         pl('#addqandabox').after('<div class="showmore hoverlink" id="moreresults"><span class="initialhidden" id="moreresultsurl">'
-            + this.more_results_url + '</span><span id="moreresultsmsg">More...</span></div>\n');
+            + this.more_results_url + '</span><span id="moreresultsmsg">@lang_more@</span></div>\n');
     },
 
     displaySignIn: function() {
@@ -93,7 +93,7 @@ pl.implement(QuestionClass, {
 
     displayInactive: function() {
         pl('#addqandabox').before('<div class="messageline"><p style="font-weight: bold;">'
-            + '&nbsp;Questions cannot be asked or answered for this listing because it is not active</p></div>');
+            + '&nbsp;@lang_question_not_active@</p></div>');
     },
 
     displayLoggedIn: function() {
@@ -103,7 +103,7 @@ pl.implement(QuestionClass, {
         }
         else if (isowner && !this.questionlist.length) {
             pl('#addqandabox').before('<div class="messageline"><p style="font-weight: bold;">'
-                + '&nbsp;No one has yet asked any questions for you to answer</p></div>');
+                + '&nbsp;@lang_no_questions@</p></div>');
         }
     },
 
@@ -164,7 +164,7 @@ pl.implement(QuestionClass, {
                         }
                         if (more_results_url) {
                             pl('#moreresultsurl').text(more_results_url);
-                            pl('#moreresultsmsg').text('More...');
+                            pl('#moreresultsmsg').text('@lang_more@');
                         }
                         else {
                             pl('#moreresultsmsg').text('');
@@ -224,7 +224,7 @@ pl.implement(QuestionClass, {
 
             blur: function() {
                 if (!pl('#addqandatext').hasClass('edited')) {
-                    pl('#addqandatext').attr({value: 'Put your question here...'});
+                    pl('#addqandatext').attr({value: '@lang_put_question_here@'});
                     pl('#addqandabtn').removeClass('editenabled');
                 }
             }
@@ -234,7 +234,7 @@ pl.implement(QuestionClass, {
                 var val = SafeStringClass.prototype.clean(pl('#addqandatext').attr('value')),
                     complete = function(json) {
                         pl('#addqandaspinner').hide();
-                        pl('#addqandatext').removeClass('edited').removeAttr('disabled').attr({value: 'Put your question here...'});
+                        pl('#addqandatext').removeClass('edited').removeAttr('disabled').attr({value: '@lang_put_question_here@'});
                         pl('#addqandabtn').removeClass('editenabled').show();
                         pl('#qandamsg').text('');
                         pl('#addqandabox').before(self.makeQuestion(json));
@@ -300,7 +300,7 @@ pl.implement(QuestionClass, {
 
                 blur: function() {
                     if (!pl(textsel).hasClass('edited')) {
-                        pl(textsel).attr({value: 'Put your question here...'});
+                        pl(textsel).attr({value: '@lang_put_question_here@'});
                         pl(btnsel).removeClass('editenabled');
                     }
                 }
@@ -350,7 +350,7 @@ pl.implement(QuestionClass, {
             pl('#qandamsg').show();
         }
         else {
-            pl('#qandamsg').html('<p>Login to ask the owner a question</p>');
+            pl('#qandamsg').html('<p>@lang_login_to_ask@</p>');
         }
     },
 
@@ -391,7 +391,7 @@ pl.implement(QuestionClass, {
             datetext = '<span class="commentinlinedate">'
                 + (question.ago_text || DateClass.prototype.agoText(question.create_date)) + '</span>',
             questionreplybtn = replyable
-                ? '<div class="inputbutton darkblue questionreplybtn span-3 hoverlink" id="qanda_replybtn_' + question.question_id + '">ANSWER</div>'
+                ? '<div class="inputbutton darkblue questionreplybtn span-3 hoverlink" id="qanda_replybtn_' + question.question_id + '">@lang_answer@</div>'
                     + '<div class="addcommentspinner preloadericon initialhidden"'
                     + ' id="qanda_replyspinner_' + question.question_id + '"></div>'
                 : '',
@@ -401,15 +401,15 @@ pl.implement(QuestionClass, {
                 <div class="questionreplyline droptransition" id="qanda_replybox_' + question.question_id + '">\
                     <p class="messageuser messagereplyuser span-4"></p>\
                     <textarea class="textarea messagetextarea messagereplytextarea" id="qanda_replytext_' + question.question_id+ '"\
-                        name="messagetext" cols="20" rows="5">Put your answer here...</textarea>\
-                    <span class="span-3 inputbutton messagebutton messagereplybutton" id="qanda_replysendbtn_' + question.question_id + '">ANSWER</span>\
+                        name="messagetext" cols="20" rows="5">@lang_put_answer_here@</textarea>\
+                    <span class="span-3 inputbutton messagebutton messagereplybutton" id="qanda_replysendbtn_' + question.question_id + '">@lang_answer@</span>\
                     <p class="messagereplymsg inputmsg successful" id="qanda_replymsg_' + question.question_id + '"></p>\
                 </div>\
             ' : '',
             answertext = HTMLMarkup.prototype.stylize(SafeStringClass.prototype.htmlEntities(question.answer)),
             replyblock = question.answer
                 ? '<span class="messageanswer">' + answertext + '</span>'
-                : '<span class="messageanswer" id="qanda_replyanswer_' + question.question_id + '">Not yet answered by owner</span>';
+                : '<span class="messageanswer" id="qanda_replyanswer_' + question.question_id + '">@lang_not_answered@</span>';
         return '<div class="commentline" id="qanda_' + question.question_id + '">'
                 + '<a class="hoverlink" href="/profile-page.html?id=' + question.profile_id + '">'
                 + '<div class="commentavatar"' + avatarstyle + '></div>'

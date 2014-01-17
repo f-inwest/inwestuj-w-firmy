@@ -12,7 +12,7 @@ pl.implement(MessageClass, {
     setEmpty: function() {
         var emptyJson = {
                 direction: 'received',
-                text: 'You currently have no messages with this user.',
+                text: '@lang_no_messages@',
                 create_date: null
             };
         this.store(emptyJson);
@@ -82,7 +82,7 @@ pl.implement(MessageListClass, {
         }
         if (self.more_results_url) {
         	html += '<div class="showmore hoverlink" id="moreresults"><span class="initialhidden" id="moreresultsurl">'
-                + self.more_results_url + '</span><span id="moreresultsmsg">Earlier messages...</span></div>\n';
+                + self.more_results_url + '</span><span id="moreresultsmsg">@lang_earlier_messages@</span></div>\n';
         }
         for (i = 0; i < self.messages.length; i++) {
             message = self.messages[i];
@@ -133,7 +133,7 @@ pl.implement(MessageListClass, {
                         }
                         if (self.more_results_url) {
                             pl('#moreresultsurl').text(self.more_results_url);
-                            pl('#moreresultsmsg').text('Earlier messages...');
+                            pl('#moreresultsmsg').text('@lang_earlier_messages@');
                         }
                         else {
                             pl('#moreresultsmsg').text('');
@@ -188,7 +188,7 @@ pl.implement(MessageListClass, {
 
             blur: function() {
                 if (!pl('#messagetext').hasClass('edited')) {
-                    pl('#messagetext').attr({value: 'Put your message here...'});
+                    pl('#messagetext').attr({value: '@lang_put_message_here@'});
                     pl('#messagebtn').removeClass('editenabled');
                 }
             }
@@ -198,7 +198,7 @@ pl.implement(MessageListClass, {
                 var completeFunc = function(json) {
                         var html = (new MessageClass(self)).store(json).makeHtml();
                         pl('#messagespinner').hide();
-                        pl('#messagetext').removeClass('edited').removeAttr('disabled').attr({value: 'Put your message here...'});
+                        pl('#messagetext').removeClass('edited').removeAttr('disabled').attr({value: '@lang_put_message_here@'});
                         pl('#messagebtn').removeClass('editenabled').show();
                         pl('#messagemsg').text('');
                         pl('#messagesend').before(html);
@@ -381,7 +381,7 @@ pl.implement(MessageGroupListClass, {
                         }
                         if (self.more_results_url) {
                             pl('#moreresultsurl').text(self.more_results_url);
-                            pl('#moreresultsmsg').text('More...');
+                            pl('#moreresultsmsg').text('@lang_more@');
                         }
                         else {
                             pl('#moreresultsmsg').text('');
@@ -425,7 +425,7 @@ pl.implement(MessageGroupListClass, {
         }
         if (self.more_results_url) {
         	html += '<div class="showmore hoverlink" id="moreresults"><span class="initialhidden" id="moreresultsurl">'
-                + self.more_results_url + '</span><span id="moreresultsmsg">More...</span></div>\n';
+                + self.more_results_url + '</span><span id="moreresultsmsg">@lang_more@</span></div>\n';
         }
         pl('#messagegrouplist').html(html);
         if (self.more_results_url) {

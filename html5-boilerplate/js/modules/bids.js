@@ -2,9 +2,9 @@ function PublicBidClass(bidslist, bidprop) {
     this.bidslist = bidslist;
     this.bidprop = bidprop;
     this.bidproptitle = {
-        'investor_bids': 'Bid',
-        'owner_bids': 'Ask',
-        'accepted_bids': 'Sale'
+        'investor_bids': '@lang_bid@',
+        'owner_bids': '@lang_bid_ask@',
+        'accepted_bids': '@lang_bid_sale@'
     };
     this.amttitle = this.bidproptitle[this.bidprop];
     this.typeclassmap = {
@@ -49,8 +49,8 @@ pl.implement(PublicBidClass, {
         return '\
         <div class="messageline orderbookheader">\
             <p class="span-2">' + this.amttitle + '</p>\
-            <p class="span-2">Equity</p>\
-            <p class="span-2">Valuation</p>\
+            <p class="span-2">@lang_equity@</p>\
+            <p class="span-2">@lang_valuation@</p>\
             <p class="orderbookdateheader">Date</p>\
         </div>\
         ';
@@ -83,9 +83,9 @@ function OrderBookClass(listing_id) {
     this.bidprops = [ 'investor_bids', 'owner_bids', 'accepted_bids' ];
     this.investmentbidprops = [ 'investor_bids', 'accepted_bids' ];
     this.nobidsmap = {
-        investor_bids: 'No bids',
-        owner_bids: 'No Asks',
-        accepted_bids: 'No Sales'
+        investor_bids: '@lang_bid_none@',
+        owner_bids: '@lang_ask_none@',
+        accepted_bids: '@lang_sale_none@'
     };
 }
 pl.implement(OrderBookClass, {
@@ -356,7 +356,7 @@ pl.implement(BidClass, {
         this.pcttext = this.pct ? PercentClass.prototype.format(this.pct) + '%' : '';
         this.valtext = this.val ? CurrencyClass.prototype.format(this.val) : '';
         this.typetext = this.type ? this.type.replace(/(investor_|owner_)/, '') : '';
-        this.bidtext = this.text ? SafeStringClass.prototype.htmlEntities(this.text) : 'None';
+        this.bidtext = this.text ? SafeStringClass.prototype.htmlEntities(this.text) : '@lang_none@';
         this.datetext = this.create_date ? DateClass.prototype.format(this.create_date) : '';
         this.whoami = this.bidslist.loggedin_profile.profile_id === this.bidslist.listing.profile_id ? 'owner' : 'investor';
         this.whoisother = this.whoami === 'investor' ? 'owner' : 'investor';
@@ -373,7 +373,7 @@ pl.implement(BidClass, {
                 pct: null,
                 val: null,
                 type: null,
-                text: 'No bids',
+                text: '@lang_bids_none@',
                 create_date: null
             };
         this.store(emptyJson);
@@ -382,13 +382,13 @@ pl.implement(BidClass, {
     makeHeader: function() {
         return '\
         <div class="messageline investorbidheader">\
-            <p class="span-2">Actor</p>\
-            <p class="span-2">Action</p>\
-            <p class="span-3">Bid</p>\
-            <p class="span-2">Equity</p>\
-            <p class="span-3">Valuation</p>\
-            <p class="span-9">Note</p>\
-            <p class="investorbiddateheader">Date</p>\
+            <p class="span-2">@lang_bid_actor@</p>\
+            <p class="span-2">@lang_bid_action@</p>\
+            <p class="span-3">@lang_bid@</p>\
+            <p class="span-2">@lang_equity@</p>\
+            <p class="span-3">@lang_valuation@</p>\
+            <p class="span-9">@lang_notes@</p>\
+            <p class="investorbiddateheader">@lang_date@</p>\
         </div>\
         ';
     },
@@ -666,8 +666,8 @@ pl.implement(SingleInvestorBidListClass, {
     bindFields: function() {
         var amtfield = new TextFieldClass('new_bid_amt', null, this.getUpdater('new_bid_amt', CurrencyClass.prototype.clean), 'new_bid_msg'),
             pctfield = new TextFieldClass('new_bid_pct', null, this.getUpdater('new_bid_pct', PercentClass.prototype.clean), 'new_bid_msg');
-        amtfield.fieldBase.setDisplayName('AMOUNT');
-        pctfield.fieldBase.setDisplayName('PERCENT');
+        amtfield.fieldBase.setDisplayName('@lang_amount@');
+        pctfield.fieldBase.setDisplayName('@lang_percent@');
         amtfield.fieldBase.addValidator(ValidatorClass.prototype.genIsNumberBetween(100, 500000));
         pctfield.fieldBase.addValidator(ValidatorClass.prototype.genIsNumberBetween(1, 100));
         amtfield.fieldBase.validator.preValidateTransform = CurrencyClass.prototype.clean;
@@ -735,7 +735,7 @@ pl.implement(SingleInvestorBidListClass, {
                 <span class="span-4">&nbsp;</span>\
                 <span class="span-15">\
                     <div class="formitem clear">\
-                        <label class="inputlabel" for="note">NOTE</label>\
+                        <label class="inputlabel" for="note">@lang_notes@</label>\
                         <span class="inputfield">\
                             <textarea class="textarea new_bid_textarea" name="note" id="existing_bid_text" cols="20" rows="5">Put your note to the owner here...</textarea>\
                         </span>\
@@ -752,14 +752,14 @@ pl.implement(SingleInvestorBidListClass, {
         var waitingtext = bid ? (this.waitingtext[bid.type] || '') : '';
         return '\
 <div class="bidactionline" id="existingbidbuttons">\
-    <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_withdraw_btn">WITHDRAW</span>\
-    <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_reject_btn">REJECT</span>\
-    <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_accept_btn">ACCEPT</span>\
+    <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_withdraw_btn">@lang_withdraw@</span>\
+    <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_reject_btn">@lang_reject@</span>\
+    <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_accept_btn">@lang_accept@</span>\
     <span class="span-16 bidconfirmmessage" id="existingbidmsg">' + waitingtext + '</span>\
 </div>\
 <div class="bidactionline initialhidden" id="existingconfirmbuttons">\
-    <span class="span-3 inputbutton bidactionbutton" id="investor_existing_cancel_btn">CANCEL</span>\
-    <span class="span-3 inputbutton bidactionbutton" id="investor_existing_confirm_btn">CONFIRM</span>\
+    <span class="span-3 inputbutton bidactionbutton" id="investor_existing_cancel_btn">@lang_cancel@</span>\
+    <span class="span-3 inputbutton bidactionbutton" id="investor_existing_confirm_btn">@lang_confirm@</span>\
     <span class="span-16 bidconfirmmessage" id="investor_existing_msg"></span>\
 </div>\
         ';
@@ -778,7 +778,7 @@ pl.implement(SingleInvestorBidListClass, {
             if (action === 'investor_post' || action === 'investor_counter') {
                 newbidaction = true;
                 if (action === 'investor_counter') {
-                    pl('#new_bid_titletext').text('MAKE A COUNTER OFFER');
+                    pl('#new_bid_titletext').text('@lang_make_counter@');
                 }
             }
             else if (action === 'investor_accept' || action === 'investor_reject' || action === 'investor_withdraw') {
@@ -891,7 +891,7 @@ pl.implement(SingleInvestorBidListClass, {
         pl(btnsel).bind('click', function() {
             var validamt = self.amtfield.validate(),
                 validpct = self.pctfield.validate(),
-                validmsg = '' + (validamt ? 'AMOUNT: ' + validamt + ' ' : '') + (validpct ? 'PERCENT: ' + validpct : '');
+                validmsg = '' + (validamt ? '@lang_amount@: ' + validamt + ' ' : '') + (validpct ? '@lang_percent@: ' + validpct : '');
             if (validmsg) {
                 self.amtfield.fieldBase.msg.show('attention', validmsg);
             }
@@ -1017,13 +1017,13 @@ pl.implement(InvestorBidGroupClass, {
     makeHeader: function() {
         return '\
         <div class="messageline investorgroupheader">\
-            <p class="span-4">Investor</p>\
-            <p class="span-2">Action</p>\
-            <p class="span-3">Bid</p>\
-            <p class="span-1 investorgroupequityheader">Equity</p>\
-            <p class="span-3">Valuation</p>\
-            <p class="span-8">Note</p>\
-            <p class="investorgroupdateheader">Date</p>\
+            <p class="span-4">@lang_investor@</p>\
+            <p class="span-2">@lang_action@</p>\
+            <p class="span-3">@lang_bid@</p>\
+            <p class="span-1 investorgroupequityheader">@lang_equity@</p>\
+            <p class="span-3">@lang_valuation@</p>\
+            <p class="span-8">@lang_note@</p>\
+            <p class="investorgroupdateheader">@lang_date@</p>\
         </div>\
         ';
     },
@@ -1448,8 +1448,8 @@ pl.implement(OwnerSingleInvestorBidListClass, {
     bindFields: function() {
         var amtfield = new TextFieldClass('new_bid_amt', null, this.getUpdater('new_bid_amt', CurrencyClass.prototype.clean), 'new_bid_msg'),
             pctfield = new TextFieldClass('new_bid_pct', null, this.getUpdater('new_bid_pct', PercentClass.prototype.clean), 'new_bid_msg');
-        amtfield.fieldBase.setDisplayName('AMOUNT');
-        pctfield.fieldBase.setDisplayName('PERCENT');
+        amtfield.fieldBase.setDisplayName('@lang_amount@');
+        pctfield.fieldBase.setDisplayName('@lang_percent@');
         amtfield.fieldBase.addValidator(ValidatorClass.prototype.genIsNumberBetween(100, 500000));
         pctfield.fieldBase.addValidator(ValidatorClass.prototype.genIsNumberBetween(1, 100));
         amtfield.fieldBase.validator.preValidateTransform = CurrencyClass.prototype.clean;
@@ -1505,7 +1505,7 @@ pl.implement(OwnerSingleInvestorBidListClass, {
 
             blur: function() {
                 if (!pl(textsel).hasClass('edited')) {
-                    pl(textsel).attr({value: 'Put your note to the owner here...'});
+                    pl(textsel).attr({value: '@lang_put_note_to_owner@'});
                 }
             }
         });
@@ -1517,9 +1517,9 @@ pl.implement(OwnerSingleInvestorBidListClass, {
                 <span class="span-4">&nbsp;</span>\
                 <span class="span-15">\
                     <div class="formitem clear">\
-                        <label class="inputlabel" for="note">NOTE</label>\
+                        <label class="inputlabel" for="note">@lang_note@</label>\
                         <span class="inputfield">\
-                            <textarea class="textarea new_bid_textarea" name="note" id="existing_bid_text" cols="20" rows="5">Put your note to the owner here...</textarea>\
+                            <textarea class="textarea new_bid_textarea" name="note" id="existing_bid_text" cols="20" rows="5">@lang_put_note_to_owner@</textarea>\
                         </span>\
                         <span class="inputicon">\
                             <div id="new_bid_texticon"></div>\
@@ -1534,14 +1534,14 @@ pl.implement(OwnerSingleInvestorBidListClass, {
         var waitingtext = bid ? (this.waitingtext[bid.type] || '') : '';
         return '\
 <div class="bidactionline" id="existingbidbuttons">\
-    <span class="span-3 inputbutton bidactionbutton initialhidden" id="owner_withdraw_btn">WITHDRAW</span>\
-    <span class="span-3 inputbutton bidactionbutton initialhidden" id="owner_reject_btn">REJECT</span>\
-    <span class="span-3 inputbutton bidactionbutton initialhidden" id="owner_accept_btn">ACCEPT</span>\
+    <span class="span-3 inputbutton bidactionbutton initialhidden" id="owner_withdraw_btn">@lang_withdraw@</span>\
+    <span class="span-3 inputbutton bidactionbutton initialhidden" id="owner_reject_btn">@lang_reject@</span>\
+    <span class="span-3 inputbutton bidactionbutton initialhidden" id="owner_accept_btn">@lang_accept@</span>\
     <span class="span-16 bidconfirmmessage" id="existingbidmsg">' + waitingtext + '</span>\
 </div>\
 <div class="bidactionline initialhidden" id="existingconfirmbuttons">\
-    <span class="span-3 inputbutton bidactionbutton" id="owner_existing_cancel_btn">CANCEL</span>\
-    <span class="span-3 inputbutton bidactionbutton" id="owner_existing_confirm_btn">CONFIRM</span>\
+    <span class="span-3 inputbutton bidactionbutton" id="owner_existing_cancel_btn">@lang_cancel@</span>\
+    <span class="span-3 inputbutton bidactionbutton" id="owner_existing_confirm_btn">@lang_confirm@</span>\
     <span class="span-16 bidconfirmmessage" id="owner_existing_msg"></span>\
 </div>\
         ';
@@ -1670,7 +1670,7 @@ pl.implement(OwnerSingleInvestorBidListClass, {
         pl(btnsel).bind('click', function() {
             var validamt = self.amtfield.validate(),
                 validpct = self.pctfield.validate(),
-                validmsg = '' + (validamt ? 'AMOUNT: ' + validamt + ' ' : '') + (validpct ? 'PERCENT: ' + validpct : '');
+                validmsg = '' + (validamt ? '@lang_amount@: ' + validamt + ' ' : '') + (validpct ? '@lang_percent@: ' + validpct : '');
             if (validmsg) {
                 self.amtfield.fieldBase.msg.show('attention', validmsg);
             }

@@ -35,7 +35,7 @@ pl.implement(APIPageClass, {
                             questionid = question && question.question_id;
                         if (questionid) {
                             pl('.questionid').attr({value: questionid});
-                            pl('.answerobj').attr({value: '{ question_id: "' + questionid + '", text: "put your answer here" }'});
+                            pl('.answerobj').attr({value: '{ question_id: "' + questionid + '", text: "@lang_put_answer_here@" }'});
                         }
                     },
                     listingajax = listingid && new AjaxClass('/listing/get/' + listingid, 'loadmsg', listingfunc),
@@ -46,18 +46,18 @@ pl.implement(APIPageClass, {
                 pl('#loadmsg').html('');
                 if (listingid) {
                     pl('.listingid').attr({value: listingid});
-                    pl('.commentobj').attr({value: '{ listing_id: "' + listingid + '", text: "put your comment here" }'});
-                    pl('.askobj').attr({value: '{ listing_id: "' + listingid + '", text: "put your question here" }'});
+                    pl('.commentobj').attr({value: '{ listing_id: "' + listingid + '", text: "@lang_put_comment_here@" }'});
+                    pl('.askobj').attr({value: '{ listing_id: "' + listingid + '", text: "@lang_put_question_to_owner@" }'});
                 }
                 if (profileid) {
                     pl('.profileid').attr({value: profileid});
-                    pl('.sendobj').attr({value: '{ profile_id: "' + profileid + '", text: "put your message here" }'});
+                    pl('.sendobj').attr({value: '{ profile_id: "' + profileid + '", text: "@lang_put_message_here@" }'});
                 }
                 if (profileusername) {
                     pl('.profileusername').attr({value: profileusername});
                 }
                 if (listingid && profileid) {
-                    pl('.bidobj').attr({value: '{ listing_id: "' + listingid + '", investor_id: "' + profileid + '", amt: 20000, pct: 5, type: "INVESTOR_POST", text: "bid note" }'});
+                    pl('.bidobj').attr({value: '{ listing_id: "' + listingid + '", investor_id: "' + profileid + '", amt: 20000, pct: 5, type: "INVESTOR_POST", text: "@lang_bid_notes@" }'});
                 }
                 pl('.apipanel dt').bind({
                     click: function() {

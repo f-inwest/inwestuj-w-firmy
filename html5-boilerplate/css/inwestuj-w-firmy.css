@@ -286,7 +286,6 @@ a:focus, a:hover { cursor: pointer; }
 .headerrow a:hover { cursor: pointer; }
 .headerlink:hover { cursor: pointer; }
 .hoverlink:hover { cursor: pointer; }
-.inputbutton:hover { cursor: pointer; }
 .smallinputbutton:hover { cursor: pointer; }
 .sideboxbutton:hover { cursor: pointer; }
 .nohover:hover { cursor: default; }
@@ -333,7 +332,7 @@ a:focus, a:hover { cursor: pointer; }
     .orderbookdate, .biddate, .investorbiddate, .lastdate
     { color: #666; }
 .darkblue
-    .tilecompany, .companyhalftitle, .companybannertextlink, .formlink, .inputbutton, .smallinputbutton, .loctextinp, .loctext, .showmore a
+    .tilecompany, .companyhalftitle, .companybannertextlink, .formlink, .smallinputbutton, .loctextinp, .loctext, .showmore a
     { color: #7edaef; }
 .companybannertextlink:visited {
     text-decoration: none;
@@ -478,6 +477,15 @@ a:focus, a:hover { cursor: pointer; }
 .videolink {
     font-size: 16px;
     color: #7edaef;
+    border: 1px;
+    border-style: solid;
+    border-color: #7edaef;
+    padding-left: 10px;
+    text-decoration: none;
+    line-height: 24px;
+    padding-right: 10px;
+    float: right;
+    margin-right: 5px;
 }
 .videolink:hover, .videolink:active {
     color: #7edaef;
@@ -947,7 +955,7 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYA
 
 .loctext { float: left; }
 
-.bidactionbtn { text-align: left !important; }
+.bidactionbtn { text-align: center; }
 
 .normalicon { float: left; margin-right: 5px; }
 
@@ -1101,16 +1109,6 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMA
 .inputlink { padding-top: 10px; height: 33px; }
 .inputimgbutton { margin-top: 5px; }
 .doclinkmsg { text-align: center; margin-top: 5px; font-weight: bold; font-size: 14px; height: 26px; padding-top: 2px; margin-bottom: 5px; font-weight: bold; }
-.inputbutton, .smallinputbutton {
-        text-align: center;
-        font-weight: bold;
-        font-size: 14px;
-height: 26px;
-border: 1px solid #ddd;
-display: block;
-margin: 0;
-padding: 14px 0px 10px;
-}
 .formtitle { font-size: 24px; padding-left: 5px; }
 .formtitlefourth { font-size: 24px; padding-left: 0; }
 .companytitle { margin-right: 10px; }
@@ -1155,8 +1153,8 @@ padding: 14px 0px 10px;
 .bidvallabel { float: left; margin-right: 10px; width: 120px; padding-top: 3px; margin-left: 10px; font-weight: bold; }
 .bidformitem { float: left; }
 .bidspacer { border: 2px solid #49515A; height: 20px; right: 5px; background: #efefef; font-weight: bold; clear: both; text-align: center; }
-.messagetextarea { color: #f8f8f8 !important; background: #49515a !important; font-weight: bold; font-size: 14px !important; height: 60px; width: 540px !important; }
-.new_bid_textarea { color: #f8f8f8 !important; background: #49515a !important; font-weight: bold; font-size: 14px !important; height: 60px; width: 627px !important; }
+.messagetextarea { color: #f8f8f8 !important; background: #49515a !important; font-size: 14px !important; height: 60px; width: 540px !important; }
+.new_bid_textarea { color: #f8f8f8 !important; background: #49515a !important; font-size: 14px !important; height: 60px; width: 627px !important; }
 .qatextarea {
 background: none;
 border: none;
@@ -1443,7 +1441,7 @@ transition: height 300ms;
 .notebidactionline { clear: both; padding-top: 5px; overflow: auto; }
 .bidactionline { clear: both; padding-top: 5px; overflow: auto; }
 .newbidactionline { clear: both; overflow: auto; }
-.bidactionbutton { float: right; margin-right: 10px; margin-top: 10px; }
+.bidactionbutton { float: right; margin-right: 10px; margin-top: 10px; text-align: center; }
 .bidconfirmmessage { padding-top: 25px; padding-right: 10px; text-align: right; font-weight: bold; color: #49515a; float: right; }
 .messagereplytextarea { position: absolute; left: 10px; top: 5px; width: 786px !important; height: 75px !important; }
 .messagereplybutton { position: absolute; right: 10px !important; bottom: 12px !important; }
@@ -1514,7 +1512,6 @@ width: 302px;
 .deactivatemsg { display: none; font-weight: bold; }
 .deactivatecancelbtn { display: none; margin-top: 10px; }
 .deletebox, .withdrawbox, .approvebox, .sendbackbox, .freezebox, .promotebox, .deactivatebox {
-    margin-top: 30px;
     padding-top: 10px;
     padding-bottom: 15px;
 }
@@ -1729,10 +1726,6 @@ background: #fefefe;
 .header, .notificationtitle
 {
 background: #fefefe;
-}
-.inputbutton, .smallinputbutton
-{
-background: #e4e4e4;
 }
 
 /* BMC ICONS */
@@ -2063,7 +2056,9 @@ position: relative;
     text-decoration: none;
     cursor: pointer;
 }
-.gotobutton { background: #eee; color: #666; border: 1px solid #ddd !important; font-size: 16px; margin-top: 20px; font-weight: normal; }
+.gotobutton {
+    margin-top: 20px;
+}
 
 
 .titleprevnextbtn { margin-top: 3px; color: #4083a9; }
@@ -2114,6 +2109,13 @@ color: #fff;
     width: 280px;
     padding-left: 10px;
     padding-top: 8px;
+}
+.askingbox-full {
+    width: 911px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 0;
+    padding-bottom: 10px;
 }
 .documentbox {
     width: 280px;
@@ -2259,12 +2261,12 @@ color: #fff;
     background: #7EDAEF !important;
     color: #ffffff !important;
 }
-.inputbutton:hover, .smallinputbutton:hover, .gotobutton:hover, .companynav:hover {
+.companynav:hover {
     border-color: #b0b3b6;
     background: #d4d4d4;
     color: #3584d2;
 }
-.inputbutton:active, .smallinputbutton:active, .gotobutton:active, .companynav:active {
+.companynav:active {
     border-color: #909396;
     background: #c4c4c4;
     color: #1564a2;
@@ -2276,8 +2278,10 @@ color: #fff;
     /* font-family: "Adelle","Helvetica Neue",Helvetica,Arial,sans-serif; */
     text-align: center;
     color: #666;
-    font-size: 30px;
     margin-top: 20px;
+    font-family: 'Ubuntu',sans-serif;
+    font-size: 25px;
+    font-weight: 500;
 }
 .addlistingsubtitle {
     /* font-family: "Adelle","Helvetica Neue",Helvetica,Arial,sans-serif; */
@@ -2304,7 +2308,7 @@ color: #fff;
     background: url(../img/slide_button.png) right no-repeat;
 }
 */
-.investbutton, .investbuttonsmall {
+.investbutton, .investbuttonsmall, .inputbutton, .smallinputbutton {
     display: block;
     background: #FFFFFF;
     border: 1px;
@@ -2319,28 +2323,22 @@ color: #fff;
     text-align: center;
     padding-left: 0px !important;
 }
-.investbutton:hover, .investbutton:active {
+.investbutton:hover, .investbutton:active,
+.investbuttonsmall:hover, .investbuttonsmall:active,
+.inputbutton:hover, .inputbutton:active,
+.smallinputbutton:hover, .smallinputbutton:active
+{
     transition: background 0.25s, color 0.25s;
     background: #7EDAEF !important;
     color: #ffffff !important;
+    cursor: pointer;
 }
-.investbuttonsmall:hover, .investbuttonsmall:active {
-    transition: background 0.25s, color 0.25s;
-    background: #7EDAEF !important;
-    color: #ffffff !important;
-}
-/*
-.investbuttonsmall {
-    font-size: 14px;
-    margin-top: 0;
-    font-weight: 700;
-    padding: 14px 0 10px;
-}
-*/
-.investbutton:hover { cursor: pointer; }
 .addlistingmsg {
     text-align: center;
-    font-size: 30px;
+    font-family: 'Ubuntu',sans-serif;
+    font-size: 25px;
+    font-weight: 500;
+
     margin-top: 10px;
 }
 .addlistinglogin {
@@ -2421,12 +2419,15 @@ color: #fff;
     margin-top: 10px;
 }
 .askinginputtext {
-    font-weight: bold; color: #f8f8f8 !important; background: #49515a !important; font-size: 30px !important; width: 140px !important;
+    color: #f8f8f8 !important; background: #49515a !important; font-size: 25px !important; width: 140px !important;
     text-align: right;
     margin-bottom: 10px;
+    font-family: 'Ubuntu',sans-serif;
+    font-size: 25px;
+    font-weight: 500;
 }
 .askingamtbtn, .askingpctbtn {
-    float: left; margin-top: 10px; margin-bottom: 10px; margin-right: 10px;
+    float: left; margin-top: 10px; margin-bottom: 10px; margin-right: 10px; text-align: center;
 }
 .newlistingoffermsg {
     margin-top: 10px;
@@ -2459,18 +2460,18 @@ color: #fff;
 .commenttextarea {
     color: #f8f8f8 !important;
     background: #49515a !important;
-    font-weight: bold;
     font-size: 14px !important;
     height: 90px;
-    width: 725px !important;
+    width: 755px !important;
     position: absolute;
     top: 5px;
-    left: 70px;
+    left: 10px;
 }
 .commentreplybutton {
     position: absolute;
     right: 10px !important;
     bottom: 12px !important;
+    text-align: center;
 }
 .commentdeleteicon {
     position: absolute;
@@ -2519,13 +2520,13 @@ color: #fff;
     margin-right: 5px;
 }
 .inputpcttext {
-    font-size: 30px !important;
     float:left;
-    font-weight: bold;
     color: #666;
     padding-top: 15px;
     width: 30px;
-    font-size: 18px;
+    font-family: 'Ubuntu',sans-serif;
+    font-size: 25px !important;
+    font-weight: 500;
 }
 .amountbidicon {
     margin-right: 35px;
@@ -2557,7 +2558,13 @@ color: #fff;
 .valuationtypepanel { overflow: visible !important; position: relative; min-height: 150px; margin-top: 100px; }
 .valuationlabel { font-size: 14px; line-height: 14px; margin-top: 10px; font-weight: normal; }
 .valuationhelptext { font-size: 14px; line-height: 14px; position: relative; top: 17px; }
-.valuationtext { font-size: 30px; font-weight: bold; position: relative; top: 11px; }
+.valuationtext {
+    position: relative;
+    top: 11px;
+    font-family: 'Ubuntu',sans-serif;
+    font-size: 25px !important;
+    font-weight: 500;
+}
 .valuationinput { width: 252px !important; padding: 0 5px !important; }
 
 /* new listing styles */

@@ -35,7 +35,7 @@ pl.implement(CommentClass, {
             this.displayAddCommentBox();
         }
         else if (this.listing.status !== 'active') {
-            pl('#addcommentbox').before('<div class="commentline"><p style="font-weight: bold;">Comments cannot be added to this listing as it is not active</p></div>');
+            pl('#addcommentbox').before('<div class="commentline"><p style="font-weight: bold;">@lang_comment_active_warning@</p></div>');
         }
         else {
             pl('#addcommentbox').before('\
@@ -111,7 +111,7 @@ pl.implement(CommentClass, {
 
             blur: function() {
                 if (!pl('#addcommenttext').hasClass('edited')) {
-                    pl('#addcommenttext').attr({value: 'Put your comment here...'});
+                    pl('#addcommenttext').attr({value: '@lang_put_comment_here@'});
                     pl('#addcommentbtn').removeClass('editenabled');
                 }
             }
@@ -120,7 +120,7 @@ pl.implement(CommentClass, {
             click: function(event) {
                 var complete = function(json) {
                         pl('#addcommentspinner').hide();
-                        pl('#addcommenttext').removeClass('edited').removeAttr('disabled').attr({value: 'Put your comment here...'});
+                        pl('#addcommenttext').removeClass('edited').removeAttr('disabled').attr({value: '@lang_put_comment_here@'});
                         pl('#addcommentbtn').removeClass('editenabled').show();
                         pl('#commentmsg').text('');
                         pl('#addcommentbox').before(self.makeComment(json));
@@ -163,7 +163,7 @@ pl.implement(CommentClass, {
             pl('#commentmsg').html('').show();
         }
         else {
-            pl('#commentmsg').html('<p>Login and be the first to comment!</p>');
+            pl('#commentmsg').html('<p>@lang_login_to_comment@</p>');
         }
     },
 

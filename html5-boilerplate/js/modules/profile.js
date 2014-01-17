@@ -580,7 +580,7 @@ pl.implement(ProfileListClass, {
         }
         if (more_results_url) {
             pl('#profilelist').after('<div class="showmore profilelistshowmore hoverlink" id="moreresults"><span class="initialhidden" id="moreresultsurl">'
-                + more_results_url + '</span><span id="moreresultsmsg">More...</span></div>\n');
+                + more_results_url + '</span><span id="moreresultsmsg">@lang_more@</span></div>\n');
             this.bindMoreResults();
         }
     },
@@ -663,7 +663,7 @@ pl.implement(ProfileListClass, {
                     }
                     if (more_results_url) {
                         pl('#moreresultsurl').text(more_results_url);
-                        pl('#moreresultsmsg').text('More...');
+                        pl('#moreresultsmsg').text('@lang_more@');
                     }
                     else {
                         pl('#moreresultsmsg').text('');

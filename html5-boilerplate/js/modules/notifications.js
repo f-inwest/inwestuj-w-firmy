@@ -171,7 +171,7 @@ pl.implement(NotifyListClass, {
                         }
                         if (self.more_results_url) {
                             pl('#moreresultsurl').text(self.more_results_url);
-                            pl('#moreresultsmsg').text('More...');
+                            pl('#moreresultsmsg').text('@lang_more@');
                         }
                         else {
                             pl('#moreresultsmsg').text('');

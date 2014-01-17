@@ -1738,7 +1738,7 @@ include(header.m4)
                 <div class="formitem clear">
                     <label class="inputlabel" for="title">ANSWER</label>
                     <span class="inputfield">
-                        <input class="text inputwidetext answerobj" type="text" name="answer" value="{ question_id: 0, text: &rsquo;put your answer here&rsquo; }"></input>
+                        <input class="text inputwidetext answerobj" type="text" name="answer" value="{ question_id: 0, text: &rsquo;@lang_put_answer_here@&rsquo; }"></input>
                     </span>
                 </div>
                 <div class="formitem clear">
