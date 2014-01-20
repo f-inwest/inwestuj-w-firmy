@@ -173,7 +173,6 @@ body.nearby-page > #wrap > #main > div.container > div.nearbywrapper {
     line-height: 22px;
 }
 .header-boxpanel-top {
-    margin-top: 15px;
 }
 .header-content-login span {
     margin-left: 30px;
@@ -384,7 +383,7 @@ a:focus, a:hover { cursor: pointer; }
 .headericonbar { float: left;  }
 
 /* banner styles */
-.banner { width: 100%; height: 270px; background: #fefefe; }
+.banner { width: 100%; height: 270px; background: #fefefe; margin-bottom: 15px; }
 .nearbybanner { height: 150px; }
 .bannertext { font-size: 30px; font-weight: bold; top: 5px; height: 40px; position: relative; }
 .bannersmall { width: 980px; height: 50px; margin-top: 10px; }
@@ -527,7 +526,6 @@ a:focus, a:hover { cursor: pointer; }
 .companyheader {
     width: 100%;
     height: 221px;
-    margin-top: 15px;
 }
 .companybanner { height: 176px; position: relative; background: #fefefe; }
 .companybannerwrapper { height: 146px; padding: 15px; }
@@ -736,10 +734,13 @@ a:focus, a:hover { cursor: pointer; }
     margin-bottom: 15px;
 }
 .header-initial {
-    margin-top: 15px;
+/*    margin-top: 15px; */
+}
+.header-more {
+    background: none;
+    margin-bottom: 60px;
 }
 .header-boxpanel-initial {
-    margin-top: 15px;
     border: 0;
     border-bottom: 0;
     margin-bottom: 0;
@@ -782,7 +783,7 @@ a:focus, a:hover { cursor: pointer; }
 .company-side-menu-container {
 }
 .company-side-menu-inner {
-    margin-top: 15px;
+    margin-bottom: 15px;
     background: #fefefe;
     padding-left: 15px;
     padding-right: 15px;
@@ -813,7 +814,6 @@ a:focus, a:hover { cursor: pointer; }
 .more {
     position: relative;
     max-width: 250px;
-    margin-bottom: 50px;
     margin-top: 10px;
     height: 29px;
     border: 1px;
@@ -839,11 +839,11 @@ a:focus, a:hover { cursor: pointer; }
     font-size: 16px;
 }
 .existing-listing-wrapper {
-    height: 62px;
 }
 .header-with-boat {
     width: 100%;
     height: 245px;
+    margin-bottom: 15px;
 }
 .headerboatwrapper {
     background: #fefefe;
@@ -1364,6 +1364,7 @@ transition: height 300ms;
     background: none;
     overflow: hidden;
     min-height: 21px;
+    margin-bottom: 15px;
 }
 .categorysidebox {
     min-height: 253px;

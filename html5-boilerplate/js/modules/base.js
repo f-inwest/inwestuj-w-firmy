@@ -888,10 +888,10 @@ pl.implement(CompanyListClass, {
             }
         }
         if (more_results_url) {
-            html += '<div class="header-content header-initial" id="moreresults"><span class="initialhidden" id="moreresultsurl">' + more_results_url + '</span><span id="moreresultmsg" class="more more-header initialhidden">@lang_see_all@</span></div>\n';
+            html += '<div class="header-content header-initial header-more" id="moreresults"><span class="initialhidden" id="moreresultsurl">' + more_results_url + '</span><span id="moreresultmsg" class="more more-header initialhidden">@lang_see_all@</span></div>\n';
         }
         else if (seeall) {
-            html += '<div class="header-content header-initial"><a href="' + this.options.seeall + '" class="more more-header">@lang_see_all@</a></div>\n';
+            html += '<div class="header-content header-initial header-more"><a href="' + this.options.seeall + '" class="more more-header">@lang_see_all@</a></div>\n';
         }
         pl('#'+this.options.companydiv).html(html);
         if (more_results_url) {
