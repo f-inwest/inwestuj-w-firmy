@@ -76,7 +76,7 @@ public class TwitterHelper {
 		String appHostName = request.getServerName();
 		int appPortNumber = request.getServerPort();
 		if (com.google.appengine.api.utils.SystemProperty.environment.value() == Environment.Value.Development) {
-			return "http://localhost:" + request.getLocalPort();
+			return "http://" + appHostName + ":" + request.getLocalPort();
 		} else {
 			return "http://" + (appPortNumber != 80 ? appHostName + ":" + appPortNumber : appHostName);
 		}

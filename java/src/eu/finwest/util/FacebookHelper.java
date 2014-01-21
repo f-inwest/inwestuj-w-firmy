@@ -113,7 +113,7 @@ public class FacebookHelper {
 	
 	public static String getLoginUrl(HttpServletRequest request) {
 		String appUrl = TwitterHelper.getApplicationUrl(request);
-		if (appUrl.contains("alocalhost")) {
+		if (appUrl.contains("localhost")) {
 			return null;
 		} else {
 			return appUrl + SERVLET_FACEBOOK_LOGIN;
@@ -122,7 +122,7 @@ public class FacebookHelper {
 	
 	public static String getLogoutUrl(HttpServletRequest request) {
 		String appUrl = TwitterHelper.getApplicationUrl(request);
-		if (appUrl.contains("alocalhost")) {
+		if (appUrl.contains("localhost")) {
 			return null;
 		} else {
 			return appUrl + SERVLET_FACEBOOK_LOGOUT;

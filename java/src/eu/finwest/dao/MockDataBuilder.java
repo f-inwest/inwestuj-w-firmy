@@ -1732,15 +1732,15 @@ public class MockDataBuilder {
 
 		bp.website = !StringUtils.isEmpty(companyUrl) ? companyUrl : getWebsite();
 
-		bp.answer1 = getQuote();
-		bp.answer2 = getQuote();
-		bp.answer3 = getQuote();
-		bp.answer4 = getQuote();
-		bp.answer5 = getQuote();
-		bp.answer6 = getQuote();
-		bp.answer7 = getQuote();
-		bp.answer8 = getQuote();
-		bp.answer9 = getQuote();
+		bp.answer1 = hasBMC ? getQuote() : getQuoteWithNulls();
+		bp.answer2 = hasBMC ? getQuote() : getQuoteWithNulls();
+		bp.answer3 = hasBMC ? getQuote() : getQuoteWithNulls();
+		bp.answer4 = hasBMC ? getQuote() : getQuoteWithNulls();
+		bp.answer5 = hasBMC ? getQuote() : getQuoteWithNulls();
+		bp.answer6 = hasBMC ? getQuote() : getQuoteWithNulls();
+		bp.answer7 = hasBMC ? getQuote() : getQuoteWithNulls();
+		bp.answer8 = hasBMC ? getQuote() : getQuoteWithNulls();
+		bp.answer9 = hasBMC ? getQuote() : getQuoteWithNulls();
 		bp.answer10 = hasIP ? getQuote() : getQuoteWithNulls();
 		bp.answer11 = hasIP ? getQuote() : getQuoteWithNulls();
 		bp.answer12 = hasIP ? getQuote() : getQuoteWithNulls();
