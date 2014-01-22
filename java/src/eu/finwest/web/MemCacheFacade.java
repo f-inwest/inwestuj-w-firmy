@@ -83,26 +83,17 @@ public class MemCacheFacade {
 		return ((Map<String, Map<String, Category>>)mem.get(MEMCACHE_CATEGORIES)).get("en");
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getCategoryLabel(String category) {
 		if (category == null) {
 			return null;
 		}
-		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
-		Map<String, Map<String, Category>> statCategories = (Map<String, Map<String, Category>>)mem.get(MemCacheFacade.MEMCACHE_CATEGORIES);
-		String langVersion = FrontController.getLangVersion() == LangVersion.PL ? "pl" : "en";
-		Category cat = null;
-		if (statCategories.containsKey(langVersion)) {
-			cat = statCategories.get(langVersion).get(category);
-		} else if (statCategories.containsKey("en")) {
-			cat = statCategories.get("en").get(category);
-		}
+		Map<String, Category> categories = getCategoriesMap();
+		Category cat = categories.get(category);
 		
 		if (cat == null) {
 			log.log(Level.WARNING, "@@@@@@@@@@@@@@@@@@@ Category '" + category + "' doesn't exist!!!");
 			return category;
 		}
-
 		return FrontController.getLangVersion() == LangVersion.PL ? cat.namePl : cat.name;
 	}
 	
@@ -157,7 +148,8 @@ public class MemCacheFacade {
 			allData = convertListingLocations(locations);
 			mem.put(MemCacheFacade.MEMCACHE_ALL_LISTING_LOCATIONS, allData);
 		}
-		return allData.get(FrontController.getCampaign().getSubdomain());
+		List<Object[]> list = allData.get(FrontController.getCampaign().getSubdomain());
+		return list != null ? list : new ArrayList<Object[]>();
 	}
 
 	public void updateLocations(List<Location> allLocations, List<ListingLocation> allListingLocations) {

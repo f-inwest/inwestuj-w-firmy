@@ -2234,11 +2234,11 @@ public class MockDataBuilder {
 	};
 
 	public static String getTestDataPath() {
-		if(com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development
+		if (com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development
 				&& new File("./test-docs").exists()) {
 			return "./test-docs/";
 		} else {
-			return "https://github.com/f-inwest/inwestuj-w-firmy/raw/master/tests/test-docs/";
+			return "https://raw.github.com/f-inwest/files/master/test-docs/";
 		}
 	}
 }

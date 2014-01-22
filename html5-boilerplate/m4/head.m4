@@ -28,12 +28,12 @@
 
   <link rel="canonical" href="http://inwestujwfirmy.pl"/>
 
-  <script>
+  <!-- script>
 (function() {
     if (window.location.hostname.match(/^inwestuj-w-firmy\.appspot\.com$/)) {
         window.location = window.location.href.replace(/[A-Za-z0-9\.-]*\.appspot\.com(:[0-9]*)?/, "inwestujwfirmy.pl");
     }
 })();
-  </script>
+  </script -->
 </head>
 '
