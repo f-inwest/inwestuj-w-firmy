@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+
+import com.google.appengine.api.log.LogService.LogLevel;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Campaign;
@@ -55,17 +58,17 @@ public class FrontController extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String pathInfo = request.getPathInfo();
 		log.log(Level.INFO, ">>>>>>> Path info: " + pathInfo);
-		if ("GET".equals(request.getMethod()) && !"true".equalsIgnoreCase(request.getHeader("X-AppEngine-Cron"))
-				&& "inwestuj-w-firmy.appspot.com".equals(request.getServerName())) {
-			String redirectUrl = request.getScheme() + "://www.inwestujwfirmy.pl" + request.getServletPath();
-			String queryString = request.getQueryString();
-			if (StringUtils.isNotEmpty(queryString)) {
-				redirectUrl += "?" + queryString;
-			}
-			log.info("Got request to inwestuj-w-firmy.appspot.com, redirecting to: " + redirectUrl);
-			response.sendRedirect(redirectUrl);
-			return;
-		}
+//		if ("GET".equals(request.getMethod()) && !"true".equalsIgnoreCase(request.getHeader("X-AppEngine-Cron"))
+//				&& "inwestuj-w-firmy.appspot.com".equals(request.getServerName())) {
+//			String redirectUrl = request.getScheme() + "://www.inwestujwfirmy.pl" + request.getServletPath();
+//			String queryString = request.getQueryString();
+//			if (StringUtils.isNotEmpty(queryString)) {
+//				redirectUrl += "?" + queryString;
+//			}
+//			log.info("Got request to inwestuj-w-firmy.appspot.com, redirecting to: " + redirectUrl);
+//			response.sendRedirect(redirectUrl);
+//			return;
+//		}
 		
 		try {
 			langVersion.set(getVersionFolder(request, response));
@@ -92,7 +95,7 @@ public class FrontController extends HttpServlet {
 			} else if (pathInfo.startsWith("/cron")) {
 				controller = new CronTaskController();
 			} else {
-				log.log(Level.WARNING, "Unknown action '" + pathInfo + "'");
+				log.log(Level.INFO, "No controller associated with '" + pathInfo + "'");
 			}
 	
 			if (controller != null) {
@@ -162,7 +165,7 @@ public class FrontController extends HttpServlet {
 				outFile = versionedRelative(version, WarmupListener.JS_FOLDER + "/" + jsName);
 			}
 		}
-		
+		log.log(Level.INFO, "Handling static file " + pathInfo + ", will respond with file: " + outFile);
 		if (outFile != null && new File(outFile).exists()) {
 			log.log(Level.INFO, ">>>>>>> Sending back file: " + outFile);
 			IOUtils.copy(new FileInputStream(outFile), response.getOutputStream());
@@ -252,6 +255,20 @@ public class FrontController extends HttpServlet {
 		} else if ("localhost".equals(nameParts[nameParts.length - 1])) {
 			// accessed campaign.localhost
 			campaignName = nameParts[nameParts.length - 2];			
+		} else if (nameParts.length >= 3 && "appspot".equals(nameParts[nameParts.length - 2])) {
+			if (nameParts.length == 3) {
+				// accessed inwestuj-w-firmy.appspot.com
+			} else if (nameParts.length == 4) {
+				if (NumberUtils.isNumber(nameParts[0]) && nameParts[0].length() == 12) {
+					// accessed version.inwestuj-w-firmy.appspot.com
+				} else {
+					// accessed campaign.inwestuj-w-firmy.appspot.com
+					campaignName = nameParts[0];
+				}
+			} else {
+				// accessed campaign.version.inwestuj-w-firmy.appspot.com
+				campaignName = nameParts[0];
+			}
 		} else {
 			if (nameParts.length == 2) {
 				// accessed inwestujwfirmy.pl

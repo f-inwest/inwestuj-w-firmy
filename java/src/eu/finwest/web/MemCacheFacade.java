@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
+import eu.finwest.dao.MockDataBuilder;
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Category;
 import eu.finwest.datamodel.Listing;
@@ -107,6 +108,11 @@ public class MemCacheFacade {
 	
 	public void updateCategories() {
 		List<Category> categories = getDAO().getCategories();
+		if (categories.size() == 0) {
+			new MockDataBuilder().quickDatastoreInit();
+			categories = getDAO().getCategories();
+		}
+
 		Map<String, Map<String, Category>> statCategories = new HashMap<String, Map<String, Category>>();
 		for (Category c : categories) {
 			String campaign = c.campaign;

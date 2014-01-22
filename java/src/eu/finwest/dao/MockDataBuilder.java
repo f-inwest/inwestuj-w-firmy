@@ -48,6 +48,7 @@ import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Category;
 import eu.finwest.datamodel.Comment;
 import eu.finwest.datamodel.Listing;
+import eu.finwest.datamodel.Listing.Currency;
 import eu.finwest.datamodel.ListingDoc;
 import eu.finwest.datamodel.ListingLocation;
 import eu.finwest.datamodel.ListingStats;
@@ -144,12 +145,17 @@ public class MockDataBuilder {
 	private long id() {
         if (!isIdInitialized) {
             try {
-                Listing maxListing = getOfy().query(Listing.class).order("-id").chunkSize(1).prefetchSize(1).get();
-                if (maxListing == null) {
-                    log.info("No listing IDs found, starting from default id: " + id);
+            	long maxListingId = id;
+                for(Key<Listing> key : getOfy().query(Listing.class).fetchKeys()) {
+                	long keyId = key.getId();
+                	if (keyId > maxListingId) {
+                		maxListingId = keyId;
+                	}
                 }
-                else {
-                    id = maxListing.id;
+                if (maxListingId == id) {
+                    log.info("No listing IDs found, starting from default id: " + id);
+                } else {
+                    id = maxListingId;
                 }
             }
             catch (NotFoundException e) {
@@ -265,6 +271,14 @@ public class MockDataBuilder {
 			ObjectifyDatastoreDAO.getInstance().updateListingStatistics(listing.id);
 		}
 		return props;
+	}
+	
+	public void quickDatastoreInit() {
+		List<SBUser> users = createMockUsers();
+		getOfy().put(users);
+		log.info("Initializing datastore with " + users.size() + " users.");
+		getOfy().put(createCategories());
+		log.info("Datastore initialized with categories.");
 	}
 
 	public String createMockDatastore(boolean storeData, boolean initializeNow) {
@@ -1657,6 +1671,7 @@ public class MockDataBuilder {
 		Listing bp = new Listing();
 		bp.id = id();
 		bp.lang = lang;
+		bp.currency = lang == LangVersion.PL ? Currency.PLN : Currency.EUR;
 		bp.campaign = lang == LangVersion.PL ? "pl" : "en";
 		bp.name = name;
 		bp.summary = summary;

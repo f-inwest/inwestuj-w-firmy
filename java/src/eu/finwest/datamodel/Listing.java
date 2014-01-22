@@ -49,7 +49,7 @@ public class Listing extends BaseObject<Listing> {
 	/**
 	 * List of supported listing currencies.
 	 */
-	public enum Currency {USD, EUR, GBP};
+	public enum Currency {USD, EUR, GBP, PLN};
 	/**
 	 * List of company stage values.
 	 */
