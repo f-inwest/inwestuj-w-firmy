@@ -238,6 +238,25 @@ pl.implement(CurrencyClass, {
     format: function(num) {
         return NumberClass.prototype.formatText(num, '$');
     },
+    format: function(num, currency) {
+        var prefix;
+        var postfix;
+        var thousands;
+        var decimal;
+        if (currency === 'pln') {
+            prefix = '';
+            postfix = 'zł';
+            thousands = ' ';
+            decimal = ',';
+        }
+        else {
+            prefix = '$';
+            postfix = '';
+            thousands = ',';
+            decimal = '.';
+        }
+        return NumberClass.prototype.formatText(num, prefix, postfix, thousands, decimal);
+    },
     formatNoSymbol: function(num) {
         return NumberClass.prototype.formatText(num, '');
     },
@@ -604,7 +623,7 @@ CompanyFormatClass.prototype.suggestedText = function(listing) {
         suggested_amt,
         suggested_pct;
     if (listing.asked_fund && listing.suggested_amt && listing.suggested_pct) {
-        suggested_amt = CurrencyClass.prototype.format(listing.suggested_amt);
+        suggested_amt = CurrencyClass.prototype.format(listing.suggested_amt, listing.currency);
         suggested_pct = PercentClass.prototype.format(listing.suggested_pct) + '%';
         suggested_text = suggested_amt + ' @ ' + suggested_pct;
     }

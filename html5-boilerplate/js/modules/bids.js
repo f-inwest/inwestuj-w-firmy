@@ -26,9 +26,9 @@ pl.implement(PublicBidClass, {
         for (k in json) {
             this[k] = json[k];
         }
-        this.amttext = this.amt ? CurrencyClass.prototype.format(this.amt) : '';
+        this.amttext = this.amt ? CurrencyClass.prototype.format(this.amt, this.bidslist.listing.currency) : '';
         this.pcttext = this.pct ? PercentClass.prototype.format(this.pct) : '';
-        this.valtext = this.val ? CurrencyClass.prototype.format(this.val) : '';
+        this.valtext = this.val ? CurrencyClass.prototype.format(this.val, this.bidslist.listing.currency) : '';
         this.datetext = this.create_date ? DateClass.prototype.format(this.create_date) : '';
         this.bidclass = '';
         //this.bidclass = this.typeclassmap[this.type] || '';
@@ -236,15 +236,18 @@ accepted_bids: [
     },
 
     displayAskingPrice: function() {
-       var amt = CurrencyClass.prototype.format(this.listing.suggested_amt),
+       var amt = CurrencyClass.prototype.format(this.listing.suggested_amt, this.listing.currency),
            pct = PercentClass.prototype.format(this.listing.suggested_pct),
-           val = CurrencyClass.prototype.format(ValuationClass.prototype.valuation(this.listing.suggested_amt, this.listing.suggested_pct));
+           val = CurrencyClass.prototype.format(
+               ValuationClass.prototype.valuation(this.listing.suggested_amt, this.listing.suggested_pct),
+               this.listing.currency
+           );
         pl('#askingamt').text(amt);
         pl('#askingpct').text(pct);
         pl('#askingval').text(val);
         pl('#askingpricewrapper').show();
     },
-
+    /*
     displayFullOrderBook: function() {
         var html,
             bidprop,
@@ -274,6 +277,7 @@ accepted_bids: [
         }
         pl('#orderbookwrapper').show();
     }
+    */
 });
 
 function CompanyBidsPageClass() {
@@ -352,9 +356,9 @@ pl.implement(BidClass, {
         for (k in json) {
             this[k] = json[k];
         }
-        this.amttext = this.amt ? CurrencyClass.prototype.format(this.amt) : '';
+        this.amttext = this.amt ? CurrencyClass.prototype.format(this.amt, this.bidslist.listing.currency) : '';
         this.pcttext = this.pct ? PercentClass.prototype.format(this.pct) + '%' : '';
-        this.valtext = this.val ? CurrencyClass.prototype.format(this.val) : '';
+        this.valtext = this.val ? CurrencyClass.prototype.format(this.val, this.bidslist.listing.currency) : '';
         this.typetext = this.type ? this.type.replace(/(investor_|owner_)/, '') : '';
         this.bidtext = this.text ? SafeStringClass.prototype.htmlEntities(this.text) : '@lang_none@';
         this.datetext = this.create_date ? DateClass.prototype.format(this.create_date) : '';
@@ -601,7 +605,7 @@ pl.implement(SingleInvestorBidListClass, {
         var amt = CurrencyClass.prototype.clean(pl('#new_bid_amt').attr('value')) || 0,
             pct = PercentClass.prototype.clean(pl('#new_bid_pct').attr('value')) || 0,
             val = pct ? Math.floor(Math.floor(100 * amt / pct)) : 0,
-            cur = CurrencyClass.prototype.format(CurrencyClass.prototype.clean(val)),
+            cur = CurrencyClass.prototype.format(CurrencyClass.prototype.clean(val), this.listing.currency),
             dis = cur || '';
         pl('#new_bid_val').removeClass('inprogress').addClass('successful').text(dis);
     },
@@ -650,7 +654,7 @@ pl.implement(SingleInvestorBidListClass, {
     },
 
     displayIfValidAmt: function(result, val) {
-        var fmt = CurrencyClass.prototype.format(val);
+        var fmt = CurrencyClass.prototype.format(val, this.listing.currency);
         if (result === 0) {
             pl('#new_bid_amt').attr({value: fmt});
         }
@@ -982,9 +986,9 @@ pl.implement(InvestorBidGroupClass, {
             this[k] = json[k];
         }
         this.messageclass = this.read ? '' : ' inputmsg'; // unread
-        this.amttext = amt ? CurrencyClass.prototype.format(amt) : '';
+        this.amttext = amt ? CurrencyClass.prototype.format(amt, this.bidslist.listing.currency) : '';
         this.pcttext = pct ? PercentClass.prototype.format(pct) + '%' : '';
-        this.valtext = val ? CurrencyClass.prototype.format(val) : '';
+        this.valtext = val ? CurrencyClass.prototype.format(val, this.bidslist.listing.currency) : '';
         this.typetext = type ? type.replace(/(investor_|owner_)/, '') : '';
         this.bidtext = this.last_text ? SafeStringClass.prototype.htmlEntities(this.last_text) : 'None';
         this.datetext = this.last_date ? DateClass.prototype.format(this.last_date) : '';
@@ -1383,7 +1387,7 @@ pl.implement(OwnerSingleInvestorBidListClass, {
         var amt = CurrencyClass.prototype.clean(pl('#new_bid_amt').attr('value')) || 0,
             pct = PercentClass.prototype.clean(pl('#new_bid_pct').attr('value')) || 0,
             val = pct ? Math.floor(Math.floor(100 * amt / pct)) : 0,
-            cur = CurrencyClass.prototype.format(CurrencyClass.prototype.clean(val)),
+            cur = CurrencyClass.prototype.format(CurrencyClass.prototype.clean(val), this.listing.currency),
             dis = cur || '';
         pl('#new_bid_val').removeClass('inprogress').addClass('successful').text(dis);
     },
@@ -1432,7 +1436,7 @@ pl.implement(OwnerSingleInvestorBidListClass, {
     },
 
     displayIfValidAmt: function(result, val) {
-        var fmt = CurrencyClass.prototype.format(val);
+        var fmt = CurrencyClass.prototype.format(val, this.listing.currency);
         if (result === 0) {
             pl('#new_bid_amt').attr({value: fmt});
         }

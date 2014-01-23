@@ -169,7 +169,7 @@ pl.implement(NewListingFinancialsClass, {
         }
     },
     displayIfValidAmt: function(result, val) {
-        var fmt = CurrencyClass.prototype.format(val);
+        var fmt = CurrencyClass.prototype.format(val, self.base.fieldMap.currency);
         if (result === 0) {
             pl('#suggested_amt').attr({value: fmt});
         }
@@ -185,7 +185,7 @@ pl.implement(NewListingFinancialsClass, {
             amt = CurrencyClass.prototype.clean(pl('#suggested_amt').attr('value')) || 0,
             pct = PercentClass.prototype.clean(pl('#suggested_pct').attr('value')) || 0,
             val = pct ? Math.floor(Math.floor(100 * amt / pct)) : 0,
-            cur = CurrencyClass.prototype.format(CurrencyClass.prototype.clean(val)),
+            cur = CurrencyClass.prototype.format(CurrencyClass.prototype.clean(val), self.base.fieldMap.currency),
             dis = fnd && cur ? cur : '';
         pl('#suggested_val').text(dis);
     },

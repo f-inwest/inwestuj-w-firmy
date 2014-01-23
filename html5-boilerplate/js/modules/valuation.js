@@ -34,6 +34,7 @@ pl.implement(ValuationClass, {
         var vdata = listing.valuation_data ? JSON.parse(listing.valuation_data) : {},
             type = vdata.valuation_type !== undefined ? vdata.valuation_type : (listing.type || 'company'),
             k, v;
+        this.currency = listing.currency;
         this.valuation_data.valuation_type = type;
         if (vdata) {
             for (k in vdata) {
@@ -93,7 +94,7 @@ pl.implement(ValuationClass, {
         exit_value = target_market * val.revenue_per * profit_margin * ps_ratio;
         npv_exit_value = exit_value * Math.pow((1 - discount_rate), exit_year);
         npv_exit_value_risk_adjusted = npv_exit_value * exit_probability;
-        pl('#exit_value').text(CurrencyClass.prototype.format(Math.floor(exit_value)));
+        pl('#exit_value').text(CurrencyClass.prototype.format(Math.floor(exit_value), this.currency));
 
         company_valuation = current_value || 0;
         num_valuations = 1;
@@ -113,7 +114,7 @@ pl.implement(ValuationClass, {
             company_valuation /= num_valuations;
         }
         company_valuation = Math.max(company_valuation, val.current_revenue); // prevent less than current 
-        pl('#company_valuation').text(CurrencyClass.prototype.format(Math.floor(company_valuation)));
+        pl('#company_valuation').text(CurrencyClass.prototype.format(Math.floor(company_valuation), this.currency);
     },
 
     valueApplication: function() {
@@ -140,7 +141,7 @@ pl.implement(ValuationClass, {
         growth_ratio = Math.pow(r, n);
         future_peak = val.best_month * growth_ratio;
         projected_peak = months_to_best > 0 ? future_peak : val.best_month;
-        pl('#projected_peak').text(CurrencyClass.prototype.format(Math.floor(projected_peak)));
+        pl('#projected_peak').text(CurrencyClass.prototype.format(Math.floor(projected_peak), this.currency));
 
         if (months_to_best > 0) {
             growth_sum_ratio = (1 - Math.pow(r, (n+1))) / (1 - r);
@@ -153,13 +154,13 @@ pl.implement(ValuationClass, {
         decline_sum_ratio = 1 / (1 - r);
         earnings_after_peak = projected_peak * decline_sum_ratio;
         future_earnings = earnings_to_peak + earnings_after_peak - projected_peak; // don't double count
-        pl('#future_earnings').text(CurrencyClass.prototype.format(Math.floor(future_earnings)));
+        pl('#future_earnings').text(CurrencyClass.prototype.format(Math.floor(future_earnings), this.currency));
 
         monthly_target = val.target_users * val.monthly_arpu;
-        pl('#monthly_target').text(CurrencyClass.prototype.format(Math.floor(monthly_target)));
+        pl('#monthly_target').text(CurrencyClass.prototype.format(Math.floor(monthly_target), this.currency));
 
         target_valuation = (monthly_target * 12) / discount_rate;
-        pl('#target_valuation').text(CurrencyClass.prototype.format(Math.floor(target_valuation)));
+        pl('#target_valuation').text(CurrencyClass.prototype.format(Math.floor(target_valuation), this.currency));
         npv = target_valuation * Math.pow((1 - discount_rate), 2);
         npv_risk_adjusted = npv * exit_probability;
 
@@ -177,7 +178,7 @@ pl.implement(ValuationClass, {
             application_valuation /= num_valuations;
         }
         application_valuation = Math.max(application_valuation, future_earnings); // prevent less than future earnings
-        pl('#application_valuation').text(CurrencyClass.prototype.format(Math.floor(application_valuation)));
+        pl('#application_valuation').text(CurrencyClass.prototype.format(Math.floor(application_valuation), this.currency));
     },
 
     displayIsAppReleased: function() {
@@ -277,7 +278,7 @@ pl.implement(ValuationPageClass, {
     },
 
     displayCurrencyField: function(id, val) {
-        pl('#' + id).text(val !== undefined ? CurrencyClass.prototype.format(val) : '');
+        pl('#' + id).text(val !== undefined ? CurrencyClass.prototype.format(val, this.currency) : '');
     },
 
     displayNumberField: function(id, val) {
@@ -402,7 +403,7 @@ pl.implement(NewListingValuationClass, {
     },
 
     displayCurrencyField: function(id, val) {
-        pl('#' + id).attr('value', val !== undefined ? CurrencyClass.prototype.format(val) : '');
+        pl('#' + id).attr('value', val !== undefined ? CurrencyClass.prototype.format(val, this.currency) : '');
     },
 
     displayNumberField: function(id, val) {
