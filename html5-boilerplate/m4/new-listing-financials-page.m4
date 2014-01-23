@@ -80,11 +80,13 @@ include(company-not-found.m4)
         <div class="formitem clear firstinputitem">
             <label class="inputlabel" for="suggested_amt">ASKING</label>
             <span class="inputfield">
-                <div class="span-4 investbutton askingamtbtn">$5,000</div>
-                <div class="span-4 investbutton askingamtbtn">$10,000</div>
-                <div class="span-4 investbutton askingamtbtn">$25,000</div>
-                <div class="span-4 investbutton askingamtbtn">$100,000</div>
-                <div class="span-4 investbutton askingamtbtn">$500,000</div>
+                <div class="span-4 investbutton askingamtbtn">@lang_asking_amt_1@</div>
+                <div class="span-4 investbutton askingamtbtn">@lang_asking_amt_2@</div>
+                <div class="span-4 investbutton askingamtbtn">@lang_asking_amt_3@</div>
+                <div class="span-4 investbutton askingamtbtn">@lang_asking_amt_4@</div>
+                <!--
+                <div class="span-4 investbutton askingamtbtn">@lang_asking_amt_1@</div>
+                -->
             </span>
         </div>
 

@@ -667,6 +667,9 @@ a:focus, a:hover { cursor: pointer; }
     left: 168px;
     width: 810px;
 }
+#companynavcontainer {
+    display: none;
+}
 .companynav {
     background: #e4e4e4;
     border: 1px solid #ddd;
@@ -1291,18 +1294,10 @@ transition: height 300ms;
     padding-left: 0;
 }
 .boxstep { border: 2px solid #cccccc; padding: 2px; overflow: auto; background: #e3e3e3; margin-bottom: 10px; }
-/*
-.boxpanel {
-    background: none;
-    margin-top: 10px;
-    overflow: hidden;
-    position: relative;
-    width: 622px;
-}
-*/
 .boxpanel {
     padding: 10px;
     margin-top: 0;
+    margin-bottom: 15px;
     font-family: 'Ubuntu',sans-serif;
     font-size: 14px;
     font-weight: 300;
@@ -1819,7 +1814,7 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYA
 .bmctitlemsg { float: right; padding-top: 15px; }
 .bmctitleboxbtn { float: right; margin-left: 20px; padding-top: 5px; }
 .bmctitlebtn { float: right; margin-left: 20px; margin-bottom: 20px; }
-.titletext { float: left; padding-top: 15px; margin-right: 10px; }
+.titletext { float: left; margin-right: 10px; }
 .titleinfobtn { float: left; margin-top: 8px; }
 .titleinfoheader { font-size: 18px; font-weight: bold; line-height: 30px; }
 .titleinfobtn:hover { cursor: pointer; }
@@ -1873,7 +1868,7 @@ border: 1px solid #cccccc;
 .editprofilepanel { overflow: visible; height: 169px; }
 .basicstitle { height: 41px; margin-top: 0px; }
 
-.bmcborder { border: 6px solid #cccccc; margin-bottom: 10px; clear: both; position: relative; }
+.bmcborder { border: 7px solid #fefefe; margin-bottom: 10px; clear: both; position: relative; }
 .bmccontainer { overflow: hidden; }
 .bmccell { padding: 5px; line-height: normal; }
 .bmcsection { font-size: 18px; font-weight: bold; }
@@ -1990,6 +1985,7 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQA
 .ipdata { left: 15px; }
 .ipcorp { margin-right: 20px; }
 .ippage { right: 15px; }
+.websitelinkip { color: #fff !important; }
 
 .dotnavwrapper { height: 26px; margin: auto; }
 .dotnaveditable { margin-top: 12px; }

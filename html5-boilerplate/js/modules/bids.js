@@ -246,9 +246,9 @@ accepted_bids: [
         pl('#askingpct').text(pct);
         pl('#askingval').text(val);
         pl('#askingpricewrapper').show();
-    },
+    }
     /*
-    displayFullOrderBook: function() {
+    ,displayFullOrderBook: function() {
         var html,
             bidprop,
             bids,

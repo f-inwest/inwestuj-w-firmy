@@ -51,10 +51,10 @@ include(company-order-book.m4)
             <div class="formitem clear firstinputitem">
                 <label class="inputlabel" for="new_bid_amt">&nbsp;</label>
                 <span class="inputfield">
-                    <div class="span-4 investbutton askingamtbtn">$5,000</div>
-                    <div class="span-4 investbutton askingamtbtn">$25,000</div>
-                    <div class="span-4 investbutton askingamtbtn">$50,000</div>
-                    <div class="span-4 last investbutton askingamtbtn">$100,000</div>
+                    <div class="span-4 investbutton askingamtbtn">@lang_asking_amt_1@</div>
+                    <div class="span-4 investbutton askingamtbtn">@lang_asking_amt_2@</div>
+                    <div class="span-4 investbutton askingamtbtn">@lang_asking_amt_3@</div>
+                    <div class="span-4 last investbutton askingamtbtn">@lang_asking_amt_4@</div>
                 </span>
             </div>
     

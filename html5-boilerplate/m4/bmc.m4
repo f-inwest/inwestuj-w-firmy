@@ -1,9 +1,9 @@
 `
 <!-- begin bmc -->
 <div class="span-24 last initialhidden" id="bmc">
-<div class="boxtitle bmctitle">
-    <span class="bmctitletext">BUSINESS MODEL CANVAS</span>
-    <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink initialhidden" id="bmc-edit-btn">EDIT</span>
+<div class="header-content header-boxpanel-initial header-boxpanel-full">
+    <span class="bmctitletext">@lang_business_model_canvas@</span>
+    <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink initialhidden" id="bmc-edit-btn">@lang_edit@</span>
     <span class="bmctitlemsg" id="bmcmsg"></span>
 </div>
 <div class="bmcborder bmcwidth bmcheight">
@@ -11,7 +11,7 @@
 <div class="bmctallcolumnonedge bmcthreefourthsheight bmcfifthwidthminushalfbar bmccontainer">
 <div class="bmccell">
 <div class="bmcicon bmc_kp_48"></div>
-<span class="bmcsection">Key Partners</span>
+<span class="bmcsection">@lang_key_partners@</span>
 <br/>
 <span id="answer3bmc"></span>
 </div>
@@ -23,7 +23,7 @@
 <div class="bmcshortcolumn bmcfifthwidthminusbar bmcthreeeighthsheightminushalfbar bmccontainer">
 <div class="bmccell">
 <div class="bmcicon bmc_ka_48"></div>
-<span class="bmcsection">Key Activities</span>
+<span class="bmcsection">@lang_key_activities@</span>
 <br/>
 <span id="answer1bmc"></span>
 </div>
@@ -34,7 +34,7 @@
 <div class="bmcshortcolumn bmcfifthwidthminusbar bmcthreeeighthsheightminushalfbar bmccontainer">
 <div class="bmccell">
 <div class="bmcicon bmc_kr_48"></div>
-<span class="bmcsection">Key Resources</span>
+<span class="bmcsection">@lang_key_resources@</span>
 <br/>
 <span id="answer2bmc"></span>
 </div>
@@ -47,7 +47,7 @@
 <div class="bmctallcolumn bmcthreefourthsheight bmcfifthwidthminusbar bmccontainer">
 <div class="bmccell">
 <div class="bmcicon bmc_vp_48"></div>
-<span class="bmcsection">Value Propositions</span>
+<span class="bmcsection">@lang_value_propositions@</span>
 <br/>
 <span id="answer4bmc"></span>
 </div>
@@ -59,7 +59,7 @@
 <div class="bmcshortcolumn bmcfifthwidthminusbar bmcthreeeighthsheightminushalfbar bmccontainer">
 <div class="bmccell">
 <div class="bmcicon bmc_cr_48"></div>
-<span class="bmcsection">Customer Relationships</span>
+<span class="bmcsection">@lang_customer_relationships@</span>
 <br/>
 <span id="answer7bmc"></span>
 </div>
@@ -70,7 +70,7 @@
 <div class="bmcshortcolumn bmcfifthwidthminusbar bmcthreeeighthsheightminushalfbar bmccontainer">
 <div class="bmccell">
 <div class="bmcicon bmc_ch_48"></div>
-<span class="bmcsection">Channels</span>
+<span class="bmcsection">@lang_channels@</span>
 <br/>
 <span id="answer6bmc"></span>
 </div>
@@ -83,7 +83,7 @@
 <div class="bmctallcolumnonedge bmcthreefourthsheight bmcfifthwidthminushalfbar bmccontainer">
 <div class="bmccell">
 <div class="bmcicon bmc_cs_48"></div>
-<span class="bmcsection">Customer Segments</span>
+<span class="bmcsection">@lang_customer_segments@</span>
 <br/>
 <span id="answer5bmc"></span>
 </div>
@@ -95,7 +95,7 @@
 <div class="bmcwidecolumn bmconefourthheightminusbar bmchalfwidthminushalfbar bmccontainer" style="clear: both;">
 <div class="bmccell">
 <div class="bmcicon bmc_co_48"></div>
-<span class="bmcsection">Cost Structure</span>
+<span class="bmcsection">@lang_cost_structure@</span>
 <br/>
 <span id="answer8bmc"></span>
 </div>
@@ -106,7 +106,7 @@
 <div class="bmcwidecolumn bmconefourthheightminusbar bmchalfwidthminushalfbar bmccontainer">
 <div class="bmccell">
 <div class="bmcicon bmc_rs_48"></div>
-<span class="bmcsection">Revenue Streams</span>
+<span class="bmcsection">@lang_revenue_streams@</span>
 <br/>
 <span id="answer9bmc"></span>
 </div>

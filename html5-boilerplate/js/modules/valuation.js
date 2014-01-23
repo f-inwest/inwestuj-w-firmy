@@ -114,7 +114,7 @@ pl.implement(ValuationClass, {
             company_valuation /= num_valuations;
         }
         company_valuation = Math.max(company_valuation, val.current_revenue); // prevent less than current 
-        pl('#company_valuation').text(CurrencyClass.prototype.format(Math.floor(company_valuation), this.currency);
+        pl('#company_valuation').text(CurrencyClass.prototype.format(Math.floor(company_valuation), this.currency));
     },
 
     valueApplication: function() {
