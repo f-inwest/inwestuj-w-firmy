@@ -3,7 +3,7 @@
 
     <div class="header-content header-boxpanel-initial header-boxpanel-full">
         <span class="titletext">@lang_presentation@</span>
-        <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink initialhidden" id="ip-edit-btn">EDIT</span>
+        <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink initialhidden" id="ip-edit-btn">@lang_edit@</span>
         <span class="bmctitlemsg" id="ipmsg"></span>
     </div>
 
@@ -20,20 +20,20 @@
                 <div class="ipcontent">
                     <div class="ipcentered mantraip"></div>
                     <div class="ipspacer"></div>
-                    <div class="ipcentered">by <span class="nameip"></div>
+                    <div class="ipcentered"><span class="nameip"></div>
                     <div class="ipcentered"><a href="" class="websitelinkip"><span class="websiteip"></span></a></div>
                     <div class="ipcentered brief_addressip"></div>
                     <div class="ipspacer"></div>
                     <div class="ipcentered askingip"></div>
                     <div class="ipspacer"></div>
-                    <div class="ipcentered">Created on <span class="ipdatetext"></span></div>
+                    <div class="ipcentered">@lang_created_on@ <span class="ipdatetext"></span></div>
                 </div>
             </div>
 
             <div class="ipslide ipslide2">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Elevator Pitch</div>
+                    <div class="iptitle">@lang_elevator_pitch@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer27ip"></div>
@@ -42,7 +42,7 @@
             <div class="ipslide ipslide3">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">The Problem</div>
+                    <div class="iptitle">@lang_the_problem@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer10ip"></div>
@@ -51,7 +51,7 @@
             <div class="ipslide ipslide4">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">The Solution</div>
+                    <div class="iptitle">@lang_the_solution@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer11ip"></div>
@@ -60,7 +60,7 @@
             <div class="ipslide ipslide5">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Features and Benefits</div>
+                    <div class="iptitle">@lang_features_and_benefits@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer12ip"></div>
@@ -69,7 +69,7 @@
             <div class="ipslide ipslide6">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Current Status</div>
+                    <div class="iptitle">@lang_current_status@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer13ip"></div>
@@ -78,7 +78,7 @@
             <div class="ipslide ipslide7">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">The Market</div>
+                    <div class="iptitle">@lang_the_market@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer14ip"></div>
@@ -87,7 +87,7 @@
             <div class="ipslide ipslide8">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">The Customer</div>
+                    <div class="iptitle">@lang_the_customer@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer15ip"></div>
@@ -96,7 +96,7 @@
             <div class="ipslide ipslide9">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Competitors</div>
+                    <div class="iptitle">@lang_competitors@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer16ip"></div>
@@ -105,7 +105,7 @@
             <div class="ipslide ipslide10">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Competitive Comparison</div>
+                    <div class="iptitle">@lang_competitive_comparison@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer17ip"></div>
@@ -114,7 +114,7 @@
             <div class="ipslide ipslide11">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Business Model</div>
+                    <div class="iptitle">@lang_business_model@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer18ip"></div>
@@ -123,7 +123,7 @@
             <div class="ipslide ipslide12">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Marketing Plan</div>
+                    <div class="iptitle">@lang_marketing_plan@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer19ip"></div>
@@ -132,7 +132,7 @@
             <div class="ipslide ipslide13">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">The Team</div>
+                    <div class="iptitle">@lang_the_team@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer20ip"></div>
@@ -141,7 +141,7 @@
             <div class="ipslide ipslide14">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Values and Methods</div>
+                    <div class="iptitle">@lang_values_and_methods@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer21ip"></div>
@@ -150,7 +150,7 @@
             <div class="ipslide ipslide15">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Current Financials</div>
+                    <div class="iptitle">@lang_current_financials@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer22ip"></div>
@@ -159,7 +159,7 @@
             <div class="ipslide ipslide16">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Financial Projections</div>
+                    <div class="iptitle">@lang_financial_projections@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer23ip"></div>
@@ -168,7 +168,7 @@
             <div class="ipslide ipslide17">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Current Ownership</div>
+                    <div class="iptitle">@lang_current_ownership@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer24ip"></div>
@@ -177,7 +177,7 @@
             <div class="ipslide ipslide18">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Use of Proceeds</div>
+                    <div class="iptitle">@lang_use_of_proceeds@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer25ip"></div>
@@ -186,7 +186,7 @@
             <div class="ipslide ipslide19">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Conclusion</div>
+                    <div class="iptitle">@lang_conclusion@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent" id="answer26ip"></div>
@@ -195,11 +195,11 @@
             <div class="ipslide ipslide20">
                 <div class="ipheader">
                     <div class="noimage iplogo"></div>
-                    <div class="iptitle">Thank You</div>
+                    <div class="iptitle">@lang_thank_you@</div>
                 </div>
                 <div class="ipline"></div>
                 <div class="ipcontent">
-                    <div class="ipcentered">Please contact for further information:</div>
+                    <div class="ipcentered">@lang_please_contact@:</div>
                     <div class="ipspacer"></div>
                     <div class="ipcentered nameip"></div>
                     <div class="ipcentered"><a href="" class="websitelinkip"><span class="websiteip"></span></a></div>
