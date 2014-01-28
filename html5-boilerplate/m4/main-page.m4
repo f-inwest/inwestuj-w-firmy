@@ -9,15 +9,23 @@ include(mainhead.m4)
 <div id="wrap">
 <div id="main">
 '
-include(header-main.m4)
-include(banner.m4)
+include(header.m4)
 `
+<div class="banner nearbybanner" id="banner">
+    <div class="container">
+        <span class="bannertext span-24">
+            <div class="welcometitle" id="welcometitle">@lang_nearby_title@</div>
+            <div class="welcometext" id="welcometext">@lang_nearby_desc@</div>
+        </span>
+    </div>
+</div> <!-- end banner -->
+
 <div class="container">
 <div class="span-24 preloader">
     <div class="preloaderfloater"></div>
     <div class="preloadericon"></div>
 </div>
-<div class="initialhidden wrapper">
+<div class="initialhidden wrapper"> <!-- nearbywrapper -->
 
 <!-- left column -->
 <div class="span-16">

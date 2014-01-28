@@ -187,11 +187,11 @@ pl.implement(DateClass, {
             diffHours = Math.floor(diffTime / 3600000),
             diffMinutes = Math.floor(diffTime / 60000),
             agoText = diffDays
-                ? diffDays + ' day' + (diffDays > 1 ? 's' : '') + ' ago'
+                ? diffDays + (diffDays > 1 ? ' @lang_days_ago@' : ' @lang_day_ago@')
                 : ( diffHours
-                    ? diffHours + ' hour' + (diffHours > 1 ? 's' : '') + ' ago'
+                    ? diffHours + (diffHours > 1 ? ' @lang_hours_ago@' : ' @lang_hour_ago@')
                     : ( diffMinutes
-                        ? diffMinutes + ' minute' + (diffMinutes > 1 ? 's' : '') + ' ago' : 'just now'));
+                        ? diffMinutes + (diffMinutes > 1 ? ' @lang_minutes_ago@' : ' @lang_minute_ago@') : '@lang_just_now@'));
         return agoText;
     }
 });
@@ -229,7 +229,7 @@ pl.implement(NumberClass, {
     },
     isNumber: function(str) {
         var match = str ? str.match(/^[0-9]*$/) : false;
-        return (match ? 0 : 'Please enter a numeric value');
+        return (match ? 0 : '@please_enter_a_number@');
     }
 });
 
@@ -265,7 +265,7 @@ pl.implement(CurrencyClass, {
     },
     isCurrency: function(str) {
         var match = str ? str.match(/^[$]?[0-9]{1,3}(,?[0-9]{3})*$/) : false;
-        return (match ? 0 : 'Please enter a currency value');
+        return (match ? 0 : '@please_enter_a_number@');
     }
 });
 
@@ -279,7 +279,7 @@ pl.implement(PercentClass, {
     },
     isPercent: function(str) {
         var match = str ? str.match(/^[1-9]?[0-9][%]?$/) : false;
-        return (match ? 0 : 'Please enter a percent value');
+        return (match ? 0 : '@please_enter_a_number@');
     }
 });
 
@@ -349,7 +349,7 @@ function AjaxClass(url, statusId, completeFunc, successFunc, loadFunc, errorFunc
     this.completeFunc = completeFunc || function(json) {};
     this.successFunc = successFunc || function(json) {
         if (!json) {
-            pl('#listingstatus').html('<span class="attention">Error: null response from server</span>');
+            pl('#listingstatus').html('<span class="attention">@lang_error_null_response@</span>');
             return;
         }
         pl(self.statusSel).text('');
@@ -358,7 +358,8 @@ function AjaxClass(url, statusId, completeFunc, successFunc, loadFunc, errorFunc
     // this.loadFunc = loadFunc || function() { pl(self.statusSel).html('<span class="inprogress">Loading...</span>'); };
     this.loadFunc = loadFunc || function() { };
     this.errorFunc = errorFunc || function(errorNum, json) {
-        var errorStr = (json && json.error_msg) ? 'Error: ' + json.error_msg : 'Error from server: ' + errorNum;
+        var errorStr = (json && json.error_msg) ? '@lang_error_from_server@: ' + json.error_msg
+            : '@lang_error_from_server@ ' + errorNum;
         pl(self.statusSel).html('<span class="attention">' + errorStr + '</span>');
     };
     this.ajaxOpts = {
@@ -463,8 +464,8 @@ pl.implement(HeaderClass, {
     },
     setLoggedIn: function(profile, logout_url) {
         var num_notifications = profile.num_notifications || 0,
-            num_messages = profile.num_messages || 0,
-            notificationlinktext = num_notifications ? num_notifications + ' unread notifications' : 'no unread notifications';
+            num_messages = profile.num_messages || 0;
+            //notificationlinktext = num_notifications ? num_notifications + ' unread notifications' : 'no unread notifications';
         if (num_messages) {
             pl('#headernummessages').text(num_messages).addClass('headernumdisplay');
         }
@@ -533,12 +534,12 @@ CookieClass.prototype.eraseCookie = function(name) {
 function PlatformClass() {}
 PlatformClass.prototype.displayName = function(platform) {
     var map = {
-        ios: 'iOS',
-        android: 'Android',
-        windows_phone: 'Windows Phone',
-        desktop: 'Desktop',
-        website: 'Web',
-        other: 'Other'
+        ios: '@lang_ios@',
+        android: '@lang_android@',
+        windows_phone: '@lang_windows_phone@',
+        desktop: '@lang_desktop@',
+        website: '@lang_web@',
+        other: '@lang_other@'
     };
     return map[platform];
 }
@@ -644,7 +645,7 @@ CompanyFormatClass.prototype.financeLine = function(listing) {
 };
 CompanyFormatClass.prototype.summaryLine = function(listing) {
     var summary_line = '';
-    summary_line += listing.profile_username || 'anonymous';
+    summary_line += listing.profile_username || '@lang_anonymous@';
     summary_line += ' ~ ';
     summary_line += CompanyFormatClass.prototype.suggestedText(listing);
     summary_line += ' ~ ';
@@ -679,23 +680,24 @@ pl.implement(CompanyTileClass, {
         this.daystext = CompanyFormatClass.prototype.daysText(json);
         this.imgClass = json.logo ? '' : 'noimage';
         this.imgStyle = json.logo ? 'background: url(' + json.logo + ') no-repeat scroll center center transparent' : '',
-        this.posted = json.posted_date ? DateClass.prototype.format(json.posted_date) : 'not posted';
-        this.name = json.title || 'No Company / App';
-
+        this.posted = json.posted_date ? DateClass.prototype.format(json.posted_date) : '@lang_not_posted@';
+        this.name = json.title || '@lang_no_proect@';
         this.type = json.type || 'venture';
-        this.category = json.category || 'Other';
-        this.categoryUC = json.category ? json.category.toUpperCase() : 'OTHER';
+        this.category = json.category || '@lang_other@';
+        this.categoryUC = this.category.toUpperCase();
         cat = this.category || '';
-        catprefix = !cat || (cat !== 'Other' && !cat.match(/^[aeiou]/i)) ? 'A' : 'An';
-        catlink = cat && cat !== 'Other' ? '<a href="/main-page.html?type=category&val=' + encodeURIComponent(cat) + '">' + cat + '</a>' : '';
+        catprefix = !cat || (cat !== '@lang_other@' && !cat.match(/^[aeiou]/i)) ? 'A' : 'An';
+        catlink = cat && cat !== '@lang_other@'
+            ? '<a href="/main-page.html?type=category&val=' + encodeURIComponent(cat) + '">' + cat + '</a>'
+            : '';
 
         this.platform = json.platform;
         platform = json.platform || '';
         platformtext = platform && platform !== 'other' ? PlatformClass.prototype.displayName(platform) + ' ' : '';
-        categorytext = platform && platform !== 'other' && cat === 'Software' ? '' : catprefix + ' ' + catlink + ' ';
-        platformprefix = categorytext ? '' : (platform.match(/^[aeiou]/i) ? 'An ' : 'A ');
+        categorytext = platform && platform !== 'other' && cat === '@lang_software@' ? '' : catprefix + ' ' + catlink + ' ';
+        platformprefix = '';
         stagetext = this.stage && this.stage !== 'established' ? this.stage : '';
-        typetext = this.type === 'application' ? this.type + ' ' + stagetext : (stagetext || 'company');
+        typetext = this.type === 'application' ? this.type + ' ' + stagetext : (stagetext || '@lang_project@');
         this.catlinked = categorytext + platformprefix + platformtext + typetext;
         this.summary = json.summary;
 
@@ -703,15 +705,15 @@ pl.implement(CompanyTileClass, {
         this.brief_address = json.brief_address
             ? '<a class="hoverlink" href="/main-page.html?type=location&val=' + encodeURIComponent(json.brief_address) + '">'
                 + '<div class="locicon"></div><span class="loctext">' + json.brief_address + '</span></a>'
-            : '<span class="loctext">No Address</span>';
+            : '<span class="loctext">@lang_no_address@</span>';
         this.brief_address_inp = json.brief_address
             ?     '</p>'
                 + '<a class="hoverlink" href="/main-page.html?type=location&val=' + encodeURIComponent(json.brief_address) + '">'
                 + '<div class="lociconinp"></div>&nbsp;<span class="loctextinp">' + json.brief_address + '</span>'
                 + '</a>'
                 + '<p>'
-            : '<span class="loctext">No Address</span>';
-        this.address = json.address || 'No Address';
+            : '<span class="loctext">@lang_no_address@</span>';
+        this.address = json.address || '@lang_no_address@';
         locprefix = this.type === 'company' ? 'in' : 'from';
         this.addrlinked = !addr ? '' : ' ' + locprefix + ' <a href="/main-page.html?type=location&val=' + encodeURIComponent(addr) + '">' + addr + '</a>';
         profilelinked = !json.profile_id ? '' : '<a href="/profile-page.html?id=' + json.profile_id + '">' + (json.profile_username || '@lang_owner@') + '</a>';
@@ -719,12 +721,12 @@ pl.implement(CompanyTileClass, {
         this.suggested_text = CompanyFormatClass.prototype.suggestedText(json);
         this.finance_line = CompanyFormatClass.prototype.financeLine(json);
         this.summary_line = CompanyFormatClass.prototype.summaryLine(json);
-        this.mantra = json.mantra || 'No Mantra';
+        this.mantra = json.mantra || '@lang_no_mantra@';
         this.mantraplussuggest = this.mantra + '<br/>' + this.suggested_text;
         this.url = '/company-page.html?id=' + json.listing_id;
         this.websitelink = json.website || '#';
         this.websiteurl = json.website ? new URLClass(json.website) : null;
-        this.websitedomain = this.websiteurl ? this.websiteurl.getHostname() : 'No Website';
+        this.websitedomain = this.websiteurl ? this.websiteurl.getHostname() : '@lang_no_website@';
         this.openanchor = this.options.preview ? '' : '<a href="' + this.url + '">';
         this.closeanchor = this.options.preview ? '' : '</a>';
     },
@@ -771,7 +773,9 @@ pl.implement(CompanyTileClass, {
     <div>' + this.address + '</div>\
     <div class="infomantra">' + this.mantra + '</div>\
     <div><span class="infolabel">Type:</span> ' + SafeStringClass.prototype.ucfirst(this.type) + '</div>\
-    ' + (this.type !== 'application' ? '' : '<div><span class="infolabel">Platform:</span> ' + PlatformClass.prototype.displayName(this.platform) + '</div>') + '\
+    ' + (this.type !== 'application'
+            ? ''
+            : '<div><span class="infolabel">Platform:</span> ' + PlatformClass.prototype.displayName(this.platform) + '</div>') + '\
     <div><span class="infolabel">Industry:</span> ' + this.category + '</div>\
     <div><span class="infolabel">Asking:</span> ' + this.suggested_text + '</div>\
 </p>\
@@ -866,7 +870,7 @@ pl.implement(CompanyListClass, {
         }
         seeall = this.options.seeall && companies && (companies.length >= this.options.colsPerRow);
         if (!companies.length) {
-            pl('#'+this.options.companydiv).html('<span class="identedtext attention">No companies found</span>');
+            pl('#'+this.options.companydiv).html('<span class="identedtext attention">@lang_no_projects_found@</span>');
             return;
         }
         if (this.options.exponential) { // display full width, then two half width, then the rest single width
@@ -907,7 +911,8 @@ pl.implement(CompanyListClass, {
             }
         }
         if (more_results_url) {
-            html += '<div class="header-content header-initial header-more" id="moreresults"><span class="initialhidden" id="moreresultsurl">' + more_results_url + '</span><span id="moreresultmsg" class="more more-header initialhidden">@lang_see_all@</span></div>\n';
+            html += '<div class="header-content header-initial header-more" id="moreresults"><span class="initialhidden" id="moreresultsurl">'
+                + more_results_url + '</span><span id="moreresultmsg" class="more more-header initialhidden">@lang_see_all@</span></div>\n';
         }
         else if (seeall) {
             html += '<div class="header-content header-initial header-more"><a href="' + this.options.seeall + '" class="more more-header">@lang_see_all@</a></div>\n';
@@ -987,6 +992,26 @@ function BaseCompanyListPageClass(options) {
     this.options.max_results = this.options.max_results || 20;
     this.data = { max_results: this.options.max_results };
     this.setListingSearch();
+    this.categoryMap = {
+        finance: '@lang_finance@',
+        software: '@lang_software@',
+        internet: '@lang_internet@',
+        chemical: '@lang_chemical@',
+        environmental: '@lang_environmental@',
+        industrial: '@lang_industrial@',
+        manufacturing: '@lang_manufacturing@',
+        media: '@lang_media@',
+        other: '@lang_other@',
+        pharma: '@lang_pharma@',
+        retail: '@lang_retail@',
+        biotech: '@lang_biotech@',
+        electronics: '@lang_electronics@',
+        energy: '@lang_energy@',
+        hardware: '@lang_hardware@',
+        healthcare: '@lang_healthcare@',
+        medical: '@lang_medical@',
+        telecom: '@lang_telecom@'
+    };
 };
 pl.implement(BaseCompanyListPageClass,{
     setListingSearch: function() {
@@ -1003,41 +1028,48 @@ pl.implement(BaseCompanyListPageClass,{
         this.url = '/listings/' + searchtype;
     },
     loadPage: function(completeFunc) {
-        var titleroot = (this.type === 'category' || this.type === 'location') ? this.val.toUpperCase() : this.type.toUpperCase(),
-            title = this.type === 'keyword' ? '@lang_search_results@' : ((this.type === 'location') ? '@lang_projects_in@' + ' ' + titleroot : titleroot + ' ' + '@lang_projects@'),
+        var title,
             ajax;
+        if (this.type == 'keyword')
+            title = '@lang_search_results@';
+        else if (this.type === 'category')
+            title = (this.categoryMap[this.val.toLowerCase()] || this.val.toLowerCase()) + ' @lang_projects@';
+        else if (this.type === 'location')
+            title = '@lang_projects_in@ ' + this.val;
+        else
+            titleroot = this.type + ' @lang_projects';
         this.setListingSearch();
         ajax = new AjaxClass(this.url, 'companydiv', completeFunc);
         pl('#listingstitle').html(title);
         if (this.type === 'top') {
             //pl('#banner').addClass('topbanner');
-            pl('#welcometitle').html('Only the best');
-            pl('#welcometext').html('The highest ranking listings on inwestuj-w-firmy');
+            pl('#welcometitle').html('@lang_top_title@');
+            pl('#welcometext').html('@lang_top_desc@');
         }
         else if (this.type === 'valuation') {
             //pl('#banner').addClass('valuationbanner');
-            pl('#welcometitle').html('Invest in a startup today');
-            pl('#welcometext').html('The listings below are ready for investment and open for bidding');
+            pl('#welcometitle').html('@lang_valuation_title@');
+            pl('#welcometext').html('@lang_vulation_desc@');
         }
         else if (this.type === 'keyword') {
             //pl('#banner').addClass('keywordbanner');
-            pl('#welcometitle').html('Search for a startup');
-            pl('#welcometext').html('Matching listings');
+            pl('#welcometitle').html('@lang_keyword_title@');
+            pl('#welcometext').html('@lang_keyword_desc@');
         }
         else if (this.type === 'latest') {
             //pl('#banner').addClass('latestbanner');
-            pl('#welcometitle').html("What's fresh?");
-            pl('#welcometext').html('The most recent listings on inwestuj-w-firmy');
+            pl('#welcometitle').html("@lang_latest_title@");
+            pl('#welcometext').html('@lang_latest_desc@');
         }
         else if (this.type === 'category') {
             //pl('#banner').addClass('categorybanner');
             pl('#welcometitle').html(this.val);
-            pl('#welcometext').html('The latest listings in this industry');
+            pl('#welcometext').html('@lang_category_desc@');
         }
         else if (this.type === 'location') {
             //pl('#banner').addClass('locationbanner');
             pl('#welcometitle').html(this.val);
-            pl('#welcometext').html('The latest listings from this location');
+            pl('#welcometext').html('@lang_location_desc@');
         }
         ajax.ajaxOpts.data = this.data;
         ajax.call();
@@ -1280,11 +1312,11 @@ pl.implement(CompanyBannerClass, {
         if (logobg) {
             pl('#companylogo').removeClass('noimage').css({background: logobg});
         }
-        pl('#title').text(this.title || 'Project Name');
+        pl('#title').text(this.title || '@lang_project_name@');
         if (this.title && this.title.length > 25) {
             pl('#title').addClass('companybannertitlelong');
         }
-        pl('title').text('Inwestuj w Firmy Listing: ' + (this.title || 'Project Name'));
+        pl('title').text('@lang_listing_title@ ' + (this.title || '@lang_project_name@'));
         pl('#mantra').text(this.mantra || 'Mantra here');
 
         pl('#listing_financial_text').html(listing_financial_text);
@@ -1307,43 +1339,17 @@ pl.implement(CompanyBannerClass, {
 
     displayStatusNotification: function() {
         var statusmsg = '';
-        if (this.loggedin_profile && this.loggedin_profile_id === this.profile_id) {
-            if (this.status === 'new') {
-                statusmsg = '<span class="normal">To list publicly, submit to admin for approval</span>';
-            }
-            else if (this.status === 'posted') {
-                statusmsg = '<span class="inprogress">An admin is reviewing your listing for activation</span>';
-            }
-            else if (this.status === 'withdrawn') {
-                statusmsg = '<span class="errorcolor">Your listing is withdrawn and no longer active</span>';
-            }
-            else if (this.status === 'frozen') {
-                statusmsg = '<span class="errorcolor">An admin has frozen your listing pending review</span>';
-            }
-            /*
-            else if (this.status === 'active') {
-                statusmsg = '<span class="normal">Your listing is active</span>';
-            }
-            */
+        if (this.status === 'new') {
+            statusmsg = '<span class="normal">@lang_status_desc_new@</span>';
         }
-        else {
-            if (this.status === 'new') {
-                statusmsg = '<span class="normal">To list publicly, submit to admin for approval</span>';
-            }
-            else if (this.status === 'posted') {
-                statusmsg = '<span class="inprogress">An admin is reviewing this listing for activation</span>';
-            }
-            else if (this.status === 'withdrawn') {
-                statusmsg = '<span class="errorcolor">This listing is withdrawn and no longer active</span>';
-            }
-            else if (this.status === 'frozen') {
-                statusmsg = '<span class="errorcolor">An admin has frozen this listing pending review</span>';
-            }
-            /*
-            else if (this.status === 'active') {
-                statusmsg = '<span class="normal">This listing is active</span>';
-            }
-            */
+        else if (this.status === 'posted') {
+            statusmsg = '<span class="inprogress">@lang_status_desc_posted@</span>';
+        }
+        else if (this.status === 'withdrawn') {
+            statusmsg = '<span class="errorcolor">@lang_status_desc_withdrawn@</span>';
+        }
+        else if (this.status === 'frozen') {
+            statusmsg = '<span class="errorcolor">@lang_status_desc_frozen@</span>';
         }
         if (this.status === 'active') {
             pl('#submiterrormsg').hide();
@@ -1374,7 +1380,7 @@ pl.implement(CompanyBannerClass, {
                     pctcomplete = self.pctComplete();
                 if (pctcomplete !== 100) {
                     msg = self.highlightMissing();
-                    msgs.push('Missing info: ' + msg);
+                    msgs.push('@lang_missing_info@: ' + msg);
                 }
                 return msgs;
             };
@@ -1383,10 +1389,10 @@ pl.implement(CompanyBannerClass, {
                 var validmsgs = submitValidator();
                 if (validmsgs.length > 0) {
                     pl('#submiterrormsg').addClass('errorcolor');
-                    pl('#submiterrormsg').html('Please correct: ' + validmsgs.join(' '));
+                    pl('#submiterrormsg').html('@lang_please_correct@: ' + validmsgs.join(' '));
                 }
                 else {
-                    pl('#submiterrormsg').removeClass('errorcolor').addClass('inprogress').text('Submitting listing...');
+                    pl('#submiterrormsg').removeClass('errorcolor').addClass('inprogress').text('@lang_submitting_listing@');
                     self.postListing();
                 }
                 return false;
@@ -1598,12 +1604,12 @@ pl.implement(ImagePanelClass, {
             url = '/listing/delete_file?id=' + self.listing.listing_id + '&type=' + 'PIC' + i,
             complete = function() {
                 pl('#' + pic).removeClass('picblank').html('');
-                pl('#picmsg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('Image deleted');
+                pl('#picmsg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('@lang_image_deleted@');
                 self.listing[pic] = null;
                 self.deleting = false;
             },
             error = function(errornum, json) {
-                var msg = json.error_msg || 'Error from server: ' + errornum;
+                var msg = json.error_msg || '@lang_error_from_server@ ' + errornum;
                 pl('#' + pic).removeClass('picblank').html('');
                 pl('#picmsg').removeClass('successful').removeClass('inprogress').addClass('errorcolor').text(msg);
                 self.listing[pic] = null;
@@ -1664,7 +1670,7 @@ pl.implement(ImagePanelClass, {
             });
         }
         if (firstpic && !this.options.editmode && self.numPics <= 1) {
-            pl('#imagetitle').text('IMAGE');
+            pl('#imagetitle').text('@lang_image@');
             pl('.dotnavwrapper').hide();
         }
         else if (firstpic && !this.options.editmode) {
@@ -1998,7 +2004,7 @@ pl.implement(AddListingClass, {
         pl('#deletebtn').bind('click', function() {
             var complete = function() {
                     pl('#deletebtn, #deletecancelbtn').hide();
-                    pl('#deletemsg').text('Listing deleted, reloading...').show();
+                    pl('#deletemsg').text('@lang_listing_deleted_reloading@').show();
                     setTimeout(function() {
                         window.location = '/add-listing-page.html';
                     }, 2000);

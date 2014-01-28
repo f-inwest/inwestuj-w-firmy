@@ -7,16 +7,17 @@ pl.implement(IPClass, {
     display: function(listing) {
         var self = this,
             logo = listing.logo ? 'url(' + listing.logo + ') no-repeat scroll center center transparent' : null,
-            corp = listing.title || 'Company name here',
+            corp = listing.title || '@lang_company_name_here@',
             date = listing.created_date ? DateClass.prototype.format(listing.created_date) : DateClass.prototype.today(),
-            mantra = listing.mantra || 'Company mantra here',
-            name = listing.founders || 'Founders here',
-            brief_address = listing.brief_address || 'Postal address here',
-            website = listing.website || 'Website here',
+            mantra = listing.mantra || '@lang_company_mantra_here@',
+            name = listing.founders || '@lang_founders_here@',
+            brief_address = listing.brief_address || '@lang_postal_address_here@',
+            website = listing.website || '@lang_website_here@',
             asking = listing.asked_fund
-                ? 'Asking ' + CurrencyClass.prototype.format(listing.suggested_amt, listing.currency)
-                    + ' for ' + PercentClass.prototype.format(listing.suggested_pct) + '%'
-                : 'Not asking for funds at this time.',
+                ? String.format('@lang_asking_for_pct@',
+                    CurrencyClass.prototype.format(listing.suggested_amt, listing.currency),
+                    PercentClass.prototype.format(listing.suggested_pct))
+                : '@lang_not_asking_funds_now@',
             m = 10,
             n = 27,
             i,
