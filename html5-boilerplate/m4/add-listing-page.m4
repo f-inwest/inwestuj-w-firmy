@@ -29,11 +29,10 @@ include(header.m4)
     <div class="initialhidden" id="notloggedin">
 
         <div class="addlistingtitle">
-            List your startup and get noticed by our
-            <a href="http://www.inwestujwfirmy.pl/profile-list-page.html?type=dragons">dragon</a> investors.
+            @lang_innovatorslink@
         </div>
 
-        <div class="addlistingsubtitle">Sign in to put your application or startup company on inwestuj-w-firmy today.</div>
+        <div class="addlistingsubtitle">@lang_sign_in_to_add_project@</div>
 
         <div class="addlistingloginrow">
             <a id="google_login" href="">
@@ -50,64 +49,48 @@ include(header.m4)
 
     <div class="initialhidden" id="existinglisting">
         <div id="editblock">
-            <div class="addlistingtitle">You have a pending listing on inwestuj-w-firmy.</div>
-            <div class="addlistingbutton investbutton" id="editlisting">EDIT LISTING</div>
-            <div class="addlistingtitle">or</div>
+            <div class="addlistingtitle">@lang_pending_listing_msg@</div>
+            <div class="addlistingbutton investbutton" id="editlisting">@lang_edit_listing@</div>
         </div>
-
-        <div class="addlistingmsg deletemsg attention" id="deletemsg">DELETE LISTING<br/>Are you sure?<br/>This cannot be undone.</div>
-        <div class="addlistingbutton investbutton" id="deletebtn">DELETE</div>
-        <div class="addlistingbutton investbutton initialhidden" id="deletecancelbtn">CANCEL</div>
-
-        <div class="addlistingtitle addlistingbottom" id="editblock2">and start over</div>
-
+        <div class="addlistingmsg deletemsg attention" id="deletemsg">
+            @lang_delete_listing@<br/>
+            @lang_are_you_sure@<br/>
+            @lang_undone_warning@
         </div>
+        <div class="addlistingbutton investbutton" id="deletebtn">@lang_delete@</div>
+        <div class="addlistingbutton investbutton initialhidden" id="deletecancelbtn">@lang_cancel@</div>
     </div>
 
-    <div class="initialhidden" id="newlisting">
+    <div class="initialhidden welcometext" id="newlisting">
 
-        <div class="addlistingtitle">Import your application startup from</div>
-
-        <div class="addlistingbuttonrow">
-            <a href="/import-listing-page.html?type=AppStore">
-                <div class="addlistingbutton addlistingbuttoncol investbutton">App Store</div>
-            </a>
-            <a href="/import-listing-page.html?type=GooglePlay">
-                <div class="addlistingbutton addlistingbuttoncol investbutton">Google Play</div>
-            </a>
-            <a href="/import-listing-page.html?type=WindowsMarketplace">
-                <div class="addlistingbutton addlistingbuttoncol investbutton">Windows Marketplace</div>
-            </a>
-             <a href="/import-listing-page.html?type=ChromeWebStore">
-                <div class="addlistingbutton addlistingbuttoncol investbutton">Chrome Web Store</div>
-            </a>
-
-        </div>
-
-        <div class="addlistingtitle">or</div>
-
-        <div class="addlistingtitle">Import your startup company from</div>
-
-        <div class="addlistingbuttonrow">
-            <a href="/import-listing-page.html?type=CrunchBase">
-                <div class="addlistingbutton addlistingbuttoncol investbutton">CrunchBase</div>
-            </a>
-            <a href="/import-listing-page.html?type=Angelco">
-                <div class="addlistingbutton addlistingbuttoncol investbutton">AngelList</div>
-            </a>
-            <a href="/import-listing-page.html?type=Startuply">
-                <div class="addlistingbutton addlistingbuttoncol investbutton">Startuply</div>
-            </a>
-        </div>
-
-        <div class="addlistingtitle">or</div>
-
-        <a href="/new-listing-basics-page.html">
-            <div class="addlistingbutton investbutton">CREATE</div>
+        <a class="new-addlistingbuttonlink" href="/new-listing-basics-page.html">
+            <span>@lang_create_project@</span>
         </a>
 
-        <div class="addlistingtitle addlistingbottom">a new listing</div>
+        <div class="addlistingtitle">@lang_or_import_project_from@</div>
 
+        <div class="addlistingbuttonrow">
+            <a class="investbutton new-addlisting-import" href="/import-listing-page.html?type=Angelco">
+                AngelList
+            </a>
+            <a class="investbutton new-addlisting-import" href="/import-listing-page.html?type=AppStore">
+                App Store
+            </a>
+            <a class="investbutton new-addlisting-import" href="/import-listing-page.html?type=ChromeWebStore">
+                Chrome Web Store
+            </a>
+            <a class="investbutton new-addlisting-import" href="/import-listing-page.html?type=CrunchBase">
+                CrunchBase
+            </a>
+            <a class="investbutton new-addlisting-import" href="/import-listing-page.html?type=GooglePlay">
+                Google Play
+            </a>
+            <a class="investbutton new-addlisting-import" href="/import-listing-page.html?type=Startuply">
+                Startuply
+            </a>
+            <a class="investbutton new-addlisting-import" href="/import-listing-page.html?type=WindowsMarketplace">
+                Windows Marketplace
+            </a>
     </div>
 
 </div> <!-- end span-24 -->

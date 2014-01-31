@@ -14,10 +14,8 @@ include(header.m4)
 <div class="banner apibanner" id="banner">
     <div class="container">
         <span class="bannertext span-24">
-            <div class="welcometitle" id="welcometitle">API Documentation</div>
-            <div class="welcometext" id="welcometext">
-                Interact with inwestuj-w-firmy&rsquo;s data through our public API
-            </div>
+            <div class="welcometitle" id="welcometitle">@lang_api_title@</div>
+            <div class="welcometext" id="welcometext">@lang_api_desc@</div>
         </span>
     </div>
 </div> <!-- end banner -->

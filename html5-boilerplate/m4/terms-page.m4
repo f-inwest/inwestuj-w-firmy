@@ -13,8 +13,8 @@ include(header.m4)
 <div class="banner termsbanner">
     <div class="container">
         <span class="bannertext span-24">
-            <div class="welcometitle">Our Terms</div>
-            <div class="welcometext">What you need to know about using inwestuj-w-firmy</div>
+            <div class="welcometitle">@lang_terms_title@</div>
+            <div class="welcometext">@lang_terms_desc@</div>
         </span>
     </div>
 </div>

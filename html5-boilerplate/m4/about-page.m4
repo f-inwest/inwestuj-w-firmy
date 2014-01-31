@@ -10,12 +10,11 @@ include(head.m4)
 '
 include(header.m4)
 `
-
 <div class="banner aboutbanner">
     <div class="container">
         <span class="bannertext span-24">
-            <div class="welcometitle">About inwestuj-w-firmy</div>
-            <div class="welcometext">What we do, how to post, and how to bid</div>
+            <div class="welcometitle">@lang_about_title@</div>
+            <div class="welcometext">@lang_about_desc@</div>
         </span>
     </div>
 </div>

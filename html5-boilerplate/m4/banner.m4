@@ -20,7 +20,7 @@
                     <div class="welcomemessage">@lang_investorsmessage@</div>
                     <div class="welcomemessage initialhidden">@lang_innovatorsmessage@</div>
                 </div>
-                <div class="welcometext" id="welcometext">
+                <div class="welcometext discoverwelcometext" id="welcometext">
                     <a href="/discover-page.html" class="welcomemessage welcomelink">@lang_investorslink@</a>
                     <a href="/add-listing-page.html" class="welcomemessage welcomelink initialhidden">@lang_innovatorslink@</a>
                 </div>

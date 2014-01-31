@@ -1035,7 +1035,7 @@ pl.implement(BaseCompanyListPageClass,{
         else if (this.type === 'category')
             title = (this.categoryMap[this.val.toLowerCase()] || this.val.toLowerCase()) + ' @lang_projects@';
         else if (this.type === 'location')
-            title = '@lang_projects_in@ ' + this.val;
+            title = '@lang_projects_in_ucfirst@ ' + this.val;
         else
             titleroot = this.type + ' @lang_projects';
         this.setListingSearch();
@@ -1063,12 +1063,12 @@ pl.implement(BaseCompanyListPageClass,{
         }
         else if (this.type === 'category') {
             //pl('#banner').addClass('categorybanner');
-            pl('#welcometitle').html(this.val);
+            pl('#welcometitle').html(title);
             pl('#welcometext').html('@lang_category_desc@');
         }
         else if (this.type === 'location') {
             //pl('#banner').addClass('locationbanner');
-            pl('#welcometitle').html(this.val);
+            pl('#welcometitle').html(title);
             pl('#welcometext').html('@lang_location_desc@');
         }
         ajax.ajaxOpts.data = this.data;

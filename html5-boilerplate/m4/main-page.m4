@@ -14,8 +14,8 @@ include(header.m4)
 <div class="banner nearbybanner" id="banner">
     <div class="container">
         <span class="bannertext span-24">
-            <div class="welcometitle" id="welcometitle">@lang_nearby_title@</div>
-            <div class="welcometext" id="welcometext">@lang_nearby_desc@</div>
+            <div class="welcometitle" id="welcometitle"></div>
+            <div class="welcometext" id="welcometext"></div>
         </span>
     </div>
 </div> <!-- end banner -->

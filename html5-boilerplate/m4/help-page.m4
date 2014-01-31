@@ -13,8 +13,8 @@ include(header.m4)
 <div class="banner helpbanner">
     <div class="container">
         <span class="bannertext span-24">
-            <div class="welcometitle">Get help</div>
-            <div class="welcometext" style="right: 50px">View our FAQ or contact us for assistance</div>
+            <div class="welcometitle">@lang_help_title@</div>
+            <div class="welcometext" style="right: 50px">@lang_help_desc@</div>
         </span>
     </div>
 </div>

@@ -421,6 +421,10 @@ a:focus, a:hover { cursor: pointer; }
     text-decoration: none;
     font-size: 22px;
 }
+.discoverwelcometext {
+    width: 362px;
+    margin-top: 40px;
+}
 .welcomeverticalbar {
     display: block;
     width: 150px;
@@ -467,7 +471,7 @@ a:focus, a:hover { cursor: pointer; }
 }
 */
 .welcomelink {
-    position: relative;
+    /* position: relative; */
     width: 322px;
     height: 40px;
     top: 40px;
@@ -1368,9 +1372,6 @@ transition: height 300ms;
     overflow: hidden;
     min-height: 21px;
     margin-bottom: 15px;
-}
-.categorysidebox {
-    min-height: 253px;
 }
 .frontsidebox {
     width: 287px;
@@ -2671,5 +2672,24 @@ color: #fff;
 }
 .firstsidebutton {
     margin-top: 0;
+}
+.new-addlistingbuttonlink {
+    width: 362px;
+    height: 40px;
+    top: 40px;
+    padding: 5px 40px 5px 40px;
+    color: #fefefe!important;
+    background: url(../img/slide_button.png) center no-repeat;
+    text-align: center;
+    line-height: 40px;
+    display: block;
+    margin: auto;
+}
+.new-addlisting-import {
+    text-align: center;
+    width: 332px;
+    margin: 15px auto 15px auto;
+    line-height: 40px;
+    height: 40px;
 }
 
