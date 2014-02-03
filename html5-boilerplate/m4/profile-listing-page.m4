@@ -20,7 +20,11 @@ include(profile-not-found.m4)
 <!-- left column -->
 <div class="span-16">
     <div id="profilemsg"></div>
-    <div class="boxtitle"><span class="titleyour">YOUR </span><span class="titletype"></span> LISTINGS<span class="titleusername"></span></div>
+    <div class="boxtitle">
+        <span class="titleyour">@lang_your_projects@</span>
+        <span class="titleuser">@lang_projects@ <span class="titleusername"></span></span>
+        <!-- <span class="titletype"></span> -->
+    </div>
     <div id="companydiv"></div>
 </div>
 <!-- end left column -->

@@ -728,22 +728,14 @@ a:focus, a:hover { cursor: pointer; }
     padding: 30px;
 }
 .header-content {
-/*    position: absolute; */
     font-family: 'Ubuntu', sans-serif;
-    /*font-size: 14px;*/
     font-size: 22px;
-    /*font-weight: 400;*/
     font-weight: 300;
     color: #5b6773;
-    /*width: 635px;*/
     width: 627px;
-    /*background: #ffffff url(../img/header-content-bck.png) no-repeat right top;*/
     background: #ffffff url(../img/header-content-bck.png) no-repeat left top;
     background-image: url(../img/header-content-bck.png);
-    /*left: 0px;*/
-    /*left: -30px;*/
     height: 30px;
-    /*line-height: 22px;*/
     line-height: 22px;
     position: relative;
     margin-bottom: 15px;
@@ -1294,6 +1286,7 @@ transition: height 300ms;
 .remarkreplyshow { height: 150px; }
 
 /* box styles */
+/*
 .boxtitle, .boxtitlegap {
     clear: both;
     font-weight: bold;
@@ -1301,6 +1294,22 @@ transition: height 300ms;
     margin-top: 30px;
     position: relative;
     padding-left: 10px;
+}
+*/
+.boxtitle, .boxtitlegap {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: #5b6773;
+    width: 627px;
+    background: #ffffff url(../img/header-content-bck.png) no-repeat left top;
+    background-image: url(../img/header-content-bck.png);
+    height: 26px;
+    line-height: 22px;
+    position: relative;
+    margin-bottom: 17px;
+    padding-left: 30px;
+    padding-top: 4px;
 }
 .boxtitlenoindent {
     padding-left: 0;
@@ -1509,14 +1518,14 @@ width: 302px;
 .freezebox { display: none; padding-bottom: 10px; }
 .freezemsg { display: none; font-weight: bold; }
 .freezecancelbtn { display: none; margin-top: 10px; }
-.promotebox { display: none; padding-bottom: 10px; }
+.promotebox { display: none; /* padding-bottom: 10px; */ }
 .promotemsg { display: none; font-weight: bold; }
 .promotecancelbtn { display: none; margin-top: 10px; }
 .deactivateguardbox { padding-left: 600px; }
 .deactivatebox { display: none; padding-top: 10px; padding-bottom: 10px; }
 .deactivatemsg { display: none; font-weight: bold; }
 .deactivatecancelbtn { display: none; margin-top: 10px; }
-.deletebox, .withdrawbox, .approvebox, .sendbackbox, .freezebox, .promotebox, .deactivatebox {
+.deletebox, .withdrawbox, .approvebox, .sendbackbox, .freezebox, .deactivatebox {
     padding-top: 10px;
     padding-bottom: 15px;
 }
@@ -2029,12 +2038,7 @@ transition: left 500ms;
 
 /* tim improvements */
 .boxtitleside {
-        margin-bottom: 2px;
-        padding-left: 15px;
-clear: both;
-       font-weight: bold;
-       margin-top: 30px;
-position: relative;
+    width: 272px;
 }
 /* tim part two */
 /* tim fonts */
@@ -2148,9 +2152,9 @@ color: #fff;
 
 /* profiles */
 .profilebox {
-    width: 232px;
-    height: 130px;
-    padding: 5px 5px 15px 65px;
+    width: 222px;
+    height: 150px;
+    padding: 15px 15px 15px 65px;
     position: relative;
     overflow: hidden;
 }
@@ -2158,7 +2162,7 @@ color: #fff;
     position: relative;
 }
 .applydragonbox p {
-    margin: 8px 15px 55px 15px;
+    margin: 15px 15px 65px 15px;
 }
 .applydragonspinner {
     position: absolute;
@@ -2173,23 +2177,16 @@ color: #fff;
 }
 .profileboxtitle { position: relative; }
 .profileusername {
-    position: absolute;
-    top: 18px;
-    left: 68px;
     font-size: 24px;
 }
 .profileuserclass { color: #666; font-weight: bold; }
 .profiledetails {
-    position: absolute;
-    left: 10px;
-    top: 65px;
-    line-height: 20px;
 }
 .profiletext { color: #666; }
 .profileavatar {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: 15px;
+    left: 15px;
 }
 .profilelistusername { font-size: 18px; font-weight: bold; color: #7edaef; }
 .profilelistemail { padding-left: 10px; color: #666; }
@@ -2231,36 +2228,30 @@ color: #fff;
     position: relative;
 }
 .profilerightbartitle {
-    padding-left: 10px !important;
 }
 .editprofilebtn {
-    padding-bottom: 0;
-    padding-top: 5px;
     position: absolute;
-    right: 10px;
-    bottom: 10px;
+    right: 5px;
+    bottom: 15px;
 }
 
   
 /* sideboxbutton */
 .sideboxbutton {
-    margin-top: 15px;
-    margin-bottom: 0;
     overflow: hidden;
-    min-height: 21px;
-    padding-top: 0;
-    width: 280px;
-    text-align: center;
-    padding-left: 0!important;
+    width: 302px;
+    display: block;
+    background: #FFFFFF;
+    border: 1px;
+    border-style: solid;
+    border-color: #7edaef;
     color: #7edaef;
     text-decoration: none;
     height: 30px;
     line-height: 30px;
-    display: block;
-    background: #fff;
-    border: 1px;
-    border-style: solid;
-    border-color: #7edaef;
+    transition: background 0.25s, color 0.25s;
+    text-align: center;
+    margin-bottom: 15px;
 }
 .sideboxbutton:hover, .sideboxbutton:active {
     transition: background 0.25s, color 0.25s;
@@ -2316,7 +2307,7 @@ color: #fff;
     text-decoration: none;
     height: 30px;
     line-height: 30px;
-    transition: background 0.25s, color 0.25s
+    transition: background 0.25s, color 0.25s;
     text-align: center;
     padding-left: 0px !important;
 }
@@ -2465,6 +2456,9 @@ color: #fff;
     position: absolute;
     top: 10px;
     left: 10px;
+    width: 35px;
+    height: 35px;
+    background-size: 35px 35px;
 }
 .commenttextarea {
     color: #f8f8f8 !important;
@@ -2602,23 +2596,24 @@ color: #fff;
 
 /* header avatar */
 .headeravatar, .profileavatar, .profilelistavatar, .commentavatar {
-    height: 55px;
+    height: 35px;
     width: 35px;
-    background-size: 55px 35px;
+    background-size: 35px 35px;
     background-repeat: no-repeat;
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADcAAAAjCAYAAAAwnJLLAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QYYBh0mUXW60gAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAABo0lEQVRYw+3WT4hOURjH8c8YZlaGRFFkwUp2bJTUk+xmYyMLpTTY0chGU/6UJTtSFmqWlJRSU6OepRSFbMdGSkSkkJlic6ZumqZ33mZ0b863bs/tnvO75/7Oc85zLpVKpVL5zxlY6QEycwgXcRpDuIfzEfF1pcde9Q8m8BYmsBEjGMPDzBzotLnMXI/jCzQdwN6uZ24zBhdp67S5GXxe4PkcXnTaXETM4mwx0+RqRLztfLUse28PTmAYdyNiuvNHQWauw7Ziqsks3kXEp86Zy8xDuFCq4uAiXZ/jBiYj4nerzZWz6zrGlyh9gGMR8b3NBeVyw9hTHMEObPjr2o5RTJW+h3GntZnLzF14VZbhJMYiYq4H3aUyKTAaEY/amLnxYmwGp3oxVo6LK3jceEcrl2WUeDsifi1Re3P+tywzh9tobmuJL/vQvi5xDba00dz8jPdT8ZqZXttGc19K3N2Htql5v1wftHoZzU3hKK5l5k586FE3gpPl/llEfGyjuQkcxCac60P/E2daWS0j4g324T6+LUH6A9PYHxFPVCqVSqVS6Yk/XkhhkSj0vlIAAAAASUVORK5CYII=);
 }
 .headeravatar {
     float: left;
     position: absolute;
-    width: 55px;
+    width: 35px;
     height: 35px;
-    background-size: 55px 35px;
+    background-size: 35px 35px;
     text-align: center;
     line-height: 40px;
     position: relative;
     border-right: 1px solid;
     border-color: #e6e6e6;
+    margin-left: 20px;
 }
 .developmentstageselect, .valuationtypeselect {
     width: 265px !important;

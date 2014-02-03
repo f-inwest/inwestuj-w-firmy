@@ -219,10 +219,13 @@ pl.implement(ProfilePageClass,{
                 }
                 if (profile.isMine()) {
                     pl('#editprofilebutton').show();
+                    pl('.titleuser').text('');
                 }
                 else {
+                    var userText = '@lang_for_user@';
+                    userText = userText.replace('%1$s', profile.getUsername())
+                    pl('.titleusername').text(userText);
                     pl('.titleyour').text('');
-                    pl('.titleusername').text(' FOR ' + profile.getUsername().toUpperCase());
                     pl('#encourageuser').hide();
                 }
                 pl('.preloader').hide();
@@ -272,12 +275,18 @@ pl.implement(ProfileListingPageClass, {
                 companyList.storeList(json);
                 pl('.titletype').text(self.type === 'monitored' ? 'WATCHED' : self.type.toUpperCase());
 
+                if (!listingfound) {
+                    pl('#no_listings_wrapper').show();
+                }
                 if (profile.isMine()) {
                     pl('#editprofilebutton').show();
+                    pl('.titleuser').text('');
                 }
                 else {
+                    var userText = '@lang_for_user@';
+                    userText = userText.replace('%1$s', profile.getUsername())
+                    pl('.titleusername').text(userText);
                     pl('.titleyour').text('');
-                    pl('.titleusername').text(' FOR ' + profile.getUsername().toUpperCase());
                     pl('#encourageuser').hide();
                 }
 

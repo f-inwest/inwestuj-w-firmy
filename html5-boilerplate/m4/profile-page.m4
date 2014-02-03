@@ -22,50 +22,87 @@ include(profile-not-found.m4)
     <div id="profilemsg"></div>
 
     <div id="no_listings_wrapper" class="initialhidden">
-        <div class="boxtitle smokegrey"><span class="titleyour">YOUR </span>LISTINGS<span class="titleusername"></span></div>
+        <div class="header-content">
+            <div class="header-title">
+                <span class="titleyour">@lang_your_projects@</span>
+                <span class="titleuser">@lang_projects@ <span class="titleusername"></span></span>
+            </div>
+        </div>
         <div class="boxpanel">
             <div class="indentedtext">
-            Currently there are no active listings<span class="titleyour"> for you</span>.
+            @lang_no_active_projects@
             <div id="encourageuser">
-                <a href="/add-listing-page.html" class="inputmsg hoverlink profilelink">Add</a> a listing or
-                <a href="/main-page.html?type=top" class="inputmsg hoverlink profilelink">invest</a> in one today!
+                <a href="/add-listing-page.html" class="inputmsg hoverlink profilelink">@lang_add_project@</a>
             </div>
             </div>
         </div>
     </div>
 
     <div id="edited_listing_wrapper" class="initialhidden">
-        <div class="boxtitle smokegrey"><span class="titleyour">YOUR </span>PENDING LISTING<span class="titleusername"></span></div>
+        <div class="header-content">
+            <div class="header-title">
+                <span class="titleyour">@lang_your_pending_project@</span>
+                <span class="titleuser">@lang_pending_project@ <span class="titleusername"></span></span>
+            </div>
+        </div>
         <div id="edited_listing"></div>
     </div>
 
     <div id="active_listings_wrapper" class="initialhidden">
-        <div class="boxtitle smokegrey"><span class="titleyour">YOUR </span>ACTIVE LISTINGS<span class="titleusername"></span></div>
+        <div class="header-content">
+            <div class="header-title">
+                <span class="titleyour">@lang_your_active_projects@</span>
+                <span class="titleuser">@lang_active_projects@ <span class="titleusername"></span></span>
+            </div>
+        </div>
         <div id="active_listings"></div>
     </div>
 
     <div id="admin_posted_listings_wrapper" class="initialhidden">
-        <div class="boxtitle smokegrey">LISTINGS AWAITING REVIEW BY ADMIN</div>
+        <div class="header-content">
+            <div class="header-title">
+                @lang_projects_awaiting_review@    
+            </div>
+        </div>
         <div id="admin_posted_listings"></div>
     </div>
 
     <div id="admin_frozen_listings_wrapper" class="initialhidden">
-        <div class="boxtitle smokegrey">LISTINGS FROZEN BY ADMIN</div>
+        <div class="header-content">
+            <div class="header-title">
+                @lang_frozen_projects@
+            </div>
+        </div>
         <div id="admin_frozen_listings"></div>
     </div>
 
     <div id="monitored_listings_wrapper" class="initialhidden">
-        <div class="boxtitle smokegrey"><span class="titleyour">YOUR </span>WATCHED LISTINGS<span class="titleusername"></span></div>
+        <div class="header-content">
+            <div class="header-title">
+                <span class="titleyour">@lang_your_watched_projects@</span>
+                <span class="titleuser">@lang_watched_projects@ <span class="titleusername"></span></span>
+            </div>
+        </div>
         <div id="monitored_listings"></div>
     </div>
 
     <div id="withdrawn_listings_wrapper" class="initialhidden">
-        <div class="boxtitle smokegrey"><span class="titleyour">YOUR </span>WITHDRAWN LISTINGS<span class="titleusername"></span></div>
+        <div class="header-content">
+            <div class="header-title">
+                <span class="titleyour">@lang_your_withdrawn_projects@</span>
+                <span class="titleuser">@lang_withdrawn_projects@ <span class="titleusername"></span></span>
+            </div>
+        </div>
         <div id="withdrawn_listings"></div>
     </div>
 
     <div id="frozen_listings_wrapper" class="initialhidden">
-        <div class="boxtitle smokegrey"><span class="titleyour">YOUR </span>FROZEN LISTINGS<span class="titleusername"></span></div>
+        <div class="header-content">
+            <div class="header-title">
+                <span class="titleyour">@lang_your_frozen_projects@</span>
+                <span class="titleuser">@lang_frozen_projects@ <span class="titleusername"></span></span>
+            </div>
+        </div>
         <div id="frozen_listings"></div>
     </div>
 

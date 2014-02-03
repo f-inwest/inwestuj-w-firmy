@@ -3,7 +3,8 @@
 <div class="span-8 last profilerightbar">
 
     <div class="boxtitle boxtitleside profilerightbartitle">
-        <span class="titleyour">YOUR </span>PROFILE<span class="titleusername"></span>
+        <span class="titleyour">@lang_your_profile@</span>
+        <span class="titleuser">@lang_profile@ <span class="titleusername"></span></span>
     </div>
     <div class="sidebox profilebox">
         <div class="profileavatar" id="avatar"></div>
@@ -19,25 +20,21 @@
         <div>
             <a href="edit-profile-page.html">
                 <span class="editprofilebtn span-3 inputbutton hoverlink initialhidden" id="editprofilebutton">
-                    EDIT
+                    @lang_edit@
                 </span>
             </a>
         </div>
     </div>
 
     <div class="initialhidden" id="applydragonwrapper">
-    <div class="boxtitle boxtitleside">APPLY TO BE A DRAGON</div>
+    <div class="boxtitle boxtitleside">@lang_apply_investor@</div>
     <div class="sidebox applydragonbox">
-        <p>
-            Apply to become a dragon on inwestuj-w-firmy.  This gives you recognition on the site
-            as a certified dragon and increases the range of investments available to you
-            on inwestuj-w-firmy.  You must have have founded a company, invested in a startup,
-            or be a coporate or venture capital executive to become a dragon.  Apply today!
+        <p>@lang_apply_investor_message@
             <span id="applydragonmessage"></span>
         </p>
         <div>
             <span class="editprofilebtn span-3 inputbutton hoverlink" id="applydragonbutton">
-                APPLY
+                @lang_apply@
             </span>
             <div class="applydragonspinner preloadericon initialhidden" id="applydragonspinner"></div>
         </div>
@@ -45,22 +42,19 @@
     </div>
 
     <div class="initialhidden" id="pendingdragonwrapper">
-    <div class="boxtitle boxtitleside">APPLICATION PENDING</div>
+    <div class="boxtitle boxtitleside">@lang_application_pending@</div>
     <div class="sidebox pendingdragonbox">
-        <p>
-            Your application to become a dragon on inwestuj-w-firmy is pending.  An admin is reviewing your
-            account and, if applicable, will be promoting you to dragon status shortly.  Thanks!
-        </p>
+        <p>@lang_application_pending_message@</p>
     </div>
     </div>
 
     <div id="promotebox" class="promotebox">
-        <div class="promotemsg attention" id="promotemsg">Promote this user to dragon status?</div>
+        <div class="promotemsg attention" id="promotemsg">@lang_promote_this_user@</div>
         <a href="#" id="promotebtn">
-            <div class="sideboxbutton hoverlink">PROMOTE</div>
+            <div class="sideboxbutton hoverlink">@lang_promote@</div>
         </a>
         <a href="#" class="promotecancelbtn" id="promotecancelbtn">
-            <div class="sideboxbutton hoverlink">CANCEL</div>
+            <div class="sideboxbutton hoverlink">@lang_cancel@</div>
         </a>
     </div>
 
