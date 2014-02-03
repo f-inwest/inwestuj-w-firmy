@@ -2304,16 +2304,7 @@ color: #fff;
     margin-top: -10px;
     margin-bottom: 35px;
 }
-/*
-.addlistingbutton {
-    text-align: center;
-    width: 300px;
-    margin: 20px auto;
-    height: 40px;
-    color: #fefefe !important;
-    background: url(../img/slide_button.png) right no-repeat;
-}
-*/
+
 .investbutton, .investbuttonsmall, .inputbutton, .smallinputbutton {
     display: block;
     background: #FFFFFF;
@@ -2338,6 +2329,18 @@ color: #fff;
     background: #7EDAEF !important;
     color: #ffffff !important;
     cursor: pointer;
+}
+.addlistingbutton {
+    text-align: center;
+    width: 332px;
+    margin: 15px auto 15px auto;
+    line-height: 40px;
+    height: 40px;
+    color: #5b6773;
+    font-family: 'Ubuntu', sans-serif;;
+    font-weight: 300;
+    text-decoration: none;
+    font-size: 22px;
 }
 .addlistingmsg {
     text-align: center;

@@ -8,7 +8,7 @@
     <div class="span-7 headerrow headerrowcenter last">
       <a href="discover-page.html"><span class="headerlink hoverlink headerlinknoborder">@lang_find@</span></a>
       <a href="nearby-page.html"><span class="headerlink"><span class="hoverlink">@lang_nearby@</span></span></a>
-      <a href="add-listing-page.html"><span class="headerlink"><span class="hoverlink">@lang_add@</span></span></a>
+      <a href="#" id="headeraddlistinglink"><span class="headerlink"><span class="hoverlink">@lang_add@</span></span></a>
     </div>
     <a href="#" id="headerloginlink">
     <div class="span-2 headerrow headerrowlogin last initialhidden" id="headernotloggedin">

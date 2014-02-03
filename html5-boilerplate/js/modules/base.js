@@ -487,6 +487,9 @@ pl.implement(HeaderClass, {
         if (logout_url) {
             pl('#logoutlink').attr({href: logout_url});
         }
+        pl('#headeraddlistinglink').bind('click', function() {
+            document.location = "add-listing-page.html"
+        });
         pl('#headerloggedin').show();
     },
     setLoggedOut: function(login_url, twitter_login_url, fb_login_url) {
@@ -503,6 +506,9 @@ pl.implement(HeaderClass, {
             //    pl('#fb_loginlink').hide();
             //}
         //}
+        pl('#headeraddlistinglink').bind('click', function() {
+            pl('#light, #fade').show();
+        });
         pl('#headernotloggedin').show();
     }
 });
