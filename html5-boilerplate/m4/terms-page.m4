@@ -23,7 +23,7 @@ include(header.m4)
 
 <!-- left column -->
 <div class="span-16">
-    <div class="boxtitle">TERMS AND CONDITIONS</div>
+    <div class="boxtitle">@lang_tandcs@</div>
     <div class="boxpanel">
         <dl>
             <dt>Terms of Use</dt>
@@ -553,7 +553,7 @@ accredited investor, you can bid for a piece of the action.
         </p>
     </div>
 -->
-    <div class="boxtitle" id="listingstitle"></div>
+    <div class="boxtitle header-sidebox" id="listingstitle"></div>
 
     <!-- companydiv -->
     <div id="companydiv">

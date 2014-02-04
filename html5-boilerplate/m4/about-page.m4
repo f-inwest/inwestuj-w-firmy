@@ -23,12 +23,14 @@ include(header.m4)
 
 <!-- left column -->
 <div class="span-16">
-    <div class="boxtitle">HOW IT WORKS <a href="http://youtu.be/hq5gaQ1FtAU">(VIEW ON YOUTUBE)</a></div>
-    <div>
-   	    <iframe width="622" height="380" src="http://www.youtube.com/embed/hq5gaQ1FtAU" frameborder="0" allowfullscreen></iframe>
+    <div class="boxtitle">@lang_how_it_works@
+        <a class="videolink about-videolink" href="http://youtu.be/hq5gaQ1FtAU" id="videolink">(@lang_view_on_youtube@)</a>
+    </div>
+    <div class="boxpanel-youtube">
+   	    <iframe width="626" height="382" src="http://www.youtube.com/embed/hq5gaQ1FtAU" frameborder="0" allowfullscreen></iframe>
     </div>
 
-    <div class="boxtitle boxtitlenoindent">WHAT WE DO</div>
+    <div class="boxtitle">@lang_what_we_do@</div>
     <div class="boxpanel">
     <p>
 The world of startup founding and investment is traditionally opaque and
@@ -54,7 +56,7 @@ are no fees for listing, investing, or receiving investment.
     </p>
     </div>
 
-    <div class="boxtitle boxtitlenoindent">HOW TO POST</div>
+    <div class="boxtitle">@lang_how_to_post@</div>
     <div class="boxpanel">
     <p>
 
@@ -112,7 +114,7 @@ Happy posting and success in all your ventures!
 
     </div>
 
-    <div class="boxtitle boxtitlenoindent">HOW TO BID</div>
+    <div class="boxtitle">@lang_how_to_bid@</div>
     <div class="boxpanel">
 
     <p>
@@ -176,7 +178,7 @@ Happy bidding and success in all your investments!
 
 <!-- right column -->
 <div class="span-8 last">
-    <div class="boxtitle">A PIECE OF THE ACTION</div>
+    <div class="boxtitle header-sidebox">@lang_piece_action@</div>
     <div class="sidebox">
         <p>
 With inwestuj-w-firmy, you&rsquo;re plugged into the pulse of the startup community.
@@ -186,7 +188,7 @@ accredited investor, you can bid for a piece of the action.
         </p>
     </div>
 
-    <div class="boxtitle" id="listingstitle"></div>
+    <div class="boxtitle header-sidebox" id="listingstitle"></div>
 
     <!-- companydiv -->
     <div id="companydiv">

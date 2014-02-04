@@ -671,12 +671,7 @@ function CompanyTileClass(options) {
 pl.implement(CompanyTileClass, {
     store: function(json) {
         var cat,
-            catprefix,
-            catlink,
             platform,
-            platformtext,
-            categorytext,
-            platformprefix,
             stagetext,
             typetext,
             locprefix,
@@ -692,19 +687,11 @@ pl.implement(CompanyTileClass, {
         this.category = json.category || '@lang_other@';
         this.categoryUC = this.category.toUpperCase();
         cat = this.category || '';
-        catprefix = !cat || (cat !== '@lang_other@' && !cat.match(/^[aeiou]/i)) ? 'A' : 'An';
-        catlink = cat && cat !== '@lang_other@'
-            ? '<a href="/main-page.html?type=category&val=' + encodeURIComponent(cat) + '">' + cat + '</a>'
-            : '';
 
         this.platform = json.platform;
         platform = json.platform || '';
-        platformtext = platform && platform !== 'other' ? PlatformClass.prototype.displayName(platform) + ' ' : '';
-        categorytext = platform && platform !== 'other' && cat === '@lang_software@' ? '' : catprefix + ' ' + catlink + ' ';
-        platformprefix = '';
         stagetext = this.stage && this.stage !== 'established' ? this.stage : '';
-        typetext = this.type === 'application' ? this.type + ' ' + stagetext : (stagetext || '@lang_project@');
-        this.catlinked = categorytext + platformprefix + platformtext + typetext;
+        this.catlinked = platform;
         this.summary = json.summary;
 
         addr = json.brief_address;
@@ -753,14 +740,10 @@ pl.implement(CompanyTileClass, {
 <div class="tilepointstext">\
     <div class="tileposted">' + this.suggested_text + '</div>\
 </div>\
-<div class="tiledesc">\
 ' + this.openanchor + '\
-    <span class="tilecompany hoverlink">' + this.name + '</span><br/>\
+    <div class="tilecompany hoverlink">' + this.name + '</div>\
 ' + this.closeanchor + '\
-    <span class="tileloc">' + this.catlinked + '</span><br/>\
-    <span class="tileloc">' + this.brief_address + '</span><br/>\
-    <span class="tiledetails">' + this.mantra + '</span>\
-</div>\
+    <div class="tiledetails">' + this.mantra + '</div>\
 </div>\
 </span>\
 ';
@@ -989,15 +972,7 @@ pl.implement(CompanyListClass, {
     }
 });
 
-function BaseCompanyListPageClass(options) {
-    this.options = options || {};
-    this.queryString = new QueryStringClass();
-    this.type = this.queryString.vars.type || 'top';
-    this.val = this.queryString.vars.val ? decodeURIComponent(this.queryString.vars.val) : '';
-    this.searchtext = this.queryString.vars.searchtext ? decodeURIComponent(this.queryString.vars.searchtext) : '';
-    this.options.max_results = this.options.max_results || 20;
-    this.data = { max_results: this.options.max_results };
-    this.setListingSearch();
+function CategoryMapClass() {
     this.categoryMap = {
         finance: '@lang_finance@',
         software: '@lang_software@',
@@ -1016,8 +991,21 @@ function BaseCompanyListPageClass(options) {
         hardware: '@lang_hardware@',
         healthcare: '@lang_healthcare@',
         medical: '@lang_medical@',
-        telecom: '@lang_telecom@'
+        telecom: '@lang_telecom@',
+        other: '@lang_other@',
+        '': '@lang_other@'
     };
+};
+
+function BaseCompanyListPageClass(options) {
+    this.options = options || {};
+    this.queryString = new QueryStringClass();
+    this.type = this.queryString.vars.type || 'top';
+    this.val = this.queryString.vars.val ? decodeURIComponent(this.queryString.vars.val) : '';
+    this.searchtext = this.queryString.vars.searchtext ? decodeURIComponent(this.queryString.vars.searchtext) : '';
+    this.options.max_results = this.options.max_results || 20;
+    this.data = { max_results: this.options.max_results };
+    this.setListingSearch();
 };
 pl.implement(BaseCompanyListPageClass,{
     setListingSearch: function() {
@@ -1035,15 +1023,16 @@ pl.implement(BaseCompanyListPageClass,{
     },
     loadPage: function(completeFunc) {
         var title,
+            categoryMap = new CategoryMapClass(),
             ajax;
         if (this.type == 'keyword')
             title = '@lang_search_results@';
         else if (this.type === 'category')
-            title = (this.categoryMap[this.val.toLowerCase()] || this.val.toLowerCase()) + ' @lang_projects@';
+            title = (categoryMap.categoryMap[this.val.toLowerCase()] || this.val.toLowerCase()) + ' @lang_projects@';
         else if (this.type === 'location')
             title = '@lang_projects_in_ucfirst@ ' + this.val;
         else
-            titleroot = this.type + ' @lang_projects';
+            title = '@lang_projects@';
         this.setListingSearch();
         ajax = new AjaxClass(this.url, 'companydiv', completeFunc);
         pl('#listingstitle').html(title);
@@ -1294,21 +1283,18 @@ pl.implement(CompanyBannerClass, {
     },
 
     displayBanner: function() {
-        var logobg = this.logo ? 'url(' + this.logo + ') no-repeat scroll center center transparent' : null,
+        var categoryMap = new CategoryMapClass(),
+            logobg = this.logo ? 'url(' + this.logo + ') no-repeat scroll center center transparent' : null,
             prefixedurl = this.website ? (this.website.indexOf('http') === 0 ? this.website : ('http://' + this.website)) : null,
             url = prefixedurl ? new URLClass(prefixedurl) : null,
             cat = this.category || '',
             addr = this.brief_address,
-            catprefix = !cat || (cat !== 'Other' && !cat.match(/^[aeiou]/i)) ? 'A' : 'An',
-            catlink = cat && cat !== 'Other' ? '<a class="companybannertextlink" href="/main-page.html?type=category&val=' + encodeURIComponent(cat) + '">' + cat + '</a>' : '',
             category_link_text = cat ? '<a class="companybannertextlink" href="/main-page.html?type=category&val=' + encodeURIComponent(cat) + '">' + this.category_val + '</a>' : '',
             type = this.type || 'company',
             platform = this.platform && this.platform !== 'other' ? PlatformClass.prototype.displayName(this.platform) + ' ' : '',
-            categorytext = this.platform && this.platform !== 'other' && this.category === 'Software' ? '' : catprefix + ' ' + catlink + ' ',
-            platformprefix = categorytext ? '' : (platform.match(/^[aeiou]/i) ? 'An ' : 'A '),
             stagetext = this.stage && this.stage !== 'established' ? this.stage : '',
             typetext = this.type === 'application' ? this.type + ' ' + stagetext : (stagetext || 'company'),
-            catlinked = categorytext + platformprefix + platform + typetext,
+            catlinked = categoryMap.categoryMap[cat.toLowerCase()] || '@lang_other',
             locprefix  = type === 'company' ? 'in' : 'from',
             address_link_text = !addr ? '' : '<a class="companybannertextlink" href="/main-page.html?type=location&val=' + encodeURIComponent(addr) + '">' + addr + '</a>',
             addrlinked = !addr ? '' : ' ' + locprefix + ' <a class="companybannertextlink" href="/main-page.html?type=location&val=' + encodeURIComponent(addr) + '">' + addr + '</a>',
@@ -1843,6 +1829,7 @@ pl.implement(InformationPageClass,{
             },
             maxResults = pl('body').hasClass('about-page') ? 12 : ( pl('body').hasClass('help-page') ? 8 : 20),
             basePage = new BaseCompanyListPageClass({ max_results: maxResults });
+        pl('#listingstitle').html('@lang_projects@');
         basePage.loadPage(completeFunc);
     }
 });

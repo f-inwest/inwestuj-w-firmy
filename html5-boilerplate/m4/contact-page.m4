@@ -29,10 +29,10 @@ include(header.m4)
 
 <!-- left column -->
 <div class="span-16">
-    <div class="boxtitle">CONACT US</div>
+    <div class="boxtitle">@lang_contact_us@</div>
     <div class="boxpanel">
         <div class="formitem">
-            <span class="inputlabel">QUESTION</span>
+            <span class="inputlabel">@lang_question@</span>
             <span class="inputfield">
                 <input class="text inputwidetext" type="text" name="question" id="question"></input>
             </span>
@@ -41,7 +41,7 @@ include(header.m4)
             </span>
         </div>
         <div class="formitem clear">
-            <span class="inputlabel">DETAILS</span>
+            <span class="inputlabel">@lang_details@</span>
             <span class="inputfield">
                 <textarea class="textarea inputwidetext" cols="20" rows="5" name="details" id="details"></textarea>
             </span>
@@ -81,12 +81,12 @@ include(header.m4)
         <div class="formitem clear">
 	        <span class="inputlabel"></span>
             <span class="span-9 inputmsg" id="submitmsg">&nbsp;</span>
-            <span class="span-3 inputbutton" id="submitbutton">SUBMIT</span>
-            <span class="span-6 inprogress inputmsg initialhidden" id="confirmmsg">Send message?</span>
+            <span class="span-3 inputbutton" id="submitbutton">@lang_submit@</span>
+            <span class="span-6 inprogress inputmsg initialhidden" id="confirmmsg">@lang_send_confirm@</span>
             <a href="#" id="sendbuttonlink">
-                <span class="span-3 inputbutton initialhidden" id="sendbutton">SEND</span>
+                <span class="span-3 inputbutton initialhidden" id="sendbutton">@lang_send@</span>
             </a>
-            <span class="span-3 inputbutton initialhidden" id="cancelbutton">CANCEL</span>
+            <span class="span-3 inputbutton initialhidden" id="cancelbutton">@lang_cancel@</span>
         </div>
     </div>
 
@@ -105,7 +105,7 @@ accredited investor, you can bid for a piece of the action.
         </p>
     </div>
 -->
-    <div class="boxtitle" id="listingstitle"></div>
+    <div class="boxtitle header-sidebox" id="listingstitle">@lang_projects@</div>
 
     <!-- companydiv -->
     <div id="companydiv">

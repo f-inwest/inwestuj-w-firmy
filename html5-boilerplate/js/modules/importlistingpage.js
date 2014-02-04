@@ -131,7 +131,7 @@ pl.implement(ImportListingClass, {
     displayEmptyList: function() {
         var listhtml = '\
             <div class="messageline">\
-                <p class="messagetext"><i>No results found</i></p>\
+                <p class="messagetext"><i>@lang_no_results@</i></p>\
             </div>\
             ';
         pl('#importcontainer').removeClass('addlistingcontainerfilled');

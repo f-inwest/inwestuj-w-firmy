@@ -12,14 +12,14 @@ include(header.m4)
 include(profile-not-found.m4)
 `
 <div class="container">
-    <div class="bannersmall">
-        <span class="bannertextsmall span-16">EDITING PROFILE</span>
+    <div class="bannersmall" style="float:left;">
+        <span class="bannertextsmall span-16">@lang_editing_profile@</span>
     </div> <!-- end banner -->
 
-    <div class="span-16">
+    <div>
         <a href="profile-page.html" class="backbuttonlink">
             <span class="push-1 span-3 inputbutton backbutton">
-                &lt;&lt; BACK
+                &lt;&lt; @lang_back@
             </span>
         </a>
     </div>
@@ -35,29 +35,29 @@ include(profile-not-found.m4)
 <!-- left column -->
 <div class="span-24 initialhidden" id="personalcolumn">
     <div class="boxtitle">
-        PERSONAL INFO
+        @lang_personal_info@
         <span class="newlistingtitlemsg" id="personalinfomsg"></span>
     </div>
 
     <div class="boxpanel boxpanelfull editprofilepanel">
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="email">EMAIL</label>
+            <label class="inputlabel" for="email">@lang_email@</label>
             <span class="inputfield">
                 <div class="inputhelp inputmsg" id="email"></div>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Email</label>
+                <label class="sideinfoheader">@lang_email@</label>
                 <br />
                 Your private email address on inwestuj-w-firmy, never shown on the site, only used to notify you for personal communications.
             </p>
         </div>
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="username">NICKNAME</label>
+            <label class="inputlabel" for="username">@lang_nickname@</label>
             <span class="inputfield">
                 <input class="text inputwidetext" type="text" name="username" id="username" value=""></input>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Nickname</label>
+                <label class="sideinfoheader">@lang_nickname@</label>
                 <br />
                 Your publicly visible username on inwestuj-w-firmy.
             </p>
@@ -66,12 +66,12 @@ include(profile-not-found.m4)
             </span>
         </div>
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="name">NAME</label>
+            <label class="inputlabel" for="name">@lang_name@</label>
             <span class="inputfield">
                 <input class="text inputwidetext" type="text" name="name" id="name" value=""></input>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Name</label>
+                <label class="sideinfoheader">@lang_name@</label>
                 <br />
                 Your full legal name, kept private, only shown upon successful conclusion of a private bid and only shown to the bid counterparty, never made public.
             </p>
@@ -80,13 +80,13 @@ include(profile-not-found.m4)
             </span>
         </div>
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="notify_enabled">NOTIFY</label>
+            <label class="inputlabel" for="notify_enabled">@lang_notify@</label>
             <span class="inputcheckbox">
                 <div id="notify_enabled"></div>
             </span>
             <span class="inputhelp">Receive a copy of each notification via email</span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Notify</label>
+                <label class="sideinfoheader">@lang_notify@</label>
                 <br />
                 Send a copy of each notification to your email address, otherwise you must login to inwestuj-w-firmy to check notifications.
             </p>
@@ -181,13 +181,12 @@ include(profile-not-found.m4)
 -->
 
     <div id="deactivatebox" class="indentedtextbox deactivateguardbox">
-        <a href="#" id="deactivateguardlink">deactivate account...</a>
+        <a href="#" id="deactivateguardlink">@lang_deactivate_account@</a>
         <div class="initialhidden deactivatebox" id="deactivateguard">
-            <p>Deactivating an account will immediately freeze all your listings and investment bids,
-            and remove all your listings from any search or website results.</p>
-            <div class="deactivatemsg attention" id="deactivatemsg">Are you sure?<br/>This cannot be undone.</div>
-            <a href="#" id="deactivatebtn"><div class="sideboxbutton">DEACTIVATE</div></a>
-            <a href="#" class="deactivatecancelbtn" id="deactivatecancelbtn"><div class="sideboxbutton">CANCEL</div></a>
+            <p>@lang_deactivate_warning@</p>
+            <div class="deactivatemsg attention" id="deactivatemsg">@lang_are_you_sure@<br/>@lang_undone_warning@</div>
+            <a href="#" id="deactivatebtn"><div class="sideboxbutton">@lang_deactivate@</div></a>
+            <a href="#" class="deactivatecancelbtn" id="deactivatecancelbtn"><div class="sideboxbutton">@lang_cancel@</div></a>
         </div>
     </div>
 

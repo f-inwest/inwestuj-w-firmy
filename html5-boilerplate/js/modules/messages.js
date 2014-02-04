@@ -273,7 +273,7 @@ pl.implement(MessageGroupClass, {
                 from_user_nickname: this.loggedin_profile.username,
                 from_user_avatar: this.loggedin_profile.avatar,
                 from_user_class: this.loggedin_profile.user_class,
-                last_text: 'You currently have no messages.',
+                last_text: '@lang_no_messages@',
                 last_date: null,
                 is_empty: true,
                 read: true

@@ -9,6 +9,17 @@ include(head.m4)
 <div id="main">
 '
 include(header.m4)
+`
+<div class="banner termsbanner">
+    <div class="container">
+        <span class="bannertext span-24">
+            <div class="welcometitle"><span id="typetitle"></span> @lang_on_site@</div>
+            <div class="welcometext initialhidden" id="listersubtitle">@lang_listers_desc@</div>
+            <div class="welcometext initialhidden" id="dragonsubtitle">@lang_investors_desc@</div>
+        </span>
+    </div>
+</div>
+'
 include(not-found.m4)
 `
 <div class="container preloader">
@@ -18,12 +29,6 @@ include(not-found.m4)
 <div class="container initialhidden wrapper">
 
 <div class="span-24">
-    <div class="addlistingtitle">The <span id="typetitle">Users</span> on Inwestuj w Firmy</div>
-
-    <div class="addlistingsubtitle initialhidden" id="listersubtitle">Visionaries creating great startups and applications.</div>
-
-    <div class="addlistingsubtitle initialhidden" id="dragonsubtitle">Experienced investors looking for great startups and applications.</div>
-
     <div id="profilelistmsg"></div>
 
     <div class="addlistingcontainer" id="profilelistcontainer">

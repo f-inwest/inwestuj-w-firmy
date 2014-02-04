@@ -83,7 +83,7 @@ pl.implement(NotificationClass, {
         var self = this,
             emptyJson = {
                 notify_type: 'notification',
-                title: 'You currently have no notifications.',
+                title: '@lang_no_notifications@',
                 text_1: null,
                 create_date: null,
                 sent_date: null,

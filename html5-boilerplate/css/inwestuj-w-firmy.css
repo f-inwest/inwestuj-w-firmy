@@ -331,7 +331,7 @@ a:focus, a:hover { cursor: pointer; }
     .orderbookdate, .biddate, .investorbiddate, .lastdate
     { color: #666; }
 .darkblue
-    .tilecompany, .companyhalftitle, .companybannertextlink, .formlink, .smallinputbutton, .loctextinp, .loctext, .showmore a
+    .companyhalftitle, .companybannertextlink, .formlink, .smallinputbutton, .loctextinp, .loctext, .showmore a
     { color: #7edaef; }
 .companybannertextlink:visited {
     text-decoration: none;
@@ -384,7 +384,7 @@ a:focus, a:hover { cursor: pointer; }
 
 /* banner styles */
 .banner { width: 100%; height: 270px; background: #fefefe; margin-bottom: 15px; }
-.nearbybanner {
+.nearbybanner, .aboutbanner, .helpbanner, .termsbanner, .contactbanner, .apibanner {
     height: 150px;
     top: 105px;
     position: absolute;
@@ -394,8 +394,6 @@ a:focus, a:hover { cursor: pointer; }
     width: 930px !important;
 }
 .bannertext { font-size: 30px; font-weight: bold; top: 5px; height: 40px; position: relative; }
-.bannersmall { width: 980px; height: 50px; margin-top: 10px; }
-.bannertextsmall { font-size: 30px; font-weight: bold; margin-top: 20px; }
 #newlistingbanner { margin-top: 27px; }
 .follow { top: 33px; position: relative; }
 .followpromo { top: 20px; position: relative; }
@@ -501,6 +499,10 @@ a:focus, a:hover { cursor: pointer; }
 .videolink:hover, .videolink:active {
     color: #7edaef;
     text-decoration: none;
+}
+.about-videolink {
+    margin-right: 2px;
+    margin-top: -2px;
 }
 .bannerbubbles {
     left: -245px;
@@ -727,7 +729,7 @@ a:focus, a:hover { cursor: pointer; }
     margin-bottom: 20px;
     padding: 30px;
 }
-.header-content {
+.header-content, .bannersmall {
     font-family: 'Ubuntu', sans-serif;
     font-size: 22px;
     font-weight: 300;
@@ -740,6 +742,10 @@ a:focus, a:hover { cursor: pointer; }
     position: relative;
     margin-bottom: 15px;
 }
+/*
+.bannersmall { width: 980px; height: 50px; margin-top: 10px; }
+.bannertextsmall { font-size: 30px; font-weight: bold; margin-top: 20px; }
+*/
 .header-initial {
 /*    margin-top: 15px; */
 }
@@ -800,23 +806,6 @@ a:focus, a:hover { cursor: pointer; }
 }
 .company-side-menu-inner-maybe-empty {
     padding-bottom: 0px;
-}
-.header-title {
-    position: relative;
-    margin-left: 20px;
-    top: 4px;
-    padding-left: 10px;
-}
-.header-content-right {
-    width: 302px;
-}
-.header-title-sidebox {
-    position: relative;
-    margin-left: -15px;
-    padding-top: 5px;
-    padding-left: 20px;
-    width: 290px;
-    margin-bottom: 0;
 }
 .more {
     position: relative;
@@ -1301,7 +1290,8 @@ transition: height 300ms;
     font-size: 22px;
     font-weight: 300;
     color: #5b6773;
-    width: 627px;
+    /*width: 627px;*/
+    width: 597px;
     background: #ffffff url(../img/header-content-bck.png) no-repeat left top;
     background-image: url(../img/header-content-bck.png);
     height: 26px;
@@ -1312,18 +1302,18 @@ transition: height 300ms;
     padding-top: 4px;
 }
 .boxtitlenoindent {
-    padding-left: 0;
+    width: 950px;
 }
 .boxstep { border: 2px solid #cccccc; padding: 2px; overflow: auto; background: #e3e3e3; margin-bottom: 10px; }
 .boxpanel {
-    padding: 10px;
+    padding: 15px;
     margin-top: 0;
     margin-bottom: 15px;
     font-family: 'Ubuntu',sans-serif;
     font-size: 14px;
     font-weight: 300;
     color: #5b6773;
-    width: 607px;
+    width: 597px;
     position: relative;
     overflow: hidden;
 }
@@ -1388,7 +1378,7 @@ transition: height 300ms;
     padding-left: 15px;
     padding-bottom: 15px;
 }
-.sidebox p { margin: 5px 10px 10px 10px; text-indent: 0px; font-weight: normal; }
+.sidebox p { margin: 15px; text-indent: 0px; font-weight: normal; }
 .uploadbox p { margin: 5px 10px 10px 10px; text-indent: 0px; font-weight: normal; }
 .sideboxcol1 { width: 150px; float: left; margin-right: 0; }
 .sideboxcol2 { width: 150px; float: left; }
@@ -1519,7 +1509,11 @@ width: 302px;
 .freezemsg { display: none; font-weight: bold; }
 .freezecancelbtn { display: none; margin-top: 10px; }
 .promotebox { display: none; /* padding-bottom: 10px; */ }
-.promotemsg { display: none; font-weight: bold; }
+.promotemsg { display: none;
+    font-weight: bold;
+    padding: 15px;
+    text-align: center;
+}
 .promotecancelbtn { display: none; margin-top: 10px; }
 .deactivateguardbox { padding-left: 600px; }
 .deactivatebox { display: none; padding-top: 10px; padding-bottom: 10px; }
@@ -1643,22 +1637,34 @@ overflow: hidden;
 }
 
 /* tiles */
-.tile { width: 146px; height: 296px; border: 1px solid #cccccc; overflow: hidden; margin-bottom: 10px; position: relative; }
+.tile { width: 142px; height: 296px; border: 1px solid #cccccc; overflow: hidden; margin-bottom: 10px; position: relative; }
 .tileimg { width: 146px; height: 146px; overflow: hidden; }
 .tiledays, .tiledaystext, .tiletype, .tiletypetext, .tilepoints { width: 146px; height: 30px; position: absolute; }
 .tiledays, .tiletype, .tilepoints { cursor: pointer; background-color: #130f30; }
 .tiledaystext, .tiletypetext { padding: 4px; font-weight: bold; }
-.tilepointstext { font-weight: bold; width: 146px; position: absolute; bottom: 0; padding: 0 4px; }
+.tilepointstext { width: 126px; position: absolute; bottom: 10px; padding: 0 10px; }
 .tiledays, .tiledaystext { top: 0px; }
 .tiletype, .tiletypetext { top: 116px; }
 .tilepoints { top: 266px; }
-.tiledesc { width: 142px; height: 116px; position: absolute; top: 146px; padding: 0 2px 2px 2px; margin:0; overflow: hidden; border-top: 1px solid #ddd; }
-.tilecompany { font-size: 14px; line-height: 19px; font-weight: bold; }
-.tileloc, .tiledetails, .tiledesc { font-size: 12px; line-height: 16px; }
-.tileloc, .tiledetails { line-height: 20px; }
+.tiledesc { width: 146px; height: 116px; position: absolute; top: 146px; padding: 0; margin:0; overflow: hidden; border-top: 1px solid #ddd; }
+.tileloc, .tiledetails, .tiledesc { font-size: 14px; line-height: 16px; }
+.tileloc, .tiledetails { line-height: 20px; padding: 10px; }
 .tilevotes, .tilevoteimg { position: absolute; }
 .tilevotes { left: 30px; }
-.tileposted { position: absolute; top: 6px; font-weight: bold; }
+.tileposted { font-size: 14px; }
+.tilecompany {
+    display: block;
+    background: #5b6773;
+    color: #fefefe;
+    width: 126px;
+    padding: 10px;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 19px;
+    text-align: center;
+}
+.boxpanel-youtube { margin-bottom: 13px; }
+
 
 /* submit page preview classes */
 .previewtext { z-index: 1000; position: absolute; background: rgba(0,0,0,0.6); left: 600px; font-size: 52px; color: #f8f8f8; font-weight: bold; padding: 10px 20px 10px 20px;
@@ -2092,7 +2098,8 @@ border: 1px solid #70b030;
 color: #fff;
 }
 .backbutton {
-        margin-top: 20px;
+        /* margin-top: 20px; */
+    float: right;
 }
 .bottombutton {
     margin-top: 35px;
@@ -2689,5 +2696,25 @@ color: #fff;
     margin: 15px auto 15px auto;
     line-height: 40px;
     height: 40px;
+}
+.header-title, .bannertextsmall {
+    position: relative;
+    margin-left: 20px;
+    top: 4px;
+    padding-left: 10px;
+}
+.header-content-right {
+    width: 302px;
+}
+.header-title-sidebox {
+    position: relative;
+    margin-left: -15px;
+    padding-top: 5px;
+    padding-left: 20px;
+    width: 290px;
+    margin-bottom: 0;
+}
+.header-sidebox {
+    width: 272px;
 }
 

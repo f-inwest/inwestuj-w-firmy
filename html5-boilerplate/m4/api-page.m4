@@ -50,7 +50,7 @@ include(header.m4)
         </p>
 </div>
 
-    <span class="boxtitle boxtitlenoindent">COMPANY LIST API</span>
+    <div class="boxtitle boxtitlenoindent">COMPANY LIST API</div>
     <div class="boxpanel apipanel">
     <p>Get a list of companies depending on the category, ranking, or user criteria.</p>
 

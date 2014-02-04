@@ -30,7 +30,7 @@ include(header.m4)
 <!-- left column -->
 <div class="span-16">
     <div class="header-content">
-        <div class="header-title" id="listingstitle"></div>
+        <div class="header-title" id="listingstitle">@lang_projects@</div>
     </div>
     <div id="companydiv"></div>
 </div>

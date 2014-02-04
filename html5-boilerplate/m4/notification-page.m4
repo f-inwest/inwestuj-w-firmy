@@ -22,10 +22,10 @@ include(header.m4)
 
     <div id="notificationmsg"></div>
 
-    <div class="span-24 last notificationtitle">Notification from <span class="lightblue">startup</span>bidder</div>
+    <div class="span-24 last notificationtitle">@lang_notification_from_site@</div>
 
     <div class="span-24 notificationmessage" id="notificationmessage"></div>
-    <div class="span-24 notificationview initialhidden" id="notificationview">In order to view, please visit the <a href="" id="notificationlink">page</a>.</div>
+    <div class="span-24 notificationview initialhidden" id="notificationview"><a href="" id="notificationlink">@lang_view_notification@</a></div>
 </div> <!-- end left column -->
 </div> <!-- end container -->
 

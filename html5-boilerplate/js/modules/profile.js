@@ -110,7 +110,7 @@ pl.implement(ProfileClass, {
                 var profile = self.profile || self.loggedin_profile,
                     complete = function() {
                         pl('#promotebtn, #promotecancelbtn').hide();
-                        pl('#promotemsg').text('Promoted to dragon, reloading...').show();
+                        pl('#promotemsg').text('@lang_promoted_reloading@').show();
                         setTimeout(function() {
                             window.location.reload();
                         },
@@ -123,7 +123,7 @@ pl.implement(ProfileClass, {
                     pl('#promotebtn').hide();
                 }
                 else if (pl('#promotecancelbtn').css('display') === 'none') { // first call
-                    pl('#promotemsg').text('Promote this user to dragon status?').show();
+                    pl('#promotemsg').text('@lang_promote_this_user@').show();
                     pl('#promotecancelbtn').show();
                 }
                 else {
@@ -273,7 +273,7 @@ pl.implement(ProfileListingPageClass, {
                 header.setLogin(json);
                 profile.display(json);
                 companyList.storeList(json);
-                pl('.titletype').text(self.type === 'monitored' ? 'WATCHED' : self.type.toUpperCase());
+                pl('.titletype').text(self.type === 'monitored' ? '@lang_watched@' : self.type.toUpperCase());
 
                 if (!listingfound) {
                     pl('#no_listings_wrapper').show();
@@ -359,7 +359,7 @@ pl.implement(EditProfileClass, {
         pl('#deactivatebtn').bind({
             click: function() {
                 var completeFunc = function() {
-                        pl('#deactivatemsg').addClass('successful').html('DEACTIVATED, LOGGING OUT...');
+                        pl('#deactivatemsg').addClass('successful').html('@lang_deactivated_logout@');
                         pl('#deactivatebtn, #deactivatecancelbtn').hide();
                         setTimeout(function() {
                             window.location = pl('#logoutlink').attr('href');
@@ -424,20 +424,20 @@ pl.implement(EditProfileClass, {
                             }
                             else {
                                 icon.showInvalid();
-                                pl('#personalinfomsg').html('<span class="attention">Nickname already taken, please choose another</span>');
+                                pl('#personalinfomsg').html('<span class="attention">@lang_nickname_taken@</span>');
                             } 
                         },
 
                         icon = new ValidIconClass('usernameicon'),
                         ajax;
                     if (!username || !username.length) {
-                        return 'Nickname must not be empty';
+                        return '@lang_nickname_empty@';
                     }
                     else if (username.length < 3) {
-                        return 'Nickname must be at least three characters';
+                        return '@lang_nickname_too_short@';
                     }
                     else if (username.length > 30) {
-                        return 'Nickname must be no more than 30 characters';
+                        return '@lang_nickname_too_long@';
                     }
                     else {
                         ajax = new AjaxClass('/user/check_user_name', 'personalinfomsg', null, successFunc);
@@ -553,23 +553,24 @@ pl.implement(ProfileListClass, {
         if (json) {
             this.store(json);
         }
-        if (this.type !== 'all') {
-            pl('#typetitle').text(this.type === 'listers' ? 'Entrepreneurs' : SafeStringClass.prototype.ucfirst(this.type));
-        }
         if (this.type === 'listers') {
+            pl('#typetitle').text('@lang_entrepreneuers@');
             pl('#listersubtitle').show();
         }
         else if (this.type === 'dragons') {
+            pl('#typetitle').text('@lang_investors@');
             pl('#dragonsubtitle').show();
         }
-
+        else {
+            pl('#typetitle').text('@lang_users@');
+        }
         this.displayList(json.users);
     },
 
     displayEmptyList: function() {
         var listhtml = '\
             <div class="messageline">\
-                <p class="messagetext"><i>No results found</i></p>\
+                <p class="messagetext"><i>@lang_no_results@</i></p>\
             </div>\
             ';
         pl('#profilelistcontainer').removeClass('addlistingcontainerfilled');
@@ -635,7 +636,7 @@ pl.implement(ProfileListClass, {
                     + DateClass.prototype.format(listitem.last_login) + '</span></br>'
                 : '',
 			pendingtext =  listitem.edited_listing
-                ? '<span class="profilelistpending">has a pending listing</span><br/>'
+                ? '<span class="profilelistpending">@lang_has_pending@</span><br/>'
                 : '',
             html = '\
             <div class="messageline">\

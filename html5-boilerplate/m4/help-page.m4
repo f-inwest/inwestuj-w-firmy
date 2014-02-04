@@ -23,7 +23,7 @@ include(header.m4)
 
 <!-- left column -->
 <div class="span-16">
-    <div class="boxtitle">HELP AND FAQ</div>
+    <div class="boxtitle">@lang_help_and_faq@</div>
     <div class="boxpanel">
         <dl>
             <dt>What is Inwestuj w Firmy?</dt>
@@ -133,7 +133,7 @@ accredited investor, you can bid for a piece of the action.
         </p>
     </div>
 -->
-    <div class="boxtitle" id="listingstitle"></div>
+    <div class="boxtitle header-sidebox" id="listingstitle"></div>
 
     <!-- companydiv -->
     <div id="companydiv">
