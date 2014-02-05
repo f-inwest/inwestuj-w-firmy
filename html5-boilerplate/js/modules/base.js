@@ -750,6 +750,8 @@ pl.implement(CompanyTileClass, {
         return html;
     },
     makeInfoWindowHtml: function() {
+        var categoryMap = new CategoryMapClass(),
+            categoryVal = categoryMap.categoryMap[this.category];
         return '\
 <div class="infowindow">\
 ' + this.openanchor + '\
@@ -761,12 +763,8 @@ pl.implement(CompanyTileClass, {
     ' + this.closeanchor + '\
     <div>' + this.address + '</div>\
     <div class="infomantra">' + this.mantra + '</div>\
-    <div><span class="infolabel">Type:</span> ' + SafeStringClass.prototype.ucfirst(this.type) + '</div>\
-    ' + (this.type !== 'application'
-            ? ''
-            : '<div><span class="infolabel">Platform:</span> ' + PlatformClass.prototype.displayName(this.platform) + '</div>') + '\
-    <div><span class="infolabel">Industry:</span> ' + this.category + '</div>\
-    <div><span class="infolabel">Asking:</span> ' + this.suggested_text + '</div>\
+    <div><span class="infolabel">@lang_category@:</span> ' + categoryVal + '</div>\
+    <div><span class="infolabel">@lang_asking@:</span> ' + this.suggested_text + '</div>\
 </p>\
 </div>\
 ';
@@ -1298,7 +1296,7 @@ pl.implement(CompanyBannerClass, {
             locprefix  = type === 'company' ? 'in' : 'from',
             address_link_text = !addr ? '' : '<a class="companybannertextlink" href="/main-page.html?type=location&val=' + encodeURIComponent(addr) + '">' + addr + '</a>',
             addrlinked = !addr ? '' : ' ' + locprefix + ' <a class="companybannertextlink" href="/main-page.html?type=location&val=' + encodeURIComponent(addr) + '">' + addr + '</a>',
-            profilelinked = !this.profile_id ? '' : ' by <a class="companybannertextlink" href="/profile-page.html?id=' + this.profile_id + '">' + (this.profile_username || 'owner') + '</a>',
+            profilelinked = !this.profile_id ? '' : ' <a class="companybannertextlink" href="/profile-page.html?id=' + this.profile_id + '">' + (this.profile_username || '@lang_owner@') + '</a>',
             website = this.website || '/company-page.html?id=' + this.listing_id,
             listing_financial_text = CompanyFormatClass.prototype.financeLine(this);
         if (logobg) {

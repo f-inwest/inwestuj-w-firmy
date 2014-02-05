@@ -93,9 +93,10 @@ pl.implement(ListingClass, {
     },
 
     displayEdit: function() {
-        var self = this;
+        var self = this,
+            editUrl = 'new-listing-basics-page.html';
         if (self.loggedin_profile && self.loggedin_profile.profile_id === self.profile_id && self.status === 'new') { // owner
-            pl('#editbutton').show();
+            pl('#editbutton').attr('href', editUrl).show();
         }
     },
 
@@ -107,8 +108,10 @@ pl.implement(ListingClass, {
                 : 'company-bids-page.html',
             url = '/' + page + '?id=' + this.listing_id;
         if (this.status === 'active' && this.asked_fund) {
-            pl('#investlink').attr('href', url);
-            pl('#investbutton').show();
+            pl('#investbutton').attr('href', url).show();
+        }
+        else {
+            pl('#investbutton').hide();
         }
     },
 

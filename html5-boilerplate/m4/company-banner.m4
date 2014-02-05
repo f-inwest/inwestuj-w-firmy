@@ -17,13 +17,24 @@ define(`companybannermacro', `
                 <div class="companybannerfold"></div>
 
                 <div class="companybannerlogo tileimg noimage" id="companylogo"></div>
-    
-                <p class="companybannertitle" id="title"></p>
-                <div class="companybannertextgrey companybannermantra2" id="mantra"></div>
-                <div class="companybannertextgrey">
-                    <span id="listing_financial_text" class="inputfield"></span><br/>
-                    <a class="companybannertextlink hoverlink initialhidden" href="" id="sendmessagelink">@lang_send_message@</a><br/>
-                    <span id="admintext"></span>
+
+                <div class="companybannercentercol">
+                    <p class="companybannertitle" id="title"></p>
+                    <div class="companybannertextgrey companybannermantra2" id="mantra"></div>
+                    <div class="companybannertextgrey" id="listing_financial_text" class="inputfield"></div>
+                    <div id="admintext"></div>
+                    <div class="companybannertextgrey">
+                        @lang_author@: <span id="profile_link_text"></span>
+                    </div>
+                    <div class="companybannertextgrey">
+                        @lang_category@: <span id="category_link_text"></span>
+                    </div>
+                    <div class="companybannertextgrey">
+                        @lang_website@:
+                        <a class="companybannertextlink" href="#" target="_blank" id="websitelink">
+                            <span id="domainname" class="companybannertextlink"></span>
+                        </a>
+                    </div>
                 </div>
 
                 <div class="companybannerfollow">
@@ -37,14 +48,8 @@ define(`companybannermacro', `
                 </div>
     
                 <div class="companybannerlinks">
-                    <div>@lang_author@: <span id="profile_link_text"></span></div>
                     <div>@lang_location@: <span id="address_link_text"></span></div>
-                    <div>@lang_category@: <span id="category_link_text"></span></div>
-                    <div>@lang_website@:
-                        <a class="companybannertextlink" href="#" target="_blank" id="websitelink">
-                            <span id="domainname" class="companybannertextlink"></span>
-                        </a>
-                    </div>
+                    <a class="companybannertextlink hoverlink initialhidden" style="display:block;" href="" id="sendmessagelink">@lang_send_message@</a>
                 </div>
             </div>
 

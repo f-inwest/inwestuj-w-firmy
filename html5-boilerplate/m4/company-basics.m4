@@ -30,19 +30,11 @@ include(images-panel.m4)
     <div class="company-side-menu-container span-8 last">
 
         <div class="company-side-menu-inner company-side-menu-inner-first">
-            <a href="#" id="investlink">
-                <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden blueboxbutton firstsidebutton" id="investbutton">@lang_invest@</div>
-            </a>
-
-            <a href="/new-listing-basics-page.html">
-                <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden" id="editbutton">&lt;&lt; @lang_revise_info@</div>
-            </a>
-
-            <div class="sidebox company-menu-sidebox investbutton gotobutton" id="valuationbutton">@lang_valuation@</div>
-
-            <div class="sidebox company-menu-sidebox investbutton gotobutton" id="modelbutton">@lang_model@</div>
-
-            <div class="sidebox company-menu-sidebox investbutton gotobutton" id="presentationbutton">@lang_presentation@</div>
+            <a class="sidebox company-menu-sidebox investbutton initialhidden blueboxbutton firstsidebutton" style="display: block;" href="#" id="investbutton">@lang_invest@</a>
+            <a class="sidebox company-menu-sidebox investbutton initialhidden" style="display: block;" href="#" id="editbutton">&lt;&lt; @lang_revise_info@</a>
+            <div class="sidebox company-menu-sidebox investbutton" id="valuationbutton">@lang_valuation@</div>
+            <div class="sidebox company-menu-sidebox investbutton" id="modelbutton">@lang_model@</div>
+            <div class="sidebox company-menu-sidebox investbutton" id="presentationbutton">@lang_presentation@</div>
         </div>
 
         <div class="company-side-menu-inner">
@@ -58,13 +50,13 @@ include(images-panel.m4)
             </div>
 
             <a href="/new-listing-financials-page.html">
-                <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden" id="fundingbutton">@lang_ask_for_funding@</div>
+                <div class="sidebox company-menu-sidebox investbutton initialhidden" id="fundingbutton">@lang_ask_for_funding@</div>
             </a>
         </div>
 
         <div class="company-side-menu-inner">
-            <div class="initialhidden" id="documentboxwrapper">
             <div class="header-content header-title-sidebox">@lang_documents@</div>
+            <div class="initialhidden" id="documentboxwrapper">
             <div class="sidebox company-menu-sidebox documentbox" id="documentbox">
                     <div class="downloadline hoverlink initialhidden" id="presentationwrapper">
                         <a href="#" id="presentationlink">
@@ -87,10 +79,10 @@ include(images-panel.m4)
             </div>
             </div>
 
-            <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden" id="adddocumentbutton">@lang_add_document@</div>
-            <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden" id="requestpresentationbutton">@lang_request_powerpoint@</div>
-            <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden" id="requestbusinessplanbutton">@lang_request_plan@</div>
-            <div class="sidebox company-menu-sidebox investbutton gotobutton initialhidden" id="requestfinancialsbutton">@lang_request_statements@</div>
+            <div class="sidebox company-menu-sidebox investbutton initialhidden" style="margin-top: 15px" id="adddocumentbutton">@lang_add_document@</div>
+            <div class="sidebox company-menu-sidebox investbutton initialhidden" id="requestpresentationbutton">@lang_request_powerpoint@</div>
+            <div class="sidebox company-menu-sidebox investbutton initialhidden" id="requestbusinessplanbutton">@lang_request_plan@</div>
+            <div class="sidebox company-menu-sidebox investbutton initialhidden" id="requestfinancialsbutton">@lang_request_statements@</div>
         </div>
 
         <div class="company-side-menu-inner">
@@ -120,33 +112,33 @@ include(images-panel.m4)
         <div class="company-side-menu-inner company-side-menu-inner-maybe-empty">
             <div id="deletebox" class="deletebox">
             <div class="deletemsg attention" id="deletemsg">@lang_are_you_sure@<br/>@lang_undone_warning@</div>
-            <a href="#" id="deletebtn"><div class="sideboxbutton hoverlink">@lang_delete@</div></a>
+            <a href="#" id="deletebtn"><div class="sideboxbutton company-menu-sidebox hoverlink">@lang_delete@</div></a>
             <a href="#" class="deletecancelbtn" id="deletecancelbtn"><div class="sideboxbutton hoverlink">@lang_cancel@</div></a>
             </div>
 
             <div id="withdrawbox" class="withdrawbox">
             <div class="withdrawmsg attention" id="withdrawmsg">@lang_are_you_sure@<br/>@lang_undone_warning@</div>
-            <a href="#" id="withdrawbtn"><div class="sideboxbutton hoverlink">@lang_withdraw@</div></a>
+            <a href="#" id="withdrawbtn"><div class="sideboxbutton company-menu-sidebox hoverlink">@lang_withdraw@</div></a>
             <a href="#" class="withdrawcancelbtn" id="withdrawcancelbtn"><div class="sideboxbutton hoverlink">@lang_cancel@</div></a>
             </div>
 
             <div id="approvebox" class="approvebox">
             <div class="approvemsg attention" id="approvemsg">@lang_are_you_sure@</div>
-            <a href="#" id="approvebtn"><div class="sideboxbutton hoverlink">@lang_activate@</div></a>
+            <a href="#" id="approvebtn"><div class="sideboxbutton company-menu-sidebox hoverlink">@lang_activate@</div></a>
             <a href="#" class="approvecancelbtn" id="approvecancelbtn"><div class="sideboxbutton hoverlink">@lang_cancel@</div></a>
             </div>
 
             <div id="sendbackbox" class="sendbackbox">
             <input class="text sideinputtext" type="text" name="sendbacktext" id="sendbacktext" value="" length="35" maxlength="100"></input>
             <div class="sendbackmsg attention" id="sendbackmsg">@lang_are_you_sure@</div>
-            <a href="#" id="sendbackbtn"><div class="sideboxbutton hoverlink">@lang_send_back@</div></a>
+            <a href="#" id="sendbackbtn"><div class="sideboxbutton company-menu-sidebox hoverlink">@lang_send_back@</div></a>
             <a href="#" class="sendbackcancelbtn" id="sendbackcancelbtn"><div class="sideboxbutton hoverlink">@lang_cancel@</div></a>
             </div>
 
             <div id="freezebox" class="freezebox">
             <input class="text sideinputtext" type="text" name="freezetext" id="freezetext" value="" length="35" maxlength="100"></input>
             <div class="freezemsg attention" id="freezemsg">@lang_are_you_sure@</div>
-            <a href="#" id="freezebtn"><div class="sideboxbutton hoverlink">@lang_freeze@</div></a>
+            <a href="#" id="freezebtn"><div class="sideboxbutton company-menu-sidebox hoverlink">@lang_freeze@</div></a>
             <a href="#" class="freezecancelbtn" id="freezecancelbtn"><div class="sideboxbutton hoverlink">@lang_cancel@</div></a>
             </div>
         </div>

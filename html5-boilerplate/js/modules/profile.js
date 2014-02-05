@@ -275,9 +275,9 @@ pl.implement(ProfileListingPageClass, {
                 companyList.storeList(json);
                 pl('.titletype').text(self.type === 'monitored' ? '@lang_watched@' : self.type.toUpperCase());
 
-                if (!listingfound) {
-                    pl('#no_listings_wrapper').show();
-                }
+                //if (!listingfound) {
+                //    pl('#no_listings_wrapper').show();
+                //}
                 if (profile.isMine()) {
                     pl('#editprofilebutton').show();
                     pl('.titleuser').text('');
