@@ -17,7 +17,10 @@
 include(images-panel.m4)
 `
         <div class="initialhidden" id="videowrapper">
-            <div class="header-content header-boxpanel-initial">@lang_video@ <a class="videolink" href="#" id="videolink">(@lang_view_on_youtube@)</a></div>
+            <div class="header-content header-boxpanel-initial header-video">
+                @lang_video@
+                <a class="videolink videolink-top" href="#" id="videolink">(@lang_view_on_youtube@)</a>
+            </div>
             <div class="boxpanel videopanel">
         	    <div class="videocontainer">
               	    <iframe width="627" height="353" id="videopresentation" src="" frameborder="0" allowfullscreen></iframe>

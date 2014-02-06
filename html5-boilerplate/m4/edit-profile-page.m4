@@ -16,13 +16,9 @@ include(profile-not-found.m4)
         <span class="bannertextsmall span-16">@lang_editing_profile@</span>
     </div> <!-- end banner -->
 
-    <div>
-        <a href="profile-page.html" class="backbuttonlink">
-            <span class="push-1 span-3 inputbutton backbutton">
-                &lt;&lt; @lang_back@
-            </span>
-        </a>
-    </div>
+    <a href="profile-page.html" class="span-3 last backbuttonlink inputbutton backbutton">
+        &lt;&lt; @lang_back@
+    </a>
 </div>
 
 <div class="container preloader">
@@ -48,7 +44,7 @@ include(profile-not-found.m4)
             <p class="sideinfo">
                 <label class="sideinfoheader">@lang_email@</label>
                 <br />
-                Your private email address on inwestuj-w-firmy, never shown on the site, only used to notify you for personal communications.
+                @lang_email_desc@
             </p>
         </div>
         <div class="formitem sideinfoitem clear">
@@ -59,7 +55,7 @@ include(profile-not-found.m4)
             <p class="sideinfo">
                 <label class="sideinfoheader">@lang_nickname@</label>
                 <br />
-                Your publicly visible username on inwestuj-w-firmy.
+                @lang_username_desc@
             </p>
             <span class="inputicon">
                 <div id="usernameicon"></div>
@@ -73,7 +69,7 @@ include(profile-not-found.m4)
             <p class="sideinfo">
                 <label class="sideinfoheader">@lang_name@</label>
                 <br />
-                Your full legal name, kept private, only shown upon successful conclusion of a private bid and only shown to the bid counterparty, never made public.
+                @lang_name_desc@
             </p>
             <span class="inputicon">
                 <div id="nameicon"></div>
@@ -84,11 +80,9 @@ include(profile-not-found.m4)
             <span class="inputcheckbox">
                 <div id="notify_enabled"></div>
             </span>
-            <span class="inputhelp">Receive a copy of each notification via email</span>
             <p class="sideinfo">
                 <label class="sideinfoheader">@lang_notify@</label>
                 <br />
-                Send a copy of each notification to your email address, otherwise you must login to inwestuj-w-firmy to check notifications.
             </p>
             <span class="inputicon">
                 <div id="notify_enabledicon"></div>
@@ -181,7 +175,7 @@ include(profile-not-found.m4)
 -->
 
     <div id="deactivatebox" class="indentedtextbox deactivateguardbox">
-        <a href="#" id="deactivateguardlink">@lang_deactivate_account@</a>
+        <a href="#" id="deactivateguardlink" class="span-6 last backbuttonlink inputbutton backbutton">@lang_deactivate_account@</a>
         <div class="initialhidden deactivatebox" id="deactivateguard">
             <p>@lang_deactivate_warning@</p>
             <div class="deactivatemsg attention" id="deactivatemsg">@lang_are_you_sure@<br/>@lang_undone_warning@</div>

@@ -50,7 +50,7 @@ pl.implement(ProfileClass, {
             pl('#avatar').css('background-image', 'url(' + profile.avatar + ')');
         }
         if (profile.joined_date) {
-            pl('#membersince').text('Joined ' + DateClass.prototype.formatDateStr(profile.joined_date));
+            pl('#membersince').text('@lang_member_since@ ' + DateClass.prototype.formatDateStr(profile.joined_date));
         }
         if (profile.user_class) {
             pl('#user_class').text(ProfileUserClass.prototype.format(profile.user_class));

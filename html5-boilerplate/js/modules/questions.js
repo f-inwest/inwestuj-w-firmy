@@ -224,7 +224,7 @@ pl.implement(QuestionClass, {
 
             blur: function() {
                 if (!pl('#addqandatext').hasClass('edited')) {
-                    pl('#addqandatext').attr({value: '@lang_put_question_here@'});
+                    pl('#addqandatext').attr({value: '@lang_put_question_to_owner@'});
                     pl('#addqandabtn').removeClass('editenabled');
                 }
             }
@@ -234,7 +234,7 @@ pl.implement(QuestionClass, {
                 var val = SafeStringClass.prototype.clean(pl('#addqandatext').attr('value')),
                     complete = function(json) {
                         pl('#addqandaspinner').hide();
-                        pl('#addqandatext').removeClass('edited').removeAttr('disabled').attr({value: '@lang_put_question_here@'});
+                        pl('#addqandatext').removeClass('edited').removeAttr('disabled').attr({value: '@lang_put_question_to_owner@'});
                         pl('#addqandabtn').removeClass('editenabled').show();
                         pl('#qandamsg').text('');
                         pl('#addqandabox').before(self.makeQuestion(json));
@@ -300,7 +300,7 @@ pl.implement(QuestionClass, {
 
                 blur: function() {
                     if (!pl(textsel).hasClass('edited')) {
-                        pl(textsel).attr({value: '@lang_put_question_here@'});
+                        pl(textsel).attr({value: '@lang_put_question_to_owner@'});
                         pl(btnsel).removeClass('editenabled');
                     }
                 }

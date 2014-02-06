@@ -692,7 +692,7 @@ pl.implement(CompanyTileClass, {
         platform = json.platform || '';
         stagetext = this.stage && this.stage !== 'established' ? this.stage : '';
         this.catlinked = platform;
-        this.summary = json.summary;
+        this.summary = json.summary || '@lang_no_description@';
 
         addr = json.brief_address;
         this.brief_address = json.brief_address
@@ -1654,10 +1654,12 @@ pl.implement(ImagePanelClass, {
                 self.runningSlideshow = false;
                 self.advanceRight(picnum);
             });
+            /*
             pl('.picslide').unbind().bind('click', function() {
                 self.runningSlideshow = false;
                 self.advanceRight();
             });
+            */
         }
         if (firstpic && !this.options.editmode && self.numPics <= 1) {
             pl('#imagetitle').text('@lang_image@');
@@ -1667,7 +1669,7 @@ pl.implement(ImagePanelClass, {
             pl('#' + firstpic + 'nav').addClass('dotnavfilled');
             if (!self.runningSlideshow) {
                 self.runningSlideshow = true;
-                setTimeout(function(){ self.advanceSlideshow(); }, 5000);
+                //setTimeout(function(){ self.advanceSlideshow(); }, 5000);
             }
         }
         else { // default highlight first
@@ -1677,6 +1679,7 @@ pl.implement(ImagePanelClass, {
             }
         }
 
+        /*
         if (pl('#picslideset .picblank').len()) {
             setTimeout(function(){
                 var complete = function(json) {
@@ -1691,29 +1694,32 @@ pl.implement(ImagePanelClass, {
                 ajax.call();
             }, 5000);
         }
+        */
     },
 
     advanceSlideshow: function() {
         var self = this;
         if (self.runningSlideshow) {
-            self.advanceRight();
-            setTimeout(function() { self.advanceSlideshow() }, 5000);
+            //self.advanceRight();
+            //setTimeout(function() { self.advanceSlideshow() }, 5000);
         }
     },
 
     advanceRight: function(picnum) {
-        var left = 1 * pl('#picslideset').css('left').replace(/px/, ''),
-            slidewidth = 1 * pl('#pic1').css('width').replace(/px/, ''),
-            fullwidth = slidewidth * this.numPics,
-            newleft = picnum ? slidewidth * ( 1 - picnum ) : Math.floor((left - slidewidth) % fullwidth),
-            newleftpx = newleft + 'px',
-            newpicnum = picnum || (Math.floor(Math.abs(newleft) / slidewidth) + 1),
-            onboundary = Math.floor(left % slidewidth) === 0;
-        if (onboundary) { // prevent in-transition movements
+        var slidewidth = 627,
+            newleft = slidewidth * (1 - picnum),
+            //left = 1 * pl('#picslideset').css('left').replace(/px/, ''),
+            //slidewidth = 1 * pl('#pic1').css('width').replace(/px/, ''),
+            //fullwidth = slidewidth * this.numPics,
+            //newleft = picnum ? slidewidth * ( 1 - picnum ) : Math.floor((left - slidewidth) % fullwidth),
+            newleftpx = newleft + 'px';
+            //newpicnum = picnum || (Math.floor(Math.abs(newleft) / slidewidth) + 1),
+            //onboundary = Math.floor(left % slidewidth) === 0;
+        //if (onboundary) { // prevent in-transition movements
             if (this.options.editmode) {
-                pl('#picnum').text(newpicnum);
-                pl('#picuploadfile').attr({name: 'PIC' + newpicnum});
-                if (this.listing['pic' + newpicnum]) {
+                pl('#picnum').text(picnum);
+                pl('#picuploadfile').attr({name: 'PIC' + picnum});
+                if (this.listing['pic' + picnum]) {
                     pl('#deleteimagebutton').show();
                 }
                 else {
@@ -1721,9 +1727,9 @@ pl.implement(ImagePanelClass, {
                 }
             }
             pl('.dotnav').removeClass('dotnavfilled');
-            pl('#pic' + newpicnum + 'nav').addClass('dotnavfilled');
+            pl('#pic' + picnum + 'nav').addClass('dotnavfilled');
             pl('#picslideset').css({left: newleftpx});
-        }
+        //}
     }
 
 });
