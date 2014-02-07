@@ -151,7 +151,7 @@ public class UserMgmtFacadeTest extends BaseFacadeAbstractTest {
 	public void testActivateUser() {
 		assertNotNull("User of index 8 should exist", mocks.users.get(8));
 		assertEquals("User should be in state CREATED", SBUser.Status.CREATED, mocks.users.get(8).status);
-		UserVO user = UserMgmtFacade.instance().activateUser(mocks.users.get(8).getWebKey(), mocks.users.get(8).activationCode);
+		UserVO user = UserMgmtFacade.instance().activateUser(mocks.users.get(8).activationCode);
 		assertNotNull("Should not be null as activated correctly", user);
 		assertEquals("Should be activated", SBUser.Status.ACTIVE.toString(), user.getStatus());
 		
@@ -162,21 +162,21 @@ public class UserMgmtFacadeTest extends BaseFacadeAbstractTest {
 		assertEquals("User's status should be CREATED before activation", SBUser.Status.CREATED, newSBUser.status);
 		
 		// trying to activate with wrong code
-		UserVO shouldBeNull = UserMgmtFacade.instance().activateUser(newUser.getId(), "wrongcode");
+		UserVO shouldBeNull = UserMgmtFacade.instance().activateUser("wrongcode");
 		assertNull("Trying to activate with wrong code, should be null", shouldBeNull);
 		
 		// proper activation
-		UserVO activatedUser = UserMgmtFacade.instance().activateUser(newUser.getId(), newSBUser.activationCode);
+		UserVO activatedUser = UserMgmtFacade.instance().activateUser(newSBUser.activationCode);
 		assertNotNull("Activate correctly, we should get actived user", activatedUser);
 		assertEquals("And user should be active", SBUser.Status.ACTIVE.toString(), activatedUser.getStatus());
 		assertEquals("Joined date should not be modified", newUser.getJoined(), activatedUser.getJoined());
 		assertEquals("We haven't activated created account", "test@sb.com", activatedUser.getEmail());
 
 		// trying to activate already activated account with valid code
-		UserVO user3 = UserMgmtFacade.instance().activateUser(newUser.getId(), newSBUser.activationCode);
+		UserVO user3 = UserMgmtFacade.instance().activateUser(newSBUser.activationCode);
 		assertNotNull("Already activated user should return user", user3);
 		// trying to activate already activated account with invalid code
-		UserVO user4 = UserMgmtFacade.instance().activateUser(newUser.getId(), newSBUser.activationCode);
+		UserVO user4 = UserMgmtFacade.instance().activateUser(newSBUser.activationCode);
 		assertNotNull("Already activated user should return user", user4);
 	}
 
@@ -298,7 +298,7 @@ public class UserMgmtFacadeTest extends BaseFacadeAbstractTest {
 		
 		assertNull("Not activated yet", UserMgmtFacade.instance().checkUserCredentials(createdSBUser.authCookie));
 		
-		UserMgmtFacade.instance().activateUser(createdUser.getId(), createdSBUser.activationCode);
+		UserMgmtFacade.instance().activateUser(createdSBUser.activationCode);
 		createdSBUser = ObjectifyDatastoreDAO.getInstance().getUser(createdUser.getId());
 		assertNotNull("user should exist", createdSBUser);
 		assertEquals("User should be active now", SBUser.Status.ACTIVE, createdSBUser.status);

@@ -23,6 +23,8 @@ import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
+import eu.finwest.datamodel.SBUser;
+import eu.finwest.util.EmailAuthHelper;
 import eu.finwest.util.FacebookHelper;
 import eu.finwest.util.FacebookUser;
 import eu.finwest.util.TwitterHelper;
@@ -61,6 +63,7 @@ public abstract class ModelDrivenController {
 	public final HttpHeaders execute(HttpServletRequest request) {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
+		SBUser emailUser = EmailAuthHelper.getUser(request);
 		FacebookUser fbUser = FacebookHelper.getFacebookUser(request);
 		twitter4j.User twitterUser = TwitterHelper.getTwitterUser(request);
 
@@ -74,6 +77,9 @@ public abstract class ModelDrivenController {
 			if (loggedInUser != null) {
 				loggedInUser.setAdmin(userService.isUserAdmin());
 			}
+		} else if (emailUser != null) {
+			// login via email/pass
+			loggedInUser = UserMgmtFacade.instance().getLoggedInUser(emailUser);
 		} else if (fbUser != null) {
 			// login via Facebook
 			log.info("Logged in via Facebook as " + fbUser.getId() + ", email: " + fbUser.getEmail());
@@ -126,6 +132,8 @@ public abstract class ModelDrivenController {
 					((BaseResultVO) model).setLoggedUser(loggedInUser);
 					if (user != null) {
 						((BaseResultVO) model).setLogoutUrl(userService.createLogoutURL(appHost));
+					} else if (emailUser != null) {
+						((BaseResultVO) model).setLogoutUrl(EmailAuthHelper.getLogoutUrl(request));
 					} else if (fbUser != null) {
 						((BaseResultVO) model).setLogoutUrl(FacebookHelper.getLogoutUrl(request));
 					} else if (twitterUser != null) {

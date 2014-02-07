@@ -5,10 +5,13 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_MODIFIED;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,6 +38,7 @@ public class HttpHeadersImpl implements HttpHeaders {
     BlobKey blob = null;
     String redirect = null;
     Map<String, String> headers = new HashMap<String, String>();
+    List<Cookie> cookies = new ArrayList<Cookie>();
 
     public HttpHeadersImpl() {}
 
@@ -110,10 +114,18 @@ public class HttpHeadersImpl implements HttpHeaders {
     	headers.put(name, value);
     }
 
-    /* (non-Javadoc)
+    @Override
+	public void addCookie(Cookie cookie) {
+		cookies.add(cookie);
+	}
+
+	/* (non-Javadoc)
      * @see org.apache.struts2.rest.HttpHeaders#apply(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
      */
     public String apply(HttpServletRequest request, HttpServletResponse response, Object target) throws IOException {
+    	for (Cookie cookie : cookies) {
+    		response.addCookie(cookie);
+    	}
 		if (isRedirect()) {
 			response.sendRedirect(getRedirectUrl());
 			return null;

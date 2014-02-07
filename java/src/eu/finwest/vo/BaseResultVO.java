@@ -1,5 +1,7 @@
 package eu.finwest.vo;
 
+import java.util.List;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
@@ -20,6 +22,9 @@ public class BaseResultVO {
 	@JsonProperty("fb_login_url") private String facebookLoginUrl;
 	
 	@JsonProperty("campaign") private CampaignVO campaign;
+	@JsonProperty("user_campaigns") private List<CampaignVO> userCampaigns;
+	@JsonProperty("all_campaigns") private List<CampaignVO> allCampaigns;
+
 	@JsonProperty("error_code") private int errorCode = ErrorCodes.OK;
 	@JsonProperty("error_msg") private String errorMessage;
 
@@ -76,5 +81,17 @@ public class BaseResultVO {
 	}
 	public void setCampaign(CampaignVO campaign) {
 		this.campaign = campaign;
+	}
+	public List<CampaignVO> getUserCampaigns() {
+		return userCampaigns;
+	}
+	public void setUserCampaigns(List<CampaignVO> userCampaigns) {
+		this.userCampaigns = userCampaigns;
+	}
+	public List<CampaignVO> getAllCampaigns() {
+		return allCampaigns;
+	}
+	public void setAllCampaigns(List<CampaignVO> allCampaigns) {
+		this.allCampaigns = allCampaigns;
 	}
 }

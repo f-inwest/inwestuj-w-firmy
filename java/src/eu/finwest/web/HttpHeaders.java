@@ -2,6 +2,7 @@ package eu.finwest.web;
 
 import java.io.IOException;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -68,4 +69,9 @@ public interface HttpHeaders {
      * Set custom header
      */
     void addHeader(String name, String value);
+    
+    /**
+     * Set cookie
+     */
+    void addCookie(Cookie cookie);
 }

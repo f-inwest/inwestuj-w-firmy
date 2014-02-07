@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -14,6 +15,8 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import eu.finwest.datamodel.SBUser;
+import eu.finwest.util.EmailAuthHelper;
 import eu.finwest.util.TwitterHelper;
 import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.ListPropertiesVO;
@@ -33,6 +36,8 @@ import eu.finwest.web.UserMgmtFacade;
  */
 public class UserController extends ModelDrivenController {
 	private static final Logger log = Logger.getLogger(UserController.class.getName());
+	
+	public static final String EMAIL_AUTHENTICATION_COOKIE = "AUTHENTICATION_COOKIE";
 
 	private Object model = null;
 
@@ -61,6 +66,16 @@ public class UserController extends ModelDrivenController {
 				return confirmEmailUpdate(request);
 			} else if("request_email_access".equalsIgnoreCase(getCommand(1))) {
 				return requestEmailAccess(request);
+			} else if("activate".equalsIgnoreCase(getCommand(1))) {
+				return activate(request);
+			} else if("request_reset_password".equalsIgnoreCase(getCommand(1))) {
+				return requestResetPassword(request);
+			} else if("reset_password".equalsIgnoreCase(getCommand(1))) {
+				return resetPassword(request);
+			} else if("not_valid_request_reset_password".equalsIgnoreCase(getCommand(1))) {
+				return notValidRequestResetPassword(request);
+			} else if("logout".equalsIgnoreCase(getCommand(1))) {
+				return logout(request);
 			} else {
 				return index(request);
 			}
@@ -69,8 +84,6 @@ public class UserController extends ModelDrivenController {
 				return update(request);
 			} else if("autosave".equalsIgnoreCase(getCommand(1))) {
 				return autoSave(request);
-			} else if("activate".equalsIgnoreCase(getCommand(1))) {
-				return activate(request);
 			} else if("deactivate".equalsIgnoreCase(getCommand(1))) {
 				return deactivate(request);
 			} else if ("create".equalsIgnoreCase(getCommand(1))) {
@@ -87,11 +100,110 @@ public class UserController extends ModelDrivenController {
 				return requestDragon(request);
 			} else if("store_campaign".equalsIgnoreCase(getCommand(1))) {
 				return storeCampaign(request);
+			} else if("register".equalsIgnoreCase(getCommand(1))) {
+				return register(request);
+			} else if("authenticate".equalsIgnoreCase(getCommand(1))) {
+				return authenticateByEmail(request);
 			}
 		}
 		return null;
 	}
 	
+	private HttpHeaders register(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("register");
+		
+		log.log(Level.INFO, "Parameters: " + request.getParameterMap());
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		String name = request.getParameter("name");
+		String location = request.getParameter("location");
+		if (!StringUtils.isEmpty(email) && !StringUtils.isEmpty(password)) {
+			model = UserMgmtFacade.instance().createUser(email, password, name, location, false);
+		} else {
+			log.log(Level.WARNING, "Parameters 'email' and 'password' are mandatory!");
+			headers.setStatus(500);
+		}
+
+		return headers;
+	}
+
+	private HttpHeaders activate(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("activate");
+    	String activationCode = getCommandOrParameter(request, 2, "code");
+		if (!StringUtils.isEmpty(activationCode)) {
+			model = UserMgmtFacade.instance().activateUser(activationCode);
+			headers.setRedirectUrl(request.getContextPath() + "/");
+		} else {
+			log.log(Level.WARNING, "Parameter 'code' is mandatory!");
+			headers.setStatus(500);
+		}
+
+		return headers;
+	}
+
+	private HttpHeaders deactivate(HttpServletRequest request) {
+    	String userId = getCommandOrParameter(request, 2, "id");
+    	if (userId == null) {
+    		userId = getLoggedInUser().getId();
+    	}
+    	model = UserMgmtFacade.instance().deactivateUser(getLoggedInUser(), userId);
+
+		HttpHeaders headers = new HttpHeadersImpl("deactivate");
+		return headers;
+	}
+
+
+	private HttpHeaders authenticateByEmail(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("authenticate");
+		if (getLoggedInUser() != null) {
+			log.warning("User already logged in, cannot login again using email: " + getCommandOrParameter(request, 2, "email"));
+			headers.setStatus(500);
+			return headers;
+		}
+		
+    	String email = getCommandOrParameter(request, 2, "email");
+    	String password = getCommandOrParameter(request, 3, "password");
+    	
+    	if (StringUtils.isNotBlank(email) && StringUtils.isNotBlank(password)) {
+    		Cookie authCookie = EmailAuthHelper.authorizeUser(request, email, password);
+			if (authCookie != null) {
+				headers.addCookie(authCookie);
+				headers.setRedirectUrl(request.getContextPath() + "/");
+			} else {
+				headers.setRedirectUrl(request.getContextPath() + "/login_error.html");
+			}
+		} else {
+			log.log(Level.WARNING, "Parameters 'email' and 'password' are mandatory!");
+			headers.setStatus(500);
+		}
+		return headers;
+	}
+	
+	private HttpHeaders logout(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("logout");
+		if (getLoggedInUser() != null) {
+			Cookie authCookie = EmailAuthHelper.logoutUser(request);
+			headers.addCookie(authCookie);
+			headers.setRedirectUrl(request.getContextPath() + "/");
+		}
+		return headers;
+	}
+
+	private HttpHeaders notValidRequestResetPassword(HttpServletRequest request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private HttpHeaders resetPassword(HttpServletRequest request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private HttpHeaders requestResetPassword(HttpServletRequest request) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	private HttpHeaders delete(HttpServletRequest request) {
 		HttpHeaders headers = new HttpHeadersImpl("delete");
 		log.log(Level.WARNING, "Deleting user is not supported! User can be only deactivated.");
@@ -223,29 +335,6 @@ public class UserController extends ModelDrivenController {
     	String userId = getCommandOrParameter(request, 1, "id");
     	model = UserMgmtFacade.instance().getUser(getLoggedInUser(), userId);
         return new HttpHeadersImpl("index").disableCaching();
-	}
-
-	private HttpHeaders activate(HttpServletRequest request) {
-    	String userId = getCommandOrParameter(request, 2, "id");
-    	if (userId == null) {
-    		userId = getLoggedInUser().getId();
-    	}
-    	String activationCode = getCommandOrParameter(request, 3, "code");
-        model = UserMgmtFacade.instance().activateUser(userId, activationCode);
-
-    	HttpHeaders headers = new HttpHeadersImpl("activate");
-		return headers;
-	}
-
-	private HttpHeaders deactivate(HttpServletRequest request) {
-    	String userId = getCommandOrParameter(request, 2, "id");
-    	if (userId == null) {
-    		userId = getLoggedInUser().getId();
-    	}
-    	model = UserMgmtFacade.instance().deactivateUser(getLoggedInUser(), userId);
-
-		HttpHeaders headers = new HttpHeadersImpl("deactivate");
-		return headers;
 	}
 
 	private HttpHeaders checkUserName(HttpServletRequest request) {

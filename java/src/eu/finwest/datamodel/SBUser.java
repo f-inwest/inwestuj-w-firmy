@@ -4,6 +4,7 @@
  */
 package eu.finwest.datamodel;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Random;
 
@@ -24,7 +25,9 @@ import com.googlecode.objectify.condition.IfNotNull;
 @Unindexed
 @Entity
 @Cached(expirationSeconds=60*60*2)
-public class SBUser extends BaseObject<SBUser> {
+public class SBUser extends BaseObject<SBUser> implements Serializable {
+	private static final long serialVersionUID = 9734525662546L;
+
 	public enum Status {CREATED, ACTIVE, DEACTIVATED};
 	public Key<SBUser> getKey() {
 		return new Key<SBUser>(SBUser.class, id);

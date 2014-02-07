@@ -32,6 +32,7 @@ import eu.finwest.datamodel.Notification;
 import eu.finwest.datamodel.PrivateMessageUser;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.VoToModelConverter;
+import eu.finwest.util.EmailAuthHelper;
 import eu.finwest.util.TwitterHelper;
 import eu.finwest.vo.BidListVO;
 import eu.finwest.vo.BidUserListVO;
@@ -83,9 +84,27 @@ public class HelloServlet extends HttpServlet {
 
 		PrintWriter out = resp.getWriter();
 		try {
-			out.println("<html><head><title>InwestujWFirmy  test page</title></head><body>");
+			out.println("<html><head><title><b>Inwestuj w Firmy</b> test page</title></head><body>");
+            
+			out.println("<h1>Email login API</h1>");
+			out.println("<form method=\"POST\" action=\"/user/register.html\">"
+					+ "<input name=\"email\" type=\"text\" value=\"test1@inwestujwfirmy.pl\"/>"
+					+ "<input name=\"password\" type=\"password\" value=\"abcdef12\"/>"
+					+ "<input type=\"submit\" value=\"Register user\"/></form><br/>");
+			out.println("<form method=\"GET\" action=\"/user/activate.html\">"
+					+ "<input name=\"code\" type=\"text\" value=\"code here ...\"/>"
+					+ "<input type=\"submit\" value=\"Activate user\"/></form><br/>");
+			if (EmailAuthHelper.getUser(req) != null) {
+				out.println("<form method=\"GET\" action=\"/user/logout.html\">"
+					+ "<input type=\"submit\" value=\"Logout\"/></form><br/>");
+			} else {
+				out.println("<form method=\"POST\" action=\"/user/authenticate.html\">"
+					+ "<input name=\"email\" type=\"text\" value=\"test1@inwestujwfirmy.pl\"/>"
+					+ "<input name=\"password\" type=\"password\" value=\"abcdef12\"/>"
+					+ "<input type=\"submit\" value=\"Login\"/></form><br/>");
+			}
+
 			if (user == null && twitterUser == null) {
-				out.println("<p>User need to be logged in!</p>");
 				return;
 			}
 
@@ -133,11 +152,15 @@ public class HelloServlet extends HttpServlet {
 			out.println("<form method=\"POST\" action=\"/user/request_dragon/.json\"><input type=\"submit\" value=\"Request Dragon badge for " + currentUser.getEmail() + "\"/></form>");
 			out.println("<form method=\"POST\" action=\"/user/promote_to_dragon/.json\"><textarea name=\"id\" rows=\"1\" cols=\"50\">"
 					+ currentUser.getId() + "</textarea><input type=\"submit\" value=\"Promote user to Dragon\"/></form>");
-			
+
+			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Campaigns API:</p>");
+			out.println("All campaigns:<br/>");
+			for (Campaign camp : datastore.getAllCampaigns()) {
+				out.println("" + camp.subdomain + " (" + camp.name + ") owned by " + camp.creatorName + "active from " + fmt.print(camp.activeFrom.getTime()) + " to " + fmt.print(camp.activeTo.getTime()) + "</br>");
+			}
+			out.println("</br>User campaigns:<br/>");
 			for (Campaign camp : datastore.getUserCampaigns(currentUser.toKeyId(), new ListPropertiesVO(10))) {
-				out.println("<p style=\"background: none repeat scroll 0% 0% rgb(220, 220, 220);\">");
 				out.println("" + camp.subdomain + " (" + camp.name + ") active from " + fmt.print(camp.activeFrom.getTime()) + " to " + fmt.print(camp.activeTo.getTime()));
-				out.println("</p>");
 				out.println("<form method=\"POST\" action=\"/user/store_campaign/.json\"><textarea name=\"campaign\" rows=\"3\" cols=\"120\">"
 							+ "{\"subdomain\":\"" + camp.subdomain + "\", \"name\":\"" + camp.name + "\", \"description\":\"" + camp.description
 							+ "\", \"comment\":\"" + camp.comment

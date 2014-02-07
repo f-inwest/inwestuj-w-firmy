@@ -139,6 +139,15 @@ public class UserMgmtFacade {
 		applyUserStatistics(user, user);
 		return user;
 	}
+	
+	public UserVO getLoggedInUser(SBUser userDTO) {
+		if (userDTO == null) {
+			return null;
+		}		
+		UserVO user = DtoToVoConverter.convert(userDTO);
+		applyUserStatistics(user, user);
+		return user;
+	}
 
 	public UserVO requestEmailUpdate(twitter4j.User twitterUser, String email) {
 		if (twitterUser == null) {
@@ -393,15 +402,33 @@ public class UserMgmtFacade {
 			log.warning("Password is too short: " + password.length());
 			return false;
 		}
-		if (name == null || name.contains(password)) {
+		if (email.contains(password)) {
+			log.warning("Password is part of email: " + email);
+			return false;
+		}
+		if (name != null && name.contains(password)) {
 			log.warning("Password is part of name: " + name);
+			return false;
+		}
+		int digits = 0;
+		int letters = 0;
+		for (int i = 0; i < password.length(); i++) {
+			if (StringUtils.isAlpha("" + password.charAt(i))) {
+				letters++;
+			}
+			if (StringUtils.isNumeric("" + password.charAt(i))) {
+				digits++;
+			}
+		}
+		if (digits < 2 || letters < 2) {
+			log.warning("Password must have at least 2 digits (" + digits + ") and 2 letters (" + letters + ")");
 			return false;
 		}
 		return true;
 	}
 	
 	private boolean validateName(String name) {
-		if (name == null || name.length() < 6) {
+		if (name != null && name.length() < 6) {
 			log.warning("Name is too short: " + name);
 			return false;
 		}
@@ -423,8 +450,29 @@ public class UserMgmtFacade {
 		}
 		String authCookie = encryptPassword(encryptedPassword + new Date().getTime());
 		
-		user = DtoToVoConverter.convert(getDAO().createUser(email, encryptedPassword, authCookie, name, location, investor));
+		SBUser userDAO = getDAO().registerUser(email, encryptedPassword, authCookie, name, location, investor);
+		log.warning("************************************************");
+		log.warning("************* EMAIL NEEDS TO BE SEND ***********");
+		log.warning("************* cofirmation code: " + userDAO.activationCode);
+		log.warning("************************************************");
+		
+		user = DtoToVoConverter.convert(userDAO);
 		applyUserStatistics(user, user);
+		return user;
+	}
+	
+	public SBUser authenticateUser(String email, String password) {
+		SBUser user = getDAO().getUserByEmail(email);
+		if (user == null) {
+			return null;
+		}
+		if (!StringUtils.equals(user.password, encryptPassword(password))) {
+			log.warning("Not valid password for user: " + user.email);
+			return null;
+		}
+		if (StringUtils.isEmpty(user.authCookie)) {
+			user.authCookie = encryptPassword(user.password + new Date().getTime());
+		}
 		return user;
 	}
 
@@ -679,8 +727,8 @@ public class UserMgmtFacade {
 		}
 	}
 	
-	public UserVO activateUser(String userId, String activationCode) {
-		UserVO user = DtoToVoConverter.convert(getDAO().activateUser(BaseVO.toKeyId(userId), activationCode));
+	public UserVO activateUser(String activationCode) {
+		UserVO user = DtoToVoConverter.convert(getDAO().activateUser(activationCode));
 		if (user != null) {
 			applyUserStatistics(user);
 		}

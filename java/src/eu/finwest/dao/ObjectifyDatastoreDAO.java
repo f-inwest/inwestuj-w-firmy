@@ -187,7 +187,7 @@ public class ObjectifyDatastoreDAO {
 		return user;
 	}
 
-	public SBUser createUser(String email, String password, String authCookie, String name, String location, boolean investor) {
+	public SBUser registerUser(String email, String password, String authCookie, String name, String location, boolean investor) {
         String userEmail = StringUtils.isNotEmpty(email) ? email : "anonymous" + String.valueOf(new Random().nextInt(1000000000)) + "@inwestujwfirmy.pl";
         SBUser user = getUserByEmail(email);
         if (user != null) {
@@ -211,7 +211,7 @@ public class ObjectifyDatastoreDAO {
 		user.investor = investor;
         user.modified = user.lastLoggedIn = user.joined = new Date();
 		user.status = SBUser.Status.CREATED;
-		user.activationCode = "" + email.hashCode() + user.joined.hashCode();
+		user.activationCode = "" + (email + user.joined.toString()).hashCode();
 		getOfy().put(user);
         log.info("Created user with defaulted nickname " + user.nickname + " as " + user);
 		return user;
@@ -1058,22 +1058,21 @@ public class ObjectifyDatastoreDAO {
 		return notOwnerOfListing && notVotedForListing;
 	}
 */
-	public SBUser activateUser(long userId, String activationCode) {
+	public SBUser activateUser(String activationCode) {
 		try {
-			SBUser user = getOfy().get(SBUser.class, userId);
+			SBUser user = getOfy().query(SBUser.class).filter("activationCode =", activationCode).get();
+			if (user == null) {
+				return null;
+			}
 			if (user.status == SBUser.Status.ACTIVE) {
 				// for already activated users don't do anything
 				return user;
 			}
-			if (StringUtils.equals(user.activationCode, activationCode)) {
-				user.status = SBUser.Status.ACTIVE;
-				getOfy().put(user);
-				return user;
-			} else {
-				return null;
-			}
+			user.status = SBUser.Status.ACTIVE;
+			getOfy().put(user);
+			return user;
 		} catch (Exception e) {
-			log.log(Level.WARNING, "User with id '" + userId + "' not found!");
+			log.log(Level.WARNING, "User with activationCode '" + activationCode + "' not found!", e);
 			return null;
 		}
 	}
@@ -1082,6 +1081,7 @@ public class ObjectifyDatastoreDAO {
 		try {
 			SBUser user = getOfy().get(SBUser.class, userId);
 			user.status = SBUser.Status.DEACTIVATED;
+			user.activationCode = null;
 			getOfy().put(user);
 			return user;
 		} catch (Exception e) {
@@ -1479,6 +1479,10 @@ public class ObjectifyDatastoreDAO {
         log.info("Campaign for subdomain " + subdomain + " is " + campaign);
         return campaign;
     }
+
+	public List<Campaign> getAllCampaigns() {
+		return getOfy().query(Campaign.class).order("-created").list();
+	}
 
 	public List<Campaign> getUserCampaigns(long userId, ListPropertiesVO listingProperties) {
 		log.info("Fetching campaigns for user " + userId + " (maxResults=" + listingProperties.getMaxResults() + ")");
