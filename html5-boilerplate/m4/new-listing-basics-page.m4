@@ -11,6 +11,15 @@ include(head.m4)
 include(header.m4)
 include(company-not-found.m4)
 `
+<div class="banner genericbanner">
+    <div class="container">
+        <span class="bannertext span-24">
+            <div class="welcometitle">@lang_wizard_title@</div>
+            <div class="welcometext">@lang_innovatorsmessage_plain@</div>
+        </span>
+    </div>
+</div>
+
 <div class="container preloader">
     <div class="preloaderfloater"></div>
     <div class="preloadericon"></div>
@@ -27,38 +36,34 @@ include(company-not-found.m4)
 <!-- left column -->
 <div class="span-16">
 
-    <div class="bannertextsmall" id="newlistingbanner">NEW LISTING WIZARD</div>
-
     <div class="boxtitle basicstitle">
-        <span class="titletext">MANDATORY INFO</span>
+        <span class="titletext">@lang_project_information@</span>
         <div class="titleinfobtn"></div>
         <div class="titleinfo">
-            <label class="titleinfoheader">Instructions</label>
-            <p> List your product or company here on inwestuj-w-firmy and submit a funding
-            request to your choice of investors.  Inwestuj w Firmy will review the listing and
-            suggest any changes before approving.</p>
-            <p>NOTE THAT YOU MUST BE THE OWNER OR AN AUTHORIZED AGENT OF THE PRODUCT OR BUSINESS TO ASK FOR FUNDING ON THIS SITE.</p>
+            <label class="titleinfoheader">@lang_instructions@</label>
+            <p>@lang_instructions_desc@</p>
+            <p>@lang_instructions_warn@</p>
         </div>
         <span class="bmctitlemsg" id="newlistingbasicsmsg"></span>
     </div>
 
     <div class="boxpanel newlistingpanel">
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="title">NAME</label>
+            <label class="inputlabel inputlabel-name" for="title">@lang_name@</label>
             <span class="inputfield">
                 <input class="text inputwidetext" type="text" name="title" id="title" value=""></input>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Name</label>
+                <label class="sideinfoheader">@lang_name@</label>
                 <br />
-                A short name for your product or company.  If a company, it should be the legal name of the company.
+                @lang_project_name_desc@
             </p>
             <span class="inputicon">
                 <div id="titleicon"></div>
             </span>
         </div>
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="type">TYPE</label>
+            <label class="inputlabel" for="type">@lang_type@</label>
             <span class="inputfield">
                 <select id="type" class="text inputwidetext categoryselect">
                     <option value="application">Application</option>
@@ -66,31 +71,30 @@ include(company-not-found.m4)
                 </select>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Type</label>
+                <label class="sideinfoheader">@lang_type@</label>
                 <br />
-                The type of listing, either "Application" for mobile, tablet, or desktop software applications, or "Company" for startup companies.
+                @lang_type_desc@
             </p>
             <span class="inputicon">
                 <div id="typeicon"></div>
             </span>
         </div>
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="platform">PLATFORM</label>
+            <label class="inputlabel" for="platform">@lang_platform@</label>
             <span class="inputfield">
                 <select id="platform" class="text inputwidetext categoryselect">
-                    <option value="ios">iOS</option>
-                    <option value="android">Android</option>
-                    <option value="windows_phone">Windows Phone</option>
-                    <option value="desktop">Desktop</option>
-                    <option value="website">Website</option>
-                    <option value="other" selected="selected">Other</option>
+                    <option value="ios">@lang_ios@</option>
+                    <option value="android">@lang_android@</option>
+                    <option value="windows_phone">@lang_windows_phone@</option>
+                    <option value="desktop">@lang_desktop@</option>
+                    <option value="website">@lang_web@</option>
+                    <option value="other" selected="selected">@lang_other@</option>
                 </select>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Platform</label>
+                <label class="sideinfoheader">@lang_platform@</label>
                 <br />
-                The platform your application supports.  If you support multiple platforms, list your primary platform, and create another listing for your additional platform.
-                If you are not listing an application company, leave this as Other.
+                @lang_platform_desc@
             </p>
             <span class="inputicon">
                 <div id="platformicon"></div>
@@ -98,15 +102,15 @@ include(company-not-found.m4)
         </div>
 
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="category">CATEGORY</label>
+            <label class="inputlabel" for="category">@lang_category@</label>
             <span class="inputfield">
                 <select id="category" class="text inputwidetext categoryselect">
                 </select>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Category</label>
+                <label class="sideinfoheader">@lang_category@</label>
                 <br />
-                The industry classification of your product or company, drawn from a list of common angel and venture investment categories.
+                @lang_project_category_desc@
             </p>
             <span class="inputicon">
                 <div id="categoryicon"></div>
@@ -114,20 +118,18 @@ include(company-not-found.m4)
         </div>
 
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="stage">STAGE</label>
+            <label class="inputlabel" for="stage">@lang_project_stage@</label>
             <span class="inputfield">
                 <select id="stage" class="text inputwidetext categoryselect">
-                    <option value="concept">Concept</option>
-                    <option value="startup" selected="selected">Startup</option>
-                    <option value="established">Established</option>
+                    <option value="concept">@lang_concept@</option>
+                    <option value="startup" selected="selected">@lang_startup@</option>
+                    <option value="established">@lang_established@</option>
                 </select>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Stage</label>
+                <label class="sideinfoheader">@lang_project_stage@</label>
                 <br />
-                What stage is your company or application at?  If you still don&rsquo;t have any revenue or product, it&rsquo;s at the "concept" stage.
-                If you have a company or application that has been launched but is still quite new and may not yet be profitable, you are at the "startup" stage.
-                If your company or application has been released, is earning a profit or breaking even, and has been around for awhile, you are "established".
+                @lang_project_stage_desc@
             </p>
             <span class="inputicon">
                 <div id="stageicon"></div>
@@ -150,38 +152,28 @@ include(company-not-found.m4)
         </div>
 -->
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="mantra">MANTRA</label>
+            <label class="inputlabel inputlabel-mantra" for="mantra">@lang_mantra@</label>
             <span class="inputfield">
                 <textarea class="inputtextareatwoline inputwidetext" cols="20" rows="5" name="mantra" id="mantra" maxlength="140"></textarea>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Mantra</label>
+                <label class="sideinfoheader">@lang_mantra@</label>
                 <br />
-                A tagline for your product or company, a single phrase or sentence, up to 140 characters.  Make it short but descriptive.
+                @lang_mantra_desc@
             </p>
             <span class="inputicon">
                 <div id="mantraicon"></div>
             </span>
         </div>
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="summary">SUMMARY</label>
+            <label class="inputlabel inputlabel-summary" for="summary">@lang_summary@</label>
             <span class="inputfield">
                 <textarea class="inputtextareatwoline inputwidetext inputelevatorpitch" cols="20" rows="5" name="summary" id="summary" maxlength="2000"></textarea>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Summary</label>
+                <label class="sideinfoheader">@lang_summary@</label>
                 <br />
-
-A short summary of your application or company between 30 and 60 seconds in
-length.  Also known as the "elevator pitch", being between 50 and 100 words read
-at presentation speed, or between 200 and 500 characters.
-Make it compelling and enthusiastic, but
-without flashy openers, which turn off experienced investors.  Make each
-sentence unique and engaging.  Tailor the pitch to the audience in easily
-understood language without jargon, as this is a sure way to loose interest.
-Stick to facts without broad exaggerations, instilling credibility into you and
-your message.
-
+                @lang_summary_desc@
             </p>
             <span class="inputicon">
                 <div id="summaryicon"></div>
@@ -191,21 +183,28 @@ your message.
         </div>
     </div>
 
+    <div class="boxtitle basicstitle">
+        <span class="titletext">@lang_logo_title@</span>
+        <div class="titleinfobtn"></div>
+        <div class="titleinfo">
+            <label class="titleinfoheader">@lang_logo_title@</label>
+            <p>@lang_logo_desc@</p>
+        </div>
+    </div>
+
    <div class="boxpanel logopanel">
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="address">LOGO</label>
+            <label class="inputlabel" for="address">@lang_logo@</label>
             <span class="inputfield">
                 <div class="tileimg noimage" id="logoimg"></div>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Logo</label>
-Your logo is often the first thing people will see about your product.
-Make sure it is professional and eye-catching.  If you do not have the budget or expertise
-for a professional logo, just make something simple with text.
+                <label class="sideinfoheader">@lang_logo_title@</label>
                 <br />
+                @lang_logo_desc@
             </p>
             <span class="inputicon">
-                <div id="locationicon"></div>
+                <div id="logoicon"></div>
             </span>
         </div>
         <div class="formitem sideinfoitem clear">
@@ -216,16 +215,25 @@ for a professional logo, just make something simple with text.
 include(images-panel-editable.m4)
 `
 
-    <div class="boxpanel newlistingpanel">
+    <div class="boxtitle basicstitle">
+        <span class="titletext">@lang_location_title@</span>
+        <div class="titleinfobtn"></div>
+        <div class="titleinfo">
+            <label class="titleinfoheader">@lang_location_title@</label>
+            <p>@lang_location_desc@</p>
+        </div>
+        <span class="bmctitlemsg" id="newlistingbasicsmsg"></span>
+    </div>
+    <div class="boxpanel newlistingpanel newlistingpanel-location">
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="address">LOCATION</label>
+            <label class="inputlabel inputlabel-location" for="address">@lang_location@</label>
             <span class="inputfield">
                 <input class="text inputwidetext" type="text" name="address" id="address" value=""></input>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Location</label>
+                <label class="sideinfoheader">@lang_location@</label>
                 <br />
-                The full physical address of your company or where you are developing this product, e.g. 1 Infinite Loop, Cupertino, CA, USA.
+                @lang_project_location_desc@
             </p>
             <span class="inputicon">
                 <div id="locationicon"></div>
@@ -244,36 +252,36 @@ include(images-panel-editable.m4)
 <!-- right column -->
 <div class="span-8 last">
 
-    <div class="sidebox inputbutton previewbutton toppreviewbutton">PREVIEW &gt;&gt;</div>
+    <div class="sidebox inputbutton previewbutton toppreviewbutton">@lang_preview@ &gt;&gt;</div>
 
     <a href="/new-listing-financials-page.html">
-        <div class="sidebox investbutton" id="askfundingbutton">ASK FOR FUNDING</div>
+        <div class="sidebox investbutton" id="askfundingbutton">@lang_ask_for_funding@</div>
     </a>
 
     <a href="/new-listing-media-page.html">
-        <div class="sidebox investbutton" id="videobutton">ADD VIDEO</div>
+        <div class="sidebox investbutton" id="videobutton">@lang_add_video@</div>
     </a>
 
     <a href="/new-listing-valuation-page.html">
-        <div class="sidebox investbutton" id="valuationbutton">ADD VALUATION</div>
+        <div class="sidebox investbutton" id="valuationbutton">@lang_add_valuation@</div>
     </a>
 
     <a href="/new-listing-bmc-page.html">
-        <div class="sidebox investbutton" id="modelbutton">ADD MODEL</div>
+        <div class="sidebox investbutton" id="modelbutton">@lang_add_model@</div>
     </a>
 
     <a href="/new-listing-qa-page.html">
-        <div class="sidebox investbutton" id="presentationbutton">PRESENTATION</div>
+        <div class="sidebox investbutton" id="presentationbutton">@lang_add_presentation@</div>
     </a>
 
     <a href="/new-listing-documents-page.html">
-        <div class="sidebox investbutton" id="documentbutton">ADD DOCUMENT</div>
+        <div class="sidebox investbutton" id="documentbutton">@lang_add_document@</div>
     </a>
 
-    <div class="boxtitle boxtitleside clear">UPLOAD LOGO</span></div>
-    <div class="uploadbox">
+    <div class="boxtitle boxtitleside clear boxtitleside-logo">@lang_upload_logo@</span></div>
+    <div class="uploadbox uploadbox-logo">
         <div class="formitem">
-            <span class="uploadinfo">Enter an image URL and press enter or upload a local file</span>
+            <span class="uploadinfo">@lang_upload_desc@</span>
         </div>
         <div class="formitem clear">
             <span class="inputfield">
@@ -292,14 +300,14 @@ include(images-panel-editable.m4)
             </span>
         </div>
         <div class="formitem clear">
-            <span class="uploadinfo" id="logomsg">146x146 JPG, PNG or GIF, autosized</span>
+            <span class="uploadinfo" id="logomsg">@lang_upload_logo_short_desc@</span>
         </div>
     </div>
 
-    <div class="boxtitle boxtitleside clear">UPLOAD IMAGE <span id="picnum">1</span></div>
+    <div class="boxtitle boxtitleside clear">@lang_upload_image@ <span id="picnum">1</span></div>
     <div class="uploadbox">
         <div class="formitem">
-            <span class="uploadinfo">Enter an image URL and press enter or upload a local file</span>
+            <span class="uploadinfo">@lang_upload_desc@</span>
         </div>
         <div class="formitem clear">
             <span class="inputfield">
@@ -318,10 +326,11 @@ include(images-panel-editable.m4)
             </span>
         </div>
         <div class="formitem clear">
-            <span class="uploadinfo" id="picmsg">622x452 JPG, PNG or GIF, autosized</span>
+            <span class="uploadinfo" id="picmsg">@lang_upload_image_short_desc@</span>
         </div>
     </div>
 
+    <div class="boxtitle boxtitleside clear boxtitleside-location">@lang_map@</span></div>
     <div class="sidebox mapsidebox">
         <span class="inputmap" id="addressmap"></span>
     </div>

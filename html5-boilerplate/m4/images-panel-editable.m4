@@ -1,21 +1,11 @@
 `
 <div class="boxtitle">
-    <span class="titletext">IMAGES</span>
+    <span class="titletext">@lang_project_images@</span>
     <div class="titleinfobtn"></div>
     <div class="titleinfo">
-        <label class="titleinfoheader">Instructions</label>
-        <p>
-Your product images are your first and best way of capturing investor interest.
-Make sure they are professional and eye-catching. Upload product
-images, screenshots, store photographs or anything visual regarding your product or service.
-        </p>
-        <p>
-Upload up to five product images and they will be displayed as a slideshow
-on your main listing page.  Each image must be a maximum of 622px by 452px in
-jpg, png or gif format, if larger it will be resized with aspect ratio being
-preserved.  All images are transformed into jpg and stored on inwestuj-w-firmy
-infrastructure.
-        </p>
+        <label class="titleinfoheader">@lang_project_images_title@</label>
+        <p>@lang_project_images_desc_1@</p>
+        <p>@lang_project_images_desc_2@</p>
     </div>
     <div class="dotnavcontainer">
         <div class="dotnavwrapper dotnaveditable">
@@ -26,7 +16,7 @@ infrastructure.
             <ul id="pic5nav" class="dotnav"><li></li></ul>
         </div>
     </div>
-    <div class="span-3 smallinputbutton deleteimagebutton initialhidden" id="deleteimagebutton">DELETE</div>
+    <div class="span-3 smallinputbutton deleteimagebutton initialhidden" id="deleteimagebutton">@lang_delete@</div>
 </div>
 <div class="boxpanel imagespaneleditable">
     <div class="piccontainer">
