@@ -4,7 +4,7 @@
 
     <div class="boxtitle boxtitleside profilerightbartitle">
         <span class="titleyour">@lang_your_profile@</span>
-        <span class="titleuser">@lang_profile@ <span class="titleusername"></span></span>
+        <span class="titleuser">@lang_profile@</span>
     </div>
     <div class="sidebox profilebox">
         <div class="profileavatar" id="avatar"></div>

@@ -1443,7 +1443,7 @@ transition: height 300ms;
 .sideboxdesc { color: #444; margin-bottom: 0px; }
 .sideboxicon { width: 32px; margin-right: 10px; float: left; }
 .notifyline { clear: both; padding: 5px; overflow: auto; }
-.notifyline:nth-child(2n+1) { background: #e8e8e8; }
+/* .notifyline:nth-child(2n+1) { background: #e8e8e8; } */
 .notifytext { float: left; font-weight: normal; padding-top: 5px; }
 .notifydate { float: right; font-size: 12px; padding-top: 2px; color: gray; margin-right: 10px; }
 .messageline { clear: both; padding: 5px 5px 15px 5px; overflow: auto; position: relative; min-height: 50px; }
@@ -2282,7 +2282,7 @@ color: #fff;
     margin: auto auto 80px auto;
 }
 .messageline:hover {
-    background: #ccc;
+    background: rgba(0,0,255,0.1);
     color: #fff;
 }
 .profilelist p {
@@ -2297,6 +2297,7 @@ color: #fff;
     position: relative;
 }
 .profilerightbartitle {
+    margin-top: 0;
 }
 .editprofilebtn {
     position: absolute;

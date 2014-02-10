@@ -617,22 +617,22 @@ pl.implement(ProfileListClass, {
                 ? '<span class="profilelistemail">' + listitem.email+ '</span>'
                 : '',
            	statustext =  listitem.status && listitem.status !== 'active'
-                ? '<span class="profileliststatus">' + listitem.status + '</span>'
+                ? '<span class="profileliststatus">@lang_inactive@</span>'
                 : '',
-			admintext =  listitem.admin ? '<span class="profilelistadmin">ADMIN</span>' : '',
+			admintext =  listitem.admin ? '<span class="profilelistadmin">@lang_admin@</span>' : '',
 			userclasstext =  listitem.user_class && this.type !== 'dragons'
                 ? '<span class="profilelistuserclass">' + ProfileUserClass.prototype.format(listitem.user_class) + '</span>'
                 : '',
             nametext = listitem.name
-                ? 'Name:<span class="profilelistlastlogin">'
+                ? '@lang_name@:<span class="profilelistlastlogin">'
                     + SafeStringClass.prototype.htmlEntities(listitem.name) + '</span></br>'
                 : '',
             locationtext = listitem.location
-                ? 'Name:<span class="profilelistlastlogin">'
+                ? '@lang_location@:<span class="profilelistlastlogin">'
                     + SafeStringClass.prototype.htmlEntities(listitem.location) + '</span></br>'
                 : '',
             lastlogintext = listitem.last_login
-                ? 'Last Login:<span class="profilelistlastlogin">'
+                ? '@lang_last_login@:<span class="profilelistlastlogin">'
                     + DateClass.prototype.format(listitem.last_login) + '</span></br>'
                 : '',
 			pendingtext =  listitem.edited_listing
