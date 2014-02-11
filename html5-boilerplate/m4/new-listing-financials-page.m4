@@ -18,36 +18,35 @@ include(company-not-found.m4)
 <div class="container initialhidden wrapper">
 
 <!-- begin banner -->
-    <div class="bannertextsmall">CHOOSE THE FUNDING THAT&rsquo;S RIGHT FOR YOU</div>
+<div class="span-16">
+    <div class="boxtitle basicstitle">@lang_project_funding@</div>
+</div>
 
-    <div class="span-16">
-        <a href="#" class="backbuttonlink">
-            <span class="push-1 span-3 inputbutton backbutton">
-                &lt;&lt; BACK
-            </span>
-        </a>
-    </div>
+<div class="span-8 last">
+    <a href="#" class="backbuttonlink">
+        <span class="push-1 span-3 inputbutton backbutton" style="margin-bottom: 0;">
+                &lt;&lt; @lang_back@
+        </span>
+    </a>
+</div>
 
 <!-- end banner -->
 
-<div class="span-16 initialhidden" id="newlistingfinancialswrapper">
+<div class="span-24 initialhidden" id="newlistingfinancialswrapper">
 
-    <div class="boxtitle">
-        <span class="titletext">ASKING FOR FUNDING?</span>
+    <div class="boxtitle boxpanelfull">
+        <span class="titletext">@lang_funding_status@</span>
         <div class="titleinfobtn"></div>
         <div class="titleinfo">
-            <label class="titleinfoheader">Instructions</label>
+            <label class="titleinfoheader">@lang_instructions@</label>
             <p>
-            Tell investors how much money you want to raise and how much of the company or product you
-            want to offer for it.  Once your listing is approved, interested investors will
-            contact you to make an offer.  Alternatively, at your option, you may post your
-            listing without asking for any money.
+            @lang_ask_for_funding_desc@
             </p>
         </div>
     </div>
-    <div class="boxpanel">
+    <div class="boxpanel boxpanelfull">
         <div class="formitem clear firstinputitem">
-            <label class="inputlabel" for="asked_fund">ALLOW BIDS</label>
+            <label class="inputlabel valuation-allow-label" for="asked_fund">@lang_allow_bids@</label>
             <span class="inputcheckbox">
                 <div id="asked_fund"></div>
             </span>
@@ -55,22 +54,14 @@ include(company-not-found.m4)
         </div>
     </div>
 
-    <div class="offerwrapper offerwrapperdisplay" id="offerwrapper">
-    <div class="boxtitle offertitle">
-        <span class="titletext">THE OFFER</span>
+    <div class="offerwrapper offerwrapperdisplay boxpanelfull" id="offerwrapper">
+    <div class="boxtitle offertitle boxpanelfull">
+        <span class="titletext">@lang_funding_details@</span>
         <div class="titleinfobtn"></div>
         <div class="titleinfo">
-            <label class="titleinfoheader">The Offer</label>
+            <label class="titleinfoheader">@lang_instructions@</label>
             <p>
-            Tell investors how much money you want to raise and how much of the company or product you
-            want to offer for it.  The amount you want to raise is cash in US Dollars.  For a company,
-            the percentage offering is the percentage of common stock, fully-diluted post-money, you
-            are offering in exchange for the funding.  If you are listing a product, the percentage is
-            the tenancy in common of the application, including but not limited to all copyrights,
-            patents, trademarks, and trade secrets.
-            The valuation is calculated by dividing the funding amount by the percentage of the
-            company or product being offered.
-            Once your listing is approved, interested investors will contact you to make an offer.
+                @lang_funding_details_desc@
             </p>
         </div>
     </div>
@@ -78,7 +69,7 @@ include(company-not-found.m4)
     <div class="boxpanelfull offerpanel" id="offerpanel">
 
         <div class="formitem clear firstinputitem">
-            <label class="inputlabel" for="suggested_amt">ASKING</label>
+            <label class="inputlabel valuation-offer-label" for="suggested_amt">@lang_asking@</label>
             <span class="inputfield">
                 <div class="span-4 investbutton askingamtbtn">@lang_asking_amt_1@</div>
                 <div class="span-4 investbutton askingamtbtn">@lang_asking_amt_2@</div>
@@ -96,10 +87,9 @@ include(company-not-found.m4)
                 <input class="text askinginputtext" type="text" name="suggested_amt" id="suggested_amt" maxlength="8"></input>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Asking</label>
+                <label class="sideinfoheader">@lang_instructions@</label>
                 <br/>
-                The amount of money you want for investment, between $100 and $500,000 USD.  This is only a suggestion,
-                as the investor may make their own bid, which you may accept, reject, or counter.
+                @lang_asking_desc@
             </p>
             <span class="inputicon">
                 <div id="suggested_amticon"></div>
@@ -107,10 +97,9 @@ include(company-not-found.m4)
         </div>
 
         <div class="formitem clear">
-            <label class="inputlabel" for="suggested_pct">FOR</label>
+            <label class="inputlabel valuation-offer-label" for="suggested_pct">@lang_offer_for@</label>
             <span class="inputfield">
                 <div class="span-4 investbutton askingpctbtn">5%</div>
-                <div class="span-4 investbutton askingpctbtn">10%</div>
                 <div class="span-4 investbutton askingpctbtn">25%</div>
                 <div class="span-4 investbutton askingpctbtn">50%</div>
                 <div class="span-4 investbutton askingpctbtn">100%</div>
@@ -123,10 +112,9 @@ include(company-not-found.m4)
                 <input class="text askinginputtext" type="text" name="suggested_pct" id="suggested_pct" maxlength="3"></input>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">For</label>
+                <label class="sideinfoheader">@lang_instructions@</label>
                 <br/>
-                For a company, how much fully diluted post-money common equity you are offering, from 1% to 100%.
-                For product investments, the tenancy in common ownership interest in the application.
+                @lang_for_desc@
             </p>
             <span class="inputicon">
                 <div id="suggested_pcticon"></div>
@@ -134,18 +122,18 @@ include(company-not-found.m4)
         </div>
 
         <div class="formitem clear">
-            <span class="inputlabel">VALUATION</span>
+            <span class="inputlabel valuation-offer-label">@lang_valuation@</span>
             <span class="inputfield financialsvaluationfield">
                 <div class="financialsvaluationtext" id="suggested_val"></div>
             </span>
-            This is the valuation implied by your offer.  This is the asking price divided by the percentage being offered.
+            <div class="valuation-offer-desc">@lang_newbid_val_desc@</div>
         </div>
 
         <div class="formitem clear">
             <span class="inputlabel">&nbsp;</span>
             <span class="inputfield">
                 <a href="/new-listing-valuation-page.html">
-                    <div class="span-8 investbutton">VALUATION HELP</div>
+                    <div class="span-8 investbutton">@lang_valuation_help@</div>
                 </a>
             </span>
         </div>

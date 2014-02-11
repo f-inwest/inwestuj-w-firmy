@@ -170,7 +170,7 @@ pl.implement(NewListingBaseClass, {
             displayName = field.fieldBase.getDisplayName();
             if (validmsg !== 0) {
                 validmsgs.push(displayName + ': ' + validmsg);
-            }
+             }
         }
         return validmsgs;
     },

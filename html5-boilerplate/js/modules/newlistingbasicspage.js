@@ -37,7 +37,7 @@ pl.implement(NewListingBasicsClass, {
             },
             ajax = new AjaxClass(url, 'newlistingmsg', complete, null, null, error);
         if (data) {
-            pl('#newlistingbanner').text('IMPORTED FROM ' + displayImportType.toUpperCase());
+            pl('#newlistingbanner').text('@lang_imported_from@ ' + displayImportType.toUpperCase());
             ajax.ajaxOpts.data = data;
         }
         ajax.setPost();
@@ -84,37 +84,37 @@ pl.implement(NewListingBasicsClass, {
 
     displayAskFundingButton: function() {
         if (this.base.listing.asked_fund) {
-            pl('#askfundingbutton').text('EDIT FUNDING');
+            pl('#askfundingbutton').text('@lang_edit_funding@');
         }
     },
 
     displayVideoButton: function() {
         if (this.base.listing.video) {
-            pl('#videobutton').text('EDIT VIDEO');
+            pl('#videobutton').text('@lang_edit_video@');
         }
     },
 
     displayValuationButton: function() {
         if (MicroListingClass.prototype.getHasValuation(this.base.listing)) {
-            pl('#valuationbutton').text('EDIT VALUATION');
+            pl('#valuationbutton').text('@lang_edit_valuation@');
         }
     },
 
     displayModelButton: function() {
         if (MicroListingClass.prototype.getHasBmc(this.base.listing)) {
-            pl('#modelbutton').text('EDIT MODEL');
+            pl('#modelbutton').text('@lang_edit_model@');
         }
     },
 
     displayPresentationButton: function() {
         if (MicroListingClass.prototype.getHasIp(this.base.listing)) {
-            pl('#presentationbutton').text('PRESENTATION');
+            pl('#presentationbutton').text('@lang_presentation@');
         }
     },
 
     displayDocumentButton: function() {
         if (MicroListingClass.prototype.getHasDoc(this.base.listing)) {
-            pl('#documentbutton').text('EDIT DOCUMENTS');
+            pl('#documentbutton').text('@lang_edit_documents@');
         }
     },
 
@@ -140,8 +140,8 @@ pl.implement(NewListingBasicsClass, {
                 summary: TextFieldClass,
                 address: TextFieldClass
             },
-            typeOptions = [ ['application', 'Application'], ['company', 'Company'] ],
-            stageOptions = [ ['concept', 'Concept'], ['startup', 'Startup'], ['established', 'Established' ] ],
+            typeOptions = [ ['application', '@lang_application@'], ['company', '@lang_company@'] ],
+            stageOptions = [ ['concept', '@lang_concept@'], ['startup', '@lang_startup@'], ['established', '@lang_established@' ] ],
             platforms = [ 'ios', 'android', 'windows_phone', 'website', 'desktop', 'other' ],
             platformOptions = [],
             platform,
@@ -205,10 +205,10 @@ pl.implement(NewListingBasicsClass, {
                 }
                 pl('#logo_url, #logouploadfile').attr({value: ''});
                 if (success) {
-                    pl('#logomsg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('Logo uploaded');
+                    pl('#logomsg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('@lang_logo_uploaded@');
                 }
                 else {
-                    pl('#logomsg').addClass('errorcolor').text('Unable to upload logo');
+                    pl('#logomsg').addClass('errorcolor').text('@lang_upload_logo_error@');
                 }
             },
             logoUpdater = this.base.getUpdater('logo_url', null, postLogo),
@@ -231,22 +231,22 @@ pl.implement(NewListingBasicsClass, {
                     self.base.listing.logo = datauri;
                     self.displayLogo(datauri);
                     self.base.displayCalculated();
-                    pl('#logomsg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('Logo uploaded');
+                    pl('#logomsg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('@lang_logo_uploaded@');
                 }
                 else {
-                    pl('#logomsg').addClass('errorcolor').text(errorMsg || 'Unable to upload logo');
+                    pl('#logomsg').addClass('errorcolor').text(errorMsg || '@lang_upload_logo_error@');
                 }
                 pl('#logo_url, #logouploadfile').attr({value: ''});
             }
         });
         pl('#logouploadfile').bind({
             change: function() {
-                pl('#logomsg').removeClass('errorcolor').addClass('inprogress').text('Uploading...');
+                pl('#logomsg').removeClass('errorcolor').addClass('inprogress').text('@lang_uploading@');
                 pl('#logouploadform').get(0).submit();
                 return false;
             }
         });
-        logoURLField.fieldBase.setDisplayName('LOGO URL');
+        logoURLField.fieldBase.setDisplayName('@lang_logo_url@');
         logoURLField.fieldBase.addValidator(ValidatorClass.prototype.isURLEmptyOk);
         logoURLField.fieldBase.isEmptyNoUpdate = true;
         logoURLField.bindEvents();
@@ -268,10 +268,10 @@ pl.implement(NewListingBasicsClass, {
                 }
                 pl('#pic_url, #picuploadfile').attr({value: ''});
                 if (success) {
-                    pl('#picmsg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('Image uploaded');
+                    pl('#picmsg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('@lang_image_uploaded@');
                 }
                 else {
-                    pl('#picmsg').addClass('errorcolor').text('Could not upload image');
+                    pl('#picmsg').addClass('errorcolor').text('@lang_upload_image_error@');
                 }
             },
             picUpdater = this.base.getUpdater('pic_url', null, postPic, null, function() { return 'pic' + pl('#picnum').text() + '_url' }),
@@ -294,17 +294,17 @@ pl.implement(NewListingBasicsClass, {
                 if (uploadurl && picurl && !errorMsg) {
                     self.base.listing['pic' + picnum] = true;
                     self.imagepanel.enableImage(picnum);
-                    pl('#picmsg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('Image uploaded');
+                    pl('#picmsg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('@lang_image_uploaded@');
                 }
                 else {
-                    pl('#picmsg').addClass('errorcolor').text(errorMsg || 'Unable to upload image');
+                    pl('#picmsg').addClass('errorcolor').text(errorMsg || '@lang_upload_image_error@');
                 }
                 pl('#pic_url, #picuploadfile').attr({value: ''});
             }
         });
         pl('#picuploadfile').bind({
             change: function() {
-                pl('#picmsg').removeClass('errorcolor').addClass('inprogress').text('Uploading...');
+                pl('#picmsg').removeClass('errorcolor').addClass('inprogress').text('@lang_uploading@');
                 pl('#picuploadform').get(0).submit();
                 return false;
             }
@@ -322,7 +322,7 @@ pl.implement(NewListingBasicsClass, {
 
     displayLogo: function(dataurl) {
         var url = dataurl && dataurl.indexOf('data:') === 0 ? dataurl : null,
-            logobg = url ? 'url(' + url + ') no-repeat scroll center center transparent' : null;
+            logobg = url ? 'url(' + url + ') no-repeat scroll center top transparent' : null;
         if (url) {
             pl('#logoimg').css({ background: logobg });
         }
@@ -357,7 +357,7 @@ pl.implement(NewListingBasicsClass, {
                             self.genPlaceUpdater()(results[0]);
                         }
                         else {
-                            pl('#newlistingbasicsmsg').html('<span class="attention">Could not geocode results: ' + status + '</span>');
+                            pl('#newlistingbasicsmsg').html('<span class="attention">@lang_geocode_error@: ' + status + '</span>');
                         }
                     });
                     return false;

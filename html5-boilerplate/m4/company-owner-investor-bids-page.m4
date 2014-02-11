@@ -111,7 +111,7 @@ include(company-order-book.m4)
                 </span>
                 <span class="newbiddesc">
                     <p>
-                    This is the valuation implied by your offer.  This is the asking price divided by the percentage being offered.
+                    @lang_newbid_val_desc@
                     </p>
                 </span>
             </div>

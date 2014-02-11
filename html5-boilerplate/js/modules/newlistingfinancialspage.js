@@ -75,13 +75,13 @@ pl.implement(NewListingFinancialsClass, {
             id = textFields[i];
             cleaner = preValidators[id];
             if (id === 'asked_fund') {
-                field = new (classes[id])(id, this.base.listing[id], this.base.getUpdater(id, cleaner, offerboxdisplay), msgids[id]);
+                field = new (classes[id])(id, self.base.listing[id], self.base.getUpdater(id, cleaner, offerboxdisplay), msgids[id]);
             }
             else if (cleaner) {
-                field = new (classes[id])(id, this.base.listing[id], this.base.getUpdater(id, cleaner), msgids[id]);
+                field = new (classes[id])(id, self.base.listing[id], self.base.getUpdater(id, cleaner), msgids[id]);
             }
             else {
-                field = new (classes[id])(id, this.base.listing[id], this.base.getUpdater(id), msgids[id]);
+                field = new (classes[id])(id, self.base.listing[id], self.base.getUpdater(id), msgids[id]);
             }
             field.fieldBase.setDisplayName(names[id]);
             field.fieldBase.addValidator(validators[id]);
@@ -89,26 +89,26 @@ pl.implement(NewListingFinancialsClass, {
                 field.fieldBase.validator.preValidateTransform = preValidators[id];
             }
             if (id === 'asked_fund') {
-                field.fieldBase.validator.postValidator = this.genDisplayAskedEffects(field);
+                field.fieldBase.validator.postValidator = self.genDisplayAskedEffects(field);
             }
             else if (id === 'suggested_amt') {
-                field.fieldBase.validator.postValidator = this.genDisplayCalculatedIfValidAmt(field);
+                field.fieldBase.validator.postValidator = self.genDisplayCalculatedIfValidAmt(field);
             }
             else if (id === 'suggested_pct') {
-                field.fieldBase.validator.postValidator = this.genDisplayCalculatedIfValidPct(field);
+                field.fieldBase.validator.postValidator = self.genDisplayCalculatedIfValidPct(field);
             }
             field.bindEvents();
-            this.base.fields.push(field);
-            this.base.fieldMap[id] = field;
-        } 
-        this.base.fieldMap['suggested_amt'].validate();
-        this.base.fieldMap['suggested_pct'].validate();
-        this.displayCalculatedIfValid();
-        this.displayOfferBox();
-        this.bindAskingButtons();
-        this.base.bindNavButtons(this.genNextValidator());
-        this.base.bindTitleInfo();
-        this.base.bindInfoButtons();
+            self.base.fields.push(field);
+            self.base.fieldMap[id] = field;
+        }
+        self.base.fieldMap['suggested_amt'].validate();
+        self.base.fieldMap['suggested_pct'].validate();
+        self.displayCalculatedIfValid();
+        self.displayOfferBox();
+        self.bindAskingButtons();
+        self.base.bindNavButtons(self.genNextValidator());
+        self.base.bindTitleInfo();
+        self.base.bindInfoButtons();
         pl('#newlistingfinancialswrapper').show();
     },
     genNextValidator: function() {
@@ -141,11 +141,11 @@ pl.implement(NewListingFinancialsClass, {
     displayOfferBox: function() {
         var fnd = this.base.fieldMap.asked_fund.fieldBase.value;
         if (fnd) {
-            pl('#askfundstatus').text('Currently you are asking for funds');
+            pl('#askfundstatus').text('@lang_asking_funds_msg@');
             pl('#offerwrapper').addClass('offerwrapperdisplay');
         }
         else {
-            pl('#askfundstatus').text('Currently you are not asking for funds');
+            pl('#askfundstatus').text('@lang_not_asking_funds_msg@');
             pl('#offerwrapper').removeClass('offerwrapperdisplay');
         }
         this.displayCalculatedIfValid();
@@ -169,7 +169,9 @@ pl.implement(NewListingFinancialsClass, {
         }
     },
     displayIfValidAmt: function(result, val) {
-        var fmt = CurrencyClass.prototype.format(val, self.base.fieldMap.currency);
+        var self = this,
+            currency = self.base.listing.currency;
+        var fmt = CurrencyClass.prototype.format(val, currency);
         if (result === 0) {
             pl('#suggested_amt').attr({value: fmt});
         }
@@ -181,11 +183,13 @@ pl.implement(NewListingFinancialsClass, {
         }
     },
     displayCalculatedIfValid: function() {
-        var fnd = pl('#asked_fund').hasClass('checkboxcheckedicon') ? true : false,
+        var self = this,
+            currency = self.base.listing.currency,
+            fnd = pl('#asked_fund').hasClass('checkboxcheckedicon') ? true : false,
             amt = CurrencyClass.prototype.clean(pl('#suggested_amt').attr('value')) || 0,
             pct = PercentClass.prototype.clean(pl('#suggested_pct').attr('value')) || 0,
             val = pct ? Math.floor(Math.floor(100 * amt / pct)) : 0,
-            cur = CurrencyClass.prototype.format(CurrencyClass.prototype.clean(val), self.base.fieldMap.currency),
+            cur = CurrencyClass.prototype.format(CurrencyClass.prototype.clean(val), currency),
             dis = fnd && cur ? cur : '';
         pl('#suggested_val').text(dis);
     },

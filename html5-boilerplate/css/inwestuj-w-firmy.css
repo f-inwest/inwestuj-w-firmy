@@ -930,7 +930,7 @@ background-image: url(../img/success_24.png);
     margin-left: 10px;
 }
 
-.checkboxredicon /* { width: 32px; height: 32px; background: url(../img/icons/flag-32.png); } */
+.checkboxredicon, .checkboxuncheckedicon /* { width: 32px; height: 32px; background: url(../img/icons/flag-32.png); } */
 {
 width: 24px;
 height: 24px;
@@ -1019,9 +1019,16 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMA
 }
 */
 {
-    width: 32px;
-    height: 32px;
-    border: 2px solid #013420;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #013420;
+    background-position-x: 3px;
+}
+.valuation-allow-label {
+    line-height: 14px;
+}
+.valuation-offer-label {
+    line-height: 28px;
 }
 
 
@@ -1035,10 +1042,9 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMA
 }
 */
 {
-    width: 32px;
-    height: 32px;
-    border: 2px solid #013420;
-    background: none;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #013420;
 }
 
 /* header num */
@@ -1271,8 +1277,13 @@ border: 2px solid #cccccc;
 .ipinfoheader { font-size: 18px; font-weight: bold; line-height: 30px; }
 
 .offertitle { height: 41px; }
-.offerpanel { width: 622px; height: 141px; overflow: visible !important; position: relative; }
-.offerwrapper { width: 640px; height: 0px; overflow: hidden;
+.offerpanel {
+    overflow: visible !important;
+    position: relative;
+    background: #fefefe;
+    padding: 15px;
+}
+.offerwrapper { height: 0px; overflow: hidden;
         -moz-transition: height 300ms;
         -webkit-transition: height 300ms;
         -o-transition: height 300ms;
@@ -1292,10 +1303,20 @@ height: 0;
         -ms-transition: height 300ms;
 transition: height 300ms;
 }
-.financialsvaluationfield { height: 43px; width: 312px; text-align: right; margin-right: 50px; }
+.financialsvaluationfield {
+    height: 43px;
+    width: 312px;
+    text-align: right;
+    margin-right: 50px;
+    margin-bottom: 15px;
+}
 .financialsvaluationtext {
     font-size: 30px;
     font-weight: bold;
+}
+.valuation-offer-desc {
+    padding-top: 14px;
+    color: #49515a;
 }
 .remarkreply { height: 0; }
 .remarkreplyshow { height: 150px; }
@@ -1443,7 +1464,7 @@ transition: height 300ms;
 .sideboxdesc { color: #444; margin-bottom: 0px; }
 .sideboxicon { width: 32px; margin-right: 10px; float: left; }
 .notifyline { clear: both; padding: 5px; overflow: auto; }
-.notifyline:nth-child(2n+1) { background: #e8e8e8; }
+/* .notifyline:nth-child(2n+1) { background: #e8e8e8; } */
 .notifytext { float: left; font-weight: normal; padding-top: 5px; }
 .notifydate { float: right; font-size: 12px; padding-top: 2px; color: gray; margin-right: 10px; }
 .messageline { clear: both; padding: 5px 5px 15px 5px; overflow: auto; position: relative; min-height: 50px; }
@@ -1922,12 +1943,12 @@ border: 1px solid #cccccc;
     left: 426px;
     width: 530px;
 }
-.valuationpanel .sideinfo, .valuationtypepanel .sideinfodisplay  {
+.sideinfo, .sideinfodisplay  {
     left: 420px;
     width: 530px;
     top: 15px;
 }
-.valuationpanel .sideinfodisplay {
+.sideinfodisplay {
     height: 180px;
 }
 .sideinfoitem { position: relative; }
@@ -2169,6 +2190,7 @@ color: #fff;
 .backbutton {
         /* margin-top: 20px; */
     float: right;
+    margin-right: 0;
 }
 .bottombutton {
     margin-top: 35px;
@@ -2282,7 +2304,7 @@ color: #fff;
     margin: auto auto 80px auto;
 }
 .messageline:hover {
-    background: #ccc;
+    background: rgba(0,0,255,0.1);
     color: #fff;
 }
 .profilelist p {
@@ -2297,6 +2319,7 @@ color: #fff;
     position: relative;
 }
 .profilerightbartitle {
+    margin-top: 0;
 }
 .editprofilebtn {
     position: absolute;
@@ -2494,12 +2517,15 @@ color: #fff;
     margin-top: 10px;
 }
 .askinginputtext {
-    color: #f8f8f8 !important; background: #49515a !important; font-size: 25px !important; width: 140px !important;
+    color: #f8f8f8 !important;
+    background: #49515a !important;
+    font-size: 16px !important;
+    width: 140px !important;
     text-align: right;
     margin-bottom: 10px;
     font-family: 'Ubuntu',sans-serif;
-    font-size: 25px;
     font-weight: 500;
+    height: 40px;
 }
 .askingamtbtn, .askingpctbtn {
     float: left; margin-top: 10px; margin-bottom: 10px; margin-right: 10px; text-align: center;
@@ -2631,9 +2657,27 @@ color: #fff;
 .formhelptext { padding-left: 115px; width: 800px; }
 .revenuelabel { margin-top: 6px; }
 .valuationbutton { position: relative; top: 5px; padding-top: 7px; padding-bottom: 7px; }
-.valuationfield { height: 100px; width: 257px; text-align: right; margin-right: 50px; }
-.valuationpanel { overflow: visible !important; position: relative; margin-bottom: 40px; }
-.valuationtypepanel { overflow: visible !important; position: relative; min-height: 150px; margin-top: 100px; }
+.valuationfield {
+    height: 100px;
+    width: 257px;
+    text-align: right;
+    margin-right: 50px;
+    margin-top: 10px;
+}
+.valuationpanel {
+    /*
+    overflow: visible !important; position: relative; margin-bottom: 40px;
+    */
+}
+.valuationtypepanel {
+    width: 950px;
+}
+.valuationwrapper {
+    background: #fefefe;
+    padding: 15px;
+    width: 920px;
+}
+
 .valuationlabel { font-size: 14px; line-height: 14px; margin-top: 10px; font-weight: normal; }
 .valuationhelptext { font-size: 14px; line-height: 14px; position: relative; top: 17px; }
 .valuationtext {
@@ -2650,21 +2694,21 @@ color: #fff;
     position: relative;
 }
 .bottombackbutton {
-    margin-top: 35px;
+    margin-top: 15px;
     float: left;
 }
 .bottompreviewbutton {
     float: right;
-    margin: 35px 6px 25px 40px;
+    margin: 15px 0 25px 40px;
     width: 130px;
 }
 .bottomsavebutton {
     float: right;
-    margin-top: 35px;
+    margin-top: 15px;
     width: 130px;
 }
 .bottomsavespinner {
-    margin-top: 45px;
+    margin-top: 25px;
     float: right;
     margin-right: 45px;
 }

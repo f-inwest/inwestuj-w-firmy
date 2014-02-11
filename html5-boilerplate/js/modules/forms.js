@@ -312,6 +312,7 @@ pl.implement(ValidatorClass, {
         if (this.postValidator) {
             this.postValidator(result, val);
         }
+
         return result;
     }
 });
@@ -384,7 +385,7 @@ pl.implement(FieldBaseClass, {
     getErrorFunc: function(displayFunc) {
         var self = this;
         return function(errorNum, json) {
-            var errorStr = (json && json.error_msg) ? 'Error: ' + json.error_msg : 'Error from server: ' + errorNum;
+            var errorStr = (json && json.error_msg) ? 'Error: ' + json.error_msg : '@lang_error_from_server@: ' + errorNum;
             displayFunc();
             self.msg.show('attention', errorStr);
         };
@@ -392,7 +393,7 @@ pl.implement(FieldBaseClass, {
     getSuccessFunc: function(displayFunc) {
         var self = this;
         return function() {
-            self.msg.show('successful', 'Saved changes');
+            self.msg.show('successful', '@lang_saved_changes@');
             self.value = self.newval;
             if (displayFunc) {
                 displayFunc();
