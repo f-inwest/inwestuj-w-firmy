@@ -1,5 +1,6 @@
 package eu.finwest.vo;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -22,8 +23,8 @@ public class BaseResultVO {
 	@JsonProperty("fb_login_url") private String facebookLoginUrl;
 	
 	@JsonProperty("campaign") private CampaignVO campaign;
-	@JsonProperty("user_campaigns") private List<CampaignVO> userCampaigns;
-	@JsonProperty("all_campaigns") private List<CampaignVO> allCampaigns;
+	@JsonProperty("user_campaigns") private Collection<CampaignVO> userCampaigns;
+	@JsonProperty("all_campaigns") private Collection<CampaignVO> allCampaigns;
 
 	@JsonProperty("error_code") private int errorCode = ErrorCodes.OK;
 	@JsonProperty("error_msg") private String errorMessage;
@@ -82,16 +83,16 @@ public class BaseResultVO {
 	public void setCampaign(CampaignVO campaign) {
 		this.campaign = campaign;
 	}
-	public List<CampaignVO> getUserCampaigns() {
+	public Collection<CampaignVO> getUserCampaigns() {
 		return userCampaigns;
 	}
-	public void setUserCampaigns(List<CampaignVO> userCampaigns) {
+	public void setUserCampaigns(Collection<CampaignVO> userCampaigns) {
 		this.userCampaigns = userCampaigns;
 	}
-	public List<CampaignVO> getAllCampaigns() {
+	public Collection<CampaignVO> getAllCampaigns() {
 		return allCampaigns;
 	}
-	public void setAllCampaigns(List<CampaignVO> allCampaigns) {
+	public void setAllCampaigns(Collection<CampaignVO> allCampaigns) {
 		this.allCampaigns = allCampaigns;
 	}
 }

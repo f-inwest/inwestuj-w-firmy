@@ -18,13 +18,9 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import com.google.appengine.api.log.LogService.LogLevel;
-
-import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Campaign.Language;
 import eu.finwest.vo.CampaignVO;
-import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.web.controllers.CommentController;
 import eu.finwest.web.controllers.CronTaskController;
 import eu.finwest.web.controllers.FileController;
@@ -49,7 +45,7 @@ public class FrontController extends HttpServlet {
 	private static final String LANGUAGE_COOKIE = "SELECTED_LANGUAGE";
 	
 	private static final ThreadLocal<LangVersion> langVersion = new ThreadLocal<LangVersion>();
-	private static final ThreadLocal<CampaignVO> campaign = new ThreadLocal<CampaignVO>();
+	private static final ThreadLocal<String> campaign = new ThreadLocal<String>();
 	
 	private static final CampaignVO PL_CAMPAIGN = createMainCampaign(Language.PL);
 	private static final CampaignVO EN_CAMPAIGN = createMainCampaign(Language.EN);
@@ -76,7 +72,11 @@ public class FrontController extends HttpServlet {
 	
 			ModelDrivenController controller = null;
 			HttpHeaders headers = null;
-			if (pathInfo.startsWith("/user")) {
+			if (StringUtils.isEmpty(pathInfo) || pathInfo.equals("/")) {
+				log.info("Accessed / so redirecting to discover page.");
+				response.sendRedirect(request.getContextPath() + "/discover-page.html");
+				return;
+			} else if (pathInfo.startsWith("/user")) {
 				controller = new UserController();
 			} else if (pathInfo.startsWith("/listing")) {
 				controller = new ListingController();
@@ -247,7 +247,7 @@ public class FrontController extends HttpServlet {
 		}
 	}
 	
-	private CampaignVO getCampaign(HttpServletRequest request) {
+	private String getCampaign(HttpServletRequest request) {
 		String nameParts[] = request.getServerName().split("\\.");
 		String campaignName = null;
 		if (nameParts.length <= 1) {
@@ -282,17 +282,10 @@ public class FrontController extends HttpServlet {
 		}
 		if (campaignName != null) {
 			campaignName = campaignName.toLowerCase();
-			if (StringUtils.equals(campaignName, getCampaign().getSubdomain())) {
-				log.log(Level.INFO, "CampaignName: " + campaignName + ", campaign: " + getCampaign() + ", same as previous.");
-				return getCampaign();
-			} else {
-				Campaign campaign = ObjectifyDatastoreDAO.getInstance().getCampaignByDomain(campaignName);
-				log.log(Level.INFO, "CampaignName: " + campaignName + ", campaign: " + campaign + " " + request.getServerName() + " " + request.getMethod() + " " + request.getPathInfo());
-				return DtoToVoConverter.convert(campaign);
-			}
+			return campaignName;
 		} else {
 			log.log(Level.INFO, "CampaignName: main " + getLangVersion() + " " + request.getServerName() + " " + request.getMethod() + " " + request.getPathInfo());
-			return getLangVersion() == LangVersion.PL ? PL_CAMPAIGN : EN_CAMPAIGN;
+			return null;
 		}
 	}
 	
@@ -301,20 +294,37 @@ public class FrontController extends HttpServlet {
 	}
 	
 	public static CampaignVO getCampaign() {
-		CampaignVO c = campaign.get();
-		return c == null ? (getLangVersion() == LangVersion.PL ? PL_CAMPAIGN : EN_CAMPAIGN) : c;
+		String campaignName = campaign.get();
+		CampaignVO campaign = MemCacheFacade.instance().getCampaign(campaignName);
+		if (StringUtils.isNotEmpty(campaignName) && campaign == null) {
+			// campaign for given subdomain is not defined
+			campaign = new CampaignVO();
+			campaign.setActiveFrom(new Date(0));
+			campaign.setActiveTo(new Date(0));
+			campaign.setAllowedLanguage(Campaign.Language.ALL.toString());
+			campaign.setCreated(new Date(0));
+			campaign.setCreator("Admin");
+			campaign.setSubdomain(campaignName);
+			campaign.setId("doesn't exist");
+			campaign.setName(campaignName);
+			campaign.setPublicBrowsing(false);
+		}
+		return campaign == null ? (getLangVersion() == LangVersion.PL ? PL_CAMPAIGN : EN_CAMPAIGN) : campaign;
 	}
 	
 	private static final CampaignVO createMainCampaign(Language language) {
 		CampaignVO campaign = new CampaignVO();
 		campaign.setName("Main " + language + " campaign");
 		campaign.setCreator("Admin");
+		campaign.setCreated(new Date(0));
 		campaign.setActiveFrom(new Date(0));
-		campaign.setActiveTo(new Date(0));
-		campaign.setDescription("Main " + language + " campaign");
-		campaign.setId(null);
+		campaign.setActiveTo(new Date(Long.MAX_VALUE - 1000));
+		campaign.setDescription(language == Language.EN ? "Main campaign" : "Główna kampania");
+		campaign.setComment(language == Language.EN ? "English speaking campaign" : "Polskojęzyczna kampania");
+		campaign.setId(language.toString());
 		campaign.setSubdomain(language.name().toLowerCase());
 		campaign.setAllowedLanguage(language.toString());
+		campaign.setPublicBrowsing(true);
 		return campaign;
 	}
 }

@@ -4,6 +4,7 @@
  */
 package eu.finwest.datamodel;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Id;
@@ -22,7 +23,10 @@ import com.googlecode.objectify.annotation.Unindexed;
 @Unindexed
 @Entity
 @Cached(expirationSeconds=60*30)
-public class Campaign extends BaseObject<Campaign> {
+public class Campaign extends BaseObject<Campaign> implements Serializable {
+
+	private static final long serialVersionUID = 9087134514857634L;
+
 	/**
 	 * List of allowed languages withing the domain
 	 */

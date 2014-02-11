@@ -17,15 +17,21 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
 import eu.finwest.dao.MockDataBuilder;
 import eu.finwest.dao.ObjectifyDatastoreDAO;
+import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Category;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingLocation;
 import eu.finwest.datamodel.Location;
+import eu.finwest.vo.CampaignVO;
+import eu.finwest.vo.DtoToVoConverter;
+import eu.finwest.vo.UserVO;
 
 /**
  * @author grzegorznittner
@@ -46,6 +52,8 @@ public class MemCacheFacade {
 	private static final String MEMCACHE_ALL_LISTING_LOCATIONS = "AllListingLocations";
 	private static final String MEMCACHE_TOP_LISTING_LOCATIONS = "TopListingLocations";
 	private static final String MEMCACHE_CATEGORIES = "Categories";
+	private static final String MEMCACHE_CAMPAIGNS = "CampaingsVO";
+	private static final String MEMCACHE_CAMPAIGNS_RAW = "CampaingsDTO";
 	
 	private MemCacheFacade() {
 	}
@@ -253,6 +261,56 @@ public class MemCacheFacade {
 			campaignTop.put(loc.briefAddress, loc.value);
 		}
 		return allTopLocations;
+	}
+	
+	public void cleanCampaingsCache() {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		mem.delete(MEMCACHE_CAMPAIGNS);
+		mem.delete(MEMCACHE_CAMPAIGNS_RAW);
+	}
+
+	public Map<String, CampaignVO> getAllCampaigns() {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		@SuppressWarnings("unchecked")
+		Map<String, CampaignVO> allCampaigns = (Map<String, CampaignVO>)mem.get(MemCacheFacade.MEMCACHE_CAMPAIGNS);
+		
+		if (allCampaigns == null) {
+			List<Campaign> campaigns = getDAO().getAllCampaigns();
+			allCampaigns = new HashMap<String, CampaignVO>();
+			for (Campaign c : campaigns) {
+				allCampaigns.put(c.subdomain, DtoToVoConverter.convert(c));
+			}
+			mem.put(MEMCACHE_CAMPAIGNS_RAW, campaigns);
+			mem.put(MEMCACHE_CAMPAIGNS, allCampaigns);
+		}
+		return allCampaigns;
+	}
+	
+	public CampaignVO getCampaign(String subdomain) {
+		return getAllCampaigns().get(subdomain);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CampaignVO> getUserCampaigns(UserVO user) {
+		List<CampaignVO> userCampaigns = new ArrayList<CampaignVO>();
+		if (user != null) {
+			MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+			List<Campaign> allCampaigns = (List<Campaign>)mem.get(MemCacheFacade.MEMCACHE_CAMPAIGNS_RAW);
+			if (allCampaigns == null) {
+				getAllCampaigns();
+				allCampaigns = (List<Campaign>)mem.get(MemCacheFacade.MEMCACHE_CAMPAIGNS_RAW);
+			}
+			if (allCampaigns == null) {
+				return userCampaigns;
+			}
+			
+			for (Campaign c : allCampaigns) {
+				if (c.creator.getId() == user.toKeyId()) {
+					userCampaigns.add(DtoToVoConverter.convert(c));
+				}
+			}
+		}
+		return userCampaigns;
 	}
 
 }

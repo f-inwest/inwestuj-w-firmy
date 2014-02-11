@@ -875,6 +875,7 @@ public class UserMgmtFacade {
 			newCampaign.subdomain = campaign.getSubdomain();
 		}
 		campaign = DtoToVoConverter.convert(getDAO().storeCampaign(newCampaign));
+		MemCacheFacade.instance().cleanCampaingsCache();
 		return campaign;
 	}
 
