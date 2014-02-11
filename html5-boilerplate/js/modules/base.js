@@ -680,7 +680,7 @@ pl.implement(CompanyTileClass, {
         this.status = json.status;
         this.daystext = CompanyFormatClass.prototype.daysText(json);
         this.imgClass = json.logo ? '' : 'noimage';
-        this.imgStyle = json.logo ? 'background: url(' + json.logo + ') no-repeat scroll center center transparent' : '',
+        this.imgStyle = json.logo ? 'background: url(' + json.logo + ') no-repeat scroll center top transparent' : '',
         this.posted = json.posted_date ? DateClass.prototype.format(json.posted_date) : '@lang_not_posted@';
         this.name = json.title || '@lang_no_project@';
         this.type = json.type || 'venture';

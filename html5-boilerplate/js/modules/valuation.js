@@ -45,9 +45,10 @@ pl.implement(ValuationClass, {
     },
 
     displayActivePanel: function() {
-        if (this.previousValuationType !== this.valuation_data.vaulation_type) {
+        var activeValuationWrapperSel = '#valuation_' + this.valuation_data.valuation_type + '_wrapper';
+        //if (this.previousValuationType !== this.valuation_data.vaulation_type) {
             pl('.valuationpanel').hide();
-        }
+        //}
         switch (this.valuation_data.valuation_type) {
             case 'company':
                 this.valueCompany();
@@ -58,10 +59,10 @@ pl.implement(ValuationClass, {
             default:
                 this.valueCompany();
         }
-        if (this.previousValuationType !== this.valuation_data.vaulation_type) {
+        //if (this.previousValuationType !== this.valuation_data.vaulation_type) {
             this.previousValuationType = this.valuation_data.valuation_type;
-            pl('#valuation_' + this.valuation_data.valuation_type + '_wrapper').show();
-        }
+            pl(activeValuationWrapperSel).show();
+        //}
     },
 
     valueCompany: function() {
