@@ -36,7 +36,7 @@ include(company-not-found.m4)
 <!-- left column -->
 <div class="span-16">
 
-    <div class="boxtitle basicstitle">
+    <div class="boxtitle basicstitle header-nobottom">
         <span class="titletext">@lang_project_information@</span>
         <div class="titleinfobtn"></div>
         <div class="titleinfo">
@@ -183,7 +183,7 @@ include(company-not-found.m4)
         </div>
     </div>
 
-    <div class="boxtitle basicstitle">
+    <div class="boxtitle basicstitle header-nobottom">
         <span class="titletext">@lang_logo_title@</span>
         <div class="titleinfobtn"></div>
         <div class="titleinfo">
@@ -215,7 +215,7 @@ include(company-not-found.m4)
 include(images-panel-editable.m4)
 `
 
-    <div class="boxtitle basicstitle">
+    <div class="boxtitle basicstitle header-nobottom">
         <span class="titletext">@lang_location_title@</span>
         <div class="titleinfobtn"></div>
         <div class="titleinfo">
@@ -278,7 +278,7 @@ include(images-panel-editable.m4)
         <div class="sidebox investbutton" id="documentbutton">@lang_add_document@</div>
     </a>
 
-    <div class="boxtitle boxtitleside clear boxtitleside-logo">@lang_upload_logo@</span></div>
+    <div class="boxtitle boxtitleside clear boxtitleside-logo header-nobottom">@lang_upload_logo@</span></div>
     <div class="uploadbox uploadbox-logo">
         <div class="formitem">
             <span class="uploadinfo">@lang_upload_desc@</span>
@@ -304,7 +304,7 @@ include(images-panel-editable.m4)
         </div>
     </div>
 
-    <div class="boxtitle boxtitleside clear">@lang_upload_image@ <span id="picnum">1</span></div>
+    <div class="boxtitle boxtitleside clear header-nobottom">@lang_upload_image@ <span id="picnum">1</span></div>
     <div class="uploadbox">
         <div class="formitem">
             <span class="uploadinfo">@lang_upload_desc@</span>
@@ -330,7 +330,7 @@ include(images-panel-editable.m4)
         </div>
     </div>
 
-    <div class="boxtitle boxtitleside clear boxtitleside-location">@lang_map@</span></div>
+    <div class="boxtitle boxtitleside clear boxtitleside-location header-nobottom">@lang_map@</span></div>
     <div class="sidebox mapsidebox">
         <span class="inputmap" id="addressmap"></span>
     </div>

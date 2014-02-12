@@ -11,6 +11,15 @@ include(head.m4)
 include(header.m4)
 include(company-not-found.m4)
 `
+<div class="banner genericbanner">
+    <div class="container">
+        <span class="bannertext span-24">
+            <div class="welcometitle">@lang_wizard_title@</div>
+            <div class="welcometext">@lang_project_funding@</div>
+        </span>
+    </div>
+</div>
+
 <div class="container preloader">
     <div class="preloaderfloater"></div>
     <div class="preloadericon"></div>
@@ -18,8 +27,30 @@ include(company-not-found.m4)
 <div class="container initialhidden wrapper">
 
 <!-- begin banner -->
-<div class="span-16">
-    <div class="boxtitle basicstitle">@lang_project_funding@</div>
+<!-- end banner -->
+
+<div class="span-16 initialhidden" id="newlistingfinancialswrapper">
+
+    <div class="boxtitle basicstitle header-nobottom">
+        <span class="titletext">@lang_funding_status@</span>
+        <div class="titleinfobtn"></div>
+        <div class="titleinfo">
+            <label class="titleinfoheader">@lang_instructions@</label>
+            <p>
+            @lang_ask_for_funding_desc@
+            </p>
+        </div>
+    </div>
+    <div class="boxpanel">
+        <div class="formitem clear firstinputitem">
+            <label class="inputlabel valuation-allow-label" for="asked_fund">@lang_allow_bids@</label>
+            <span class="inputcheckbox">
+                <div id="asked_fund"></div>
+            </span>
+            <span class="inputhelp inputmsg"><span id="askfundstatus"></span><span class="newlistingaskmsg" id="newlistingaskmsg">&nbsp;</span></span>
+        </div>
+    </div>
+
 </div>
 
 <div class="span-8 last">
@@ -30,32 +61,9 @@ include(company-not-found.m4)
     </a>
 </div>
 
-<!-- end banner -->
-
-<div class="span-24 initialhidden" id="newlistingfinancialswrapper">
-
-    <div class="boxtitle boxpanelfull">
-        <span class="titletext">@lang_funding_status@</span>
-        <div class="titleinfobtn"></div>
-        <div class="titleinfo">
-            <label class="titleinfoheader">@lang_instructions@</label>
-            <p>
-            @lang_ask_for_funding_desc@
-            </p>
-        </div>
-    </div>
-    <div class="boxpanel boxpanelfull">
-        <div class="formitem clear firstinputitem">
-            <label class="inputlabel valuation-allow-label" for="asked_fund">@lang_allow_bids@</label>
-            <span class="inputcheckbox">
-                <div id="asked_fund"></div>
-            </span>
-            <span class="inputhelp inputmsg"><span id="askfundstatus"></span><span class="newlistingaskmsg" id="newlistingaskmsg">&nbsp;</span></span>
-        </div>
-    </div>
-
-    <div class="offerwrapper offerwrapperdisplay boxpanelfull" id="offerwrapper">
-    <div class="boxtitle offertitle boxpanelfull">
+<div class="span-24">
+    <div class="offerwrapper offerwrapperdisplay boxpanelfull header-nobottom" id="offerwrapper">
+    <div class="boxtitle offertitle boxpanelfull header-nobottom">
         <span class="titletext">@lang_funding_details@</span>
         <div class="titleinfobtn"></div>
         <div class="titleinfo">

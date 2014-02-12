@@ -1,7 +1,7 @@
 `
 <div class="span-16">
-    <div class="header-content">
-        <div class="header-title">@lang_project_valuation@</div>
+    <div class="header-content" style="margin-bottom: 0; height: 45px;">
+        <div class="header-title">@lang_valuation_wizard@</div>
     </div>
 </div>
 

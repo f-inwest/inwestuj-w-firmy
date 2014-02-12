@@ -1281,7 +1281,10 @@ border: 2px solid #cccccc;
     overflow: visible !important;
     position: relative;
     background: #fefefe;
-    padding: 15px;
+    padding-left: 15px;
+    padding-top: 15px;
+    padding-right: 15px;
+    padding-bottom: 65px;
 }
 .offerwrapper { height: 0px; overflow: hidden;
         -moz-transition: height 300ms;
@@ -1687,7 +1690,7 @@ transition: height 300ms;
     padding: 10px;
 }
 .uploadbox-logo {
-    height: 157px;
+    height: 156px;
 }
 
 
@@ -1891,12 +1894,19 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYA
 .bmcthreefourthsheight { height: 469px; }
 .bmctitle { clear: both; }
 .bmctitlemsg {
-    float: right;
+    float: left;
     margin-right: 5px;
     font-size: 16px;
+    margin-top: 5px;
+    margin-left: 3px;
 }
 .bmctitleboxbtn { float: right; margin-left: 20px; padding-top: 5px; }
-.bmctitlebtn { float: right; margin-left: 20px; margin-bottom: 20px; }
+.bmctitlebtn {
+    float: right;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
 .titletext { float: left; margin-right: 10px; }
 .titleinfobtn {
     float: right;
@@ -1957,7 +1967,7 @@ border: 1px solid #cccccc;
 .editprofilepanel { }
 .basicstitle { height: 26px; margin-top: 0px; }
 
-.bmcborder { border: 7px solid #fefefe; margin-bottom: 10px; clear: both; position: relative; }
+.bmcborder { border: 7px solid #121212; margin-bottom: 10px; clear: both; position: relative; }
 .bmccontainer { overflow: hidden; }
 .bmccell { padding: 5px; line-height: normal; }
 .bmcsection { font-size: 18px; font-weight: bold; }
@@ -2088,7 +2098,14 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAQA
     top: -10px;
     margin-top: -15px;
 }
-.deleteimagebutton { height: 22px; padding: 0px 0px 0px 0px; float: right; margin-right: 10px; margin-top: 11px; }
+.deleteimagebutton {
+    display: block;
+    position: absolute;
+    top: 3px;
+    right: 28px;
+    height: 24px;
+    font-size: 16px;
+}
 .picpanel {
     padding-top: 15px;
     padding-bottom: 15px;
@@ -2127,7 +2144,7 @@ transition: left 500ms;
     margin-top: 15px;
 }
 .boxtitleside-logo {
-    margin-top: 316px;
+    margin-top: 299px;
     margin-bottom: 16px;
 }
 .boxtitleside-location {
@@ -2836,5 +2853,10 @@ color: #fff;
     position: relative;
     top: -2px;
 }
-
+.header-nobottom {
+    margin-bottom: 0;
+}
+.summarypanel {
+    height: 144px;
+}
 

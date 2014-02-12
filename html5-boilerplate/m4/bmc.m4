@@ -1,11 +1,26 @@
 `
 <!-- begin bmc -->
-<div class="span-24 last initialhidden" id="bmc">
-<div class="header-content header-boxpanel-initial header-boxpanel-full">
-    <span class="bmctitletext">@lang_business_model_canvas@</span>
-    <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink initialhidden" id="bmc-edit-btn">@lang_edit@</span>
-    <span class="bmctitlemsg" id="bmcmsg"></span>
+<div class="initialhidden" id="bmc">
+
+<div class="span-16">
+    <div class="header-content header-boxpanel-initial header-boxpanel-full">
+        <span class="bmctitletext">@lang_business_model_canvas@</span>
+        <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink initialhidden" id="bmc-edit-btn">@lang_edit@</span>
+        <span class="bmctitlemsg" id="bmcmsg"></span>
+    </div>
 </div>
+<div class="span-8 last">
+    <a href="#" class="backbuttonlink">
+        <span class="push-1 span-3 inputbutton backbutton">
+            &lt;&lt; @lang_back@
+        </span>
+    </a>
+    <div class="formitem clear">
+        <span class="inputmsg" id="newlistingmsg"></span>
+    </div>
+</div>
+
+<div class="span-24 last">
 <div class="bmcborder bmcwidth bmcheight">
 
 <div class="bmctallcolumnonedge bmcthreefourthsheight bmcfifthwidthminushalfbar bmccontainer">
@@ -112,6 +127,7 @@
 </div>
 </div>
 
+</div>
 </div>
 </div>
 <!-- end bmc -->

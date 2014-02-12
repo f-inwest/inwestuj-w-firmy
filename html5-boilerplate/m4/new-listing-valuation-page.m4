@@ -11,6 +11,15 @@ include(head.m4)
 include(header.m4)
 include(company-not-found.m4)
 `
+<div class="banner genericbanner">
+    <div class="container">
+        <span class="bannertext span-24">
+            <div class="welcometitle">@lang_wizard_title@</div>
+            <div class="welcometext">@lang_project_valuation@</div>
+        </span>
+    </div>
+</div>
+
 <div class="container preloader">
     <div class="preloaderfloater"></div>
     <div class="preloadericon"></div>

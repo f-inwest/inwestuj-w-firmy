@@ -11,6 +11,15 @@ include(head.m4)
 include(header.m4)
 include(company-not-found.m4)
 `
+<div class="banner genericbanner">
+    <div class="container">
+        <span class="bannertext span-24">
+            <div class="welcometitle">@lang_wizard_title@</div>
+            <div class="welcometext">@lang_project_media@</div>
+        </span>
+    </div>
+</div>
+
 <div class="container preloader">
     <div class="preloaderfloater"></div>
     <div class="preloadericon"></div>
@@ -18,15 +27,6 @@ include(company-not-found.m4)
 <div class="container initialhidden wrapper">
 
 <!-- begin banner -->
-    <div class="bannertextsmall">ADD VIDEO AND A WEBSITE TO YOUR LISTING</div>
-
-    <div class="span-16">
-        <a href="#" class="backbuttonlink">
-            <span class="push-1 span-3 inputbutton backbutton">
-                &lt;&lt; BACK
-            </span>
-        </a>
-    </div>
 
 <!-- end banner -->
 
@@ -35,52 +35,61 @@ include(company-not-found.m4)
 <!-- left column -->
 <div class="span-16">
 
-    <div class="boxtitle basicstitle">
-        <span class="titletext">VIDEO</span>
+    <div class="boxtitle basicstitle header-nobottom">
+        <span class="titletext">@lang_video@</span>
         <div class="titleinfobtn"></div>
         <div class="titleinfo">
-            <label class="titleinfoheader">Instructions</label>
+            <label class="titleinfoheader">@lang_instructions@</label>
             <p>
-Link to a youtube, vimeo, or dailymotion video presenting your product, service or company.
-If you do not have a video ready, just record a voiceover of a quick run through your slide deck.
+                @lang_video_help@
             </p>
         </div>
     </div>
-    <div class="boxpanel newlistingpanel">
-        <div class="formitem sideinfoitem clear">
+    <div class="boxpanel videopanel" style="padding-top: 10px; overflow: visible; width: 627px; height: inherit;">
+        <div class="formitem sideinfoitem clear" style="padding-left: 15px">
             <span class="inputfield">
-                <input class="text mediainputlink videourl" style="width: 568px !important" type="text" maxlength="255" name="video" id="video" value=""></input>
+                <input class="text mediainputlink videourl" style="width: 548px !important" type="text" maxlength="255" name="video" id="video" value=""></input>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Video</label>
+                <label class="sideinfoheader">@lang_instructions@</label>
                 <br />
-Link to a youtube, vimeo, or dailymotion video presenting your product, service or company.
-If you do not have a video ready, just record a voiceover of a quick run through your slide deck.
+                @lang_video_help@
             </p>
             <span class="videoinputicon">
                 <div id="videoicon"></div>
             </span>
         </div>
-        <div class="formitem clear">
+        <div class="formitem clear" style="padding-left: 15px; padding-bottom: 5px;">
             <span class="uploadinfo" id="videomsg">
-                Enter a link to your youtube, vimeo or dailymotion video
+                @lang_video_msg@
             </span>
         </div>
 	    <div class="videocontainer">
-      	    <iframe width="622" height="350" id="videoiframe" src="" frameborder="0" allowfullscreen></iframe> 
+      	    <iframe width="627" height="357" id="videoiframe" src="" frameborder="0" allowfullscreen></iframe>
 	    </div>
     </div>
 
-    <div class="boxpanel newlistingpanel">
+    <div class="boxtitle basicstitle header-nobottom" style="margin-top: 20px;">
+        <span class="titletext">@lang_website@</span>
+        <div class="titleinfobtn"></div>
+        <div class="titleinfo">
+            <label class="titleinfoheader">@lang_instructions@</label>
+            <p>
+                @lang_website_help@
+            </p>
+        </div>
+    </div>
+
+    <div class="boxpanel" style="overflow: visible; height: 45px;">
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="website">WEBSITE</label>
+            <label class="inputlabel" for="website">@lang_website@</label>
             <span class="inputfield">
                 <input class="text inputwidetext" type="text" name="website" id="website" value=""></input>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">Link</label>
+                <label class="sideinfoheader">@lang_instructions@</label>
                 <br />
-                A link to the website for your application or company, or if you don&rsquo;t have one, then a link to your facebook page, twitter page, google profile, or blog.
+                @lang_website_help@
             </p>
             <span class="inputicon">
                 <div id="websiteicon"></div>
@@ -96,7 +105,7 @@ If you do not have a video ready, just record a voiceover of a quick run through
         <div class="formitem clear">
            <a href="#" class="nextbuttonlink">
                 <span class="push-13 span-3 inputbutton">
-                    NEXT
+                    @lang_next@
                 </span>
             </a>
         </div>
@@ -106,7 +115,11 @@ If you do not have a video ready, just record a voiceover of a quick run through
 
 <!-- right column -->
 <div class="span-8 last">
-
+    <a href="#" class="backbuttonlink">
+        <span class="push-1 span-3 inputbutton backbutton" style="margin-bottom: 0;">
+                &lt;&lt; @lang_back@
+        </span>
+    </a>
 </div>
 <!-- end right column -->
 

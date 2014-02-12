@@ -1,11 +1,12 @@
 `
 <!-- begin bmc -->
-<div class="span-24 last initialhidden" id="bmc-editable">
-<div class="boxtitle bmctitle">
-    <span class="titletext">@lang_business_model_canvas@
-        <a href="http://www.youtube.com/watch?v=QoAOzMTLP5s">(@lang_see_the_tutorial@)</a>
+<div class="initialhidden" id="bmc-editable">
+<div class="span-16">
+<div class="boxtitle bmctitle" style="height: 80px;">
+    <span class="titletext" style="margin-bottom: 15px;">@lang_business_model_canvas@
+        <a href="http://www.youtube.com/watch?v=QoAOzMTLP5s" style="font-size: 16px;">(@lang_see_the_tutorial@)</a>
     </span>
-    <div class="titleinfobtn"></div>
+    <div class="titleinfobtn" style="margin-top: 2px;"></div>
     <div class="titleinfo">
         <label class="titleinfoheader">@lang_instructions@</label>
     
@@ -31,11 +32,23 @@
 -->
     </div>
     <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink" id="bmc-activate-deactivate-btn"></span>
-    <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink" id="bmc-preview-btn">SHOW</span>
+    <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink" id="bmc-preview-btn">@lang_show@</span>
     <span class="bmctitleboxbtn"><div id="bmcfieldicon"></div></span>
     <span class="bmctitlemsg" id="bmc-editable-msg">@lang_click_to_edit@</span>
 </div>
+</div>
+<div class="span-8 last">
+        <a href="#" class="backbuttonlink">
+            <span class="push-1 span-3 inputbutton backbutton">
+                &lt;&lt; @lang_back@
+            </span>
+        </a>
+    <div class="formitem clear">
+        <span class="inputmsg" id="newlistingmsg"></span>
+    </div>
+</div>
 
+<div class="span-24 last">
 <div class="bmcborder bmcwidth bmcheight">
 
 <div class="bmctallcolumnonedge bmcthreefourthsheight bmcfifthwidthminushalfbar bmccontainer">

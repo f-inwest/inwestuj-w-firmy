@@ -1,5 +1,5 @@
 `
-<div class="boxtitle">
+<div class="boxtitle header-nobottom">
     <span class="titletext">@lang_project_images@</span>
     <div class="titleinfobtn"></div>
     <div class="titleinfo">
