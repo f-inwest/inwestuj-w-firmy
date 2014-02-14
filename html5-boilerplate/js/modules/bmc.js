@@ -169,7 +169,7 @@ pl.implement(NewListingBMCClass, {
         var self = this,
             complete = function(json) {
                 self.base.listing.has_bmc = json.listing.has_bmc;
-                pl('#bmc-editable-msg').html('<span class="successful">@lang_business_model_activated@</span>');
+                pl('#bmc-editable-msg').html('<span class="successful">@lang_activated@</span>');
                 pl('#bmc-activate-deactivate-btn').text('@lang_deactivate@');
             },
             data = {
@@ -187,7 +187,7 @@ pl.implement(NewListingBMCClass, {
         var self = this,
             complete = function(json) {
                 self.base.listing.has_bmc = json.listing.has_bmc;
-                pl('#bmc-editable-msg').html('<span class="successful">@lang_business_model_deactivated@</span>');
+                pl('#bmc-editable-msg').html('<span class="successful">@lang_deactivated@</span>');
             },
             data = {
                 listing: {

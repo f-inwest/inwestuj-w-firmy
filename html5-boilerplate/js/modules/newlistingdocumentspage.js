@@ -99,7 +99,7 @@ pl.implement(NewListingDocumentsClass, {
                     });
                     */
                     pl('#' + id + 'uploadfile').removeAttr('value');
-                    pl('#' + id + 'msg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('Document deleted');
+                    pl('#' + id + 'msg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('@lang_deleted@');
                 };
                 ajax = new AjaxClass('/listings/delete_file/?id=' + self.base.listing.listing_id + '&type='+id.toUpperCase(), id+'msg', completeFunc);
                 ajax.setPost();
@@ -131,7 +131,7 @@ pl.implement(NewListingDocumentsClass, {
                         self.displayUpload(uploadId);
                         self.base.displayCalculated();
                         pl('#' + fieldurl).attr({value: ''});
-                        pl('#' + id + 'msg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('Document uploaded');
+                        pl('#' + id + 'msg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('@lang_uploaded@');
                     }
                 };
             },
@@ -156,21 +156,21 @@ pl.implement(NewListingDocumentsClass, {
                     }
                     if (uploadurl && val && !errorMsg) {
                         self.base.listing[fieldname] = val;
-                        pl('#'+id+'msg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('Document uploaded');
+                        pl('#'+id+'msg').removeClass('errorcolor').removeClass('inprogress').addClass('successful').text('@lang_uploaded@');
                         pl('#'+id+'_url, #'+id+'uploadfile').attr({value: ''});
                         self.displayUpload(id);
                         self.base.displayCalculated();
                     }
                     else {
                         self.base.listing[fieldname] = null;
-                        pl('#'+id+'msg').addClass('errorcolor').text(errorMsg || 'Unable to upload document');
+                        pl('#'+id+'msg').addClass('errorcolor').text(errorMsg || '@lang_upload_error@');
                     }
                 };
             },
             genBrowseChange = function(id) {
                 var formsel = '#' + id + 'uploadform';
                 return function() {
-                    pl('#' + id + 'msg').removeClass('inprogress').addClass('inprogress').text('Uploading...');
+                    pl('#' + id + 'msg').removeClass('inprogress').addClass('inprogress').text('@lang_uploading@');
                     pl(formsel).get(0).submit();
                     return false;
                 };

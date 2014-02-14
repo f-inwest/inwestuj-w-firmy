@@ -428,11 +428,49 @@ pl.implement(SearchBoxClass, {
     }
 });
 
+function CampaignDropdownClass() {}
+pl.implement(CampaignDropdownClass, {
+    bindEvents: function(json) {
+        var campaign = json ? json.campaign : null,
+            all_campaigns = json ? json.all_campaigns : null;
+        if (!campaign || !campaign.name) {
+            return;
+        }
+        pl('#campaign-textbox').get(0).innerText = campaign.name;
+
+        if (!all_campaigns) {
+            return;
+        }
+        pl('#campaign-textbox-additional').get(0).innerHTML = this.campaignTextboxen(all_campaigns);
+
+        pl('#campaign-dropdown-button').bind('click', function() {
+            if (pl('#campaign-dropdown').hasClass('campaign-dropdown-visible')) {
+                pl('#campaign-dropdown').removeClass('campaign-dropdown-visible');
+            }
+            else {
+                pl('#campaign-dropdown').addClass('campaign-dropdown-visible');
+            }
+        })
+    },
+    campaignTextboxen: function(all_campaigns) {
+        var textboxen = "",
+            campaign,
+            i;
+        for (i = 0; i < all_campaigns.length; i++) {
+            campaign = all_campaigns[i];
+            textboxen += '<div class="campaign-textbox">' + campaign.name + '</div>\n';
+        }
+        return textboxen;
+    }
+
+});
+
 function HeaderClass() {}
 pl.implement(HeaderClass, {
     setLogin: function(json) {
         var profile = null,
-            searchbox = new SearchBoxClass();
+            searchbox = new SearchBoxClass(),
+            dropdown = new CampaignDropdownClass();
         if (json && json.loggedin_profile) {
             profile = json.loggedin_profile;
         }
@@ -441,6 +479,7 @@ pl.implement(HeaderClass, {
         }
         this.setHeader(profile, json.login_url, json.logout_url, json.twitter_login_url, json.fb_login_url);
         searchbox.bindEvents();
+        dropdown.bindEvents(json);
     },
     setHeader: function(profile, login_url, logout_url, twitter_login_url, fb_login_url) {
         if (profile) {

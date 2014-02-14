@@ -582,7 +582,11 @@ a:focus, a:hover { cursor: pointer; }
 .companybannertiletitlelong { /* font-size: 24px; line-height: 24px; top: 4px; height: 49px; */ }
 .companybannertext { font-size: 14px; font-weight: bold; }
 .companybannerlink { float: left; margin-right: 5px; }
-.companybannertextgrey { font-size: 14px; width: 830px; }
+.companybannertextgrey {
+    font-size: 14px;
+    width: 830px;
+    line-height: 21px;
+}
 .companybannermapline {
     height: 21px;
     font-family: 'Ubuntu', sans-serif;
@@ -1680,7 +1684,12 @@ transition: height 300ms;
 .uploadurlbutton { margin-left: 4px; }
 .uploadinputbutton { font-weight: bold; color: #f8f8f8 !important; background: #49515a !important; font-size: 14px !important; margin-left: 0px !important; width: 383px !important; }
 .uploadinputbuttonshort { width: 300px !important; }
-.uploaddelete { position: absolute; top: 43px; right: 0px; display: none; }
+.uploaddelete {
+    position: absolute;
+    top: 77px;
+    left: 485px;
+    display: none;
+}
 .uploaditem { position: relative; }
 .uploadbox {
     width: 282px;
@@ -1904,8 +1913,13 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYA
 .bmctitlebtn {
     float: right;
     margin-left: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-size: 16px;
+}
+.bmceditbtn {
+    float: right;
+    margin-right: 0;
+    margin-left: 0;
 }
 .titletext { float: left; margin-right: 10px; }
 .titleinfobtn {
@@ -2858,5 +2872,37 @@ color: #fff;
 }
 .summarypanel {
     height: 144px;
+}
+.campaign-selector-wrapper {
+    width: 100%;
+    position: absolute;
+}
+.campaign-selector {
+    margin: 0 auto;
+    width: 960px;
+    padding: 10px 30px 10px 0px;
+}
+.campaign-dropdown {
+    width: 200px;
+    float: right;
+    height: 30px;
+    position: relative;
+    overflow: hidden;
+    z-index: 2000;
+}
+.campaign-dropdown-visible {
+    overflow: visible;
+}
+.campaign-textbox {
+    padding: 4px 0 3px 15px;
+    border-bottom: 1px solid #fefefe;
+    color: #fefefe;
+    background: #4dc6e1;
+}
+.campaign-dropdown-button {
+    background: url(../img/dropdown.png);
+    width: 30px;
+    height: 30px;
+    float: right;
 }
 

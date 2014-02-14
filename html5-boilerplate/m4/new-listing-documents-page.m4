@@ -11,47 +11,38 @@ include(head.m4)
 include(header.m4)
 include(company-not-found.m4)
 `
+<div class="banner genericbanner">
+    <div class="container">
+        <span class="bannertext span-24">
+            <div class="welcometitle">@lang_wizard_title@</div>
+            <div class="welcometext">@lang_documents@</div>
+        </span>
+    </div>
+</div>
+
 <div class="container preloader">
     <div class="preloaderfloater"></div>
     <div class="preloadericon"></div>
 </div>
 <div class="container initialhidden wrapper">
 
-<!-- begin banner -->
-    <div class="bannertextsmall">ADD DOCUMENTS TO YOUR LISTING</div>
-
-    <div class="span-16">
-        <a href="#" class="backbuttonlink">
-            <span class="push-1 span-3 inputbutton backbutton">
-                &lt;&lt; BACK
-            </span>
-        </a>
-    </div>
-
-<!-- end banner -->
-
 <!-- left column -->
 <div class="span-16 initialhidden" id="newlistingdocumentswrapper">
 
     <div class="boxtitle basicstitle">
-        <span class="titletext">PRESENTATION</span>
+        <span class="titletext">@lang_presentation@</span>
         <div class="titleinfobtn"></div>
         <div class="titleinfo">
-            <label class="titleinfoheader">Instructions</label>
+            <label class="titleinfoheader">@lang_instructions@</label>
             <p>
-            Giving investors insight into your company or product is a great way to get them over
-            the hurdle to actually winning their funding.  Especially if you are asking for significant
-            funding of $100,000 or more, investors will want to see a detailed business plan, an
-            investor-oriented presentation, and whatever existing financial statements you have.  Although
-            these documents are optional, including them will increase your chances of getting funding,
-            as well as exposing you to a higher calibur of investor.
+                @lang_presentation_document_help@
             </p>
         </div>
     </div>
     <div class="boxpanel">
         <div class="mediacol2">
             <div class="formitem">
-                <span class="uploadinfo">Enter a URL or upload from your computer.</span>
+                <span class="uploadinfo">@lang_upload_desc@</span>
             </div>
             <div class="formitem clear">
                 <span class="inputfield">
@@ -70,34 +61,29 @@ include(company-not-found.m4)
                     </form>
                 </span>
                 <a href="" id="presentationdeletelink">
-                    <span class="span-3 inputbutton uploaddelete">DELETE</span>
+                    <span class="span-3 inputbutton uploaddelete">@lang_delete@</span>
                 </a>
             </div>
             <div class="formitem clear">
-                <span class="uploadinfo" id="presentationmsg">Powerpoint or PDF presentation, 10-30 slides</span>
+                <span class="uploadinfo" id="presentationmsg">@lang_presentation_document_shorthelp@</span>
             </div>
         </div>
     </div>
 
     <div class="boxtitle basicstitle">
-        <span class="titletext">BUSINESS PLAN</span>
+        <span class="titletext">@lang_business_plan@</span>
         <div class="titleinfobtn"></div>
         <div class="titleinfo">
-            <label class="titleinfoheader">Instructions</label>
+            <label class="titleinfoheader">@lang_instructions@</label>
             <p>
-            Giving investors insight into your company or product is a great way to get them over
-            the hurdle to actually winning their funding.  Especially if you are asking for significant
-            funding of $100,000 or more, investors will want to see a detailed business plan, an
-            investor-oriented presentation, and whatever existing financial statements you have.  Although
-            these documents are optional, including them will increase your chances of getting funding,
-            as well as exposing you to a higher calibur of investor.
+            @lang_business_plan_document_help@
             </p>
         </div>
     </div>
     <div class="boxpanel">
         <div class="mediacol2">
             <div class="formitem">
-                <span class="uploadinfo">Enter a URL or upload from your computer.</span>
+                <span class="uploadinfo">@lang_upload_desc@</span>
             </div>
             <div class="formitem clear">
                 <span class="inputfield">
@@ -116,34 +102,29 @@ include(company-not-found.m4)
                     </form>
                 </span>
                 <a href="" id="business_plandeletelink">
-                    <span class="span-3 inputbutton uploaddelete">DELETE</span>
+                    <span class="span-3 inputbutton uploaddelete">@lang_delete@</span>
                 </a>
             </div>
             <div class="formitem clear">
-                <span class="uploadinfo" id="business_planmsg">Word document or PDF of business plan</span>
+                <span class="uploadinfo" id="business_planmsg">@lang_business_plan_document_shorthelp@</span>
             </div>
         </div>
     </div>
 
     <div class="boxtitle basicstitle">
-        <span class="titletext">FINANCIAL STATEMENTS</span>
+        <span class="titletext">@lang_financial_statements@</span>
         <div class="titleinfobtn"></div>
         <div class="titleinfo">
-            <label class="titleinfoheader">Instructions</label>
+            <label class="titleinfoheader">@lang_instructions@</label>
             <p>
-            Giving investors insight into your company or product is a great way to get them over
-            the hurdle to actually winning their funding.  Especially if you are asking for significant
-            funding of $100,000 or more, investors will want to see a detailed business plan, an
-            investor-oriented presentation, and whatever existing financial statements you have.  Although
-            these documents are optional, including them will increase your chances of getting funding,
-            as well as exposing you to a higher calibur of investor.
+                @lang_financial_statements_document_help@
             </p>
         </div>
     </div>
     <div class="boxpanel">
         <div class="mediacol2">
             <div class="formitem">
-                <span class="uploadinfo">Enter a URL or upload from your computer.</span>
+                <span class="uploadinfo">@lang_upload_desc@</span>
             </div>
             <div class="formitem clear">
                 <span class="inputfield">
@@ -162,11 +143,11 @@ include(company-not-found.m4)
                     </form>
                 </span>
                 <a href="" id="financialsdeletelink">
-                    <span class="span-3 inputbutton uploaddelete">DELETE</span>
+                    <span class="span-3 inputbutton uploaddelete">@lang_delete@</span>
                 </a>
             </div>
             <div class="formitem clear">
-                <span class="uploadinfo" id="financialsmsg">Spreadsheet or PDF of financials, can be unaudited</span>
+                <span class="uploadinfo" id="financialsmsg">@lang_financial_statements_document_shorthelp@</span>
             </div>
         </div>
     </div>
@@ -181,7 +162,13 @@ include(company-not-found.m4)
 
 <!-- right column -->
 <div class="span-8 last">
+    <a href="#" class="backbuttonlink">
+        <span class="push-1 span-3 inputbutton backbutton">
+            &lt;&lt; @lang_back@
+        </span>
+    </a>
 </div>
+
 <!-- end right column -->
 '
 include(new-listing-bottom-buttons.m4)

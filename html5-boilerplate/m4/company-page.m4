@@ -15,6 +15,15 @@ include(company-banner.m4)
 companybannermacro(`companynavselected', `', `', `', `', `', `')
 `
 
+<div class="banner genericbanner">
+    <div class="container">
+        <span class="bannertext span-24">
+            <div class="welcometitle">@lang_project_information@</div>
+            <div class="welcometext"></div>
+        </span>
+    </div>
+</div>
+
 <div class="container preloader">
      <div class="preloaderfloater"></div>
      <div class="preloadericon"></div>

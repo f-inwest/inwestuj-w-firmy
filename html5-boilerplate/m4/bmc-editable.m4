@@ -2,7 +2,7 @@
 <!-- begin bmc -->
 <div class="initialhidden" id="bmc-editable">
 <div class="span-16">
-<div class="boxtitle bmctitle" style="height: 80px;">
+<div class="boxtitle bmctitle header-nobottom" style="height: 80px;">
     <span class="titletext" style="margin-bottom: 15px;">@lang_business_model_canvas@
         <a href="http://www.youtube.com/watch?v=QoAOzMTLP5s" style="font-size: 16px;">(@lang_see_the_tutorial@)</a>
     </span>

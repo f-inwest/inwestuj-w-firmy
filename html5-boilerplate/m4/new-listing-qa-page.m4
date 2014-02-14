@@ -11,21 +11,20 @@ include(head.m4)
 include(header.m4)
 include(company-not-found.m4)
 `
+<div class="banner genericbanner">
+    <div class="container">
+        <span class="bannertext span-24">
+            <div class="welcometitle">@lang_wizard_title@</div>
+            <div class="welcometext">@lang_presentation@</div>
+        </span>
+    </div>
+</div>
+
 <div class="container preloader">
     <div class="preloaderfloater"></div>
     <div class="preloadericon"></div>
 </div>
 <div class="container initialhidden wrapper">
-
-    <div class="bannertextsmall">ADD AN INVESTOR PRESENTATION TO YOUR LISTING</div>
-
-    <div class="span-16">
-        <a href="#" class="backbuttonlink">
-            <span class="push-1 span-3 inputbutton backbutton">
-                &lt;&lt; BACK
-            </span>
-        </a>
-    </div>
 
 <div class="span-16">
     <div class="formitem clear">

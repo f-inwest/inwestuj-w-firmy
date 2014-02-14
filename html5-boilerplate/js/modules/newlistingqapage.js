@@ -88,7 +88,7 @@ pl.implement(NewListingQAClass, {
 
     bindActivateDeactivateButton: function() {
         var self = this,
-            text = this.base.listing.has_ip ? 'DEACTIVATE' : 'ACTIVATE';
+            text = this.base.listing.has_ip ? '@lang_deactivate@' : '@lang_activate@';
         pl('#ip-activate-deactivate-btn').text(text).bind('click', function() {
             if (self.base.listing.has_ip) {
                 self.deactivate();
@@ -103,8 +103,8 @@ pl.implement(NewListingQAClass, {
         var self = this,
             complete = function(json) {
                 self.base.listing.has_ip = json.listing.has_ip;
-                pl('#ip-editable-msg').html('<span class="successful">Presentation activated</span>');
-                pl('#ip-activate-deactivate-btn').text('DEACTIVATE');
+                pl('#ip-editable-msg').html('<span class="successful">@lang_activated@</span>');
+                pl('#ip-activate-deactivate-btn').text('@lang_deactivate@');
             },
             data = {
                 listing: {
@@ -121,7 +121,7 @@ pl.implement(NewListingQAClass, {
         var self = this,
             complete = function(json) {
                 self.base.listing.has_ip = json.listing.has_ip;
-                pl('#ip-editable-msg').html('<span class="successful">Presentation deactivated</span>');
+                pl('#ip-editable-msg').html('<span class="successful">@lang_deactivated@</span>');
             },
             data = {
                 listing: {

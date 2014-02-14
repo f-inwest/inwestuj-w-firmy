@@ -1,12 +1,22 @@
 `
-<div class="span-24 last initialhidden" id="ip">
+<div class="initialhidden" id="ip">
 
-    <div class="header-content header-boxpanel-initial header-boxpanel-full">
+<div class="span-16">
+    <div class="header-content header-boxpanel-initial header-nobottom" style="height: 40px;">
         <span class="titletext">@lang_presentation@</span>
-        <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink initialhidden" id="ip-edit-btn">@lang_edit@</span>
         <span class="bmctitlemsg" id="ipmsg"></span>
     </div>
+</div>
+<div class="span-8 last">
+    <a href="#" class="backbuttonlink">
+        <span class="span-3 inputbutton backbutton" style="margin-left: 40px;">
+            &lt;&lt; @lang_back@
+        </span>
+    </a>
+    <span class="span-3 smallinputbutton darkblue bmctitlebtn bmceditbtn hoverlink initialhidden" id="ip-edit-btn">@lang_edit@</span>
+</div>
 
+<div class="span-24 last">
     <div class="bmcborder ipmain">
 
         <div class="ipslideset">
@@ -214,9 +224,10 @@
             <div class="iparrow ipright"></div>
             <div class="iparrow ipfirst"></div>
             <div class="ipfooter ipdata"><span class="ipcorp ipcorpname"></span><span class="ipdate ipdatetext"></span></div>
-            <div class="ipfooter ippage"><span class="ippagenum"></span>&nbsp;of&nbsp;<span class="ippagetotal"></span></div>
+            <div class="ipfooter ippage"><span class="ippagenum"></span>&nbsp;@lang_page_m_of_n@&nbsp;<span class="ippagetotal"></span></div>
         </div>
     </div>
+</div>
 </div>
 <!-- end presentation -->
 '

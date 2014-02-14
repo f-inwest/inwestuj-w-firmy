@@ -47,4 +47,15 @@
     </div>
 
   </div>
+
+  <div class="campaign-selector-wrapper">
+    <div class="campaign-selector">
+      <div class="campaign-dropdown-button" id="campaign-dropdown-button"></div>
+      <div class="campaign-dropdown" id="campaign-dropdown">
+          <div class="campaign-textbox" id="campaign-textbox">@lang_select_campaign@</div>
+          <div class="campaign-textbox-additional" id="campaign-textbox-additional"></div>
+      </div>
+    </div>
+  </div>
+
 '

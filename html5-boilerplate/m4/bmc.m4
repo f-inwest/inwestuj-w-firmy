@@ -3,18 +3,18 @@
 <div class="initialhidden" id="bmc">
 
 <div class="span-16">
-    <div class="header-content header-boxpanel-initial header-boxpanel-full">
+    <div class="header-content header-boxpanel-initial header-nobottom" style="height: 40px;">
         <span class="bmctitletext">@lang_business_model_canvas@</span>
-        <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink initialhidden" id="bmc-edit-btn">@lang_edit@</span>
         <span class="bmctitlemsg" id="bmcmsg"></span>
     </div>
 </div>
 <div class="span-8 last">
     <a href="#" class="backbuttonlink">
-        <span class="push-1 span-3 inputbutton backbutton">
+        <span class="span-3 inputbutton backbutton" style="margin-left: 40px;">
             &lt;&lt; @lang_back@
         </span>
     </a>
+    <span class="span-3 smallinputbutton darkblue bmctitlebtn bmceditbtn hoverlink initialhidden" id="bmc-edit-btn">@lang_edit@</span>
     <div class="formitem clear">
         <span class="inputmsg" id="newlistingmsg"></span>
     </div>

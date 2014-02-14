@@ -13,17 +13,18 @@ pl.implement(IPClass, {
             name = listing.founders || '@lang_founders_here@',
             brief_address = listing.brief_address || '@lang_postal_address_here@',
             website = listing.website || '@lang_website_here@',
-            asking = listing.asked_fund
-                ? String.format('@lang_asking_for_pct@',
-                    CurrencyClass.prototype.format(listing.suggested_amt, listing.currency),
-                    PercentClass.prototype.format(listing.suggested_pct))
-                : '@lang_not_asking_funds_now@',
+            amt = CurrencyClass.prototype.format(listing.suggested_amt, listing.currency),
+            pct = PercentClass.prototype.format(listing.suggested_pct),
+            asking = '@lang_not_asking_funds_now@',
             m = 10,
             n = 27,
             i,
             field,
             val,
             sel;
+        if (listing.asked_fund) {
+            asking = '@lang_asking_for_pct@'.replace('%1$s', amt).replace('%2$d', pct);
+        }
         pl('.mantraip').text(mantra);
         pl('.nameip').text(name);
         pl('.brief_addressip').text(brief_address);
