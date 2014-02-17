@@ -861,10 +861,17 @@ public class UserMgmtFacade {
 
 	public CampaignVO storeCampaign(UserVO loggedInUser, CampaignVO campaign) {
 		if (loggedInUser == null || !(loggedInUser.isAccreditedInvestor() || loggedInUser.isAdmin())) {
+			log.info("Not logged in or user is not admin/investor");
+			return null;
+		}
+		if (StringUtils.equalsIgnoreCase(campaign.getSubdomain(), "pl")
+				|| StringUtils.equalsIgnoreCase(campaign.getSubdomain(), "en")) {
+			log.info("User cannot update special campaigns");
 			return null;
 		}
 		Campaign existingCampaign = getDAO().getCampaignByDomain(campaign.getSubdomain());
 		if (existingCampaign != null && existingCampaign.creator.getId() != loggedInUser.toKeyId()) {
+			log.info("User is not an admin of the campaign, creator: " + existingCampaign.creatorName + ", logged in user: " + loggedInUser);
 			return null;
 		}
 		Campaign newCampaign = VoToModelConverter.convert(campaign);

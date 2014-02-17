@@ -20,6 +20,7 @@ public class CampaignVO extends BaseVO implements Serializable {
 	private static final long serialVersionUID = 4545997896432456L;
 	
 	@JsonProperty("campaign_id") private String id;
+	@JsonProperty("special") private boolean special;
 	@JsonProperty("creator") private String creator;
 	@JsonProperty("subdomain") private String subdomain;
 	@JsonProperty("create_date") @JsonSerialize(using=DateSerializer.class) private Date created;
@@ -104,5 +105,11 @@ public class CampaignVO extends BaseVO implements Serializable {
 	}
 	public void setAllowedLanguage(String allowedLanguage) {
 		this.allowedLanguage = allowedLanguage;
+	}
+	public boolean isSpecial() {
+		return special;
+	}
+	public void setSpecial(boolean special) {
+		this.special = special;
 	}
 }

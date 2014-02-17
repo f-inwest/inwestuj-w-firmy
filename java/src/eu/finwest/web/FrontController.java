@@ -47,8 +47,8 @@ public class FrontController extends HttpServlet {
 	private static final ThreadLocal<LangVersion> langVersion = new ThreadLocal<LangVersion>();
 	private static final ThreadLocal<String> campaign = new ThreadLocal<String>();
 	
-	private static final CampaignVO PL_CAMPAIGN = createMainCampaign(Language.PL);
-	private static final CampaignVO EN_CAMPAIGN = createMainCampaign(Language.EN);
+	public static final CampaignVO PL_CAMPAIGN = createMainCampaign(Language.PL);
+	public static final CampaignVO EN_CAMPAIGN = createMainCampaign(Language.EN);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -315,6 +315,7 @@ public class FrontController extends HttpServlet {
 	private static final CampaignVO createMainCampaign(Language language) {
 		CampaignVO campaign = new CampaignVO();
 		campaign.setName("Main " + language + " campaign");
+		campaign.setSpecial(true);
 		campaign.setCreator("Admin");
 		campaign.setCreated(new Date(0));
 		campaign.setActiveFrom(new Date(0));

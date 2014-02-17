@@ -26,7 +26,6 @@ import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Vote;
 import eu.finwest.web.LangVersion;
-import eu.finwest.web.ListingFacade;
 import eu.finwest.web.MemCacheFacade;
 
 /**
@@ -789,6 +788,7 @@ public class DtoToVoConverter {
 		}
 		CampaignVO campaignVO = new CampaignVO();
 		campaignVO.setId(campaign.id != null ? new Key<Campaign>(Campaign.class, campaign.id).getString() : "");
+		campaignVO.setSpecial(false);
 		campaignVO.setActiveFrom(campaign.activeFrom);
 		campaignVO.setActiveTo(campaign.activeTo);
 		campaignVO.setAdmins(campaign.admins);

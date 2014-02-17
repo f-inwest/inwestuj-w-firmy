@@ -277,6 +277,8 @@ public class MemCacheFacade {
 		if (allCampaigns == null) {
 			List<Campaign> campaigns = getDAO().getAllCampaigns();
 			allCampaigns = new HashMap<String, CampaignVO>();
+			allCampaigns.put(FrontController.PL_CAMPAIGN.getSubdomain(), FrontController.PL_CAMPAIGN);
+			allCampaigns.put(FrontController.EN_CAMPAIGN.getSubdomain(), FrontController.EN_CAMPAIGN);
 			for (Campaign c : campaigns) {
 				allCampaigns.put(c.subdomain, DtoToVoConverter.convert(c));
 			}
