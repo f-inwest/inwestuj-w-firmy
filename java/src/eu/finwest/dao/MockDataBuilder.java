@@ -1072,22 +1072,22 @@ public class MockDataBuilder {
 				true, true);
 		listings.add(bp); // 20
 
-		bp = prepareListing(EN, JENNY, "PartyFinder", Listing.State.ACTIVE, "Internet", 20000, 5,
+		bp = prepareListing(EN, "test2", JENNY, "PartyFinder", Listing.State.ACTIVE, "Internet", 20000, 5,
 				"Life is a party, so party on", "You've got some free time tonight, but you don't have anything planned.  You could go check in on each of your bars to see what your friends are doing, you could try and instant message everyone, you could see what's happening on facebook and hope someone checks it.  Or you can use PartyFinder.  Simply post where you're going to be and when, and all your closest friends are sent an SMS on where and when the action's at.  It's the best way to get a party going.",
 				false, true);
 		listings.add(bp); // 21
 
-		bp = prepareListing(EN, BURNTSKY, "Tabify", Listing.State.ACTIVE, "Retail", 100000, 10,
+		bp = prepareListing(EN, "test2", BURNTSKY, "Tabify", Listing.State.ACTIVE, "Retail", 100000, 10,
 				"Condensing your bookshelf onto your tablet", "Everyone's got that bookshelf they haven't touched in ages.  You don't want to just toss them out, you know you'll get nothing for them at the used bookstore, and besides, you might want to look at them again someday.  But your cramped apartment is getting moreso by the day and you need space.  That's where Tabletify saves the day.  We take all your books, digitize them in full color high resolution down to the last page, and load it onto a USB stick.  Using a patented process we then load it via our app onto your tablet.  Viola, you've got everything you had in a fraction of the space.  And with our Iron Mountain archival service, you'll have all those books for generations to come.  Load it today, load it with Tabify.",
 				true, false);
 		listings.add(bp); // 22
 
-		bp = prepareListing(EN, EMPEROR, "MysticTea", Listing.State.ACTIVE, "Pharma", 150000, 15,
+		bp = prepareListing(EN, "test2", EMPEROR, "MysticTea", Listing.State.ACTIVE, "Pharma", 150000, 15,
 				"Ancient Chinese secrets brought to your drugstore shelf", "Everyone has heard of accupuncture by now, but not many know the biggest secret of ancient Chinese medicine, the Mystical Tea.  There are actually 12 mystical teas, each one aiding a specific part of the body, bringing comfort and relief in a natural, non-toxic way.  We take this ancient wisdom and package it into a convenient, customer-friendly one-dose application that is sold in drugstores across China.  Now we're bringing this secret to the West.",
 				true, true);
 		listings.add(bp); // 23
 
-		bp = prepareListing(EN, EMPEROR, "New Century Wines", Listing.State.ACTIVE, "Retail", 40000, 5,
+		bp = prepareListing(EN, "test2", EMPEROR, "New Century Wines", Listing.State.ACTIVE, "Retail", 40000, 5,
 				"The best of European wines in the New China", "We've all heard that the Chinese economy is growing in leaps and bounds.  What you probably don't know, however, is how hard it is to get a good bottle of wine in Beijing.  But we're changing all that, bringing the best of France, Italy, and more to the finest restaurants and shops in China.",
 				true, false);
 		listings.add(bp); // 24
@@ -1107,7 +1107,7 @@ public class MockDataBuilder {
 				true, false);
 		listings.add(bp); // 27
 
-		bp = prepareListing(PL, JOHN, "Karnawalec", Listing.State.ACTIVE, "Manufacturing", 95000, 15,
+		bp = prepareListing(PL, "test", JOHN, "Karnawalec", Listing.State.ACTIVE, "Manufacturing", 95000, 15,
 				"Pirat, rycerz, wróżka, strażak, a może smok...", "Za co przebrać dziecko na kolejny w tym roku bal karnawałowy? Jak sprawić, by mogło się swobodnie bawić, a jednocześnie z radością wcieliło się w nową rolę? W okresie karnawału wszyscy rodzice stają przed nie lada wyzwaniem.",
 				true, true);
 		listings.add(bp); // 28
@@ -1117,12 +1117,12 @@ public class MockDataBuilder {
 				false, true);
 		listings.add(bp); // 29
 
-		bp = prepareListing(PL, EMPEROR, "SuperDronik", Listing.State.ACTIVE, "Electronics", 80000, 10,
+		bp = prepareListing(PL, "test", EMPEROR, "SuperDronik", Listing.State.ACTIVE, "Electronics", 80000, 10,
 				"Szpieguj razem z nami", "Nasz SuperDronik pozwoli Ci na obserwację otoczenia twojego domu, samochodu, działki, magazynów oraz czegokolwiek byś nie chciał. Poznasz zwyczaje swoich sąsiadów z nieznanej dotychczas strony! Zainwestuj w NAS!",
 				true, true);
 		listings.add(bp); // 30
 
-		bp = prepareListing(PL, JENNY, "iGogle SKI", Listing.State.ACTIVE, "Electronics", 32000, 45,
+		bp = prepareListing(PL, "test", JENNY, "iGogle SKI", Listing.State.ACTIVE, "Electronics", 32000, 45,
 				"Poczujesz się jak pilot myśliwca", "Nasze gogle narciarskie pozwolą na sprawdzenie wiadomości, listy połączeń, przypomnień i innych funkcji normalnie dostępnych w Twoim telefonie.",
 				true, false);
 		listings.add(bp); // 31
@@ -1663,16 +1663,25 @@ public class MockDataBuilder {
 
     private Listing prepareListing(LangVersion lang, UserVO owner, String name, Listing.State state, String category, int amount, int percentage,
             String mantra, String summary, boolean hasBMC, boolean hasIP) {
-        return prepareListing(lang, owner, name, state, category, amount, percentage, mantra, summary, null, null, null, null, null, hasBMC, hasIP);
+    	return prepareListing(lang, null, owner, name, state, category, amount, percentage, mantra, summary, hasBMC, hasIP);
+    }
+    private Listing prepareListing(LangVersion lang, String campaign, UserVO owner, String name, Listing.State state, String category, int amount, int percentage,
+            String mantra, String summary, boolean hasBMC, boolean hasIP) {
+        return prepareListing(lang, campaign, owner, name, state, category, amount, percentage, mantra, summary, null, null, null, null, null, hasBMC, hasIP);
+    }
+    
+    private Listing prepareListing(LangVersion lang, UserVO owner, String name, Listing.State state, String category, int amount, int percentage,
+            String mantra, String summary, String companyUrl, DateTime createdAt, DateTime modifiedAt, String logo_url, String address, boolean hasBMC, boolean hasIP) {
+    	return prepareListing(lang, null, owner, name, state, category, amount, percentage, mantra, summary, companyUrl, createdAt, modifiedAt, logo_url, address, hasBMC, hasIP);	
     }
 
-    private Listing prepareListing(LangVersion lang, UserVO owner, String name, Listing.State state, String category, int amount, int percentage,
+    private Listing prepareListing(LangVersion lang, String campaign, UserVO owner, String name, Listing.State state, String category, int amount, int percentage,
             String mantra, String summary, String companyUrl, DateTime createdAt, DateTime modifiedAt, String logo_url, String address, boolean hasBMC, boolean hasIP) {
 		Listing bp = new Listing();
 		bp.id = id();
 		bp.lang = lang;
 		bp.currency = lang == LangVersion.PL ? Currency.PLN : Currency.EUR;
-		bp.campaign = lang == LangVersion.PL ? "pl" : "en";
+		bp.campaign = campaign != null ? campaign : (lang == LangVersion.PL ? "pl" : "en");
 		bp.name = name;
 		bp.summary = summary;
 		bp.mantra = mantra;

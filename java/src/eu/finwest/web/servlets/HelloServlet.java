@@ -3,6 +3,7 @@ package eu.finwest.web.servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -169,6 +170,14 @@ public class HelloServlet extends HttpServlet {
 							+ "\", \"allowed_languages\":\"" + camp.allowedLanguage + "\"}"
 							+ "</textarea><input type=\"submit\" value=\"Update campaign " + camp.subdomain + "\"/></form>");
 			}
+			out.println("<br/><br/><form method=\"POST\" action=\"/user/store_campaign/.json\"><textarea name=\"campaign\" rows=\"3\" cols=\"120\">"
+					+ "{\"subdomain\":\"" + "new" + "\", \"name\":\"" + "New campaign" + "\", \"description\":\"" + "Super fancy campaign"
+					+ "\", \"comment\":\"" + "This is a comment for campaign"
+					+ "\", \"active_from\":\"" + fmt.print(new Date().getTime()) + "\", \"active_to\":\"" + fmt.print(new Date().getTime() + 30 * 24 * 60 * 60 * 1000)
+					+ "\", \"public_browsing\":\"" + "true" + "\", \"admins\":\"" + ""
+					+ "\", \"allowed_languages\":\"" + "pl" + "\"}"
+					+ "</textarea><input type=\"submit\" value=\"Create campaign\"/></form>");
+
 
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Listings API:</p>");
 			out.println("<a href=\"/listings/discover/.json\">Discover listings</a><br/>");
@@ -545,7 +554,10 @@ public class HelloServlet extends HttpServlet {
 			if (count < 5) {
 				printListingDocs(out, currentUser, listing, fmt);
 			} else {
-				out.println("Documents won't be displayed.");
+				out.println("<table border=\"1\"><tr><td colspan=\"2\">Docs to download</td></tr>");
+				out.println("<tr><td><a href=\"/listing/presentation/" + listing.getId() + "/light.json?\">View light presentation</a><br/></td></tr>");
+				out.println("<tr><td><a href=\"/listing/presentation/" + listing.getId() + "/dark.json?\">View dark presentation</a><br/></td></tr>");
+				out.println("<tr><td>Other docs not displayed to speed up page rendering</td></tr></table>");
 			}
 			out.println("<td>");
 			out.println("</tr>");
@@ -558,7 +570,10 @@ public class HelloServlet extends HttpServlet {
 		if (docs != null && !docs.isEmpty()) {
 			BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
-			out.println("<table border=\"1\"><tr><td colspan=\"2\">Uploaded documents for edited listing</td></tr>");
+			out.println("<table border=\"1\">");
+			out.println("<tr><td><a href=\"/listing/presentation/" + listing.getId() + "/light.json?\">View light presentation</a><br/></td></tr>");
+			out.println("<tr><td><a href=\"/listing/presentation/" + listing.getId() + "/dark.json?\">View dark presentation</a><br/></td></tr>");
+			out.println("<tr><td colspan=\"2\">Uploaded documents for edited listing</td></tr>");
 			for (ListingDocumentVO doc : docs) {
 				if (doc == null) {
 					continue;
@@ -604,7 +619,7 @@ public class HelloServlet extends HttpServlet {
 				out.println("<td><form method=\"POST\" action=\"/listing/delete_file/.json?id="
 						+ listing.getId() + "&type=" + doc.getType() + "\"><input type=\"submit\" value=\"Delete\"/></form>");
 				out.println("</td></tr>");
-			}
+			}			
 			out.println("</table>");
 		} else {
 			out.println("No documents uploaded");

@@ -283,6 +283,12 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
 	  	<replace dir="war/pl" token="href='css/" value="href='pl/css/">
 			<include name="**/*.html"/>
 		</replace>
+	  	<copy todir="war" filtering="false">
+	  	  <fileset dir=".">
+	  	      <include name="pl.properties"/>
+	  	      <include name="en.properties"/>
+	  	  </fileset>
+	  	</copy>
 	</target>
   
 	<target name="ensure-test-name" unless="test">
@@ -350,6 +356,7 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
         <!-- arg value="- -jvm_flag=-Xdebug"/
         arg value="- -jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=7778"/ -->
         <arg value="--jvm_flag=-Xmx1024m"/>
+        <arg value="--jvm_flag=-XX:MaxPermSize=256m"/>
       	<arg value="--jvm_flag=-Dappengine.user.timezone=UTC"/>
         <!--
         <arg value="- -jvm_flag=-Dhttp.proxyHost=${http_proxy_host}"/>

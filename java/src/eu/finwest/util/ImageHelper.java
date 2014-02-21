@@ -1,5 +1,6 @@
 package eu.finwest.util;
 
+import java.io.ByteArrayOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
@@ -8,6 +9,10 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 
 public class ImageHelper {
 	private static final Logger log = Logger.getLogger(ImageHelper.class.getName());
@@ -152,5 +157,34 @@ public class ImageHelper {
 		String avatarUrl = fetchUrl("http://graph.facebook.com/" + facebookId + "/picture");
 		log.info("Fetched Facebook avatar url: " + avatarUrl);
 		return avatarUrl;
+	}
+	
+	public static byte[] getBytesFromBlob(BlobKey blobKey) {
+        BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+
+        // Start reading
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        
+        long inxStart = 0;
+        long inxEnd = 10240;
+        boolean flag = false;
+
+        do {
+            try {
+                byte[] b = blobstoreService.fetchData(blobKey,inxStart,inxEnd);
+                out.write(b);
+
+                if (b.length < 10240) {
+                    flag = true;
+                }
+                inxStart = inxEnd + 1;
+                inxEnd += 10250;
+            } catch (Exception e) {
+                flag = true;
+            }
+
+        } while (!flag);
+
+        return out.toByteArray();
 	}
 }

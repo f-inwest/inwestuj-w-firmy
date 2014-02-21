@@ -1,5 +1,7 @@
 package eu.finwest.web;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,6 +29,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
+import org.docx4j.openpackaging.io.SaveToZipFile;
+import org.docx4j.openpackaging.packages.PresentationMLPackage;
 import org.joda.time.DateMidnight;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -68,6 +72,8 @@ import eu.finwest.datamodel.PictureImport;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.VoToModelConverter;
 import eu.finwest.util.ImageHelper;
+import eu.finwest.util.OfficeHelper;
+import eu.finwest.util.OfficeHelper.Template;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.DiscoverListingsVO;
 import eu.finwest.vo.DtoToVoConverter;
@@ -2427,5 +2433,41 @@ public class ListingFacade {
 
 		log.info("Prefilling location. Country name: " + countryName + ", state: " + stateName + ", city: " + cityName
 				+ ", brief address: " + briefAddress + ", long: " + longitude + ", lat: " + latitude);
+	}
+
+	public BlobKey createPresentation(Listing listing, String type) {
+		SBUser owner = ObjectifyDatastoreDAO.getInstance().getUser(listing.owner.getString());
+		
+		Template template = StringUtils.isBlank(type) || StringUtils.equalsIgnoreCase(type, "dark") ? Template.BLACK : Template.WHITE;
+		Map<String, String> mappings = OfficeHelper.instance().getMappings(listing, owner);
+		
+		ByteArrayInputStream logoStream = new ByteArrayInputStream(new byte[] {});
+		ListingDoc logoDoc = getDAO().getListingDocument(listing.logoId);
+		if (logoDoc != null) {
+			logoStream = new ByteArrayInputStream(ImageHelper.getBytesFromBlob(logoDoc.blob));
+		}
+		try {
+			PresentationMLPackage pptx = OfficeHelper.instance().generatePresenation(template, logoStream, mappings);
+			log.info("Presentation generated");
+			SaveToZipFile saver = new SaveToZipFile(pptx);
+			ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+			saver.save(outStream);
+			log.info("Presentation saved to byte array, length: " + outStream.size());
+
+			// save data to Google App Engine Blobstore
+			FileService fileService = FileServiceFactory.getFileService();
+			AppEngineFile file = fileService.createNewBlobFile("application/vnd.openxmlformats-officedocument.presentationml.presentation");
+			FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
+			writeChannel.write(ByteBuffer.wrap(outStream.toByteArray()));
+			writeChannel.closeFinally();
+			
+			log.info("Presentation stored to blobstore, file: " + file.getFullPath());
+			// your blobKey to your data in Google App Engine BlobStore
+			return fileService.getBlobKey(file);
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error generating presentation", e);
+		}
+		
+		return null;
 	}
 }

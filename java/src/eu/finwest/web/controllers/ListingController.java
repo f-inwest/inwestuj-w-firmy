@@ -126,7 +126,9 @@ public class ListingController extends ModelDrivenController {
 				return queryImport(request);
 			} else if ("import_types".equalsIgnoreCase(getCommand(1))) {
 				return importTypes(request);
-			}
+			} else if ("presentation".equalsIgnoreCase(getCommand(1))) {
+				return presentation(request);
+			} 
 		} else if ("POST".equalsIgnoreCase(request.getMethod())) {
 			if ("create".equalsIgnoreCase(getCommand(1))) {
 				return startEditing(request);
@@ -741,6 +743,32 @@ public class ListingController extends ModelDrivenController {
 			headers.setStatus(500);
 		}
 		model = "Returning picture " + picNr + " for listing " + listingId;
+		return headers;
+	}
+	
+	private HttpHeaders presentation(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("presentation");
+		
+		String listingId = getCommandOrParameter(request, 2, "id");
+		String type = getCommandOrParameter(request, 3, "type");
+
+		Listing listing = ObjectifyDatastoreDAO.getInstance().getListing(BaseVO.toKeyId(listingId));
+		if (listing == null) {
+			log.log(Level.INFO, "Listing not found!");
+			headers.setStatus(500);
+			return headers;
+		}
+		BlobKey pictureBlob = ListingFacade.instance().createPresentation(listing, type);
+		log.log(Level.INFO, "Sending back presentation: " + pictureBlob);
+		if (pictureBlob != null) {
+			headers.addHeader("Cache-Control", "public, max-age=86400");
+			headers.setBlobKey(pictureBlob);
+		} else {
+			log.log(Level.INFO, "Presentation has not been generated!");
+			headers.setStatus(500);
+		}
+		model = "Returning presentation for listing " + listingId;
+		
 		return headers;
 	}
 
