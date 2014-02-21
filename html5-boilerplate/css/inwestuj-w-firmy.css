@@ -2899,10 +2899,20 @@ color: #fff;
     color: #fefefe;
     background: #4dc6e1;
 }
+.campaign-textbox-link {
+    text-decoration: none;
+    color: #fefefe !important;
+}
 .campaign-dropdown-button {
     background: url(../img/dropdown.png);
     width: 30px;
     height: 30px;
     float: right;
 }
-
+.no-listings-found {
+    background: #fefefe;
+    padding: 30px;
+    margin-bottom: 15px;
+    width: 567px;
+    font-weight: 500;
+}

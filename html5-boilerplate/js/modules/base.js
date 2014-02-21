@@ -441,7 +441,7 @@ pl.implement(CampaignDropdownClass, {
         if (!all_campaigns) {
             return;
         }
-        pl('#campaign-textbox-additional').get(0).innerHTML = this.campaignTextboxen(all_campaigns);
+        pl('#campaign-textbox-additional').get(0).innerHTML = this.campaignTextboxen(campaign, all_campaigns);
 
         pl('#campaign-dropdown-button').bind('click', function() {
             if (pl('#campaign-dropdown').hasClass('campaign-dropdown-visible')) {
@@ -452,15 +452,47 @@ pl.implement(CampaignDropdownClass, {
             }
         })
     },
-    campaignTextboxen: function(all_campaigns) {
+    campaignTextboxen: function(current_campaign, all_campaigns) {
         var textboxen = "",
             campaign,
+            hostRoot,
+            campaignLink,
+            subdomain,
             i;
+        hostRoot = this.getHostRoot();
         for (i = 0; i < all_campaigns.length; i++) {
             campaign = all_campaigns[i];
-            textboxen += '<div class="campaign-textbox">' + campaign.name + '</div>\n';
+            subdomain = campaign.subdomain;
+            if (subdomain === current_campaign.subdomain)
+                continue;
+            campaignLink = 'http://' + subdomain + '.' + hostRoot;
+            textboxen += '<div class="campaign-textbox">'
+                + '<a href="' + campaignLink + '" target="_blank" class="campaign-textbox-link">'
+                + campaign.name
+                + '</a>'
+                + '</div>\n';
         }
         return textboxen;
+    },
+    getHostRoot: function() {
+        var host = window.location.host,
+            firstDot = host.indexOf('.'),
+            firstColon = host.indexOf(':'),
+            lastHostComponent = host.substring(firstDot + 1, firstColon),
+            tld = ".pl",
+            isSubdomain = firstDot < host.indexOf(tld),
+            isLocalhostSubdomain = lastHostComponent == 'localhost',
+            domain;
+        if (isLocalhostSubdomain) {
+            domain = host.substring(firstDot == -1 ? 0 : firstDot + 1);
+        }
+        else if (isSubdomain) {
+            domain = host.substring(firstDot == -1 ? 0 : firstDot + 1);
+        }
+        else {
+            domain = host;
+        }
+        return domain;
     }
 
 });
@@ -896,7 +928,9 @@ pl.implement(CompanyListClass, {
         }
         seeall = this.options.seeall && companies && (companies.length >= this.options.colsPerRow);
         if (!companies.length) {
-            pl('#'+this.options.companydiv).html('<span class="identedtext attention">@lang_no_projects_found@</span>');
+            pl('#'+this.options.companydiv)
+                .addClass('no-listings-found')
+                .html('<span class="identedtext attention">@lang_no_projects_found@</span>');
             return;
         }
         if (this.options.exponential) { // display full width, then two half width, then the rest single width
