@@ -23,6 +23,8 @@ war/test-docs
 war/*.png
 war/*.html
 war/*.txt
+war/pl.properties
+war/en.properties
 war/crossdomain.xml
 war/WEB-INF/appengine-generated
 war/WEB-INF/appengine-web.xml
