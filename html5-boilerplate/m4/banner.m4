@@ -9,20 +9,29 @@
 
         <span class="bannertext span-24">
 
-            <div class="span-1">
+            <div class="span-1" id="welcomevertical-wrapper">
                 <div class="welcomeverticalline"></div>
                 <a href="#" class="welcomeverticalbar">@lang_investors@</a>
                 <a href="#" class="welcomeverticalbar welcomeverticalbar2 welcomeverticalbargrey">@lang_innovators@</a>
             </div>
 
-            <div class="span-20 push-1">
-                <div class="welcometitle" id="welcometitle">
+            <div class="span-20 push-1" id="welcome-wrapper-outer">
+                <div class="welcometitle">
                     <div class="welcomemessage">@lang_investorsmessage@</div>
                     <div class="welcomemessage initialhidden">@lang_innovatorsmessage@</div>
                 </div>
-                <div class="welcometext discoverwelcometext" id="welcometext">
+                <div class="welcometext discoverwelcometext">
                     <a href="/discover-page.html" class="welcomemessage welcomelink">@lang_investorslink@</a>
                     <a href="/add-listing-page.html" class="welcomemessage welcomelink initialhidden">@lang_innovatorslink@</a>
+                </div>
+            </div>
+
+            <div class="span-20 initialhidden" id="welcome-campaign-wrapper-outer">
+                <div class="welcometitle">
+                    <div class="welcomemessage" id="welcometitle-campaign-message"></div>
+                </div>
+                <div class="welcometext discoverwelcometext">
+                    <a href="/add-listing-page.html" class="welcomemessage welcomelink">@lang_innovatorslink@</a>
                 </div>
             </div>
 
