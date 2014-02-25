@@ -131,7 +131,7 @@ body.nearby-page > #wrap > #main > div.container > div.nearbywrapper {
     border: 2px solid #FFF;
     background: #CCC;
 */
-    z-index: 1002;
+    z-index: 10002;
     overflow: visible;
 }
 .page-login {
@@ -2915,4 +2915,7 @@ color: #fff;
     margin-bottom: 15px;
     width: 567px;
     font-weight: 500;
+}
+.welcome-wrapper-campaign {
+    margin-left: 0;
 }

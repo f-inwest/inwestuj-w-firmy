@@ -451,6 +451,19 @@ pl.implement(CampaignDropdownClass, {
                 pl('#campaign-dropdown').addClass('campaign-dropdown-visible');
             }
         })
+
+        if (!campaign.special) { // show specific campaign
+            if (pl('#welcomevertical-wrapper').len() > 0) { // it's discover page
+                pl('#welcomevertical-wrapper').hide();
+                pl('#welcome-wrapper-outer').hide();
+                pl('#welcometitle-campaign-message').get(0).innerHTML = this.campaignText(campaign);
+                pl('#welcome-campaign-wrapper-outer').show();
+            }
+            else {
+            //    pl('#welcometitle').innerHTML = campaign.name;
+            //    pl('#welcometext').innerHTML = campaign.description;
+            }
+        }
     },
     campaignTextboxen: function(current_campaign, all_campaigns) {
         var textboxen = "",
@@ -473,6 +486,9 @@ pl.implement(CampaignDropdownClass, {
                 + '</div>\n';
         }
         return textboxen;
+    },
+    campaignText: function(campaign) {
+        return '<b>' + campaign.name + '</b><br />' + campaign.description;
     },
     getHostRoot: function() {
         var host = window.location.host,
@@ -581,6 +597,12 @@ pl.implement(HeaderClass, {
             pl('#light, #fade').show();
         });
         pl('#headernotloggedin').show();
+
+        pl('a[href=/add-listing-page.html]').bind('click', function(e) {
+            pl('#light, #fade').show();
+            e.preventDefault();
+            return false;
+        });
     }
 });
 
