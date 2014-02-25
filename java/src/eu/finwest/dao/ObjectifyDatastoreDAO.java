@@ -44,6 +44,7 @@ import eu.finwest.datamodel.PictureImport;
 import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
+import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.Vote;
 import eu.finwest.vo.ListPropertiesVO;
@@ -1494,6 +1495,11 @@ public class ObjectifyDatastoreDAO {
 		List<Key<Campaign>> keyList = new CursorHandler<Campaign>().handleQuery(listingProperties, query);
 		List<Campaign> campaigns = new ArrayList<Campaign>(getOfy().get(keyList).values());
 		return campaigns;
+	}
+
+	public void storeTransaction(Transaction trans) {
+		Key<Transaction> key = getOfy().put(trans);
+		log.info("Stored payment transaction data, id: " + key.getString() + ", " + trans);
 	}
 
 }

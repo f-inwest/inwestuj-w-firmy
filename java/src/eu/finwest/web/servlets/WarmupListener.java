@@ -36,6 +36,7 @@ import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.Rank;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
+import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.Vote;
 import eu.finwest.util.TwitterHelper;
@@ -78,6 +79,7 @@ public class WarmupListener implements ServletContextListener {
         ObjectifyService.register(GeocodeLocation.class);
         ObjectifyService.register(StartuplyCache.class);
         ObjectifyService.register(PictureImport.class);
+        ObjectifyService.register(Transaction.class);
 	}
 
 	public void contextInitialized(ServletContextEvent event) {

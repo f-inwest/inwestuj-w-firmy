@@ -22,6 +22,7 @@ import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
+import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.VoToModelConverter;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.CommentListVO;
@@ -442,6 +443,10 @@ public class ServiceFacade {
 		list.setUser(loggedInUser);
 		
 		return list;
+	}
+
+	public void storeTransaction(Transaction trans) {
+		getDAO().storeTransaction(trans);
 	}
 
 }

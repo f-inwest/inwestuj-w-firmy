@@ -1,12 +1,15 @@
 package eu.finwest.web.controllers;
 
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.util.Date;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -19,6 +22,8 @@ import com.google.gdata.util.AuthenticationException;
 import eu.finwest.dao.DatastoreMigration;
 import eu.finwest.dao.MockDataBuilder;
 import eu.finwest.datamodel.SystemProperty;
+import eu.finwest.datamodel.Transaction;
+import eu.finwest.datamodel.Transaction.Status;
 import eu.finwest.vo.SystemPropertyVO;
 import eu.finwest.vo.UserVO;
 import eu.finwest.web.HttpHeaders;
@@ -64,9 +69,63 @@ public class SystemController extends ModelDrivenController {
 				return associateMockImages(request);
 			} else if("update_avatars_dragon_lister".equalsIgnoreCase(getCommand(1))) {
 				return updateAvatarsDragonLister(request);
+			} else if("transferuj_pl_notification".equalsIgnoreCase(getCommand(1))) {
+				return transferujPlNotification(request);
 			}
 		}
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	private HttpHeaders transferujPlNotification(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("transferuj_pl_notification");
+
+		try {
+			String remoteHost = request.getRemoteHost();
+			log.info("We got transferuj.pl confirmation from: " + remoteHost);
+			if (!StringUtils.equals("195.149.229.109,", remoteHost)) {
+				log.warning("Transferuj.pl confirmation received from " + remoteHost + ", supposed to be 195.149.229.109");
+			}
+			
+			Map<String, String[]> params = (Map<String, String[]>)request.getParameterMap();
+			for (Map.Entry<String, String[]> entry : params.entrySet()) {
+				StringBuffer buf = new StringBuffer();
+				for (String value : entry.getValue()) {
+					buf.append(" ").append(value);
+				}
+				log.info("Parameter " + entry.getKey() + " : " + buf.toString());
+			}
+			Transaction trans = new Transaction();
+			trans.seller_id = params.get("id") != null ? params.get("id")[0] : null;
+			String status = params.get("tr_status") != null ? params.get("tr_status")[0] : null;
+			trans.status = StringUtils.equals("TRUE", status) ? Status.OK : Status.ERROR;
+			trans.transactionId = params.get("tr_id") != null ? params.get("tr_id")[0] : null;
+			trans.amountStr = params.get("tr_amount") != null ? params.get("tr_amount")[0] : null;
+			trans.paidStr = params.get("tr_paid") != null ? params.get("tr_paid")[0] : null;
+			trans.error = params.get("tr_error") != null ? params.get("tr_error")[0] : null;
+			trans.date = params.get("tr_date'") != null ? params.get("tr_date'")[0] : null;
+			trans.description = params.get("tr_desc") != null ? params.get("tr_desc")[0] : null;
+			trans.crc = params.get("tr_crc") != null ? params.get("tr_crc")[0] : null;
+			trans.email = params.get("tr_email") != null ? params.get("tr_email")[0] : null;
+			trans.md5sum = params.get("md5sum") != null ? params.get("md5sum")[0] : null;
+			
+			if (!(trans.status == Status.OK && StringUtils.equalsIgnoreCase("none", trans.error))) {
+				log.info("Transaction " + trans.transactionId + " failed.");
+			}
+			
+			String md5string = trans.seller_id + trans.transactionId + trans.amountStr + trans.crc + "718N3Xa1b9qk1QG4";
+			String thedigest = DigestUtils.md5Hex(md5string);
+			if (!StringUtils.equals(trans.md5sum, thedigest)) {
+				log.warning("MD5 not valid! string: " + md5string + " -> MD5 -> " + thedigest);
+			}
+			model = "TRUE";
+			ServiceFacade.instance().storeTransaction(trans);
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error parsing transferuj.pl notification!", e);
+			model = "FALSE";
+		}
+		
+		return headers;
 	}
 
 	private HttpHeaders associateMockImages(HttpServletRequest request) {

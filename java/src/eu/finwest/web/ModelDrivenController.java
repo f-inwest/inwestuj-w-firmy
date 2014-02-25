@@ -171,12 +171,8 @@ public abstract class ModelDrivenController {
 		try {
 			response.setContentType("application/json;charset=UTF-8");
 			mapper.writeValue(response.getWriter(), getModel());
-		} catch (JsonGenerationException e) {
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error generating response JSON", e);
 		}
 	}
 
@@ -191,7 +187,19 @@ public abstract class ModelDrivenController {
 			writer.println(modelHtml);
 			writer.println("</body></html>");
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.log(Level.SEVERE, "Error generating response HTML", e);
+		}
+	}
+
+	public void generateText(HttpServletResponse response) {
+		PrintWriter writer;
+		try {
+			response.setContentType("text/plain;charset=UTF-8");
+			writer = response.getWriter();
+			String modelText = getModel() != null ? getModel().toString() : "Result is empty.";
+			writer.println(modelText);
+		} catch (IOException e) {
+			log.log(Level.SEVERE, "Error generating response text", e);
 		}
 	}
 
