@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.googlecode.objectify.Key;
 
@@ -25,6 +28,7 @@ import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Vote;
+import eu.finwest.web.FrontController;
 import eu.finwest.web.LangVersion;
 import eu.finwest.web.MemCacheFacade;
 
@@ -173,6 +177,7 @@ public class DtoToVoConverter {
 		listing.setPlatform(listingDTO.platform);
 		listing.setStage(listingDTO.stage != null ? listingDTO.stage.toString() : null);
 		listing.setPresentationId(keyToString(listingDTO.presentationId));
+		listing.setPresentationGenId(keyToString(listingDTO.presentationGenId));
 		listing.setBuinessPlanId(keyToString(listingDTO.businessPlanId));
 		listing.setFinancialsId(keyToString(listingDTO.financialsId));
 		listing.setLogo(listingDTO.logoBase64);
@@ -321,11 +326,28 @@ public class DtoToVoConverter {
 			return null;
 		}
 		ListingDocumentVO doc = new ListingDocumentVO();
-		doc.setId(new Key<ListingDoc>(ListingDoc.class, docDTO.id).getString());
+		doc.setId(docDTO.id != 0 ? new Key<ListingDoc>(ListingDoc.class, docDTO.id).getString() : null);
 		doc.setMockData(docDTO.mockData);
 		doc.setBlob(docDTO.blob);
 		doc.setCreated(docDTO.created);
 		doc.setType(docDTO.type.toString());
+		switch(docDTO.type) {
+		case PRESENTATION_GENERATED:
+			DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy_MM_dd_HH_mm");
+			switch (FrontController.getLangVersion()) {
+			case EN:
+				doc.setFileName("project_presentation_" + fmt.print(docDTO.created.getTime()) + ".pptx");
+				break;
+			case PL:
+				doc.setFileName("prezentacja_projektu_" + fmt.print(docDTO.created.getTime()) + ".pptx");
+				break;
+			}
+			break;
+		default:
+			doc.setFileName(StringUtils.lowerCase(docDTO.type.toString()));
+			break;
+		}
+
 		return doc;
 	}
 

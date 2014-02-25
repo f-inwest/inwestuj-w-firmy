@@ -75,7 +75,7 @@ public class FileController extends ModelDrivenController {
 		ListingDocumentVO doc = ListingFacade.instance().getListingDocument(getLoggedInUser(), docId);
 		log.log(Level.INFO, "Sending back document: " + doc);
 		if (doc != null && doc.getBlob() != null) {
-			headers.addHeader("Content-Disposition", "attachment; filename=" + doc.getType().toLowerCase());
+			headers.addHeader("Content-Disposition", "attachment; filename=" + doc.getFileName());
 			headers.setBlobKey(doc.getBlob());
 		} else {
 			log.log(Level.INFO, "Document not found or blob not available!");

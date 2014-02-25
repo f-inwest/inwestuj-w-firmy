@@ -23,7 +23,8 @@ import com.googlecode.objectify.annotation.Unindexed;
 @Entity
 @Cached(expirationSeconds=60*10)
 public class ListingDoc extends BaseObject<ListingDoc> {
-	public static enum Type {BUSINESS_PLAN, PRESENTATION, FINANCIALS, LOGO, PIC1, PIC2, PIC3, PIC4, PIC5};
+	public static enum Type {BUSINESS_PLAN, PRESENTATION, FINANCIALS, LOGO, PIC1, PIC2, PIC3, PIC4, PIC5,
+		PRESENTATION_GENERATED};
 	public Key<ListingDoc> getKey() {
 		return new Key<ListingDoc>(ListingDoc.class, id);
 	}

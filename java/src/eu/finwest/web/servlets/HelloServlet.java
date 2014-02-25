@@ -555,8 +555,7 @@ public class HelloServlet extends HttpServlet {
 				printListingDocs(out, currentUser, listing, fmt);
 			} else {
 				out.println("<table border=\"1\"><tr><td colspan=\"2\">Docs to download</td></tr>");
-				out.println("<tr><td><a href=\"/listing/presentation/" + listing.getId() + "/light.json?\">View light presentation</a><br/></td></tr>");
-				out.println("<tr><td><a href=\"/listing/presentation/" + listing.getId() + "/dark.json?\">View dark presentation</a><br/></td></tr>");
+				out.println("<tr><td><a href=\"/listing/presentation/" + listing.getId() + ".json?\">View generated presentation</a><br/></td></tr>");
 				out.println("<tr><td>Other docs not displayed to speed up page rendering</td></tr></table>");
 			}
 			out.println("<td>");
@@ -571,8 +570,7 @@ public class HelloServlet extends HttpServlet {
 			BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
 			out.println("<table border=\"1\">");
-			out.println("<tr><td><a href=\"/listing/presentation/" + listing.getId() + "/light.json?\">View light presentation</a><br/></td></tr>");
-			out.println("<tr><td><a href=\"/listing/presentation/" + listing.getId() + "/dark.json?\">View dark presentation</a><br/></td></tr>");
+			out.println("<tr><td><a href=\"/listing/presentation/" + listing.getId() + ".json\">View generated presentation</a><br/></td></tr>");
 			out.println("<tr><td colspan=\"2\">Uploaded documents for edited listing</td></tr>");
 			for (ListingDocumentVO doc : docs) {
 				if (doc == null) {
@@ -615,7 +613,7 @@ public class HelloServlet extends HttpServlet {
 							"<input type=\"submit\" value=\"Swap 5 <-> 1\"/></form>");
 				}
 				out.println("<a href=\"/file/download/" + doc.getId() + ".json\">Download "
-						+ doc.getType() + " uploaded " + fmt.print(doc.getCreated().getTime()) + ", type: " + doc.getType() + "</a></td>");
+						+ doc.getFileName() + " uploaded " + fmt.print(doc.getCreated().getTime()) + ", type: " + doc.getType() + "</a></td>");
 				out.println("<td><form method=\"POST\" action=\"/listing/delete_file/.json?id="
 						+ listing.getId() + "&type=" + doc.getType() + "\"><input type=\"submit\" value=\"Delete\"/></form>");
 				out.println("</td></tr>");
@@ -662,7 +660,7 @@ public class HelloServlet extends HttpServlet {
 							}
 						}
 						out.println("<a href=\"/file/download/" + doc.getId() + ".json\">Download "
-								+ doc.getType() + " uploaded " + fmt.print(doc.getCreated().getTime()) + ", type: " + doc.getType() + "</a></td>");
+								+ doc.getFileName() + " uploaded " + fmt.print(doc.getCreated().getTime()) + ", type: " + doc.getType() + "</a></td>");
 						out.println("<td><form method=\"POST\" action=\"/listing/delete_file/.json?id="
 								+ listing.getId() + "&type=" + doc.getType() + "\"><input type=\"submit\" value=\"Delete\"/></form>");
 						out.println("</td></tr>");
@@ -689,6 +687,9 @@ public class HelloServlet extends HttpServlet {
 		}
 		if (listing.presentationId != null) {
 			list.add(ListingFacade.instance().getListingDocument(loggedInUser, listing.presentationId.getString()));
+		}
+		if (listing.presentationGenId != null) {
+			list.add(ListingFacade.instance().getListingDocument(loggedInUser, listing.presentationGenId.getString()));
 		}
 		if (listing.financialsId != null) {
 			list.add(ListingFacade.instance().getListingDocument(loggedInUser, listing.financialsId.getString()));

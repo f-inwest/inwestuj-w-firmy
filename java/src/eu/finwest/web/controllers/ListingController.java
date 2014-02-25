@@ -750,18 +750,17 @@ public class ListingController extends ModelDrivenController {
 		HttpHeaders headers = new HttpHeadersImpl("presentation");
 		
 		String listingId = getCommandOrParameter(request, 2, "id");
-		String type = getCommandOrParameter(request, 3, "type");
-
 		Listing listing = ObjectifyDatastoreDAO.getInstance().getListing(BaseVO.toKeyId(listingId));
 		if (listing == null) {
 			log.log(Level.INFO, "Listing not found!");
 			headers.setStatus(500);
 			return headers;
 		}
-		BlobKey pictureBlob = ListingFacade.instance().createPresentation(listing, type);
+		BlobKey pictureBlob = ListingFacade.instance().generatePresentation(getLoggedInUser(), listingId);
 		log.log(Level.INFO, "Sending back presentation: " + pictureBlob);
 		if (pictureBlob != null) {
 			headers.addHeader("Cache-Control", "public, max-age=86400");
+			headers.addHeader("Content-Disposition", "attachment; filename=" + ListingDoc.Type.PRESENTATION_GENERATED.toString() + ".pptx");
 			headers.setBlobKey(pictureBlob);
 		} else {
 			log.log(Level.INFO, "Presentation has not been generated!");

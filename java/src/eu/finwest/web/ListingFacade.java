@@ -1967,6 +1967,10 @@ public class ListingFacade {
 			replacedDocId = listing.presentationId;
 			listing.presentationId = new Key<ListingDoc>(ListingDoc.class, docDTO.id);
 			break;
+		case PRESENTATION_GENERATED:
+			replacedDocId = listing.presentationGenId;
+			listing.presentationGenId = new Key<ListingDoc>(ListingDoc.class, docDTO.id);
+			break;
 		case LOGO:
 			replacedDocId = listing.logoId;
 			listing.logoBase64 = listingToUpdate.logoBase64;
@@ -2435,10 +2439,33 @@ public class ListingFacade {
 				+ ", brief address: " + briefAddress + ", long: " + longitude + ", lat: " + latitude);
 	}
 
-	public BlobKey createPresentation(Listing listing, String type) {
+	public BlobKey generatePresentation(UserVO loggedInUser, String listingId) {
+		if (loggedInUser == null) {
+			log.warning("User has to be logged in to generate presentation!");
+			return null;
+		}
+		Listing listing = ObjectifyDatastoreDAO.getInstance().getListing(BaseVO.toKeyId(listingId));
+		if (listing == null) {
+			log.warning("Listing for id " + listingId + " doesn't exist!");
+			return null;
+		}
+		if (listing.state != Listing.State.ACTIVE) {
+			log.warning("Presentation generation is only available for active listings :" + listing);
+			return null;
+		}
 		SBUser owner = ObjectifyDatastoreDAO.getInstance().getUser(listing.owner.getString());
+		if (owner == null) {
+			log.warning("Listing owner with id " + listing.owner.getString() + " doesn't exist!");
+			return null;
+		}
+
+		if (listing.presentationGenId != null) {
+			ListingDoc presentation = getDAO().getListingDocument(listing.presentationGenId);
+			log.info("Returning current generated presentation: " + presentation);
+			return presentation.blob;
+		}
 		
-		Template template = StringUtils.isBlank(type) || StringUtils.equalsIgnoreCase(type, "dark") ? Template.BLACK : Template.WHITE;
+		Template template = Template.BLACK;
 		Map<String, String> mappings = OfficeHelper.instance().getMappings(listing, owner);
 		
 		ByteArrayInputStream logoStream = new ByteArrayInputStream(new byte[] {});
@@ -2463,6 +2490,18 @@ public class ListingFacade {
 			
 			log.info("Presentation stored to blobstore, file: " + file.getFullPath());
 			// your blobKey to your data in Google App Engine BlobStore
+			
+			ListingDoc presDoc = new ListingDoc();
+			presDoc.blob = fileService.getBlobKey(file);
+			presDoc.created = new Date();
+			presDoc.mockData = false;
+			presDoc.modified = new Date();
+			presDoc.type = Type.PRESENTATION_GENERATED;
+			presDoc = getDAO().createListingDocument(presDoc);
+			ListingDocumentVO presDocVO = DtoToVoConverter.convert(presDoc);
+			log.info("Created new listing document: " + presDocVO);
+			
+			createListingDocument(loggedInUser, listingId, presDocVO);
 			return fileService.getBlobKey(file);
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Error generating presentation", e);

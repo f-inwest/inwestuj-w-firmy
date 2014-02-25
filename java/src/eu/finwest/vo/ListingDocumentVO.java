@@ -27,6 +27,8 @@ public class ListingDocumentVO extends BaseResultVO {
 	private String state;
 	@JsonProperty("mockData")
 	private boolean mockData;
+	@JsonProperty("filename")
+	private String fileName;
 
 	public String getId() {
 		return id;
@@ -69,5 +71,11 @@ public class ListingDocumentVO extends BaseResultVO {
 	}
 	public void setMockData(boolean mockData) {
 		this.mockData = mockData;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }

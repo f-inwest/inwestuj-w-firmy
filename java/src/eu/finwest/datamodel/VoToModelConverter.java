@@ -82,6 +82,7 @@ public class VoToModelConverter {
 			listing.state = Listing.State.valueOf(StringUtils.upperCase(listingVO.getState()));
 		}
 		listing.presentationId = listingVO.getPresentationId() != null ? stringToKey(listingVO.getPresentationId()) : null;
+		listing.presentationGenId = listingVO.getPresentationGenId() != null ? stringToKey(listingVO.getPresentationGenId()) : null;
 		listing.businessPlanId = listingVO.getBuinessPlanId() != null ? stringToKey(listingVO.getBuinessPlanId()) : null;
 		listing.financialsId = listingVO.getFinancialsId() != null ? stringToKey(listingVO.getFinancialsId()) : null;
 		listing.videoUrl = listingVO.getVideo();

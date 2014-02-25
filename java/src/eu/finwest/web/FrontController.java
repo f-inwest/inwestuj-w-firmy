@@ -221,7 +221,7 @@ public class FrontController extends HttpServlet {
 			}
 			log.info("Selected version: " + version);
 		} else {
-			log.warning("Header " + ACCEPT_LANGUAGE + " not passed!");
+			log.info("Header " + ACCEPT_LANGUAGE + " not passed!");
 		}
 		if (langCookie == null) {
 			log.info("Setting language cookie to: " + version);
@@ -290,7 +290,8 @@ public class FrontController extends HttpServlet {
 	}
 	
 	public static LangVersion getLangVersion() {
-		return langVersion.get();
+		LangVersion lang = langVersion.get();
+		return lang == null ? LangVersion.PL : lang;
 	}
 	
 	public static CampaignVO getCampaign() {

@@ -56,6 +56,7 @@ public class ListingVO extends ListingTileVO implements Serializable {
 	@JsonProperty("has_ip") private boolean hasIp;
 	@JsonProperty("business_plan_id") private String buinessPlanId;
 	@JsonProperty("presentation_id") private String presentationId;
+	@JsonProperty("presentation_gen_id") private String presentationGenId;
 	@JsonProperty("financials_id") private String financialsId;
 	@JsonProperty("video") private String video;
 	@JsonProperty("pic1") private String pic1;
@@ -326,6 +327,14 @@ public class ListingVO extends ListingTileVO implements Serializable {
 
 	public void setPresentationId(String presentationId) {
 		this.presentationId = presentationId;
+	}
+
+	public String getPresentationGenId() {
+		return presentationGenId;
+	}
+
+	public void setPresentationGenId(String presentationGenId) {
+		this.presentationGenId = presentationGenId;
 	}
 
 	public String getFinancialsId() {

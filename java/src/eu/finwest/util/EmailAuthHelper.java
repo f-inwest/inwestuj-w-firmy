@@ -51,15 +51,17 @@ public class EmailAuthHelper {
 		SBUser user = (SBUser)request.getSession().getAttribute(SESSION_EMAIL_USER);
 		if (user == null) {
 			log.info("Email auth session user: " + user);
-			for (Cookie cookie : request.getCookies()) {
-				if (StringUtils.equals(EMAIL_AUTHENTICATION_COOKIE, cookie.getName())) {
-					if (StringUtils.isNotBlank(cookie.getValue())) {
-						String authCookie = cookie.getValue();
-						user = ObjectifyDatastoreDAO.getInstance().getUserByAuthCookie(authCookie);
-						log.info("Email auth user by cookie: " + authCookie + " is " + user);
-						break;
-					} else {
-						log.info("Auth cookie is blank.");
+			if (request != null && request.getCookies() != null) {
+				for (Cookie cookie : request.getCookies()) {
+					if (StringUtils.equals(EMAIL_AUTHENTICATION_COOKIE, cookie.getName())) {
+						if (StringUtils.isNotBlank(cookie.getValue())) {
+							String authCookie = cookie.getValue();
+							user = ObjectifyDatastoreDAO.getInstance().getUserByAuthCookie(authCookie);
+							log.info("Email auth user by cookie: " + authCookie + " is " + user);
+							break;
+						} else {
+							log.info("Auth cookie is blank.");
+						}
 					}
 				}
 			}
