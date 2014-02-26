@@ -1,7 +1,6 @@
 package eu.finwest.web.controllers;
 
 import java.io.IOException;
-import java.security.MessageDigest;
 import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
@@ -63,8 +62,8 @@ public class SystemController extends ModelDrivenController {
                 return importStartuplyData(request);
 			} else if("export-datastore".equalsIgnoreCase(getCommand(1))) {
 				return exportDatastore(request);
-			} else if("migrate201209051446_to_current".equalsIgnoreCase(getCommand(1))) {
-				return migrate201209051446_to_current(request);
+			} else if("migrate20140225_to_current".equalsIgnoreCase(getCommand(1))) {
+				return migrate20140225_to_current(request);
 			} else if("associate_mock_images".equalsIgnoreCase(getCommand(1))) {
 				return associateMockImages(request);
 			} else if("update_avatars_dragon_lister".equalsIgnoreCase(getCommand(1))) {
@@ -148,12 +147,12 @@ public class SystemController extends ModelDrivenController {
 		return headers;
 	}
 
-	private HttpHeaders migrate201209051446_to_current(HttpServletRequest request) {
-		HttpHeaders headers = new HttpHeadersImpl("migrate201209051446_to_current");
+	private HttpHeaders migrate20140225_to_current(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("migrate20140225_to_current");
 
 		UserVO loggedInUser = getLoggedInUser();
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
-			model = DatastoreMigration.migrate201209051446_to_current();
+			model = DatastoreMigration.migrate20140225_to_current();
 		}
 		return headers;
 	}

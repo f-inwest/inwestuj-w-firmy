@@ -822,6 +822,7 @@ public class DtoToVoConverter {
 		campaignVO.setName(campaign.name);
 		campaignVO.setPublicBrowsing(campaign.publicBrowsing);
 		campaignVO.setSubdomain(campaign.subdomain);
+		campaignVO.setStatus(campaign.status.toString());
 		return campaignVO;
 	}
 

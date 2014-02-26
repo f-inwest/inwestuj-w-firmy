@@ -870,9 +870,12 @@ public class UserMgmtFacade {
 			return null;
 		}
 		Campaign existingCampaign = getDAO().getCampaignByDomain(campaign.getSubdomain());
-		if (existingCampaign != null && existingCampaign.creator.getId() != loggedInUser.toKeyId()) {
+		if (existingCampaign != null && (existingCampaign.creator.getId() != loggedInUser.toKeyId() || !loggedInUser.isAdmin())) {
 			log.info("User is not an admin of the campaign, creator: " + existingCampaign.creatorName + ", logged in user: " + loggedInUser);
 			return null;
+		}
+		if (StringUtils.isBlank(campaign.getStatus())) {
+			campaign.setStatus(Campaign.Status.NEW.toString());
 		}
 		Campaign newCampaign = VoToModelConverter.convert(campaign);
 		log.info("Updating campaign " + newCampaign + " with new data " + campaign + " by " + loggedInUser.getName());
@@ -880,6 +883,10 @@ public class UserMgmtFacade {
 			newCampaign.creator = new Key<SBUser>(loggedInUser.getId());
 			newCampaign.creatorName = loggedInUser.getName();
 			newCampaign.subdomain = campaign.getSubdomain();
+			newCampaign.status = Campaign.Status.NEW;
+		} else if (newCampaign.status != Campaign.Status.NEW && !loggedInUser.isAdmin()){
+			// only admins can change campaign status to ACTIVE or CLOSED
+			newCampaign.status = Campaign.Status.NEW;
 		}
 		campaign = DtoToVoConverter.convert(getDAO().storeCampaign(newCampaign));
 		MemCacheFacade.instance().cleanCampaingsCache();

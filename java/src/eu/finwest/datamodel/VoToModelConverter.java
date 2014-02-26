@@ -350,13 +350,14 @@ public class VoToModelConverter {
 		campaign.activeFrom = campaignVO.getActiveFrom();
 		campaign.activeTo = campaignVO.getActiveTo();
 		campaign.admins = campaignVO.getAdmins();
-		campaign.allowedLanguage = Campaign.Language.valueOf(campaignVO.getAllowedLanguage());
+		campaign.allowedLanguage = Campaign.Language.valueOf(campaignVO.getAllowedLanguage().toUpperCase());
 		campaign.comment = campaignVO.getComment();
 		campaign.creatorName = campaignVO.getCreator();
 		campaign.description = campaignVO.getDescription();
 		campaign.name = campaignVO.getName();
 		campaign.publicBrowsing = campaignVO.isPublicBrowsing();
 		campaign.subdomain = campaignVO.getSubdomain();
+		campaign.status = Campaign.Status.valueOf(campaignVO.getStatus().toUpperCase());
 		return campaign;
 	}
 	

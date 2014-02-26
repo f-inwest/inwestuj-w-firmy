@@ -18,6 +18,7 @@ import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
 
 import eu.finwest.datamodel.Bid;
+import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Comment;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.Monitor;
@@ -25,6 +26,7 @@ import eu.finwest.datamodel.Notification;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.web.ListingFacade;
+import eu.finwest.web.MemCacheFacade;
 
 /**
  * @author "Grzegorz Nittner" <grzegorz.nittner@gmail.com>
@@ -36,37 +38,50 @@ public class DatastoreMigration {
 		return ofy;
 	}
 
-	public static String migrate201209051446_to_current() {
+	public static String migrate20140225_to_current() {
 		StringBuffer report = new StringBuffer();
 
 		/* migrating Listings
-		 * - fixing address and brief_address fields - mixed position of country and city
+		 * - removing Language.ALL for Campaign
 		 */
-		report.append("Listing migration:<br/>\n<ul>\n");
+		report.append("Campaign migration:<br/>\n<ul>\n");
+		
+		QueryResultIterable<Key<Campaign>> l = getOfy().query(Campaign.class).fetchKeys();
+		Map<Key<Campaign>, Campaign> campaigns = getOfy().get(l);
 
-		QueryResultIterable<Key<Listing>> l = getOfy().query(Listing.class).fetchKeys();
-		Map<Key<Listing>, Listing> listings = getOfy().get(l);
-		List<Listing> listingMigration = new ArrayList<Listing>();
-
-		for (Listing listing : listings.values()) {
-			if (StringUtils.equalsIgnoreCase(listing.city, "dusseldorf")) {
-				listing.city = "d\u00fcsseldorf";
-				String previousAddress = listing.address;
-				String briefAddress = StringUtils.capitalize(listing.city)
-						+ (listing.usState != null ? ", " + listing.usState.toUpperCase() : "") + ", "
-						+ StringUtils.capitalize(listing.country);
-				listing.address = listing.briefAddress = briefAddress;
-
-				listing.notes += "Fixed brief address on " + new Date() + "\n";
-				listingMigration.add(listing);
-				report.append("<li>migrating listing '" + listing.name + "' - new address: " + listing.address
-						+ " <- old address: " + previousAddress);
-			} else {
-				report.append("<li>listing '" + listing.name + "' not migrated");
+		List<Campaign> toMigrate = new ArrayList<Campaign>();
+		for (Campaign campaign : campaigns.values()) {
+			if (campaign.allowedLanguage == Campaign.Language.ALL) {
+				report.append("<li> setting EN language for campaign: " + campaign.subdomain);
+				campaign.allowedLanguage = Campaign.Language.EN;
+				toMigrate.add(campaign);
+			}
+			if (campaign.status == null) {
+				report.append("<li> setting ACTIVE status for campaign: " + campaign.subdomain);
+				campaign.status = Campaign.Status.ACTIVE;
+				toMigrate.add(campaign);
+			}
+			if (StringUtils.equals(campaign.subdomain, "test")) {
+				report.append("<li> changing description for campaign: " + campaign.subdomain);
+				campaign.name = "Kampania testowa";
+				campaign.description = "Kampanie umożliwiają ograniczenie widoczności wysyłanych projektów. "
+		    			+ "Właściciel kampanii jest jedynym użytkownikiem który może przeglądać takie projekty";
+				campaign.comment = "Kampania przeznaczona dla celów testowych";
+				toMigrate.add(campaign);
+			}
+			if (StringUtils.equals(campaign.subdomain, "test2")) {
+				report.append("<li> changing description for campaign: " + campaign.subdomain);
+				campaign.name = "Second Test Campaign";
+				campaign.description = "Campaigns allow investors to run their own investing campaigns. "
+		    			+ "Campaign owner can only browse submited listings.";
+				campaign.comment = "This campaign was created for test purposes";
+				toMigrate.add(campaign);
 			}
 		}
-		getOfy().put(listingMigration);
+		
+		getOfy().put(toMigrate);
 		report.append("<br/>\n</ul>\n");
+		MemCacheFacade.instance().cleanCampaingsCache();
 
 		return report.toString();
 	}

@@ -32,6 +32,7 @@ public class CampaignVO extends BaseVO implements Serializable {
 	@JsonProperty("public_browsing") private boolean	publicBrowsing;
 	@JsonProperty("admins") private String admins;
 	@JsonProperty("allowed_languages") private String allowedLanguage;
+	@JsonProperty("status") private String status;
 	
 	@Override
 	public String getId() {
@@ -111,5 +112,11 @@ public class CampaignVO extends BaseVO implements Serializable {
 	}
 	public void setSpecial(boolean special) {
 		this.special = special;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

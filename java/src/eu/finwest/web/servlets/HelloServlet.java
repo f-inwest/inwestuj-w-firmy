@@ -231,7 +231,9 @@ public class HelloServlet extends HttpServlet {
 							+ "\", \"comment\":\"" + camp.comment
 							+ "\", \"active_from\":\"" + fmt.print(camp.activeFrom.getTime()) + "\", \"active_to\":\"" + fmt.print(camp.activeTo.getTime())
 							+ "\", \"public_browsing\":\"" + camp.publicBrowsing + "\", \"admins\":\"" + camp.admins
-							+ "\", \"allowed_languages\":\"" + camp.allowedLanguage + "\"}"
+							+ "\", \"allowed_languages\":\"" + camp.allowedLanguage
+							+ "\", \"status\":\"" + camp.status + "\""
+							+ "}"
 							+ "</textarea><input type=\"submit\" value=\"Update campaign " + camp.subdomain + "\"/></form>");
 			}
 			out.println("<br/><br/><form method=\"POST\" action=\"/user/store_campaign/.json\"><textarea name=\"campaign\" rows=\"3\" cols=\"120\">"
@@ -239,7 +241,7 @@ public class HelloServlet extends HttpServlet {
 					+ "\", \"comment\":\"" + "This is a comment for campaign"
 					+ "\", \"active_from\":\"" + fmt.print(new Date().getTime()) + "\", \"active_to\":\"" + fmt.print(new Date().getTime() + 30 * 24 * 60 * 60 * 1000)
 					+ "\", \"public_browsing\":\"" + "true" + "\", \"admins\":\"" + ""
-					+ "\", \"allowed_languages\":\"" + "pl" + "\"}"
+					+ "\", \"allowed_languages\":\"" + "PL"+ ", \"status\":\"" + "NEW" + "\"}"
 					+ "</textarea><input type=\"submit\" value=\"Create campaign\"/></form>");
 
 
