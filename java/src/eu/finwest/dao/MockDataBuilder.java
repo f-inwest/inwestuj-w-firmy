@@ -70,6 +70,7 @@ import eu.finwest.vo.ListingAndUserVO;
 import eu.finwest.vo.UserVO;
 import eu.finwest.web.LangVersion;
 import eu.finwest.web.ListingFacade;
+import eu.finwest.web.MemCacheFacade;
 import eu.finwest.web.controllers.ListingController;
 
 /**
@@ -336,7 +337,9 @@ public class MockDataBuilder {
 			getOfy().put(listingLocList);
 			output.append("Listing location data stored.</br>");
 		}
-
+		MemCacheFacade.instance().cleanCampaingsCache();
+		MemCacheFacade.instance().clearAllListingLocations();
+		
 		return output.toString();
 	}
 

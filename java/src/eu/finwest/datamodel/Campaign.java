@@ -37,7 +37,7 @@ public class Campaign extends BaseObject<Campaign> implements Serializable {
 		return new Key<Campaign>(Campaign.class, id);
 	}
 	@Id public Long id;
-	@Indexed public Status status;
+	@Indexed public Status status = Status.NEW;
 
 	public boolean mockData;
 
