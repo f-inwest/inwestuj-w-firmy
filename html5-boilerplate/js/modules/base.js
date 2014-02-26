@@ -488,7 +488,7 @@ pl.implement(CampaignDropdownClass, {
         return textboxen;
     },
     campaignText: function(campaign) {
-        return '<b>' + campaign.name + '</b><br />' + campaign.description;
+        return '<b>' + campaign.name + '</b><p class="campaign-description">' + campaign.description + '</p>';
     },
     getHostRoot: function() {
         var host = window.location.host,

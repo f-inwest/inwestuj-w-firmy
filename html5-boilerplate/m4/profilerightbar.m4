@@ -2,15 +2,14 @@
 <!-- right column -->
 <div class="span-8 last profilerightbar">
 
-    <div class="boxtitle boxtitleside profilerightbartitle">
-        <span class="titleyour">@lang_your_profile@</span>
-        <span class="titleuser">@lang_profile@</span>
-    </div>
+    <div class="boxtitle boxtitleside profilerightbartitle">@lang_details</div>
     <div class="sidebox profilebox">
         <div class="profileavatar" id="avatar"></div>
+        <!--
         <div class="profileusername">
             <span id="username"></span>
         </div>
+        -->
         <div class="profiledetails">
             <div><span class="profiletext" id="email"></span></div>
             <div><span class="profiletext" id="name"></span></div>

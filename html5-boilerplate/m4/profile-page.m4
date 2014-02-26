@@ -9,6 +9,21 @@ include(head.m4)
 <div id="main">
 '
 include(header.m4)
+`
+<div class="banner contactbanner">
+    <div class="container">
+        <span class="bannertext span-24">
+            <div class="welcometitle">
+                <span class="titleyour">@lang_your_profile@</span>
+                <span class="titleuser initialhidden>@lang_projects@ <span class="titleusername"></span></span>
+            </div>
+            <div class="welcometext">
+                <span id="username"></span>
+            </div>
+        </span>
+    </div>
+</div>
+'
 include(profile-not-found.m4)
 `
 <div class="container preloader">
@@ -104,6 +119,17 @@ include(profile-not-found.m4)
             </div>
         </div>
         <div id="frozen_listings"></div>
+    </div>
+
+    <div id="campaign_list_wrapper" class="initialhidden">
+        <div class="header-content">
+            <div class="header-title">
+                <span class="titleyour">@lang_your_campaigns@</span>
+                <span class="titleuser">@lang_campaigns@ <span class="titleusername"></span></span>
+            </div>
+        </div>
+        <div id="campaign_list"></div>
+        <div class="initialhidden" id="campaign_add_wrapper"></div>
     </div>
 
 </div> <!-- end left column -->

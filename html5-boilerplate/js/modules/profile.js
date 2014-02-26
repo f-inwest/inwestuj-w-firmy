@@ -1,3 +1,64 @@
+function CampaignTileClass() {}
+pl.implement(CampaignTileClass, {
+    store: function(campaign) {
+        var self = this;
+        self.campaign = campaign;
+    },
+    makeTile: function() {
+        var self = this,
+            html = "";
+        html += "<div>"
+            + self.campaign.campaign_id + "<br/>"           // read only
+            + self.campaign.name + "<br/>"                  // text field
+            + self.campaign.description + "<br/>"           // text field
+            + self.campaign.subdomain + "<br/>"             // text field first-time only, read-only otherwise
+            + self.campaign.active_from + "<br/>"           // date field
+            + self.campaign.active_to + "<br/>"             // date field
+            + self.campaign.allowed_languages + "<br/>"     // dropdown PL/EN
+            + self.campaign.status + "<br/>"                // dropdown all for admin, read-only otherwise
+            + "</div>"
+        return html;
+    }
+});
+
+/*
+ <div id="campaign_list_wrapper" class="initialhidden">
+ <div class="header-content">
+ <div class="header-title">
+ <span class="titleyour">@lang_your_campaigns@</span>
+ <span class="titleuser">@lang_campaigns@ <span class="titleusername"></span></span>
+ </div>
+ </div>
+ <div id="campaign_list"></div>
+ </div>
+
+ */
+function CampaignListClass() {}
+pl.implement(CampaignListClass, {
+
+    storeList: function(json) {
+        var html = "",
+            campaigns = json.user_campaigns,
+            campaign,
+            tile,
+            i;
+        if (!campaigns.length || campaigns.length == 0) {
+            pl('#campaign_list')
+                .addClass('no-listings-found')
+                .html('<span class="identedtext attention">@lang_no_campaigns_found@</span>');
+            return;
+        }
+        for (i = 0; i < campaigns.length; i++) {
+            campaign = campaigns[i];
+            tile  = new CampaignTileClass();
+            tile.store(campaign);
+            html += tile.makeTile();
+        }
+        pl('#campaign_list').html(html);
+    }
+});
+
+
 function ProfileClass() {}
 pl.implement(ProfileClass, {
     display: function(json) {
@@ -162,12 +223,32 @@ pl.implement(ProfilePageClass,{
         options.propertykey = propertykey;
         options.companydiv = propertykey;
         if (listings && (options.propertyissingle || listings.length > 0)) {
-            pl(wrappersel).show();
             companylist = new CompanyListClass(options);
             companylist.storeList(self.json);
+            pl(wrappersel).show();
             listingfound = true;
         }
         return listingfound;
+    },
+
+    storeCampaigns: function() {
+        var self = this,
+            profile = self.json.loggedin_profile,
+            userProfile = self.json.profile,
+            canView = profile && (profile.admin || profile.investor),
+            canCreate = canView && !userProfile,
+            campaigns = self.json.user_campaigns,
+            campaignFound = false;
+        if (campaigns && campaigns.length > 0) {
+            campaignList = new CampaignListClass();
+            campaignList.storeList(self.json);
+            campaignFound = true;
+        }
+        if (canCreate)
+            pl('#campaign_add_wrapper').show();
+        if (canView)
+            pl('#campaign_list_wrapper').show();
+        return campaignFound;
     },
 
     loadPage: function() {
@@ -214,6 +295,7 @@ pl.implement(ProfilePageClass,{
                         listingfound = true;
                     }
                 }
+                self.storeCampaigns();
                 if (!listingfound) {
                     pl('#no_listings_wrapper').show();
                 }
