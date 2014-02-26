@@ -1455,6 +1455,13 @@ public class ObjectifyDatastoreDAO {
 				campaign.creator = newCampaign.creator;
 				campaign.creatorName = newCampaign.creatorName;
 				campaign.subdomain = StringUtils.lowerCase(newCampaign.subdomain);
+				campaign.status = Campaign.Status.NEW;
+				campaign.paid = false;
+				campaign.payment = null;
+			} else {
+				campaign.status = newCampaign.status;
+				campaign.paid = newCampaign.paid;
+				campaign.payment = newCampaign.payment;
 			}
 			campaign.activeFrom = newCampaign.activeFrom;
 			campaign.activeTo = newCampaign.activeTo;
@@ -1470,7 +1477,7 @@ public class ObjectifyDatastoreDAO {
 			getOfy().put(campaign);
 			return campaign;
 		} catch (Exception e) {
-			log.log(Level.WARNING, "Campaign with id '" + newCampaign.id + "' not found!");
+			log.log(Level.WARNING, "Error while storing campaign: " + newCampaign);
 			return null;
 		}
 	}

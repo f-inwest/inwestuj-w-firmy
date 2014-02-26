@@ -280,7 +280,9 @@ public class MemCacheFacade {
 			allCampaigns.put(FrontController.PL_CAMPAIGN.getSubdomain(), FrontController.PL_CAMPAIGN);
 			allCampaigns.put(FrontController.EN_CAMPAIGN.getSubdomain(), FrontController.EN_CAMPAIGN);
 			for (Campaign c : campaigns) {
-				allCampaigns.put(c.subdomain, DtoToVoConverter.convert(c));
+				if (c.status == Campaign.Status.ACTIVE) {
+					allCampaigns.put(c.subdomain, DtoToVoConverter.convert(c));
+				}
 			}
 			mem.put(MEMCACHE_CAMPAIGNS_RAW, campaigns);
 			mem.put(MEMCACHE_CAMPAIGNS, allCampaigns);

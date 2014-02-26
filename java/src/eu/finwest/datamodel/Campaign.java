@@ -24,18 +24,20 @@ import com.googlecode.objectify.annotation.Unindexed;
 @Entity
 @Cached(expirationSeconds=60*30)
 public class Campaign extends BaseObject<Campaign> implements Serializable {
-
 	private static final long serialVersionUID = 9087134514857634L;
+	
+	public enum Status {NEW, ACTIVE, CLOSED};
 
 	/**
 	 * List of allowed languages withing the domain
 	 */
-	public enum Language {ALL, PL, EN};
+	public enum Language {PL, EN, ALL};
 	
 	public Key<Campaign> getKey() {
 		return new Key<Campaign>(Campaign.class, id);
 	}
 	@Id public Long id;
+	@Indexed public Status status;
 
 	public boolean mockData;
 
@@ -57,6 +59,8 @@ public class Campaign extends BaseObject<Campaign> implements Serializable {
 	public String admins;
 	public Language allowedLanguage;
 	public Key<ListingDoc> logoId;
+	public boolean paid = false;
+	public Key<Transaction> payment;
 
 	public String getWebKey() {
 		return new Key<Campaign>(Campaign.class, id).getString();

@@ -60,6 +60,7 @@ import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.Rank;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
+import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.Vote;
 import static eu.finwest.web.LangVersion.*;
@@ -188,6 +189,10 @@ public class MockDataBuilder {
 		
 		QueryResultIterable<Key<Campaign>> ca = getOfy().query(Campaign.class).fetchKeys();
 		output.append("Deleted campaigns: " + ca.toString() + "</br>");
+		getOfy().delete(ca);
+
+		QueryResultIterable<Key<Transaction>> ta = getOfy().query(Transaction.class).fetchKeys();
+		output.append("Deleted transactions: " + ca.toString() + "</br>");
 		getOfy().delete(ca);
 
 		QueryResultIterable<Key<Listing>> l = getOfy().query(Listing.class).fetchKeys();
@@ -335,14 +340,15 @@ public class MockDataBuilder {
 		return output.toString();
 	}
 
-    private List<Campaign> createMockCampaigns(List<SBUser> users) {
+    public List<Campaign> createMockCampaigns(List<SBUser> users) {
     	List<Campaign> list = new ArrayList<Campaign>();
     	Campaign c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 180L * 24 * 60 * 60 * 1000);
-    	c.name = "Test Campaign";
-    	c.description = "This campaign was created for test purposes";
-    	c.comment = "Comment on test campaign";
+    	c.name = "Kampania testowa";
+    	c.description = "Kampanie umożliwiają ograniczenie widoczności wysyłanych projektów. "
+    			+ "Właściciel kampanii jest jedynym użytkownikiem który może przeglądać takie projekty";
+    	c.comment = "Kampania przeznaczona dla celów testowych";
     	c.allowedLanguage = Campaign.Language.PL;
     	c.creator = new Key<SBUser>(SBUser.class, GREG.toKeyId());
     	c.creatorName = GREG.getName();
@@ -350,21 +356,24 @@ public class MockDataBuilder {
     	c.mockData = true;
     	c.publicBrowsing = false;
     	c.subdomain = "test";
+    	c.status = Campaign.Status.ACTIVE;
     	list.add(c);
     	
     	c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 10 * 1000);
-    	c.name = "Test2 Campaign";
-    	c.description = "This campaign was created for test purposes - it should be inactive";
-    	c.comment = "Comment on test campaign";
-    	c.allowedLanguage = Campaign.Language.ALL;
+    	c.name = "Second Test Campaign";
+    	c.description = "Campaigns allow investors to run their own investing campaigns. "
+    			+ "Campaign owner can only browse submited listings.";
+    	c.comment = "This campaign was created for test purposes";
+    	c.allowedLanguage = Campaign.Language.EN;
     	c.creator = new Key<SBUser>(SBUser.class, JOHN.toKeyId());
     	c.creatorName = JOHN.getName();
     	c.created = new Date();
     	c.mockData = true;
     	c.publicBrowsing = false;
     	c.subdomain = "test2";
+    	c.status = Campaign.Status.ACTIVE;
     	list.add(c);
     	
     	c = new Campaign();
@@ -380,8 +389,25 @@ public class MockDataBuilder {
     	c.mockData = true;
     	c.publicBrowsing = true;
     	c.subdomain = "test3";
+    	c.status = Campaign.Status.ACTIVE;
     	list.add(c);
-    	
+
+    	c = new Campaign();
+    	c.activeFrom = new Date();
+    	c.activeTo = new Date(new Date().getTime() + 180 * 24 * 60 * 60 * 1000);
+    	c.name = "Inactive Campaign";
+    	c.description = "This campaign was created for test purposes - not active";
+    	c.comment = "Comment on test campaign";
+    	c.allowedLanguage = Campaign.Language.PL;
+    	c.creator = new Key<SBUser>(SBUser.class, INSIDER.toKeyId());
+    	c.creatorName = INSIDER.getName();
+    	c.created = new Date();
+    	c.mockData = true;
+    	c.publicBrowsing = true;
+    	c.subdomain = "inactive";
+    	c.status = Campaign.Status.CLOSED;
+    	list.add(c);
+
     	getOfy().put(list);
     	
 		return list;

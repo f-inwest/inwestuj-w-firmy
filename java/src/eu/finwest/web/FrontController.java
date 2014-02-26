@@ -67,8 +67,7 @@ public class FrontController extends HttpServlet {
 //		}
 		
 		try {
-			langVersion.set(getVersionFolder(request, response));
-			campaign.set(getCampaign(request));
+			setLanguageAndCampaign(request, response);
 	
 			ModelDrivenController controller = null;
 			HttpHeaders headers = null;
@@ -130,6 +129,21 @@ public class FrontController extends HttpServlet {
 		}
 	}
 
+	private void setLanguageAndCampaign(HttpServletRequest request, HttpServletResponse response) {
+		langVersion.set(obtainLanguageVersion(request, response));
+		String userCampaign = obtainCampaign(request);
+		campaign.set(userCampaign);
+		if (StringUtils.isNotBlank(userCampaign)) {
+			try {
+				CampaignVO campaign = getCampaign();
+				langVersion.set(LangVersion.valueOf(campaign.getAllowedLanguage()));
+				log.info("Setting language from campaign: " + langVersion.get());
+			} catch (Exception e) {
+				log.log(Level.WARNING, "Error while setting language from campaign.", e);
+			}
+		}
+	}
+
 	private void handleStaticFiles(HttpServletRequest request, HttpServletResponse response, String pathInfo, LangVersion version)
 			throws IOException, FileNotFoundException {
 		String outFile = null;
@@ -176,7 +190,7 @@ public class FrontController extends HttpServlet {
 		}
 	}
 	
-	private LangVersion getVersionFolder(HttpServletRequest request, HttpServletResponse response) {
+	private LangVersion obtainLanguageVersion(HttpServletRequest request, HttpServletResponse response) {
 		String langCookie = null;
 		if (request.getParameter(SET_LANGUAGE) != null) {
 			String version = request.getParameter(SET_LANGUAGE);
@@ -248,7 +262,7 @@ public class FrontController extends HttpServlet {
 		}
 	}
 	
-	private String getCampaign(HttpServletRequest request) {
+	private String obtainCampaign(HttpServletRequest request) {
 		String nameParts[] = request.getServerName().split("\\.");
 		String campaignName = null;
 		if (nameParts.length <= 1) {
@@ -303,7 +317,7 @@ public class FrontController extends HttpServlet {
 			campaign = new CampaignVO();
 			campaign.setActiveFrom(new Date(0));
 			campaign.setActiveTo(new Date(0));
-			campaign.setAllowedLanguage(Campaign.Language.ALL.toString());
+			campaign.setAllowedLanguage(getLangVersion() == LangVersion.PL ? PL_CAMPAIGN.toString() : EN_CAMPAIGN.toString());
 			campaign.setCreated(new Date(0));
 			campaign.setCreator("Admin");
 			campaign.setSubdomain(campaignName);
@@ -316,14 +330,15 @@ public class FrontController extends HttpServlet {
 	
 	private static final CampaignVO createMainCampaign(Language language) {
 		CampaignVO campaign = new CampaignVO();
-		campaign.setName("Main " + language + " campaign");
+		campaign.setName(language == Language.EN ? "English projects" : "Polskie projekty");
 		campaign.setSpecial(true);
 		campaign.setCreator("Admin");
 		campaign.setCreated(new Date(0));
 		campaign.setActiveFrom(new Date(0));
+		campaign.setStatus(Campaign.Status.ACTIVE.toString());
 		campaign.setActiveTo(new Date(Long.MAX_VALUE - 1000));
 		campaign.setDescription(language == Language.EN ? "Main campaign" : "Główna kampania");
-		campaign.setComment(language == Language.EN ? "English speaking campaign" : "Polskojęzyczna kampania");
+		campaign.setComment(language == Language.EN ? "Campaign dedicated for english language projects" : "Kampania dla polskojęzycznych projektów");
 		campaign.setId(language.toString());
 		campaign.setSubdomain(language.name().toLowerCase());
 		campaign.setAllowedLanguage(language.toString());
