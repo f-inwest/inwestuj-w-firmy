@@ -129,7 +129,15 @@ include(profile-not-found.m4)
             </div>
         </div>
         <div id="campaign_list"></div>
-        <div class="initialhidden" id="campaign_add_wrapper"></div>
+        <div class="initialhidden" id="campaign_add_wrapper">
+            <div class="boxpanel">
+                <div class="indentedtext">
+                    <div id="addcampaign">
+                        <a href="#" class="inputmsg hoverlink profilelink">@lang_add_campaign@</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div> <!-- end left column -->

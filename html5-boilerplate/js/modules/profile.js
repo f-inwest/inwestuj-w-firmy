@@ -4,19 +4,41 @@ pl.implement(CampaignTileClass, {
         var self = this;
         self.campaign = campaign;
     },
-    makeTile: function() {
+
+    makeTile: function() { // uneditable
         var self = this,
-            html = "";
-        html += "<div>"
-            + self.campaign.campaign_id + "<br/>"           // read only
-            + self.campaign.name + "<br/>"                  // text field
-            + self.campaign.description + "<br/>"           // text field
-            + self.campaign.subdomain + "<br/>"             // text field first-time only, read-only otherwise
-            + self.campaign.active_from + "<br/>"           // date field
-            + self.campaign.active_to + "<br/>"             // date field
-            + self.campaign.allowed_languages + "<br/>"     // dropdown PL/EN
-            + self.campaign.status + "<br/>"                // dropdown all for admin, read-only otherwise
-            + "</div>"
+            campaignUniqName = 'campaign_' + self.campaign.campaign_id,
+            dateFrom = DateClass.prototype.dateFromYYYYMMDD(self.campaign.active_from),
+            dateFromStr = DateClass.prototype.formatDateStr(DateClass.prototype.formatDate(dateFrom)),
+            dateTo = DateClass.prototype.dateFromYYYYMMDD(self.campaign.active_to),
+            dateToStr = DateClass.prototype.formatDateStr(DateClass.prototype.formatDate(dateTo)),
+            statusStr = self.campaign.status === 'ACTIVE' ? '@lang_active@' : '@lang_inactive@',
+            html = '';
+        html += '<div class="boxpanel">'
+            + '<input type="hidden" name="' + campaignUniqName + '" value="' + self.campaign.campaign_id + '"></input>' // read only
+            + '<div class="campaign-item-title">' + self.campaign.name + '</div>'                     // text field
+            + '<p>' + self.campaign.description + '</p>'                                              // text field
+            + '<div class="campaign-item">'
+            +     '<label class="campaign-item-label">@lang_start_date@</label>'
+            +     '<span class="campaign-item-value">' + dateFromStr + '</label>'       // date field
+            + '</div>'
+            + '<div class="campaign-item">'
+            +     '<label class="campaign-item-label">@lang_end_date@</label>'
+            +     '<span class="campaign-item-value">' + dateToStr + '</label>'         // date field
+            + '</div>'
+            + '<div class="campaign-item">'
+            +     '<label class="campaign-item-label">@lang_language@</label>'
+            +     '<span class="campaign-item-value">' + self.campaign.allowed_languages + '</label>' // dropdown PL/EN
+            + '</div>'
+            + '<div class="campaign-item">'
+            +     '<label class="campaign-item-label">@lang_subdomain@</label>'
+            +     '<span class="campaign-item-value">' + self.campaign.subdomain + '</label>' // text field first-time only, read-only otherwise
+            + '</div>'
+            + '<div class="campaign-item">'
+            +     '<label class="campaign-item-label">@lang_status@</label>'
+            +     '<span class="campaign-item-value">' + statusStr + '</label>' // dropdown all for admin, read-only otherwise
+            + '</div>'
+            + '</div';
         return html;
     }
 });
@@ -43,9 +65,12 @@ pl.implement(CampaignListClass, {
             tile,
             i;
         if (!campaigns.length || campaigns.length == 0) {
-            pl('#campaign_list')
-                .addClass('no-listings-found')
-                .html('<span class="identedtext attention">@lang_no_campaigns_found@</span>');
+            html = '<div class="boxpanel">'
+                +   '<div class="indentedtext">'
+                +       '@lang_no_campaigns_found@'
+                +   '</div>'
+                + '</div>';
+            pl('#campaign_list').html(html);
             return;
         }
         for (i = 0; i < campaigns.length; i++) {
@@ -174,8 +199,7 @@ pl.implement(ProfileClass, {
                         pl('#promotemsg').text('@lang_promoted_reloading@').show();
                         setTimeout(function() {
                             window.location.reload();
-                        },
- 3000);
+                        }, 3000);
                     },
 
                     url = '/user/promote_to_dragon/' + profile.profile_id,
@@ -239,11 +263,10 @@ pl.implement(ProfilePageClass,{
             canCreate = canView && !userProfile,
             campaigns = self.json.user_campaigns,
             campaignFound = false;
-        if (campaigns && campaigns.length > 0) {
-            campaignList = new CampaignListClass();
-            campaignList.storeList(self.json);
+        campaignList = new CampaignListClass();
+        campaignList.storeList(self.json);
+        if (campaigns && campaigns.length > 0)
             campaignFound = true;
-        }
         if (canCreate)
             pl('#campaign_add_wrapper').show();
         if (canView)

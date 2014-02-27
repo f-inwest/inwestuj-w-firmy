@@ -2,7 +2,7 @@
 <!-- right column -->
 <div class="span-8 last profilerightbar">
 
-    <div class="boxtitle boxtitleside profilerightbartitle">@lang_details</div>
+    <div class="boxtitle boxtitleside profilerightbartitle">@lang_details@</div>
     <div class="sidebox profilebox">
         <div class="profileavatar" id="avatar"></div>
         <!--

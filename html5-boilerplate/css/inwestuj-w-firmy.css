@@ -2924,3 +2924,12 @@ color: #fff;
     line-height: 30px;
     margin-top: 10px;
 }
+.campaign-item {}
+.campaign-item-label {
+    width: 140px;
+    float: left;
+}
+.campaign-item-value {}
+.campaign-item-title {
+    font-size: 22px;
+}
