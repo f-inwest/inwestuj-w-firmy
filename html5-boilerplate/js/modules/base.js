@@ -166,7 +166,7 @@ pl.implement(DateClass, {
     },
     addDays: function(dateObj, days) {
         var t1 = dateObj.getTime(),
-            d = 86400 * days,
+            d = 24 * 60 * 60 * 1000 * days,
             t2 = t1 + d,
             newDate = new Date();
         newDate.setTime(t2);
