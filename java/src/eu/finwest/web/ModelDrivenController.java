@@ -151,7 +151,6 @@ public abstract class ModelDrivenController {
 				}
 				((BaseResultVO) model).setCampaign(FrontController.getCampaign());
 				((BaseResultVO) model).setAllCampaigns(MemCacheFacade.instance().getAllCampaigns().values());
-				((BaseResultVO) model).setUserCampaigns(MemCacheFacade.instance().getUserCampaigns(loggedInUser));
 
 				if (((BaseResultVO) model).getErrorCode() != ErrorCodes.OK) {
 					headers.setStatus(500);

@@ -266,6 +266,7 @@ public class UserMgmtFacade {
 		
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
 			result.setUser(user);
+			result.setOwnedCampaigns(MemCacheFacade.instance().getUserCampaigns(user));
 		} else {
 			((UserListingsForUsersVO)result).setUserBasic(new UserBasicVO(user));
 		}

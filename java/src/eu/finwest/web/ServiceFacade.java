@@ -20,6 +20,7 @@ import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Comment;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.Monitor;
+import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.Transaction;
@@ -448,5 +449,10 @@ public class ServiceFacade {
 	public void storeTransaction(Transaction trans) {
 		getDAO().storeTransaction(trans);
 	}
-
+	
+	public PricePoint storePricepoint(PricePoint pp) {
+		pp = getDAO().storePricePoint(pp);
+		MemCacheFacade.instance().cleanPricePointsCache();
+		return pp;
+	}
 }

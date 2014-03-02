@@ -30,6 +30,7 @@ import eu.finwest.datamodel.Location;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.Notification;
 import eu.finwest.datamodel.PictureImport;
+import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.PrivateMessage;
 import eu.finwest.datamodel.PrivateMessageUser;
 import eu.finwest.datamodel.QuestionAnswer;
@@ -80,6 +81,7 @@ public class WarmupListener implements ServletContextListener {
         ObjectifyService.register(StartuplyCache.class);
         ObjectifyService.register(PictureImport.class);
         ObjectifyService.register(Transaction.class);
+        ObjectifyService.register(PricePoint.class);
 	}
 
 	public void contextInitialized(ServletContextEvent event) {

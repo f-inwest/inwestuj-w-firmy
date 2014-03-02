@@ -20,6 +20,7 @@ import com.google.gdata.util.AuthenticationException;
 
 import eu.finwest.dao.DatastoreMigration;
 import eu.finwest.dao.MockDataBuilder;
+import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.Transaction.Status;
@@ -64,12 +65,16 @@ public class SystemController extends ModelDrivenController {
 				return exportDatastore(request);
 			} else if("migrate20140225_to_current".equalsIgnoreCase(getCommand(1))) {
 				return migrate20140225_to_current(request);
+			} else if("reset_pricepoints".equalsIgnoreCase(getCommand(1))) {
+				return resetPricePoints(request);
 			} else if("associate_mock_images".equalsIgnoreCase(getCommand(1))) {
 				return associateMockImages(request);
 			} else if("update_avatars_dragon_lister".equalsIgnoreCase(getCommand(1))) {
 				return updateAvatarsDragonLister(request);
 			} else if("transferuj_pl_notification".equalsIgnoreCase(getCommand(1))) {
 				return transferujPlNotification(request);
+			} else if("store_pricepoint".equalsIgnoreCase(getCommand(1))) {
+				return storePricepoint(request);
 			}
 		}
 		return null;
@@ -127,6 +132,36 @@ public class SystemController extends ModelDrivenController {
 		return headers;
 	}
 
+	@SuppressWarnings("unchecked")
+	private HttpHeaders storePricepoint(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("store_pricepoint");
+		UserVO loggedInUser = getLoggedInUser();
+		if (!(loggedInUser != null && loggedInUser.isAdmin())) {
+			log.info("Only admins can change pricepoints");
+			headers.setStatus(501);
+			return headers;
+		}
+		
+		try {
+			PricePoint pp = new PricePoint();
+			pp.name = getCommandOrParameter(request, 2, "name");
+			String amountTxt = getCommandOrParameter(request, 3, "amount");
+			amountTxt = amountTxt.replace(",", ".");
+			double amountDbl = Double.parseDouble(amountTxt);
+			pp.amount = (int)(amountDbl * 100);
+			pp.descriptionPl = getCommandOrParameter(request, 4, "descriptionPl");
+			pp.descriptionEn = getCommandOrParameter(request, 5, "descriptionEn");
+			log.info("Updating pricepoint " + pp.name + " with amount: " + pp.amount + ", descriptionPl: " + pp.descriptionPl
+					+ ", descriptionEn: " + pp.descriptionEn);
+			
+			model = ServiceFacade.instance().storePricepoint(pp);
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error handling store_pricepoint request!", e);
+		}
+		
+		return headers;
+	}
+
 	private HttpHeaders associateMockImages(HttpServletRequest request) {
 		HttpHeaders headers = new HttpHeadersImpl("associate_mock_images");
 
@@ -153,6 +188,16 @@ public class SystemController extends ModelDrivenController {
 		UserVO loggedInUser = getLoggedInUser();
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
 			model = DatastoreMigration.migrate20140225_to_current();
+		}
+		return headers;
+	}
+
+	private HttpHeaders resetPricePoints(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("reset_pricepoints");
+
+		UserVO loggedInUser = getLoggedInUser();
+		if (loggedInUser != null && loggedInUser.isAdmin()) {
+			model = DatastoreMigration.resetPricePoints();
 		}
 		return headers;
 	}

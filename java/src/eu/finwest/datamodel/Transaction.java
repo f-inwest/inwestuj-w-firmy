@@ -11,6 +11,7 @@ import javax.persistence.PrePersist;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cached;
 import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Indexed;
 import com.googlecode.objectify.annotation.Unindexed;
 
 /**
@@ -43,6 +44,13 @@ public class Transaction extends BaseObject<Transaction> {
 	public String crc;
 	public String email;
 	public String md5sum;
+	
+	public String pricePointName;
+	public Key<PricePoint> pricePoint;
+	
+	@Indexed public Key<Listing> listing;
+	@Indexed public Key<Listing> user;
+	@Indexed public Key<Listing> campaign;
 	
 	public Date modified;
 	@PrePersist void updateModifiedDate() {

@@ -54,6 +54,9 @@ import eu.finwest.datamodel.ListingLocation;
 import eu.finwest.datamodel.ListingStats;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.Notification;
+import eu.finwest.datamodel.PricePoint;
+import eu.finwest.datamodel.PricePoint.Group;
+import eu.finwest.datamodel.PricePoint.Type;
 import eu.finwest.datamodel.PrivateMessage;
 import eu.finwest.datamodel.PrivateMessageUser;
 import eu.finwest.datamodel.QuestionAnswer;
@@ -193,8 +196,12 @@ public class MockDataBuilder {
 		getOfy().delete(ca);
 
 		QueryResultIterable<Key<Transaction>> ta = getOfy().query(Transaction.class).fetchKeys();
-		output.append("Deleted transactions: " + ca.toString() + "</br>");
-		getOfy().delete(ca);
+		output.append("Deleted transactions: " + ta.toString() + "</br>");
+		getOfy().delete(ta);
+
+		QueryResultIterable<Key<PricePoint>> pp = getOfy().query(PricePoint.class).fetchKeys();
+		output.append("Deleted pricepoints: " + pp.toString() + "</br>");
+		getOfy().delete(pp);
 
 		QueryResultIterable<Key<Listing>> l = getOfy().query(Listing.class).fetchKeys();
 		output.append("Deleted listings: " + l.toString() + "</br>");
@@ -299,6 +306,7 @@ public class MockDataBuilder {
 		}
 		
 		List<Campaign> campaigns = createMockCampaigns(users);
+		List<PricePoint> pricePoints = createPricePoints();
 
 		List<Listing> listings = createMockListings(users);
 
@@ -341,6 +349,93 @@ public class MockDataBuilder {
 		MemCacheFacade.instance().clearAllListingLocations();
 		
 		return output.toString();
+	}
+	
+	public List<PricePoint> createPricePoints() {
+		List<PricePoint> list = new ArrayList<PricePoint>();
+		
+		PricePoint pp = new PricePoint();
+		pp.name = "INV_REG";
+		pp.group = Group.INVESTOR;
+		pp.type = Type.INVESTOR_REGISTRATION;
+		pp.amount = 5000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = "Opłata rejestracyjna dla inwestorów";
+		pp.descriptionEn = "Register fee for investors";
+		list.add(pp);
+		
+		pp = new PricePoint();
+		pp.name = "PRJ_ACT";
+		pp.group = Group.LISTING;
+		pp.type = Type.LISTING_ACTIVATION;
+		pp.amount = 2000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = "Opłata aktywacyjna dla Twojego projektu";
+		pp.descriptionEn = "Activation fee for your project";
+		list.add(pp);
+		
+		pp = new PricePoint();
+		pp.name = "PRJ_BP";
+		pp.group = Group.LISTING;
+		pp.type = Type.LISTING_BP;
+		pp.amount = 1000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = "Opłata za udostępnienie do pobrania planu biznesowego";
+		pp.descriptionEn = "Fee for generated business plan";
+		list.add(pp);
+		
+		pp = new PricePoint();
+		pp.name = "PRJ_PPT";
+		pp.group = Group.LISTING;
+		pp.type = Type.LISTING_PPTX;
+		pp.amount = 1000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = "Opłata za udostępnienie do pobrania prezentacji";
+		pp.descriptionEn = "Fee for generated presentation";
+		list.add(pp);
+		
+		pp = new PricePoint();
+		pp.name = "PRJ_ALL";
+		pp.group = Group.LISTING;
+		pp.type = Type.LISTING_ACTIVATION;
+		pp.amount = 3000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = "Opłata za pełny pakiet aktywacyjny dla Twojego projektu, zawierający aktywację, plan biznesowy oraz prezentację";
+		pp.descriptionEn = "Fee for full package for your listing, including activation, business plan and presentation";
+		list.add(pp);
+
+		pp = new PricePoint();
+		pp.name = "CMP_1MT";
+		pp.group = Group.CAMPAIGN;
+		pp.type = Type.CAMPAIGN_MONTH;
+		pp.amount = 50000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = "Opłata za kampanię inwestycyjną trwającą 1 miesiąc";
+		pp.descriptionEn = "Fee for 1 month long investment campaign";
+		list.add(pp);
+		
+		pp = new PricePoint();
+		pp.name = "CMP_6MT";
+		pp.group = Group.CAMPAIGN;
+		pp.type = Type.CAMPAIGN_6MONTHS;
+		pp.amount = 200000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = "Opłata za kampanię inwestycyjną trwającą 6 miesięcy";
+		pp.descriptionEn = "Fee for 6 month long investment campaign";
+		list.add(pp);
+
+		pp = new PricePoint();
+		pp.name = "CMP_1Y";
+		pp.group = Group.CAMPAIGN;
+		pp.type = Type.CAMPAIGN_YEAR;
+		pp.amount = 350000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = "Opłata za kampanię inwestycyjną trwającą okrągły rok";
+		pp.descriptionEn = "Fee for 1 year long investment campaign";
+		list.add(pp);
+
+		getOfy().put(list);
+		return list;
 	}
 
     public List<Campaign> createMockCampaigns(List<SBUser> users) {

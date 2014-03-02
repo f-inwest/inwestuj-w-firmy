@@ -17,8 +17,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
@@ -29,6 +27,7 @@ import eu.finwest.datamodel.Category;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingLocation;
 import eu.finwest.datamodel.Location;
+import eu.finwest.datamodel.PricePoint;
 import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.UserVO;
@@ -54,6 +53,7 @@ public class MemCacheFacade {
 	private static final String MEMCACHE_CATEGORIES = "Categories";
 	private static final String MEMCACHE_CAMPAIGNS = "CampaingsVO";
 	private static final String MEMCACHE_CAMPAIGNS_RAW = "CampaingsDTO";
+	private static final String MEMCACHE_PRICEPOINTS_GROUPED = "PricePointsGrouped";
 	
 	private MemCacheFacade() {
 	}
@@ -317,4 +317,46 @@ public class MemCacheFacade {
 		return userCampaigns;
 	}
 
+	public void cleanPricePointsCache() {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Map<PricePoint.Group, List<PricePoint>> groupedPP = loadPricePoints();
+		mem.delete(MEMCACHE_PRICEPOINTS_GROUPED);
+		mem.put(MEMCACHE_PRICEPOINTS_GROUPED, groupedPP);
+	}
+
+	private Map<PricePoint.Group, List<PricePoint>> loadPricePoints() {
+		List<PricePoint> pricePoints = getDAO().getAllPricePoints();
+		Map<PricePoint.Group, List<PricePoint>> groupedPP = new HashMap<PricePoint.Group, List<PricePoint>>();
+		for (PricePoint pp : pricePoints) {
+			List<PricePoint> list = groupedPP.get(pp.group);
+			if (list == null) {
+				list = new ArrayList<PricePoint>();
+				groupedPP.put(pp.group, list);
+			}
+			list.add(pp);
+		}
+		return groupedPP;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PricePoint> getPricePoints(PricePoint.Group pricePointGroup) {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Map<PricePoint.Group, List<PricePoint>> groupedPP = (Map<PricePoint.Group, List<PricePoint>>)mem.get(MEMCACHE_PRICEPOINTS_GROUPED);
+		if (groupedPP == null) {
+			groupedPP = loadPricePoints();
+			mem.put(MEMCACHE_PRICEPOINTS_GROUPED, groupedPP);
+		}
+		return (List<PricePoint>)groupedPP.get(pricePointGroup);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<PricePoint.Group, List<PricePoint>> getAllPricePoints() {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Map<PricePoint.Group, List<PricePoint>> groupedPP = (Map<PricePoint.Group, List<PricePoint>>)mem.get(MEMCACHE_PRICEPOINTS_GROUPED);
+		if (groupedPP == null) {
+			groupedPP = loadPricePoints();
+			mem.put(MEMCACHE_PRICEPOINTS_GROUPED, groupedPP);
+		}
+		return groupedPP;
+	}
 }

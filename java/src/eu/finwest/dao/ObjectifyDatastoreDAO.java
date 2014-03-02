@@ -41,6 +41,7 @@ import eu.finwest.datamodel.Location;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.Notification;
 import eu.finwest.datamodel.PictureImport;
+import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
@@ -1456,13 +1457,12 @@ public class ObjectifyDatastoreDAO {
 				campaign.creatorName = newCampaign.creatorName;
 				campaign.subdomain = StringUtils.lowerCase(newCampaign.subdomain);
 				campaign.status = Campaign.Status.NEW;
-				campaign.paid = false;
-				campaign.payment = null;
+				campaign.paidCode = null;
 			} else {
 				campaign.status = newCampaign.status;
-				campaign.paid = newCampaign.paid;
-				campaign.payment = newCampaign.payment;
+				campaign.paidCode = newCampaign.paidCode;
 			}
+			campaign.publicBrowsing = false;
 			campaign.activeFrom = newCampaign.activeFrom;
 			campaign.activeTo = newCampaign.activeTo;
 			campaign.admins = newCampaign.admins;
@@ -1473,7 +1473,6 @@ public class ObjectifyDatastoreDAO {
 			campaign.mockData = newCampaign.mockData;
 			campaign.modified = new Date();
 			campaign.name = newCampaign.name;
-			campaign.publicBrowsing = newCampaign.publicBrowsing;
 			getOfy().put(campaign);
 			return campaign;
 		} catch (Exception e) {
@@ -1509,4 +1508,27 @@ public class ObjectifyDatastoreDAO {
 		log.info("Stored payment transaction data, id: " + key.getString() + ", " + trans);
 	}
 
+	public List<PricePoint> getAllPricePoints() {
+		return getOfy().query(PricePoint.class).order("-name").list();
+	}
+
+    public PricePoint getPricePointByName(String name) {
+    	PricePoint pricePoint = getOfy().query(PricePoint.class).filter("name =", name.toUpperCase()).get();
+        log.info("Loaded pricepoint for name: " + name + ": " + pricePoint);
+        return pricePoint;
+    }
+
+	public PricePoint storePricePoint(PricePoint pricePoint) {
+		PricePoint pp = getPricePointByName(pricePoint.name.toUpperCase());
+		if (pp != null) {
+			pp.amount = pricePoint.amount;
+			pp.descriptionEn = pricePoint.descriptionEn;
+			pp.descriptionPl = pricePoint.descriptionPl;
+		} else {
+			pp = pricePoint;
+			pp.name = pp.name.toUpperCase();
+		}
+		getOfy().put(pp);
+		return pp;
+	}
 }

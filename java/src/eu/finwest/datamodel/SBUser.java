@@ -87,6 +87,8 @@ public class SBUser extends BaseObject<SBUser> implements Serializable {
 
 	@Indexed public Date joined;
 	public Date lastLoggedIn;
+	
+	public String paidCode;
 
 	public String getWebKey() {
 		return new Key<SBUser>(SBUser.class, id).getString();

@@ -131,6 +131,7 @@ public class HelloServlet extends HttpServlet {
 //				out.println("<p>Sorry, you're not authorized to view contents!!!</p>");
 //				return;
 //			}
+			out.println("<a href=\"/payment/\">Payments configuration</a><br/>");
 			out.println("<a href=\"/setup/\">Setup page</a></p>");
 
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Payment system:</p>");
@@ -225,12 +226,11 @@ public class HelloServlet extends HttpServlet {
 			}
 			out.println("</br>User campaigns:<br/>");
 			for (Campaign camp : datastore.getUserCampaigns(currentUser.toKeyId(), new ListPropertiesVO(10))) {
-				out.println("" + camp.subdomain + " (" + camp.name + ") active from " + fmt.print(camp.activeFrom.getTime()) + " to " + fmt.print(camp.activeTo.getTime()));
+				out.println("" + camp.subdomain + " (" + camp.name + ") active from " + fmt2.print(camp.activeFrom.getTime()) + " to " + fmt2.print(camp.activeTo.getTime()));
 				out.println("<form method=\"POST\" action=\"/user/store_campaign/.json\"><textarea name=\"campaign\" rows=\"3\" cols=\"120\">"
 							+ "{\"subdomain\":\"" + camp.subdomain + "\", \"name\":\"" + camp.name + "\", \"description\":\"" + camp.description
-							+ "\", \"comment\":\"" + camp.comment
-							+ "\", \"active_from\":\"" + fmt.print(camp.activeFrom.getTime()) + "\", \"active_to\":\"" + fmt.print(camp.activeTo.getTime())
-							+ "\", \"public_browsing\":\"" + camp.publicBrowsing + "\", \"admins\":\"" + camp.admins
+							+ "\", \"active_from\":\"" + fmt2.print(camp.activeFrom.getTime()) + "\", \"active_to\":\"" + fmt2.print(camp.activeTo.getTime())
+							+ "\", \"public_browsing\":\"" + camp.publicBrowsing
 							+ "\", \"allowed_languages\":\"" + camp.allowedLanguage
 							+ "\", \"status\":\"" + camp.status + "\""
 							+ "}"
@@ -238,9 +238,8 @@ public class HelloServlet extends HttpServlet {
 			}
 			out.println("<br/><br/><form method=\"POST\" action=\"/user/store_campaign/.json\"><textarea name=\"campaign\" rows=\"3\" cols=\"120\">"
 					+ "{\"subdomain\":\"" + "new" + "\", \"name\":\"" + "New campaign" + "\", \"description\":\"" + "Super fancy campaign"
-					+ "\", \"comment\":\"" + "This is a comment for campaign"
-					+ "\", \"active_from\":\"" + fmt.print(new Date().getTime()) + "\", \"active_to\":\"" + fmt.print(new Date().getTime() + 30 * 24 * 60 * 60 * 1000)
-					+ "\", \"public_browsing\":\"" + "true" + "\", \"admins\":\"" + ""
+					+ "\", \"active_from\":\"" + fmt2.print(new Date().getTime()) + "\", \"active_to\":\"" + fmt2.print(new Date().getTime() + 30 * 24 * 60 * 60 * 1000)
+					+ "\", \"public_browsing\":\"" + "true"
 					+ "\", \"allowed_languages\":\"" + "PL"+ ", \"status\":\"" + "NEW" + "\"}"
 					+ "</textarea><input type=\"submit\" value=\"Create campaign\"/></form>");
 
