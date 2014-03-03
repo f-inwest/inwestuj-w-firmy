@@ -1119,10 +1119,12 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMA
 .inputcaptcha { margin-top: 10px; margin-bottom: 10px; }
 .inputtext, .narrowinputtitle, .bidinputtitle, .narrowinputtext, .inputtextpct, .inputwidetext, .inputfullwidetextshort,
         .sideinputtext, .sideinputtitle, .sideinputtextarea,
-        .inputselect, .inputmedselect, .inputwidewithvalidate
+        .inputselect, .inputmedselect, .inputwidewithvalidate,
+        .campaign-input-title, .campaign-input-description, .campaign-item-input
 { font-weight: normal; color: #7c7f81 !important; background: #fefefe !important; border: none; border-bottom: 1px solid #d9d9d9; }
 .inputtext, .inputtextpct, .inputwidetext, .inputfullwidetextshort, .sideinputtext, .sideinputtextarea,
-        .inputselect, .inputmedselect, .narrowinputtext, .inputwidewithvalidate
+        .inputselect, .inputmedselect, .narrowinputtext, .inputwidewithvalidate,
+        .campaign-input-title, .campaign-input-description, .campaign-item-input
 { font-size: 16px !important; }
 .inputwidetext { width: 420px !important; }
 .categoryselect { padding: 5px; width: 432px !important; height: 29px; }
@@ -2923,4 +2925,58 @@ color: #fff;
     font-size: 22px;
     line-height: 30px;
     margin-top: 10px;
+}
+.campaign-item {}
+.campaign-item-label {
+    width: 140px;
+    float: left;
+}
+.campaign-item-value {}
+.campaign-item-title {
+    font-size: 22px;
+}
+.campaign-item-button {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    padding: 0px 30px 0px 30px !important;
+    width: 70px;
+}
+.campaign-undo-button {
+    bottom: 65px;
+}
+.campaign-input-title, .campaign-input-description, .campaign-item-input {
+    color: #5b6773 !important;
+    font-weight: 300;
+    background: #fefefe !important;
+    border: 1px solid #d9d9d9;
+    font-size: 14px !important;
+}
+.campaign-input-title {
+    width: 585px !important;
+    font-size: 22px !important;
+}
+.campaign-input-description {
+    width: 585px !important;
+}
+.campaign-item-input {
+}
+.campaign-item-radio {
+    width: 30px !important;
+    float: left;
+}
+.campaign-item-radio-label {
+    float: left;
+    line-height: 25px;
+    margin-right: 25px;
+    margin-bottom: 10px;
+}
+.campaign-item-status-radio-label {
+    margin-bottom: 20px;
+}
+.campaign-item-subdomain {
+    clear: both;
+}
+.campaign-message {
+    clear: both;
 }

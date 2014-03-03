@@ -1,51 +1,367 @@
 function CampaignTileClass() {}
 pl.implement(CampaignTileClass, {
+
+    makeNew: function() {
+        var self = this,
+            campaign_id = Math.floor(Math.random()*1000000000),
+            now = new Date(),
+            endTime = DateClass.prototype.addDays(now, 120),
+            active_from = DateClass.prototype.formatDatetime(now),
+            active_to = DateClass.prototype.formatDatetime(endTime);
+        self.campaign = {
+            campaign_id: campaign_id,
+            active_from: active_from,
+            active_to: active_to,
+            allowed_languages: 'PL',
+            status: 'NEW',
+            name: '@lang_campaign_name@',
+            description: '@lang_campaign_desc@',
+            subdomain: 'campaign-' + campaign_id
+        };
+    },
+
     store: function(campaign) {
         var self = this;
         self.campaign = campaign;
     },
-    makeTile: function() {
+
+    formattedDateStr: function(datetimestr) {
+        return DateClass.prototype.formatDatetimeStr(
+                DateClass.prototype.formatDatetime(
+                    DateClass.prototype.dateFromYYYYMMDDHHMMSS(datetimestr)));
+    },
+
+    formattedAllowedLang: function(lang) {
+        var langStr;
+        if (lang === 'EN') {
+            langStr = '@lang_english@';
+        }
+        else if (lang === 'PL') {
+            langStr = '@lang_polish@';
+        }
+        else {
+            langStr = lang;
+        }
+        return langStr;
+    },
+
+    formattedStatus: function(status) {
+        var statusStr;
+        if (status === 'NEW') {
+            statusStr = '@lang_new@';
+        }
+        else if (status === 'ACTIVE') {
+            statusStr = '@lang_active_campaign@';
+        }
+        else {
+            statusStr = '@lang_closed@';
+        }
+        return statusStr;
+    },
+
+    makeTile: function() { // uneditable
         var self = this,
-            html = "";
-        html += "<div>"
-            + self.campaign.campaign_id + "<br/>"           // read only
-            + self.campaign.name + "<br/>"                  // text field
-            + self.campaign.description + "<br/>"           // text field
-            + self.campaign.subdomain + "<br/>"             // text field first-time only, read-only otherwise
-            + self.campaign.active_from + "<br/>"           // date field
-            + self.campaign.active_to + "<br/>"             // date field
-            + self.campaign.allowed_languages + "<br/>"     // dropdown PL/EN
-            + self.campaign.status + "<br/>"                // dropdown all for admin, read-only otherwise
-            + "</div>"
+            campaignUniqId = 'campaign_' + self.campaign.campaign_id,
+            messageId = campaignUniqId + '_message',
+            campaignUniqTitle = campaignUniqId + '_title',
+            campaignUniqDesc = campaignUniqId + '_desc',
+            campaignUniqActiveFrom = campaignUniqId + '_active_from',
+            campaignUniqActiveTo = campaignUniqId + '_active_to',
+            campaignUniqSubdomain = campaignUniqId + '_subdomain',
+            campaignUniqLang = campaignUniqId + '_lang',
+            campaignUniqLangEN = campaignUniqId + '_lang_en',
+            campaignUniqLangPL = campaignUniqId + '_lang_pl',
+            campaignUniqStatus = campaignUniqId + '_status',
+            campaignUniqStatusNEW = campaignUniqId + '_status_new',
+            campaignUniqStatusACTIVE = campaignUniqId + '_status_active',
+            campaignUniqStatusCLOSED = campaignUniqId + '_status_closed',
+            campaignStatusCheckedNEW = '',
+            campaignStatusCheckedACTIVE = '',
+            campaignStatusCheckedCLOSED = '',
+            dateFromStr = self.formattedDateStr(self.campaign.active_from),
+            dateToStr = self.formattedDateStr(self.campaign.active_to),
+            langCheckedEN = '',
+            langCheckedPL = '',
+            langStr = self.formattedAllowedLang(self.campaign.allowed_languages),
+            statusStr = self.formattedStatus(self.campaign.status),
+            html = '';
+        if (self.campaign.allowed_languages === 'EN') {
+            langCheckedEN = ' checked ';
+        }
+        else if (self.campaign.allowed_languages === 'PL') {
+            langCheckedPL = ' checked ';
+        }
+        if (self.campaign.status === 'NEW') {
+            campaignStatusCheckedNEW = ' checked ';
+        }
+        else if (self.campaign.status === 'ACTIVE') {
+            campaignStatusCheckedACTIVE = ' checked ';
+        }
+        else {
+            campaignStatusCheckedCLOSED = ' checked ';
+        }
+        html +=
+              '<div class="boxpanel"'
+            +     ' id="' + campaignUniqId + '" >'
+            +   '<div class="campaign-item-title">'
+            +     '<span>'
+            +       self.campaign.name
+            +     '</span>'
+            +     '<input class="text campaign-input-title initialhidden" type="text"'
+            +       ' name="' + campaignUniqTitle + '"'
+            +       ' id="' + campaignUniqTitle + '"'
+            +       ' maxlength="60"'
+            +       ' value="' + self.campaign.name + '">'
+            +     '</input>'
+            +   '</div>'
+            +   '<div class="campaign-item-description">'
+            +     '<p>' + self.campaign.description + '</p>'
+            +     '<textarea class="inputtextareatwoline campaign-input-description initialhidden" cols="70" rows="2"'
+            +       ' name="' + campaignUniqDesc + '"'
+            +       ' id="' + campaignUniqDesc + '"'
+            +       ' maxlength="140">'
+            +       self.campaign.description
+            +     '</textarea>'
+            +   '</div>'
+            +   '<div class="campaign-item-active-from">'
+            +       '<label class="campaign-item-label">@lang_start_date@</label>'
+            +       '<span class="campaign-item-value">' + dateFromStr + '</span>'       // date field
+            +       '<input class="text campaign-item-input initialhidden" type="text"'
+            +         ' name="' + campaignUniqActiveFrom + '"'
+            +         ' id="' + campaignUniqActiveFrom + '"'
+            +         ' maxlength="20"'
+            +         ' value="' + dateFromStr + '">'
+            +       '</input>'
+            +   '</div>'
+            +   '<div class="campaign-item-active-to">'
+            +       '<label class="campaign-item-label">@lang_end_date@</label>'
+            +       '<span class="campaign-item-value">' + dateToStr + '</span>'         // date field
+            +       '<input class="text campaign-item-input initialhidden" type="text"'
+            +         ' name="' + campaignUniqActiveTo + '"'
+            +         ' id="' + campaignUniqActiveTo + '"'
+            +         ' maxlength="20"'
+            +         ' value="' + dateToStr + '">'
+            +       '</input>'
+            +   '</div>'
+            +   '<div class="campaign-item-language">'
+            +       '<label class="campaign-item-label">@lang_language@</label>'
+            +       '<span class="campaign-item-value">' + langStr + '</span>' // dropdown PL/EN
+            +       '<input class="text campaign-item-radio initialhidden" type="radio"'
+            +         ' name="' + campaignUniqLang + '"'
+            +         ' id="' + campaignUniqLangEN + '"'
+            +         langCheckedEN
+            +         ' value="EN">'
+            +       '</input>'
+            +       '<span class="campaign-item-radio-label initialhidden">@lang_english@</span>'
+            +       '<input class="text campaign-item-radio initialhidden" type="radio"'
+            +         ' name="' + campaignUniqLang + '"'
+            +         ' id="' + campaignUniqLangPL + '"'
+            +         langCheckedPL
+            +         ' value="PL">'
+            +       '</input>'
+            +       '<span class="campaign-item-radio-label initialhidden">@lang_polish@</span>'
+            +   '</div>'
+            +   '<div class="campaign-item-subdomain">'
+            +       '<label class="campaign-item-label">@lang_subdomain@</label>'
+            +       '<span class="campaign-item-value">' + self.campaign.subdomain + '</span>' // text field first-time only, read-only otherwise
+            +       '<input class="text campaign-item-input initialhidden" type="text"'
+            +         ' name="' + campaignUniqSubdomain + '"'
+            +         ' id="' + campaignUniqSubdomain + '"'
+            +         ' maxlength="30"'
+            +         ' value="' + self.campaign.subdomain + '">'
+            +       '</input>'
+            +   '</div>'
+            +   '<div class="campaign-item-status">'
+            +       '<label class="campaign-item-label">@lang_status@</label>'
+            +       '<span class="campaign-item-value">' + statusStr + '</span>'
+            +       '<input class="text campaign-item-radio initialhidden" type="radio"'
+            +         ' name="' + campaignUniqStatus + '"'
+            +         ' id="' + campaignUniqStatusNEW + '"'
+            +         campaignStatusCheckedNEW
+            +         ' value="NEW">'
+            +       '</input>'
+            +       '<span class="campaign-item-radio-label campaign-item-status-radio-label initialhidden">@lang_new@</span>'
+            +       '<input class="text campaign-item-radio initialhidden" type="radio"'
+            +         ' name="' + campaignUniqStatus + '"'
+            +         ' id="' + campaignUniqStatusACTIVE + '"'
+            +         campaignStatusCheckedACTIVE
+            +         ' value="ACTIVE">'
+            +       '</input>'
+            +       '<span class="campaign-item-radio-label initialhidden">@lang_active_campaign@</span>'
+            +       '<input class="text campaign-item-radio initialhidden" type="radio"'
+            +         ' name="' + campaignUniqStatus + '"'
+            +         ' id="' + campaignUniqStatusCLOSED + '"'
+            +         campaignStatusCheckedCLOSED
+            +         ' value="CLOSED">'
+            +       '</input>'
+            +       '<span class="campaign-item-radio-label initialhidden">@lang_closed@</span>'
+            +   '</div>'
+            +   '<div class="campaign-message" id="' + messageId + '"></div>'
+            +   '<div class="campaign-item-button investbutton campaign-edit-button">@lang_edit@</div>'
+            +   '<div class="campaign-item-button investbutton campaign-undo-button initialhidden">@lang_undo@</div>'
+            +   '<div class="campaign-item-button investbutton campaign-save-button initialhidden">@lang_save@</div>'
+            + '</div>';
         return html;
+    },
+
+    bindEvents: function(options) {
+        var self = this,
+            isAdmin = options.isAdmin,
+            isNew = self.campaign.status === 'NEW',
+            campaignUniqId = 'campaign_' + self.campaign.campaign_id,
+            campaignSel = '#' + campaignUniqId,
+            messageId = campaignUniqId + '_message',
+            messageSel = '#' + messageId,
+            editSel = campaignSel + ' div.campaign-edit-button',
+            undoSel = campaignSel + ' div.campaign-undo-button',
+            saveSel = campaignSel + ' div.campaign-save-button',
+            titleSel = campaignSel + ' div.campaign-item-title span',
+            titleInputSel = campaignSel + ' div.campaign-item-title input',
+            descSel = campaignSel + ' div.campaign-item-description p',
+            descInputSel = campaignSel + ' div.campaign-item-description textarea',
+            activeFromSel = campaignSel + ' div.campaign-item-active-from span',
+            activeFromInputSel = campaignSel + ' div.campaign-item-active-from input',
+            activeToSel = campaignSel + ' div.campaign-item-active-to span',
+            activeToInputSel = campaignSel + ' div.campaign-item-active-to input',
+            subdomainSel = campaignSel + ' div.campaign-item-subdomain span',
+            subdomainInputSel = campaignSel + ' div.campaign-item-subdomain input',
+            langSel = campaignSel + ' div.campaign-item-language span.campaign-item-value',
+            langInputSel = campaignSel + ' div.campaign-item-language input',
+            langInputLabelSel = campaignSel + ' div.campaign-item-language span.campaign-item-radio-label',
+            statusSel = campaignSel + ' div.campaign-item-status span.campaign-item-value',
+            statusInputSel = campaignSel + ' div.campaign-item-status input',
+            statusInputLabelSel = campaignSel + ' div.campaign-item-status span.campaign-item-radio-label',
+            viewableSel = [ titleSel, descSel, activeFromSel, activeToSel, langSel, editSel ],
+            editableSel = [ titleInputSel, descInputSel, activeFromInputSel, activeToInputSel,
+                langInputSel, langInputLabelSel, undoSel, saveSel ],
+            adminViewableSel = [ statusSel ],
+            adminEditableSel = [ statusInputSel, statusInputLabelSel ],
+            newViewableSel = [ subdomainSel ],
+            newEditableSel = [ subdomainInputSel ]
+            ;
+        pl(editSel).unbind().bind({
+            click: function() {
+                pl(messageSel).get(0).innerText = '';
+                pl(viewableSel.join(',')).hide();
+                pl(editableSel.join(',')).show();
+                if (isAdmin) {
+                    pl(adminViewableSel.join(',')).hide();
+                    pl(adminEditableSel.join(',')).show();
+                }
+                if (isNew) {
+                    pl(newViewableSel.join(',')).hide();
+                    pl(newEditableSel.join(',')).show();
+                }
+                return false;
+            }
+        });
+        pl(undoSel).unbind().bind({
+            click: function() {
+                pl(messageSel).get(0).innerText = '';
+                pl(editableSel.join(',')).hide();
+                pl(viewableSel.join(',')).show();
+                if (isAdmin) {
+                    pl(adminEditableSel.join(',')).hide();
+                    pl(adminViewableSel.join(',')).show();
+                }
+                if (isNew) {
+                    pl(newEditableSel.join(',')).hide();
+                    pl(newViewableSel.join(',')).show();
+                }
+                return false;
+            }
+        });
+        pl(saveSel).unbind().bind({
+            click: function() {
+                var subdomain = pl(subdomainInputSel).get(0).value.replace(/[^a-z0-9-]/g, '').toLowerCase(),
+                    name = pl(titleInputSel).get(0).value,
+                    description = pl(descInputSel).get(0).value,
+                    active_from = pl(activeFromInputSel).get(0).value.replace(/[^0-9]/g, ''),
+                    active_to = pl(activeToInputSel).get(0).value.replace(/[^0-9]/g, ''),
+                    allowed_languages = pl(langInputSel + '[checked]').get(0).value,
+                    status = pl(statusInputSel + '[checked]').get(0).value,
+                    data = {
+                        campaign: {
+                            subdomain: subdomain,
+                            name: name,
+                            description: description,
+                            active_from: active_from,
+                            active_to: active_to,
+                            allowed_languages: allowed_languages,
+                            status: status
+                        }
+                    },
+                    successFunc = function() {
+                        pl(messageSel).addClass('successful').get(0).innerText = 'saved';
+                        self.campaign.subdomain = subdomain;
+                        self.campaign.name = name;
+                        self.campaign.description = description;
+                        self.campaign.active_from = active_from;
+                        self.campaign.active_to = active_to;
+                        self.campaign.allowed_languages = allowed_languages;
+                        self.campaign.status = status;
+                        pl(subdomainSel).get(0).innerText = subdomain;
+                        pl(titleSel).get(0).innerText = name;
+                        pl(descSel).get(0).innerText = description;
+                        pl(activeFromSel).get(0).innerText = self.formattedDateStr(active_from);
+                        pl(activeToSel).get(0).innerText = self.formattedDateStr(active_to);
+                        pl(langSel).get(0).innerText = self.formattedAllowedLang(allowed_languages);
+                        pl(statusSel).get(0).innerText = self.formattedStatus(status);
+                        pl(editableSel.join(',')).hide();
+                        pl(viewableSel.join(',')).show();
+                        if (isAdmin) {
+                            pl(adminEditableSel.join(',')).hide();
+                            pl(adminViewableSel.join(',')).show();
+                        }
+                        if (isNew) {
+                            pl(newEditableSel.join(',')).hide();
+                            pl(newViewableSel.join(',')).show();
+                        }
+                    },
+                    loadFunc = function() {
+                        pl(messageSel).addClass('inprogress').get(0).innerText = 'saving...';
+                    },
+                    errorFunc = function() {
+                        pl(messageSel).addClass('errorcolor').get(0).innerText = 'error';
+                    },
+                    ajax = new AjaxClass('/user/store_campaign/.json', messageId, null,
+                        successFunc, loadFunc, errorFunc);
+
+                ajax.setPostData(data);
+                ajax.call();
+
+                return false;
+            }
+        });
+    },
+
+    triggerEdit: function() {
+        var self = this,
+            campaignUniqId = 'campaign_' + self.campaign.campaign_id,
+            campaignSel = '#' + campaignUniqId,
+            editSel = campaignSel + ' div.campaign-edit-button';
+        pl(editSel).get(0).click();
     }
+
 });
 
-/*
- <div id="campaign_list_wrapper" class="initialhidden">
- <div class="header-content">
- <div class="header-title">
- <span class="titleyour">@lang_your_campaigns@</span>
- <span class="titleuser">@lang_campaigns@ <span class="titleusername"></span></span>
- </div>
- </div>
- <div id="campaign_list"></div>
- </div>
-
- */
 function CampaignListClass() {}
 pl.implement(CampaignListClass, {
 
     storeList: function(json) {
         var html = "",
             campaigns = json.user_campaigns,
+            isAdmin = json.loggedin_profile.admin,
             campaign,
             tile,
             i;
         if (!campaigns.length || campaigns.length == 0) {
-            pl('#campaign_list')
-                .addClass('no-listings-found')
-                .html('<span class="identedtext attention">@lang_no_campaigns_found@</span>');
+            html = '<div class="boxpanel">'
+                +   '<div class="indentedtext">'
+                +       '@lang_no_campaigns_found@'
+                +   '</div>'
+                + '</div>';
+            pl('#campaign_list').html(html);
             return;
         }
         for (i = 0; i < campaigns.length; i++) {
@@ -55,6 +371,12 @@ pl.implement(CampaignListClass, {
             html += tile.makeTile();
         }
         pl('#campaign_list').html(html);
+        for (i = 0; i < campaigns.length; i++) {
+            campaign = campaigns[i];
+            tile  = new CampaignTileClass();
+            tile.store(campaign);
+            tile.bindEvents({isAdmin: isAdmin});
+        }
     }
 });
 
@@ -174,8 +496,7 @@ pl.implement(ProfileClass, {
                         pl('#promotemsg').text('@lang_promoted_reloading@').show();
                         setTimeout(function() {
                             window.location.reload();
-                        },
- 3000);
+                        }, 3000);
                     },
 
                     url = '/user/promote_to_dragon/' + profile.profile_id,
@@ -239,15 +560,25 @@ pl.implement(ProfilePageClass,{
             canCreate = canView && !userProfile,
             campaigns = self.json.user_campaigns,
             campaignFound = false;
-        if (campaigns && campaigns.length > 0) {
-            campaignList = new CampaignListClass();
-            campaignList.storeList(self.json);
+        campaignList = new CampaignListClass();
+        campaignList.storeList(self.json);
+        if (campaigns && campaigns.length > 0)
             campaignFound = true;
-        }
-        if (canCreate)
-            pl('#campaign_add_wrapper').show();
         if (canView)
             pl('#campaign_list_wrapper').show();
+        if (canCreate) {
+            pl('#addcampaign a').bind({click: function() {
+                var tile = new CampaignTileClass(),
+                    html = '';
+                tile.makeNew();
+                html = tile.makeTile();
+                pl('#campaign_add_wrapper').before(html);
+                tile.bindEvents({isAdmin: profile.admin});
+                tile.triggerEdit();
+                return false;
+            }});
+            pl('#campaign_add_wrapper').show();
+        }
         return campaignFound;
     },
 
