@@ -56,6 +56,7 @@ public class UserVO extends BaseVO {
 	private boolean mockData;
 	@JsonProperty("admin") private boolean admin;
 	@JsonProperty("avatar") private String avatar;
+	private String paidCode;
 	private Map<String, String> locationHeaders;
 	
 	public UserVO() {
@@ -238,5 +239,11 @@ public class UserVO extends BaseVO {
 	}
 	public void setAvatar(String avatar) {
 		this.avatar = avatar;
+	}
+	public String getPaidCode() {
+		return paidCode;
+	}
+	public void setPaidCode(String paidCode) {
+		this.paidCode = paidCode;
 	}
 }

@@ -298,6 +298,8 @@ public class ListingFacade {
 		    	if (loggedInUser != null && StringUtils.equals(loggedInUser.getId(), listingDTO.owner.getString())) {
 		    		String[] url = ServiceFacade.instance().createUploadUrls(loggedInUser, "/file/upload/" + listing.getId() + "/", 1);
 		    		listing.setUploadUrl(url[0]);
+		    		// listing owner would be able to pay for listing services
+		    		listingAndUser.setPricePoints(UserMgmtFacade.instance().getPricePoints(loggedInUser, listing));
 		    	}
 				Monitor monitor = loggedInUser != null ? getDAO().getListingMonitor(loggedInUser.toKeyId(), listing.toKeyId()) : null;
 				applyListingData(loggedInUser, listing, monitor);

@@ -93,6 +93,7 @@ public class ListingVO extends ListingTileVO implements Serializable {
 	@JsonProperty("answer26") private String answer26;
 	@JsonProperty("answer27") private String answer27;
 	@JsonProperty("valuation_data") private String valuationData;
+	private String paidCode;
 	@JsonProperty("notes") private String notes;
 	
 	public ListingVO() {
@@ -799,6 +800,14 @@ public class ListingVO extends ListingTileVO implements Serializable {
 
 	public void setCampaign(String campaign) {
 		this.campaign = campaign;
+	}
+
+	public String getPaidCode() {
+		return paidCode;
+	}
+
+	public void setPaidCode(String paidCode) {
+		this.paidCode = paidCode;
 	}
 	
 }

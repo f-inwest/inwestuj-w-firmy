@@ -22,6 +22,7 @@ import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingDoc;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.Notification;
+import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.PrivateMessage;
 import eu.finwest.datamodel.PrivateMessageUser;
 import eu.finwest.datamodel.QuestionAnswer;
@@ -250,7 +251,8 @@ public class DtoToVoConverter {
 		listing.setAnswer25(listingDTO.answer25);
 		listing.setAnswer26(listingDTO.answer26);
 		listing.setAnswer27(listingDTO.answer27);
-
+		
+		listing.setPaidCode(listingDTO.paidCode);
 		listing.setValuationData(listingDTO.valuationData);
 		return listing;
 	}
@@ -373,6 +375,7 @@ public class DtoToVoConverter {
 		user.setNotifyEnabled(userDTO.notifyEnabled);
 		user.setEditedListing(keyToString(userDTO.editedListing));
 		user.setAvatar(userDTO.avatarUrl);
+		user.setPaidCode(userDTO.paidCode);
 		return user;
 	}
 
@@ -823,6 +826,7 @@ public class DtoToVoConverter {
 		campaignVO.setPublicBrowsing(campaign.publicBrowsing);
 		campaignVO.setSubdomain(campaign.subdomain);
 		campaignVO.setStatus(campaign.status.toString());
+		campaignVO.setPaidCode(campaign.paidCode);
 		return campaignVO;
 	}
 

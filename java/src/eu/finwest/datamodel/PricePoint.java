@@ -31,6 +31,8 @@ import com.googlecode.objectify.annotation.Unindexed;
 public class PricePoint extends BaseObject<PricePoint> implements Serializable {
 	private static final long serialVersionUID = 5895345626437L;
 
+	public enum Codes {NONE, INV_REG, PRJ_ACT, PRJ_BP, PRJ_PPT, PRJ_ALL, CMP_1MT, CMP_6MT, CMP_1Y};
+	
 	public enum Group {LISTING, CAMPAIGN, INVESTOR};
 	public enum Type {LISTING_ACTIVATION, LISTING_PPTX, LISTING_BP, LISTING_VALUATION, LISTING_ALL,
 		INVESTOR_REGISTRATION, CAMPAIGN_MONTH, CAMPAIGN_6MONTHS, CAMPAIGN_YEAR};

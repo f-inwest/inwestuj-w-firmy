@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -26,9 +27,12 @@ import com.googlecode.objectify.Key;
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Listing;
+import eu.finwest.datamodel.PricePoint;
+import eu.finwest.datamodel.PricePoint.Group;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.VoToModelConverter;
+import eu.finwest.datamodel.PricePoint.Codes;
 import eu.finwest.util.FacebookUser;
 import eu.finwest.util.ImageHelper;
 import eu.finwest.vo.BaseVO;
@@ -37,6 +41,8 @@ import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ErrorCodes;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.ListingTileVO;
+import eu.finwest.vo.ListingVO;
+import eu.finwest.vo.PricePointVO;
 import eu.finwest.vo.UserAndUserVO;
 import eu.finwest.vo.UserBasicVO;
 import eu.finwest.vo.UserDataUpdatable;
@@ -256,6 +262,8 @@ public class UserMgmtFacade {
 				allListings.add(result.getEditedListing());
 			}
 			applyUserStatistics(loggedInUser, loggedInUser);
+			
+			result.setPricePoints(getPricePoints(user, MemCacheFacade.instance().getUserCampaigns(user)));
 		} else {
 			user.setEmail("");
 			user.setLocation("");
@@ -892,6 +900,174 @@ public class UserMgmtFacade {
 		campaign = DtoToVoConverter.convert(getDAO().storeCampaign(newCampaign));
 		MemCacheFacade.instance().cleanCampaingsCache();
 		return campaign;
+	}
+	
+	public List<PricePointVO> getPricePoints(UserVO loggedInUser, List<CampaignVO> campaigns) {
+		List<PricePointVO> list = new ArrayList<PricePointVO>();
+		if (loggedInUser == null) {
+			log.info("User not logged in, returning empty pricepoints.");
+		} else {
+			PricePoint.Codes code = PricePoint.Codes.valueOf(loggedInUser.getPaidCode() != null ? loggedInUser.getPaidCode() : "NONE");
+			if (code == Codes.NONE) {
+				List<PricePoint> pricePoints = MemCacheFacade.instance().getPricePoints(Group.INVESTOR);
+				LangVersion portalLang = FrontController.getLangVersion();
+				for (PricePoint pp : pricePoints) {
+					list.add(preparePricePointData(pp, loggedInUser, portalLang));
+				}
+				log.info("Returning " + list.size() + " pricepoints for user " + loggedInUser.getName());
+			} else {
+				log.info("User " + loggedInUser.getName() + " has already registered as investor.");
+				
+				if (loggedInUser.isAccreditedInvestor()) {
+					List<PricePoint> pricePoints = MemCacheFacade.instance().getPricePoints(Group.CAMPAIGN);
+					LangVersion portalLang = FrontController.getLangVersion();
+					for (CampaignVO campaign : campaigns) {
+						PricePoint.Codes campaignPaidCode = PricePoint.Codes.valueOf(campaign.getPaidCode() != null ? campaign.getPaidCode() : "NONE");
+						if (StringUtils.equalsIgnoreCase(Campaign.Status.NEW.toString(), campaign.getStatus())
+								&& campaignPaidCode == PricePoint.Codes.NONE) {
+							for (PricePoint pp : pricePoints) {
+								list.add(preparePricePointData(pp, loggedInUser, campaign, portalLang));
+							}
+						}
+					}
+				}
+			}
+		}
+		log.info("Returning " + list.size() + " pricepoints for user " + loggedInUser.getName());
+		return list;
+	}
+
+	public List<PricePointVO> getPricePoints(UserVO loggedInUser, ListingVO listing) {
+		List<PricePointVO> list = new ArrayList<PricePointVO>();
+		if (loggedInUser == null || listing == null) {
+			log.info("User not logged in or empty listing, returning empty pricepoints.");
+		} else if (!StringUtils.equalsIgnoreCase(Listing.State.NEW.toString(), listing.getState())
+				&& !StringUtils.equalsIgnoreCase(Listing.State.POSTED.toString(), listing.getState())) {
+			log.info("Only listings in NEW or POSTED state can be activated, returning empty pricepoints.");
+		} else {
+			PricePoint.Codes code = PricePoint.Codes.valueOf(loggedInUser.getPaidCode() != null ? loggedInUser.getPaidCode() : "NONE");
+			if (code == Codes.NONE) {
+				List<PricePoint> pricePoints = MemCacheFacade.instance().getPricePoints(Group.LISTING);
+				LangVersion portalLang = FrontController.getLangVersion();
+				for (PricePoint pp : pricePoints) {
+					list.add(preparePricePointData(pp, loggedInUser, listing, portalLang));
+				}
+				log.info("Returning " + list.size() + " pricepoints for user " + loggedInUser.getName());
+			} else {
+				log.info("User " + loggedInUser.getName() + " has already registered as investor.");
+			}
+		}		
+		return list;
+	}
+	
+	private PricePointVO preparePricePointData(PricePoint pricePoint, UserVO loggedInUser, CampaignVO campaign, LangVersion portalLang) {
+		PricePointVO pp = new PricePointVO();
+		if (portalLang == LangVersion.PL) {
+			pp.setDescription(pricePoint.descriptionPl);
+			pp.setButtonText("Przejdź do zapłaty");
+			
+			pp.setPaymentLanguage("pl");
+			pp.setTransactionDescClient("Opłata aktywacyjna kampanii");
+			pp.setTransactionDescSeller("Opłata aktywacyjna kampanii");			
+		} else {
+			pp.setDescription(pricePoint.descriptionEn);
+			pp.setButtonText("Proceed to pay");
+
+			pp.setPaymentLanguage("en");
+			pp.setTransactionDescClient("Campaign activation fee");
+			pp.setTransactionDescSeller("Opłata aktywacyjna kampanii");
+		}
+		pp.setActionUrl("https://secure.transferuj.pl");
+		pp.setSellerId("12330");
+		updateAmounts(pp, pricePoint, portalLang);
+		pp.setCrc(pricePoint.name + " " + campaign.getId());
+		pp.setReturnUrlSuccess("http://www.inwestujwfirmy.pl");
+		pp.setReturnUrlFailure("http://www.inwestujwfirmy.pl/error-page.html");
+		
+		pp.setUserEmail(loggedInUser.getEmail());
+		pp.setUserName(loggedInUser.getName());
+		pp.setUserPhone(loggedInUser.getPhone());
+		updateMd5(pp);
+		return pp;
+	}
+
+	private PricePointVO preparePricePointData(PricePoint pricePoint, UserVO loggedInUser, LangVersion portalLang) {
+		PricePointVO pp = new PricePointVO();
+		if (portalLang == LangVersion.PL) {
+			pp.setDescription(pricePoint.descriptionPl);
+			pp.setButtonText("Przejdź do zapłaty");
+			
+			pp.setPaymentLanguage("pl");
+			pp.setTransactionDescClient("Opłata rejestracyjna dla inwestora");
+			pp.setTransactionDescSeller("Opłata rejestracyjna dla inwestora");			
+		} else {
+			pp.setDescription(pricePoint.descriptionEn);
+			pp.setButtonText("Proceed to pay");
+
+			pp.setPaymentLanguage("en");
+			pp.setTransactionDescClient("Investor registration fee");
+			pp.setTransactionDescSeller("Opłata rejestracyjna dla inwestora");
+		}
+		pp.setActionUrl("https://secure.transferuj.pl");
+		pp.setSellerId("12330");
+		updateAmounts(pp, pricePoint, portalLang);
+		pp.setCrc(pricePoint.name + " " + loggedInUser.getId());
+		pp.setReturnUrlSuccess("http://www.inwestujwfirmy.pl");
+		pp.setReturnUrlFailure("http://www.inwestujwfirmy.pl/error-page.html");
+		
+		pp.setUserEmail(loggedInUser.getEmail());
+		pp.setUserName(loggedInUser.getName());
+		pp.setUserPhone(loggedInUser.getPhone());
+		updateMd5(pp);
+		return pp;
+	}
+
+	private PricePointVO preparePricePointData(PricePoint pricePoint, UserVO loggedInUser, ListingVO listing, LangVersion portalLang) {
+		PricePointVO pp = new PricePointVO();
+		if (portalLang == LangVersion.PL) {
+			pp.setDescription(pricePoint.descriptionPl);
+			pp.setButtonText("Przejdź do zapłaty");
+			
+			pp.setPaymentLanguage("pl");
+			pp.setTransactionDescClient("Opłata za usługę " + pricePoint.name);
+			pp.setTransactionDescSeller("Opłata za usługę " + pricePoint.name);
+		} else {
+			pp.setDescription(pricePoint.descriptionEn);
+			pp.setButtonText("Proceed to pay");
+
+			pp.setPaymentLanguage("en");
+			pp.setTransactionDescClient("Payment for service " + pricePoint.name);
+			pp.setTransactionDescSeller("Opłata za usługę " + pricePoint.name);
+		}
+		pp.setActionUrl("https://secure.transferuj.pl");
+		pp.setSellerId("12330");
+		updateAmounts(pp, pricePoint, portalLang);
+		pp.setCrc(pricePoint.name + " " + listing.getId());
+		pp.setReturnUrlSuccess("http://www.inwestujwfirmy.pl");
+		pp.setReturnUrlFailure("http://www.inwestujwfirmy.pl/error-page.html");
+		
+		pp.setUserEmail(loggedInUser.getEmail());
+		pp.setUserName(loggedInUser.getName());
+		pp.setUserPhone(loggedInUser.getPhone());
+		updateMd5(pp);
+		return pp;
+	}
+	
+	private void updateMd5(PricePointVO pp) {
+		String md5string = pp.getSellerId() + pp.getAmount() + pp.getCrc() + "718N3Xa1b9qk1QG4";
+		pp.setMd5sum(DigestUtils.md5Hex(md5string));
+	}
+	
+	private void updateAmounts(PricePointVO pp, PricePoint pricePoint, LangVersion portalLang) {
+		String value = "" + (pricePoint.amount / 100);
+		value += portalLang == LangVersion.PL ? "," : ".";
+		value += pricePoint.amount % 100 > 9 ? (pricePoint.amount % 100) : "0" + (pricePoint.amount % 100);
+		value += " " + pricePoint.currency;
+		pp.setValueDisplayed(value);
+		
+		value = "" + (pricePoint.amount / 100) + ".";
+		value += pricePoint.amount % 100 > 9 ? (pricePoint.amount % 100) : "0" + (pricePoint.amount % 100);
+		pp.setAmount(value);
 	}
 
 }

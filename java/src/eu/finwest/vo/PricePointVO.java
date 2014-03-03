@@ -18,6 +18,7 @@ public class PricePointVO implements Serializable {
 	@JsonProperty("value_displayed")	private String valueDisplayed;
 	@JsonProperty("description") private String description;
 	@JsonProperty("button_text") private String buttonText;
+	@JsonProperty("action_url")	private String actionUrl;
 	@JsonProperty("id")	private String sellerId;
 	@JsonProperty("kwota")	private String amount;
 	@JsonProperty("opis")	private String transactionDescClient;
@@ -152,6 +153,14 @@ public class PricePointVO implements Serializable {
 
 	public void setMd5sum(String md5sum) {
 		this.md5sum = md5sum;
+	}
+
+	public String getActionUrl() {
+		return actionUrl;
+	}
+
+	public void setActionUrl(String actionUrl) {
+		this.actionUrl = actionUrl;
 	}
 
 }
