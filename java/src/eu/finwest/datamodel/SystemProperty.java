@@ -4,6 +4,7 @@
  */
 package eu.finwest.datamodel;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Id;
@@ -24,7 +25,9 @@ import com.googlecode.objectify.annotation.Unindexed;
 @Unindexed
 @Entity
 @Cached(expirationSeconds=60*30*2)
-public class SystemProperty {
+public class SystemProperty implements Serializable {
+	private static final long serialVersionUID = 9579454626201L;
+	
 	public static final String GOOGLEDOC_USER = "googledoc.user";
 	public static final String GOOGLEDOC_PASSWORD = "googledoc.password";
 	public static final String GOOGLEPLACES_API_KEY = "googleplaces.apikey";

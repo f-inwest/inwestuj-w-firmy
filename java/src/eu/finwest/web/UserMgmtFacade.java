@@ -40,6 +40,7 @@ import eu.finwest.datamodel.VoToModelConverter;
 import eu.finwest.datamodel.PricePoint.Codes;
 import eu.finwest.util.FacebookUser;
 import eu.finwest.util.ImageHelper;
+import eu.finwest.util.OfficeHelper;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.DtoToVoConverter;
@@ -66,6 +67,7 @@ public class UserMgmtFacade {
 	private static UserMgmtFacade instance;
 	
 	private DateTimeFormatter timeStampFormatter = DateTimeFormat.forPattern("yyyyMMdd_HHmmss_SSS");
+	private OfficeHelper oh = OfficeHelper.instance();
 	
 	public static UserMgmtFacade instance() {
 		if (instance == null) {
@@ -993,21 +995,8 @@ public class UserMgmtFacade {
 	
 	private PricePointVO preparePricePointData(PricePoint pricePoint, UserVO loggedInUser, CampaignVO campaign, LangVersion portalLang) {
 		PricePointVO pp = new PricePointVO();
-		if (portalLang == LangVersion.PL) {
-			pp.setDescription(pricePoint.descriptionPl);
-			pp.setButtonText("Przejdź do zapłaty");
-			
-			pp.setPaymentLanguage("pl");
-			pp.setTransactionDescClient("Opłata aktywacyjna kampanii");
-			pp.setTransactionDescSeller("Opłata aktywacyjna kampanii");
-		} else {
-			pp.setDescription(pricePoint.descriptionEn);
-			pp.setButtonText("Proceed to pay");
-
-			pp.setPaymentLanguage("en");
-			pp.setTransactionDescClient("Campaign activation fee");
-			pp.setTransactionDescSeller("Opłata aktywacyjna kampanii");
-		}
+		pp.setTransactionDescClient(oh.getTranslation(portalLang, "lang_payment_client_campaign_activation"));
+		pp.setTransactionDescSeller(oh.getTranslation(portalLang, "lang_payment_seller_campaign_activation") + " " + campaign.getSubdomain());
 
 		updateCommonFields(pricePoint, loggedInUser, portalLang, pp, campaign.getId());
 		return pp;
@@ -1015,21 +1004,8 @@ public class UserMgmtFacade {
 
 	private PricePointVO preparePricePointData(PricePoint pricePoint, UserVO loggedInUser, LangVersion portalLang) {
 		PricePointVO pp = new PricePointVO();
-		if (portalLang == LangVersion.PL) {
-			pp.setDescription(pricePoint.descriptionPl);
-			pp.setButtonText("Przejdź do zapłaty");
-			
-			pp.setPaymentLanguage("pl");
-			pp.setTransactionDescClient("Opłata rejestracyjna dla inwestora");
-			pp.setTransactionDescSeller("Opłata rejestracyjna dla inwestora");
-		} else {
-			pp.setDescription(pricePoint.descriptionEn);
-			pp.setButtonText("Proceed to pay");
-
-			pp.setPaymentLanguage("en");
-			pp.setTransactionDescClient("Investor registration fee");
-			pp.setTransactionDescSeller("Opłata rejestracyjna dla inwestora");
-		}
+		pp.setTransactionDescClient(oh.getTranslation(portalLang, "lang_payment_client_investor_registration"));
+		pp.setTransactionDescSeller(oh.getTranslation(portalLang, "lang_payment_seller_investor_registration") + " " + loggedInUser.getEmail());
 		
 		updateCommonFields(pricePoint, loggedInUser, portalLang, pp, loggedInUser.getId());
 		return pp;
@@ -1037,27 +1013,20 @@ public class UserMgmtFacade {
 
 	private PricePointVO preparePricePointData(PricePoint pricePoint, UserVO loggedInUser, ListingVO listing, LangVersion portalLang) {
 		PricePointVO pp = new PricePointVO();
-		if (portalLang == LangVersion.PL) {
-			pp.setDescription(pricePoint.descriptionPl);
-			pp.setButtonText("Przejdź do zapłaty");
-			
-			pp.setPaymentLanguage("pl");
-			pp.setTransactionDescClient("Opłata za usługę " + pricePoint.name);
-			pp.setTransactionDescSeller("Opłata za usługę " + pricePoint.name);
-		} else {
-			pp.setDescription(pricePoint.descriptionEn);
-			pp.setButtonText("Proceed to pay");
+		pp.setTransactionDescClient(oh.getTranslation(portalLang, "lang_payment_client_project_service"));
+		pp.setTransactionDescSeller(oh.getTranslation(portalLang, "lang_payment_seller_project_service"));
 
-			pp.setPaymentLanguage("en");
-			pp.setTransactionDescClient("Payment for service " + pricePoint.name);
-			pp.setTransactionDescSeller("Opłata za usługę " + pricePoint.name);
-		}
-		
 		updateCommonFields(pricePoint, loggedInUser, portalLang, pp, listing.getId());
 		return pp;
 	}
 	
 	private void updateCommonFields(PricePoint pricePoint, UserVO loggedInUser, LangVersion portalLang, PricePointVO pp, String id) {
+		boolean freeUsage = StringUtils.equals("true", MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_FREE_USAGE));
+
+		pp.setDescription(portalLang == LangVersion.PL ? pricePoint.descriptionPl : pricePoint.descriptionEn);
+		pp.setButtonText(oh.getTranslation(portalLang, freeUsage ? "lang_payment_free_usage_button" : "lang_payment_pay_button"));		
+		pp.setPaymentLanguage(portalLang.name().toLowerCase());
+
 		pp.setSellerId(MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_CUSTOMER_ID));
 		updateAmounts(pp, pricePoint, portalLang);
 		pp.setCrc(pricePoint.name + " " + id);
@@ -1076,7 +1045,7 @@ public class UserMgmtFacade {
 		pp.setReturnUrlSuccess(returnUrl);
 		pp.setReturnUrlFailure("http://" + domain + "/error-page.html");
 		
-		if (devEnvironment || StringUtils.equals("true", MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_FREE_USAGE))) {
+		if (devEnvironment || freeUsage) {
 			pp.setActionUrl("http://" + domain + "/system/transaction_confirmation.html");
 		} else {
 			pp.setActionUrl(MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_ACTION_URL));

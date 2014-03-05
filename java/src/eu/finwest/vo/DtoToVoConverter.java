@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -22,7 +21,6 @@ import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingDoc;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.Notification;
-import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.PrivateMessage;
 import eu.finwest.datamodel.PrivateMessageUser;
 import eu.finwest.datamodel.QuestionAnswer;

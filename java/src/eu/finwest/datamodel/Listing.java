@@ -60,7 +60,7 @@ public class Listing extends BaseObject<Listing> {
 	}
 	@Id public Long id;
 	
-	@Indexed public LangVersion lang;
+	@Indexed public LangVersion lang = LangVersion.PL;
 	
 	public Date modified;
 	@PrePersist void updateModifiedDate() {

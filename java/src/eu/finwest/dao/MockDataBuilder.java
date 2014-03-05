@@ -67,6 +67,7 @@ import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.Vote;
 import static eu.finwest.web.LangVersion.*;
+import eu.finwest.util.OfficeHelper;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.ListingAndUserVO;
@@ -390,6 +391,7 @@ public class MockDataBuilder {
 	
 	public List<PricePoint> createPricePoints() {
 		List<PricePoint> list = new ArrayList<PricePoint>();
+		OfficeHelper oh = OfficeHelper.instance();
 		
 		PricePoint pp = new PricePoint();
 		pp.name = "INV_REG";
@@ -397,8 +399,8 @@ public class MockDataBuilder {
 		pp.type = Type.INVESTOR_REGISTRATION;
 		pp.amount = 5000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = "Opłata rejestracyjna dla inwestorów";
-		pp.descriptionEn = "Register fee for investors";
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_investor_registration_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_investor_registration_desc");
 		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
 		list.add(pp);
 		
@@ -408,8 +410,8 @@ public class MockDataBuilder {
 		pp.type = Type.LISTING_ACTIVATION;
 		pp.amount = 2000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = "Opłata aktywacyjna dla Twojego projektu";
-		pp.descriptionEn = "Activation fee for your project";
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_project_activation_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_project_activation_desc");
 		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
 		list.add(pp);
 		
@@ -419,8 +421,8 @@ public class MockDataBuilder {
 		pp.type = Type.LISTING_BP;
 		pp.amount = 1000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = "Opłata za udostępnienie do pobrania planu biznesowego";
-		pp.descriptionEn = "Fee for generated business plan";
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_project_bp_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_project_bp_desc");
 		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
 		list.add(pp);
 		
@@ -430,8 +432,8 @@ public class MockDataBuilder {
 		pp.type = Type.LISTING_PPTX;
 		pp.amount = 1000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = "Opłata za udostępnienie do pobrania prezentacji";
-		pp.descriptionEn = "Fee for generated presentation";
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_project_ppt_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_project_ppt_desc");
 		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
 		list.add(pp);
 		
@@ -441,8 +443,8 @@ public class MockDataBuilder {
 		pp.type = Type.LISTING_ACTIVATION;
 		pp.amount = 3000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = "Opłata za pełny pakiet aktywacyjny dla Twojego projektu, zawierający aktywację, plan biznesowy oraz prezentację";
-		pp.descriptionEn = "Fee for full package for your listing, including activation, business plan and presentation";
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_project_all_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_project_all_desc");
 		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
 		list.add(pp);
 
@@ -452,8 +454,8 @@ public class MockDataBuilder {
 		pp.type = Type.CAMPAIGN_MONTH;
 		pp.amount = 50000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = "Opłata za kampanię inwestycyjną trwającą 1 miesiąc";
-		pp.descriptionEn = "Fee for 1 month long investment campaign";
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_campaign_1month_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_campaign_1month_desc");
 		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
 		list.add(pp);
 		
@@ -463,8 +465,8 @@ public class MockDataBuilder {
 		pp.type = Type.CAMPAIGN_6MONTHS;
 		pp.amount = 200000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = "Opłata za kampanię inwestycyjną trwającą 6 miesięcy";
-		pp.descriptionEn = "Fee for 6 month long investment campaign";
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_campaign_6month_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_campaign_6month_desc");
 		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
 		list.add(pp);
 
@@ -474,8 +476,8 @@ public class MockDataBuilder {
 		pp.type = Type.CAMPAIGN_YEAR;
 		pp.amount = 350000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = "Opłata za kampanię inwestycyjną trwającą okrągły rok";
-		pp.descriptionEn = "Fee for 1 year long investment campaign";
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_campaign_year_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_campaign_year_desc");
 		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
 		list.add(pp);
 
@@ -485,13 +487,14 @@ public class MockDataBuilder {
 
     public List<Campaign> createMockCampaigns(List<SBUser> users) {
     	List<Campaign> list = new ArrayList<Campaign>();
+    	OfficeHelper oh = OfficeHelper.instance();
+    	
     	Campaign c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 180L * 24 * 60 * 60 * 1000);
-    	c.name = "Kampania testowa";
-    	c.description = "Kampanie umożliwiają ograniczenie widoczności wysyłanych projektów. "
-    			+ "Właściciel kampanii jest jedynym użytkownikiem który może przeglądać takie projekty";
-    	c.comment = "Kampania przeznaczona dla celów testowych";
+    	c.name = oh.getTranslation(PL, "lang_campaign_test_name");
+    	c.description = oh.getTranslation(PL, "lang_campaign_test_desc");
+    	c.comment = "";
     	c.allowedLanguage = Campaign.Language.PL;
     	c.creator = new Key<SBUser>(SBUser.class, GREG.toKeyId());
     	c.creatorName = GREG.getName();
@@ -505,10 +508,9 @@ public class MockDataBuilder {
     	c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 10 * 1000);
-    	c.name = "Second Test Campaign";
-    	c.description = "Campaigns allow investors to run their own investing campaigns. "
-    			+ "Campaign owner can only browse submited listings.";
-    	c.comment = "This campaign was created for test purposes";
+    	c.name = oh.getTranslation(EN, "lang_campaign_test2_name");
+    	c.description = oh.getTranslation(EN, "lang_campaign_test2_desc");
+    	c.comment = "";
     	c.allowedLanguage = Campaign.Language.EN;
     	c.creator = new Key<SBUser>(SBUser.class, JOHN.toKeyId());
     	c.creatorName = JOHN.getName();
@@ -522,9 +524,9 @@ public class MockDataBuilder {
     	c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 180 * 24 * 60 * 60 * 1000);
-    	c.name = "Test3 Campaign";
-    	c.description = "This campaign was created for test purposes - public browsing";
-    	c.comment = "Comment on test campaign";
+    	c.name = oh.getTranslation(EN, "lang_campaign_test3_name");
+    	c.description = oh.getTranslation(EN, "lang_campaign_test3_desc");
+    	c.comment = "";
     	c.allowedLanguage = Campaign.Language.EN;
     	c.creator = new Key<SBUser>(SBUser.class, AHMED.toKeyId());
     	c.creatorName = AHMED.getName();
@@ -538,16 +540,16 @@ public class MockDataBuilder {
     	c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 180 * 24 * 60 * 60 * 1000);
-    	c.name = "Inactive Campaign";
-    	c.description = "This campaign was created for test purposes - not active";
-    	c.comment = "Comment on test campaign";
+    	c.name = oh.getTranslation(PL, "lang_campaign_dead_name");
+    	c.description = oh.getTranslation(PL, "lang_campaign_dead_desc");
+    	c.comment = "";
     	c.allowedLanguage = Campaign.Language.PL;
     	c.creator = new Key<SBUser>(SBUser.class, INSIDER.toKeyId());
     	c.creatorName = INSIDER.getName();
     	c.created = new Date();
     	c.mockData = true;
     	c.publicBrowsing = true;
-    	c.subdomain = "inactive";
+    	c.subdomain = "dead";
     	c.status = Campaign.Status.CLOSED;
     	list.add(c);
 
