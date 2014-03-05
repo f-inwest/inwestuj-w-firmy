@@ -11,6 +11,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import eu.finwest.util.DateDeserializer;
 import eu.finwest.util.DateSerializer;
+import eu.finwest.util.ShortDateSerializer;
 
 /**
  * 
@@ -25,13 +26,13 @@ public class CampaignVO extends BaseVO implements Serializable {
 	@JsonProperty("special") private boolean special;
 	@JsonProperty("creator") private String creator;
 	@JsonProperty("subdomain") private String subdomain;
-	@JsonProperty("create_date") @JsonSerialize(using=DateSerializer.class) private Date created;
+	@JsonProperty("create_date") @JsonSerialize(using=ShortDateSerializer.class) private Date created;
 	@JsonProperty("name") private String name;
 	@JsonProperty("description") private String description;
 	private String comment;
-	@JsonProperty("active_from") @JsonSerialize(using=DateSerializer.class) @JsonDeserialize(using=DateDeserializer.class)
+	@JsonProperty("active_from") @JsonSerialize(using=ShortDateSerializer.class) @JsonDeserialize(using=DateDeserializer.class)
 		private Date activeFrom;
-	@JsonProperty("active_to") @JsonSerialize(using=DateSerializer.class)  @JsonDeserialize(using=DateDeserializer.class)
+	@JsonProperty("active_to") @JsonSerialize(using=ShortDateSerializer.class)  @JsonDeserialize(using=DateDeserializer.class)
 		private Date activeTo;
 	@JsonProperty("public_browsing") private boolean	publicBrowsing;
 	private String admins;
