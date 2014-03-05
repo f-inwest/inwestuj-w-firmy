@@ -28,6 +28,7 @@ public class UserListingsVO extends BaseResultVO implements UserDataUpdatableCon
 	@JsonProperty("top_locations") private Map<String, Integer> topLocations;
 	@JsonProperty("admin_posted_listings") private List<ListingTileVO> adminPostedListings;
 	@JsonProperty("admin_frozen_listings") private List<ListingTileVO> adminFrozenListings;
+	@JsonProperty("pricepoints") private List<PricePointVO> pricePoints;
 
 	public void updateUserData() {
 		List<UserDataUpdatable> updatable = new ArrayList<UserDataUpdatable>();
@@ -108,5 +109,11 @@ public class UserListingsVO extends BaseResultVO implements UserDataUpdatableCon
 	}
 	public void setNotifications(List<NotificationVO> notifications) {
 		this.notifications = notifications;
+	}
+	public List<PricePointVO> getPricePoints() {
+		return pricePoints;
+	}
+	public void setPricePoints(List<PricePointVO> pricePoints) {
+		this.pricePoints = pricePoints;
 	}
 }

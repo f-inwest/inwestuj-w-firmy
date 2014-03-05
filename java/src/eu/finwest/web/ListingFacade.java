@@ -1248,6 +1248,8 @@ public class ListingFacade {
 			result.setAdminPostedListings(list);
 		}
 
+		result.setPricePoints(UserMgmtFacade.instance().getPricePoints(loggedInUser, MemCacheFacade.instance().getUserCampaigns(loggedInUser)));
+
 		result.setCategories(MemCacheFacade.instance().getTopCategories());
 		result.setTopLocations(MemCacheFacade.instance().getTopLocations());
 

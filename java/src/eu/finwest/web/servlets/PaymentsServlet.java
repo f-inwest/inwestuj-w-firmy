@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -24,6 +26,7 @@ import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.PricePoint;
 import eu.finwest.util.TwitterHelper;
 import eu.finwest.vo.ListPropertiesVO;
+import eu.finwest.vo.ListingVO;
 import eu.finwest.vo.PricePointVO;
 import eu.finwest.vo.UserListingsVO;
 import eu.finwest.vo.UserVO;
@@ -50,6 +53,9 @@ public class PaymentsServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
+		resp.setCharacterEncoding("UTF-8");
+		new FrontController ().setLanguageAndCampaign(req, resp);
+		
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 		twitter4j.User twitterUser = TwitterHelper.getTwitterUser(req);
@@ -97,44 +103,71 @@ public class PaymentsServlet extends HttpServlet {
 
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Payment system examples:</p>");
 			
-			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">User listings</p>");
-			UserListingsVO listings = ListingFacade.instance().getDiscoverUserListings(currentUser);
 			ObjectMapper mapper = new ObjectMapper();
+			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">User listings</p>");
+			out.println("<table border=\"1\"><tr><td>Generated button</td><td>Pricepoint JSON</td></tr>");
+			UserListingsVO listings = ListingFacade.instance().getDiscoverUserListings(currentUser);
 			if (listings.getEditedListing() != null) {
-				out.println("<table border=\"1\"><tr><td>Generated button</td><td>Pricepoint JSON</td></tr>");
+				out.println("<tr><td colspan='2'>Edited listing</td></tr>");
 				List<PricePointVO> list = UserMgmtFacade.instance().getPricePoints(currentUser, listings.getEditedListing());
 				for (PricePointVO pp : list) {
-					out.println("<tr><td>");
-					out.println("Description: " + pp.getDescription() + "</br>");
-					out.println("Amount: " + (pp.getValueDisplayed() == null ? "FREE" : pp.getValueDisplayed()) + "</br>");
-					out.println("<form action=\"" + pp.getActionUrl() + "\" method=\"post\" accept-charset=\"utf-8\">"); 
-					out.println("<input type=\"hidden\" name=\"id\" value=\"" + pp.getSellerId() + "\">");
-					out.println("<input type=\"hidden\" name=\"kwota\" value=\"" + pp.getAmount() + "\">");
-					out.println("<input type=\"hidden\" name=\"opis\" value=\"" + pp.getTransactionDescClient() + "\">");
-					out.println("<input type=\"hidden\" name=\"opis_sprzed\" value=\"" + pp.getTransactionDescSeller() + "\">");
-					out.println("<input type=\"hidden\" name=\"crc\" value=\"" + pp.getCrc() + "\">");
-					out.println("<input type=\"hidden\" name=\"pow_url\" value=\"" + pp.getReturnUrlSuccess() + "\">");
-					out.println("<input type=\"hidden\" name=\"pow_url_blad\" value=\"" + pp.getReturnUrlFailure() + "\">");
-					out.println("<input type=\"hidden\" name=\"email\" value=\"" + pp.getUserEmail() + "\">");
-					out.println("<input type=\"hidden\" name=\"nazwisko\" value=\"" + pp.getUserName() + "\">");
-					out.println("<input type=\"hidden\" name=\"telefon\" value=\"" + pp.getUserPhone() + "\">");
-					out.println("<input type=\"hidden\" name=\"jezyk\" value=\"" + pp.getPaymentLanguage() + "\">");
-					out.println("<input type=\"hidden\" name=\"md5sum\" value=\"" + pp.getMd5sum() + "\">");
-					out.println("<input type=\"submit\" name=\"submit\" value=\"" + pp.getButtonText() + "\">");
-					out.println("</form>");
-					out.println("</td><td>");
-					out.println("<form>"); 
-					out.println("<textarea autocomplete=\"off\" rows=\"10\" cols=\"100\">" + mapper.writeValueAsString(pp) + "</textarea>");
-					out.println("</form></td></tr>");
+					printPricePointAction(out, mapper, pp);
 				}
-				out.println("</table>");
+			} else {
+				out.println("<tr><td colspan='2'>No listing(s)</td></tr>");
 			}
+
+			if (listings.getActiveListings() != null && listings.getActiveListings().size() > 0) {
+				out.println("<tr><td colspan='2'>Active listing(s)</td></tr>");
+				ListingVO listing = ListingFacade.instance().getListing(currentUser, listings.getActiveListings().get(0).getId()).getListing();
+				List<PricePointVO> list = UserMgmtFacade.instance().getPricePoints(currentUser, listing);
+				for (PricePointVO pp : list) {
+					printPricePointAction(out, mapper, pp);
+				}
+			} else {
+				out.println("<tr><td colspan='2'>No listing(s)</td></tr>");
+			}
+			out.println("</table>");
 			
+			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">User pricepoints</p>");
+			out.println("<table border=\"1\"><tr><td>Generated button</td><td>Pricepoint JSON</td></tr>");
+			List<PricePointVO> list = UserMgmtFacade.instance().getPricePoints(currentUser, MemCacheFacade.instance().getUserCampaigns(currentUser));
+			for (PricePointVO pp : list) {
+				printPricePointAction(out, mapper, pp);
+			}
+			out.println("</table>");
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Error while creating payment test page", e);
 		} finally {
 			out.println("</body></html>");
 		}
+	}
+
+	private void printPricePointAction(PrintWriter out, ObjectMapper mapper,
+			PricePointVO pp) throws IOException, JsonGenerationException,
+			JsonMappingException {
+		out.println("<tr><td>");
+		out.println("Description: " + pp.getDescription() + "</br>");
+		out.println("Amount: " + (pp.getValueDisplayed() == null ? "FREE" : pp.getValueDisplayed()) + "</br>");
+		out.println("<form action=\"" + pp.getActionUrl() + "\" method=\"post\" accept-charset=\"utf-8\">"); 
+		out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"id\" value=\"" + pp.getSellerId() + "\">");
+		out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"kwota\" value=\"" + pp.getAmount() + "\">");
+		out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"opis\" value=\"" + pp.getTransactionDescClient() + "\">");
+		out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"opis_sprzed\" value=\"" + pp.getTransactionDescSeller() + "\">");
+		out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"crc\" value=\"" + pp.getCrc() + "\">");
+		out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"pow_url\" value=\"" + pp.getReturnUrlSuccess() + "\">");
+		out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"pow_url_blad\" value=\"" + pp.getReturnUrlFailure() + "\">");
+		out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"email\" value=\"" + pp.getUserEmail() + "\">");
+		out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"nazwisko\" value=\"" + pp.getUserName() + "\">");
+		out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"telefon\" value=\"" + pp.getUserPhone() + "\">");
+		out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"jezyk\" value=\"" + pp.getPaymentLanguage() + "\">");
+		out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"md5sum\" value=\"" + pp.getMd5sum() + "\">");
+		out.println("<input type=\"submit\" autocomplete=\"off\" name=\"submit\" value=\"" + pp.getButtonText() + "\">");
+		out.println("</form>");
+		out.println("</td><td>");
+		out.println("<form>"); 
+		out.println("<textarea autocomplete=\"off\" rows=\"10\" cols=\"100\">" + mapper.writeValueAsString(pp) + "</textarea>");
+		out.println("</form></td></tr>");
 	}
 
 	private void printPricePoints(PrintWriter out, Map<PricePoint.Group, List<PricePoint>> pricePoints) {

@@ -91,19 +91,19 @@ public class HelloServlet extends HttpServlet {
             
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Email login API:</p>");
 			out.println("<form method=\"POST\" action=\"/user/register.html\">"
-					+ "<input name=\"email\" type=\"text\" value=\"test1@inwestujwfirmy.pl\"/>"
-					+ "<input name=\"password\" type=\"password\" value=\"abcdef12\"/>"
+					+ "<input name=\"email\" autocomplete=\"off\" type=\"text\" value=\"test1@inwestujwfirmy.pl\"/>"
+					+ "<input name=\"password\" autocomplete=\"off\" type=\"password\" value=\"abcdef12\"/>"
 					+ "<input type=\"submit\" value=\"Register user\"/></form><br/>");
 			out.println("<form method=\"GET\" action=\"/user/activate.html\">"
-					+ "<input name=\"code\" type=\"text\" value=\"code here ...\"/>"
+					+ "<input name=\"code\" autocomplete=\"off\" type=\"text\" value=\"code here ...\"/>"
 					+ "<input type=\"submit\" value=\"Activate user\"/></form><br/>");
 			if (EmailAuthHelper.getUser(req) != null) {
 				out.println("<form method=\"GET\" action=\"/user/logout.html\">"
 					+ "<input type=\"submit\" value=\"Logout\"/></form><br/>");
 			} else {
 				out.println("<form method=\"POST\" action=\"/user/authenticate.html\">"
-					+ "<input name=\"email\" type=\"text\" value=\"test1@inwestujwfirmy.pl\"/>"
-					+ "<input name=\"password\" type=\"password\" value=\"abcdef12\"/>"
+					+ "<input name=\"email\" autocomplete=\"off\" type=\"text\" value=\"test1@inwestujwfirmy.pl\"/>"
+					+ "<input name=\"password\" autocomplete=\"off\" type=\"password\" value=\"abcdef12\"/>"
 					+ "<input type=\"submit\" value=\"Login\"/></form><br/>");
 			}
 
@@ -134,29 +134,30 @@ public class HelloServlet extends HttpServlet {
 			out.println("<a href=\"/payment/\">Payments configuration</a><br/>");
 			out.println("<a href=\"/setup/\">Setup page</a></p>");
 
+			/*
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Payment system:</p>");
 			out.println("<form action=\"https://secure.transferuj.pl\" method=\"post\" accept-charset=\"utf-8\">"); 
 			out.println("<input type=\"hidden\" name=\"id\" value=\"12330\">");
 			out.println("<label for=\"kwota\">Value: </label>");
-			out.println("<input type=\"text\" name=\"kwota\" value=\"10.00\"><br/>");
+			out.println("<input autocomplete=\"off\" type=\"text\" name=\"kwota\" value=\"10.00\"><br/>");
 			out.println("<label for=\"opis\">Transaction description: </label>");
-			out.println("<input type=\"text\" name=\"opis\" value=\"Aktywacja projektu\"><br/>");
+			out.println("<input autocomplete=\"off\" type=\"text\" name=\"opis\" value=\"Aktywacja projektu\"><br/>");
 			out.println("<label for=\"crc\">Additional text: </label>");
-			out.println("<input type=\"text\" name=\"crc\" value=\"project [id will go here]\"><br/>");
+			out.println("<input autocomplete=\"off\" type=\"text\" name=\"crc\" value=\"project [id will go here]\"><br/>");
 			out.println("<label for=\"opis_sprzed\">Transaction description for seller (optional): </label>");
-			out.println("<input type=\"text\" name=\"opis_sprzed\" value=\"Test transaction\"><br/>");
+			out.println("<input autocomplete=\"off\" type=\"text\" name=\"opis_sprzed\" value=\"Test transaction\"><br/>");
 			out.println("<label for=\"pow_url\">Return url for success: </label>");
-			out.println("<input type=\"text\" name=\"pow_url\" value=\"http://www.inwestujwfirmy.pl\"><br/>");
+			out.println("<input autocomplete=\"off\" type=\"text\" name=\"pow_url\" value=\"http://www.inwestujwfirmy.pl\"><br/>");
 			out.println("<label for=\"pow_url_blad\">Return url for failure: </label>");
-			out.println("<input type=\"text\" name=\"pow_url_blad\" value=\"http://www.inwestujwfirmy.pl\"><br/>");
+			out.println("<input autocomplete=\"off\" type=\"text\" name=\"pow_url_blad\" value=\"http://www.inwestujwfirmy.pl\"><br/>");
 			out.println("<label for=\"email\">Customer email address (optional): </label>");
-			out.println("<input type=\"text\" name=\"email\" value=\"grzegorz.nittner@gmail.com\"><br/>");
+			out.println("<input autocomplete=\"off\" type=\"text\" name=\"email\" value=\"grzegorz.nittner@gmail.com\"><br/>");
 			out.println("<label for=\"nazwisko\">Name of the customer (optional): </label>");
-			out.println("<input type=\"text\" name=\"nazwisko\" value=\"Grzegorz Nittner\"><br/>");
+			out.println("<input autocomplete=\"off\" type=\"text\" name=\"nazwisko\" value=\"Grzegorz Nittner\"><br/>");
 			out.println("<label for=\"telefon\">Customer phone number (optional): </label>");
-			out.println("<input type=\"text\" name=\"telefon\" value=\"515261xxx\"><br/>");
+			out.println("<input autocomplete=\"off\" type=\"text\" name=\"telefon\" value=\"515261xxx\"><br/>");
 			out.println("<label for=\"jezyk\">Language for payment system (pl, end or de): </label>");
-			out.println("<input type=\"text\" name=\"jezyk\" value=\"pl\"><br/>");
+			out.println("<input autocomplete=\"off\" type=\"text\" name=\"jezyk\" value=\"pl\"><br/>");
 			out.println("<input type=\"hidden\" name=\"md5sum\" value=\"default_md5\">");
 			out.println("<input type=\"submit\" name=\"submit\" value=\"Submit payment\""
 					+ " onclick=\"var txt=this.form.elements['id'].value"
@@ -195,6 +196,7 @@ public class HelloServlet extends HttpServlet {
 					+ "+this.form.elements['tr_crc'].value+'718N3Xa1b9qk1QG4';"
 					+ "this.form.elements['md5sum'].value=CryptoJS.MD5(txt);\">");
 			out.println("</form>");
+			*/
 			
 			ListPropertiesVO listProperties = new ListPropertiesVO(1);
 			List<Listing> listings = datastore.getAllListings();
@@ -213,10 +215,10 @@ public class HelloServlet extends HttpServlet {
 			out.println("<form method=\"POST\" action=\"/user/activate/" + currentUser.getId() + "/.json\"><input type=\"submit\" value=\"Activates logged in user\"/></form>");
 			out.println("<form method=\"POST\" action=\"/user/deactivate/" + currentUser.getId() + "/.json\"><input type=\"submit\" value=\"Deactivates logged in user\"/></form>");
 			out.println("<a href=\"/user/votes/" + currentUser.getId() + "/.json\">Logged in user votes</a><br/>");
-			out.println("<form method=\"GET\" action=\"/user/check_user_name/.json\"><input name=\"name\" type=\"text\" value=\"greg\"/>"
+			out.println("<form method=\"GET\" action=\"/user/check_user_name/.json\"><input name=\"name\" autocomplete=\"off\" type=\"text\" value=\"greg\"/>"
 					+ "<input type=\"submit\" value=\"Check user name\"/></form>");
 			out.println("<form method=\"POST\" action=\"/user/request_dragon/.json\"><input type=\"submit\" value=\"Request Dragon badge for " + currentUser.getEmail() + "\"/></form>");
-			out.println("<form method=\"POST\" action=\"/user/promote_to_dragon/.json\"><textarea name=\"id\" rows=\"1\" cols=\"50\">"
+			out.println("<form method=\"POST\" action=\"/user/promote_to_dragon/.json\"><textarea autocomplete=\"off\" name=\"id\" rows=\"1\" cols=\"50\">"
 					+ currentUser.getId() + "</textarea><input type=\"submit\" value=\"Promote user to Dragon\"/></form>");
 
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Campaigns API:</p>");
@@ -227,7 +229,7 @@ public class HelloServlet extends HttpServlet {
 			out.println("</br>User campaigns:<br/>");
 			for (Campaign camp : datastore.getUserCampaigns(currentUser.toKeyId(), new ListPropertiesVO(10))) {
 				out.println("" + camp.subdomain + " (" + camp.name + ") active from " + fmt2.print(camp.activeFrom.getTime()) + " to " + fmt2.print(camp.activeTo.getTime()));
-				out.println("<form method=\"POST\" action=\"/user/store_campaign/.json\"><textarea name=\"campaign\" rows=\"3\" cols=\"120\">"
+				out.println("<form method=\"POST\" action=\"/user/store_campaign/.json\"><textarea autocomplete=\"off\" name=\"campaign\" rows=\"3\" cols=\"120\">"
 							+ "{\"subdomain\":\"" + camp.subdomain + "\", \"name\":\"" + camp.name + "\", \"description\":\"" + camp.description
 							+ "\", \"active_from\":\"" + fmt2.print(camp.activeFrom.getTime()) + "\", \"active_to\":\"" + fmt2.print(camp.activeTo.getTime())
 							+ "\", \"public_browsing\":\"" + camp.publicBrowsing
@@ -236,7 +238,7 @@ public class HelloServlet extends HttpServlet {
 							+ "}"
 							+ "</textarea><input type=\"submit\" value=\"Update campaign " + camp.subdomain + "\"/></form>");
 			}
-			out.println("<br/><br/><form method=\"POST\" action=\"/user/store_campaign/.json\"><textarea name=\"campaign\" rows=\"3\" cols=\"120\">"
+			out.println("<br/><br/><form method=\"POST\" action=\"/user/store_campaign/.json\"><textarea autocomplete=\"off\" name=\"campaign\" rows=\"3\" cols=\"120\">"
 					+ "{\"subdomain\":\"" + "new" + "\", \"name\":\"" + "New campaign" + "\", \"description\":\"" + "Super fancy campaign"
 					+ "\", \"active_from\":\"" + fmt2.print(new Date().getTime()) + "\", \"active_to\":\"" + fmt2.print(new Date().getTime() + 30 * 24 * 60 * 60 * 1000)
 					+ "\", \"public_browsing\":\"" + "true"
@@ -256,13 +258,13 @@ public class HelloServlet extends HttpServlet {
 			out.println("<br/><a href=\"/listings/all_listing_locations/.json\">All listing locations</a><br/><br/>");
 			out.println("<form method=\"POST\" action=\"/listing/create/.json\"><input type=\"submit\" value=\"Creates NEW listing\"/></form>");
 			out.println("<form method=\"POST\" action=\"/listing/delete/.json\"><input type=\"submit\" value=\"Deletes edited (NEW) listing\"/></form>");
-			out.println("<form method=\"POST\" action=\"/listing/delete/.json\"><textarea name=\"id\" rows=\"1\" cols=\"50\">"
+			out.println("<form method=\"POST\" action=\"/listing/delete/.json\"><textarea autocomplete=\"off\" name=\"id\" rows=\"1\" cols=\"50\">"
 					+ "listing id</textarea><input type=\"submit\" value=\"Delete listing by id\"/></form>");
 
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Import listing data</p>");
 			out.println("<br/><a href=\"/listing/import_types/.json\">Available import types</a><br/>");
 			List<String> types = ListingImportService.instance().availableImportTypes(currentUser);
-			out.println("<form method=\"GET\" action=\"/listing/query_import/.json\"><textarea name=\"query\" rows=\"1\" cols=\"100\">"
+			out.println("<form method=\"GET\" action=\"/listing/query_import/.json\"><textarea autocomplete=\"off\" name=\"query\" rows=\"1\" cols=\"100\">"
 					+ "Football"
 					+ "</textarea>"
 					+ "<select name=\"type\" size=\"1\">");
@@ -271,7 +273,7 @@ public class HelloServlet extends HttpServlet {
 			}
 			out.println("</select>"
 					+ "<input type=\"submit\" value=\"Submit query\"/></form>");
-			out.println("<form method=\"POST\" action=\"/listing/import/.json\"><input name=\"id\" type=\"text\" size=\"50\"/>"
+			out.println("<form method=\"POST\" action=\"/listing/import/.json\"><input name=\"id\" autocomplete=\"off\" type=\"text\" size=\"50\"/>"
 					+ "<select name=\"type\" size=\"1\">");
 			for (String type : types) {
 				out.println("<option>" + type + "</option>");
@@ -282,19 +284,19 @@ public class HelloServlet extends HttpServlet {
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Editing new listing. Update methods:</p>");
 			ListingAndUserVO editedListing = ListingFacade.instance().createListing(currentUser);
 			if (editedListing.getListing() != null) {
-				out.println("<form method=\"POST\" action=\"/listing/update_field/.json\"><textarea name=\"listing\" rows=\"1\" cols=\"100\">"
+				out.println("<form method=\"POST\" action=\"/listing/update_field/.json\"><textarea autocomplete=\"off\" name=\"listing\" rows=\"1\" cols=\"100\">"
 						+ "{\"title\":\"" + editedListing.getListing().getName() + "\"}"
 						+ "</textarea><input type=\"submit\" value=\"Update title\"/></form>");
-				out.println("<form method=\"POST\" action=\"/listing/update_field/.json\"><textarea name=\"listing\" rows=\"1\" cols=\"100\">"
+				out.println("<form method=\"POST\" action=\"/listing/update_field/.json\"><textarea autocomplete=\"off\" name=\"listing\" rows=\"1\" cols=\"100\">"
 						+ "{\"mantra\":\"" + editedListing.getListing().getMantra() + "\"}"
 						+ "</textarea><input type=\"submit\" value=\"Update mantra\"/></form>");
-				out.println("<form method=\"POST\" action=\"/listing/update_field/.json\"><textarea name=\"listing\" rows=\"1\" cols=\"100\">"
+				out.println("<form method=\"POST\" action=\"/listing/update_field/.json\"><textarea autocomplete=\"off\" name=\"listing\" rows=\"1\" cols=\"100\">"
 						+ "{\"summary\":\"" + editedListing.getListing().getSummary() + "\"}"
 						+ "</textarea><input type=\"submit\" value=\"Update summary\"/></form>");
-				out.println("<form method=\"POST\" action=\"/listing/update_field/.json\"><textarea name=\"listing\" rows=\"1\" cols=\"100\">"
+				out.println("<form method=\"POST\" action=\"/listing/update_field/.json\"><textarea autocomplete=\"off\" name=\"listing\" rows=\"1\" cols=\"100\">"
 						+ "{\"suggested_amt\":\"" + editedListing.getListing().getSuggestedAmount() + "\"}"
 						+ "</textarea><input type=\"submit\" value=\"Update suggested amount\"/></form>");
-				out.println("<form method=\"POST\" action=\"/listing/update_field/.json\"><textarea name=\"listing\" rows=\"1\" cols=\"100\">"
+				out.println("<form method=\"POST\" action=\"/listing/update_field/.json\"><textarea autocomplete=\"off\" name=\"listing\" rows=\"1\" cols=\"100\">"
 						+ "{\"logo_url\":\"http://mcsearcher.files.wordpress.com/2008/12/sexy-girl-7.jpg\"}"
 						+ "</textarea><input type=\"submit\" value=\"Update logo from URL\"/></form>");
 				out.println("<p>Updatable field names: " + ListingVO.UPDATABLE_PROPERTIES + "</p>");
@@ -367,7 +369,7 @@ public class HelloServlet extends HttpServlet {
 			out.println("<a href=\"/listings/latest/.json?max_results=6\">Latest listings</a><br/>");
 			out.println("<a href=\"/listings/closing/.json?max_results=6\">Closing listings</a><br/>");
 			out.println("<a href=\"/listings/monitored/.json?max_results=6\">Monitored listings (by logged in user)</a><br/>");
-			out.println("<form method=\"GET\" action=\"/listing/keyword/.json\"><input name=\"text\" type=\"text\" value=\"business\"/>"
+			out.println("<form method=\"GET\" action=\"/listing/keyword/.json\"><input name=\"text\" autocomplete=\"off\" type=\"text\" value=\"business\"/>"
 					+ "<input type=\"submit\" value=\"Keyword search\"/></form>");
 
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Comments API:</p>");
@@ -387,7 +389,7 @@ public class HelloServlet extends HttpServlet {
 					out.println("" + msg.getUserNickname() + " (" + msg.getCounter() + ") last " + msg.getDirection() + " '" + msg.getText() + "' on " + msg.getLastDate() + " ");
 					out.println("<a href=\"/user/messages/" + msg.getUser() + "/.json\">View all conversation with " + msg.getUserNickname() + "</a> ");
 					out.println("</p>");
-					out.println("<form method=\"POST\" action=\"/user/send_message/.json\"><textarea name=\"message\" rows=\"1\" cols=\"120\">"
+					out.println("<form method=\"POST\" action=\"/user/send_message/.json\"><textarea autocomplete=\"off\" name=\"message\" rows=\"1\" cols=\"120\">"
 								+ "{\"profile_id\":\"" + msg.getUser() + "\", \"text\":\"Reply text " + (msg.getCounter() + 1) + " to " + msg.getUserNickname() + "\"}"
 								+ "</textarea><input type=\"submit\" value=\"Send private to " + msg.getUserNickname() + "\"/></form>");
 				}
@@ -396,7 +398,7 @@ public class HelloServlet extends HttpServlet {
 			}
 			for (SBUser usr : users) {
 				if (usr.id != currentUser.toKeyId()) {
-					out.println("<form method=\"POST\" action=\"/user/send_message/.json\"><textarea name=\"message\" rows=\"3\" cols=\"50\">"
+					out.println("<form method=\"POST\" action=\"/user/send_message/.json\"><textarea autocomplete=\"off\" name=\"message\" rows=\"3\" cols=\"50\">"
 							+ "{\"profile_id\":\"" + usr.getWebKey() + "\", \"text\":\"Message text to " + usr.nickname + "\"}"
 							+ "</textarea><input type=\"submit\" value=\"Send private to " + usr.nickname + "\"/></form>");
 				}
@@ -551,7 +553,7 @@ public class HelloServlet extends HttpServlet {
 			} else {
 				out.println("No comments.<br/>");
 			}
-			out.println("<form method=\"POST\" action=\"/listing/post_comment/.json\"><textarea name=\"comment\" rows=\"2\" cols=\"50\">"
+			out.println("<form method=\"POST\" action=\"/listing/post_comment/.json\"><textarea autocomplete=\"off\" name=\"comment\" rows=\"2\" cols=\"50\">"
 					+ "{ \"listing_id\":\"" + listing.getId() + "\", \"text\":\"comment text\" }"
 					+ "</textarea><input type=\"submit\" value=\"Post comment\"/></form>");
 
@@ -565,7 +567,7 @@ public class HelloServlet extends HttpServlet {
 				} else {
 					out.println("Q: " + qa.getQuestion() + "<br/>");
 					if (StringUtils.equals(listing.getOwner(), currentUser.getId())) {
-						out.println("<form method=\"POST\" action=\"/listing/answer_question/.json\"><textarea name=\"message\" rows=\"2\" cols=\"50\">"
+						out.println("<form method=\"POST\" action=\"/listing/answer_question/.json\"><textarea autocomplete=\"off\" name=\"message\" rows=\"2\" cols=\"50\">"
 							+ "{\"question_id\":\"" + qa.getId() + "\", \"text\":\"Answer text\"}"
 							+ "</textarea><input type=\"submit\" value=\"Answer\"/></form>");
 					} else {
@@ -574,7 +576,7 @@ public class HelloServlet extends HttpServlet {
 				}
 			}
 			out.println("<a href=\"/listing/questions_answers/" + listing.getId() + ".json?\">View Q&amp;A</a>");
-			out.println("<form method=\"POST\" action=\"/listing/ask_owner/.json\"><textarea name=\"message\" rows=\"3\" cols=\"50\">"
+			out.println("<form method=\"POST\" action=\"/listing/ask_owner/.json\"><textarea autocomplete=\"off\" name=\"message\" rows=\"3\" cols=\"50\">"
 					+ "{\"listing_id\":\"" + listing.getId() + "\", \"text\":\"Message text\"}"
 					+ "</textarea><input type=\"submit\" value=\"Ask owner\"/></form>");
 
@@ -588,7 +590,7 @@ public class HelloServlet extends HttpServlet {
 					out.println(bu.getUserNickname() + " (" + bu.getCounter() + ") " + bu.getType() + " " + bu.getAmount() + " for " + bu.getPercentage() + "% valued "
 							+ bu.getValue() + " on " + bu.getLastDate() + " ");
 					out.println("<a href=\"/listing/bids/" + listing.getId() + "/" + bu.getUser() + ".json?\">View bids from " + bu.getUserNickname() + "</a>");
-					out.println("<form method=\"POST\" action=\"/listing/make_bid/.json\"><textarea name=\"bid\" rows=\"3\" cols=\"50\">"
+					out.println("<form method=\"POST\" action=\"/listing/make_bid/.json\"><textarea autocomplete=\"off\" name=\"bid\" rows=\"3\" cols=\"50\">"
 							+ "{\"listing_id\":\"" + listing.getId() + "\", \"text\":\"Bid text text\", "
 							+ "\"amt\":\"10000\", \"pct\":\"5\", \"type\":\"INVESTOR_POST\" "
 							+ (StringUtils.equals(currentUser.getId(), listing.getOwner()) ? ", \"investor_id\":\"" + bu.getUser() + "\"" : "") + "}"
@@ -606,12 +608,12 @@ public class HelloServlet extends HttpServlet {
 					}
 				}
 				out.println("<a href=\"/listing/bids/" + listing.getId() + ".json?\">View bids</a>");
-				out.println("<form method=\"POST\" action=\"/listing/make_bid/.json\"><textarea name=\"bid\" rows=\"3\" cols=\"50\">"
+				out.println("<form method=\"POST\" action=\"/listing/make_bid/.json\"><textarea autocomplete=\"off\" name=\"bid\" rows=\"3\" cols=\"50\">"
 					+ "{\"listing_id\":\"" + listing.getId() + "\", \"text\":\"Bid text 1\", "
 					+ "\"amt\":\"10000\", \"pct\":\"5\", \"type\":\"INVESTOR_POST\" }"
 					+ "</textarea><input type=\"submit\" value=\"Make bid\"/></form>");
 			}
-			out.println("<form method=\"POST\" action=\"/listing/update_field/.json\"><textarea name=\"listing\" rows=\"1\" cols=\"50\">"
+			out.println("<form method=\"POST\" action=\"/listing/update_field/.json\"><textarea autocomplete=\"off\" name=\"listing\" rows=\"1\" cols=\"50\">"
 					+ "{\"id\":\"" + listing.getId() + "\", \"website\":\"" + listing.getWebsite() + "\"}"
 					+ "</textarea><input type=\"submit\" value=\"Update listing\"/></form>");
 

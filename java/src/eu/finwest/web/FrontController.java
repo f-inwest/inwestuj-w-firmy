@@ -130,7 +130,7 @@ public class FrontController extends HttpServlet {
 		}
 	}
 
-	private void setLanguageAndCampaign(HttpServletRequest request, HttpServletResponse response) {
+	public void setLanguageAndCampaign(HttpServletRequest request, HttpServletResponse response) {
 		langVersion.set(obtainLanguageVersion(request, response));
 		String userCampaign = obtainCampaign(request);
 		campaign.set(userCampaign);
