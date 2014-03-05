@@ -545,9 +545,12 @@ pl.implement(HeaderClass, {
         pl('#headerloginlink').bind('click', function() {
             pl('#light, #fade').show();
         });
-        pl('#login-close-box, #fade').bind('click', function() {
-           pl('#light, #fade').hide();
-        });
+        pl('#login-close-box, #fade, #register-login-close-box, #register-close-link')
+            .bind('click', function() {
+                pl('#light, #fade, #register-verify-text, #register-close-link').hide();
+                pl('#register-form, #login-panel-text, #social-login').show();
+                pl('#register-email').removeClass('register-email-input');
+            });
     },
     setLoggedIn: function(profile, logout_url) {
         var num_notifications = profile.num_notifications || 0,
@@ -580,6 +583,7 @@ pl.implement(HeaderClass, {
         pl('#headerloggedin').show();
     },
     setLoggedOut: function(login_url, twitter_login_url, fb_login_url) {
+        var self = this;
         //if (login_url) {
             pl('#loginlink').attr({href: login_url});
             //if (twitter_login_url) {
@@ -593,8 +597,50 @@ pl.implement(HeaderClass, {
             //    pl('#fb_loginlink').hide();
             //}
         //}
+        pl('#signin-link').bind('click', function() {
+            var email = pl('#register-email').get(0).value,
+                password = pl('#register-password').get(0).value,
+                data = { email: email, password: password },
+                successFunc = function(json) {
+                    console.log('logged in to account', json);
+                    location.reload();
+                },
+                errorFunc = function(json) {
+                    console.log('error loggin in to account', json);
+                    pl('#register-message').text('@lang_cant_login@');
+                },
+                ajax = new AjaxClass('/user/authenticate', 'register-message', null, successFunc, null, errorFunc);
+            ajax.setPostData(data);
+            ajax.call();
+        });
+        pl('#register-link').bind('click', function() {
+            var email = pl('#register-email').get(0).value,
+                password = pl('#register-password').get(0).value,
+                data = { email: email, password: password },
+                successFunc = function(json) {
+                    console.log('created account', json);
+                    pl('#register-form, #login-panel-text, #social-login').hide();
+                    pl('#register-verify-text, #register-close-link').show();
+                },
+                errorFunc = function(json) {
+                    console.log('error creating account', json);
+                    pl('#register-message').text('@login_cant_register@');
+                },
+                ajax = new AjaxClass('/user/register', 'register-message', null, successFunc, null, errorFunc);
+            ajax.setPostData(data);
+            ajax.call();
+        });
+        pl('#register-email').bind('focus', function() {
+            var field = pl('#register-email').get(0);
+            if (field.value === '@lang_login_username@') {
+                field.value = '';
+                pl('#register-email').addClass('register-email-input');
+            }
+        });
         pl('#headeraddlistinglink').bind('click', function() {
             pl('#light, #fade').show();
+            e.preventDefault();
+            return false;
         });
         pl('#headernotloggedin').show();
 
