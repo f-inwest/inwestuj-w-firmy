@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
@@ -28,6 +30,7 @@ import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingLocation;
 import eu.finwest.datamodel.Location;
 import eu.finwest.datamodel.PricePoint;
+import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.UserVO;
@@ -54,6 +57,8 @@ public class MemCacheFacade {
 	private static final String MEMCACHE_CAMPAIGNS = "CampaingsVO";
 	private static final String MEMCACHE_CAMPAIGNS_RAW = "CampaingsDTO";
 	private static final String MEMCACHE_PRICEPOINTS_GROUPED = "PricePointsGrouped";
+	private static final String MEMCACHE_SYSTEM_PROPERTY_LIST = "ListOfSystemProperties";
+	private static final String MEMCACHE_SYSTEM_PROPERTY_MAP = "MapOfSystemProperties";
 	
 	private MemCacheFacade() {
 	}
@@ -207,7 +212,7 @@ public class MemCacheFacade {
 		@SuppressWarnings("unchecked")
 		Map<String, List<Object[]>> allData = (Map<String, List<Object[]>>)mem.get(MemCacheFacade.MEMCACHE_ALL_LISTING_LOCATIONS);
 		
-		List<Object[]> result = allData.get(FrontController.getCampaign().getSubdomain());
+		List<Object[]> result = allData.get(listing.campaign == null ? listing.lang.name().toLowerCase() : listing.campaign);
 		if (result == null) {
 			result = new ArrayList<Object[]>();
 			allData.put(FrontController.getCampaign().getSubdomain(), result);
@@ -291,7 +296,20 @@ public class MemCacheFacade {
 	}
 	
 	public CampaignVO getCampaign(String subdomain) {
-		return getAllCampaigns().get(subdomain);
+		Map<String, CampaignVO> map = getAllCampaigns();
+		return map == null ? null : map.get(subdomain);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Campaign getCampaignById(String id) {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		List<Campaign> allCampaigns = (List<Campaign>)mem.get(MemCacheFacade.MEMCACHE_CAMPAIGNS_RAW);
+		for (Campaign c : allCampaigns) {
+			if (StringUtils.equals(id, c.getWebKey())) {
+				return c;
+			}
+		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -359,4 +377,40 @@ public class MemCacheFacade {
 		}
 		return groupedPP;
 	}
+	
+	public void clearSystemPropertiesCache() {
+		loadSystemProperties(MemcacheServiceFactory.getMemcacheService());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, SystemProperty> getSystemProperties() {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Map<String, SystemProperty> map = (Map<String, SystemProperty>)mem.get(MEMCACHE_SYSTEM_PROPERTY_MAP);
+		if (map == null) {
+			map = loadSystemProperties(mem);
+		}
+		return map;
+	}
+
+	private Map<String, SystemProperty> loadSystemProperties(MemcacheService mem) {
+		Map<String, SystemProperty> map;
+		map = new HashMap<String, SystemProperty>();
+		List<SystemProperty> props = ObjectifyDatastoreDAO.getInstance().getSystemProperties();
+		for (SystemProperty prop : props) {
+			map.put(prop.name, prop);
+		}
+		mem.put(MEMCACHE_SYSTEM_PROPERTY_MAP, map);
+		mem.put(MEMCACHE_SYSTEM_PROPERTY_LIST, props);
+		return map;
+	}
+
+	public String getSystemProperty(String name) {
+		Map<String, SystemProperty> map = getSystemProperties();
+		if (map != null && map.containsKey(name)) {
+			return map.get(name).value;
+		} else {
+			return null;
+		}
+	}
+	
 }

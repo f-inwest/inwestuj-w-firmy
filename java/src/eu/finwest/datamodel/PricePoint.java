@@ -51,6 +51,7 @@ public class PricePoint extends BaseObject<PricePoint> implements Serializable {
 	@JsonProperty("type")public Type type;
 	@JsonProperty("descriptionPl") public String descriptionPl;
 	@JsonProperty("descriptionEn")public String descriptionEn;
+	@JsonProperty("successUrl")public String successUrl;
 	
 	public Date modified;
 	@PrePersist void updateModifiedDate() {

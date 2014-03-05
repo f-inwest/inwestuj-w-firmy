@@ -305,6 +305,7 @@ public class MockDataBuilder {
 			getOfy().put(createCategories());
 		}
 		
+		createDefaultSystemProperties();
 		List<Campaign> campaigns = createMockCampaigns(users);
 		List<PricePoint> pricePoints = createPricePoints();
 
@@ -347,8 +348,44 @@ public class MockDataBuilder {
 		}
 		MemCacheFacade.instance().cleanCampaingsCache();
 		MemCacheFacade.instance().clearAllListingLocations();
+		MemCacheFacade.instance().clearSystemPropertiesCache();
 		
 		return output.toString();
+	}
+	
+	public List<SystemProperty> createDefaultSystemProperties() {
+		List<SystemProperty> list = new ArrayList<SystemProperty>();
+		
+		SystemProperty prop = new SystemProperty();
+		prop.name = SystemProperty.PAYMENT_SECURITY_CODE;
+		prop.value = "718N3Xa1b9qk1QG4";
+		prop.created = new Date();
+		prop.author = "system";
+		list.add(prop);
+		
+		prop = new SystemProperty();
+		prop.name = SystemProperty.PAYMENT_ACTION_URL;
+		prop.value = "https://secure.transferuj.pl";
+		prop.created = new Date();
+		prop.author = "system";
+		list.add(prop);
+		
+		prop = new SystemProperty();
+		prop.name = SystemProperty.PAYMENT_CUSTOMER_ID;
+		prop.value = "12330";
+		prop.created = new Date();
+		prop.author = "system";
+		list.add(prop);
+
+		prop = new SystemProperty();
+		prop.name = SystemProperty.PAYMENT_FREE_USAGE;
+		prop.value = "true";
+		prop.created = new Date();
+		prop.author = "system";
+		list.add(prop);
+
+		getOfy().put(list);
+		return list;
 	}
 	
 	public List<PricePoint> createPricePoints() {
@@ -362,6 +399,7 @@ public class MockDataBuilder {
 		pp.currency = Currency.PLN;
 		pp.descriptionPl = "Opłata rejestracyjna dla inwestorów";
 		pp.descriptionEn = "Register fee for investors";
+		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
 		list.add(pp);
 		
 		pp = new PricePoint();
@@ -372,6 +410,7 @@ public class MockDataBuilder {
 		pp.currency = Currency.PLN;
 		pp.descriptionPl = "Opłata aktywacyjna dla Twojego projektu";
 		pp.descriptionEn = "Activation fee for your project";
+		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
 		list.add(pp);
 		
 		pp = new PricePoint();
@@ -382,6 +421,7 @@ public class MockDataBuilder {
 		pp.currency = Currency.PLN;
 		pp.descriptionPl = "Opłata za udostępnienie do pobrania planu biznesowego";
 		pp.descriptionEn = "Fee for generated business plan";
+		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
 		list.add(pp);
 		
 		pp = new PricePoint();
@@ -392,6 +432,7 @@ public class MockDataBuilder {
 		pp.currency = Currency.PLN;
 		pp.descriptionPl = "Opłata za udostępnienie do pobrania prezentacji";
 		pp.descriptionEn = "Fee for generated presentation";
+		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
 		list.add(pp);
 		
 		pp = new PricePoint();
@@ -402,6 +443,7 @@ public class MockDataBuilder {
 		pp.currency = Currency.PLN;
 		pp.descriptionPl = "Opłata za pełny pakiet aktywacyjny dla Twojego projektu, zawierający aktywację, plan biznesowy oraz prezentację";
 		pp.descriptionEn = "Fee for full package for your listing, including activation, business plan and presentation";
+		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
 		list.add(pp);
 
 		pp = new PricePoint();
@@ -412,6 +454,7 @@ public class MockDataBuilder {
 		pp.currency = Currency.PLN;
 		pp.descriptionPl = "Opłata za kampanię inwestycyjną trwającą 1 miesiąc";
 		pp.descriptionEn = "Fee for 1 month long investment campaign";
+		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
 		list.add(pp);
 		
 		pp = new PricePoint();
@@ -422,6 +465,7 @@ public class MockDataBuilder {
 		pp.currency = Currency.PLN;
 		pp.descriptionPl = "Opłata za kampanię inwestycyjną trwającą 6 miesięcy";
 		pp.descriptionEn = "Fee for 6 month long investment campaign";
+		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
 		list.add(pp);
 
 		pp = new PricePoint();
@@ -432,6 +476,7 @@ public class MockDataBuilder {
 		pp.currency = Currency.PLN;
 		pp.descriptionPl = "Opłata za kampanię inwestycyjną trwającą okrągły rok";
 		pp.descriptionEn = "Fee for 1 year long investment campaign";
+		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
 		list.add(pp);
 
 		getOfy().put(list);

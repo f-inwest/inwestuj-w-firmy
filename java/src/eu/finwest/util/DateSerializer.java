@@ -16,6 +16,15 @@ import org.joda.time.format.DateTimeFormatter;
  * @author "Grzegorz Nittner" <grzegorz.nittner@gmail.com>
  */
 public class DateSerializer extends JsonSerializer<Date> {
+	private String pattern = "yyyyMMddHHmmss";
+
+	public String getPattern() {
+		return pattern;
+	}
+
+	public void setPattern(String pattern) {
+		this.pattern = pattern;
+	}
 
 	@Override
 	public void serialize(Date value, JsonGenerator jgen, SerializerProvider provider)
@@ -23,7 +32,7 @@ public class DateSerializer extends JsonSerializer<Date> {
 		if (value == null) {
 			jgen.writeString("");
 		} else {
-			DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyyMMddHHmmss");
+			DateTimeFormatter fmt = DateTimeFormat.forPattern(pattern);
 			jgen.writeString(fmt.print(value.getTime()));
 		}
 	}

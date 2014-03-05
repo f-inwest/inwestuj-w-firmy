@@ -624,6 +624,15 @@ public class ObjectifyDatastoreDAO {
 			return null;
 		}
 	}
+	
+	public Listing getListing(String listingId) {
+		try {
+			return (Listing)getOfy().get(Key.create(listingId));
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Listing entity '" + listingId + "' not found", e);
+			return null;
+		}
+	}
 
 	public List<Listing> getListings(List<Long> listingIds) {
 		List<Key<Listing>> keys = new ArrayList<Key<Listing>>();
@@ -1503,9 +1512,11 @@ public class ObjectifyDatastoreDAO {
 		return campaigns;
 	}
 
-	public void storeTransaction(Transaction trans) {
+	public Transaction storeTransaction(Transaction trans) {
 		Key<Transaction> key = getOfy().put(trans);
+		trans.id = key.getId();
 		log.info("Stored payment transaction data, id: " + key.getString() + ", " + trans);
+		return trans;
 	}
 
 	public List<PricePoint> getAllPricePoints() {

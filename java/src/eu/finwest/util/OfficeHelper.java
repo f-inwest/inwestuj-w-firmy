@@ -87,7 +87,7 @@ public class OfficeHelper {
 		}
 	}
 	
-	private String getTranslation(LangVersion lang, String key) {
+	public String getTranslation(LangVersion lang, String key) {
 		if (lang == LangVersion.PL) {
 			return plTranslations.getString(key);
 		} else if (lang == LangVersion.EN) {

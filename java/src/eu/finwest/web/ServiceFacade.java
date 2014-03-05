@@ -256,7 +256,9 @@ public class ServiceFacade {
 			return null;
 		}
 		property.setAuthor(loggedInUser.getEmail());
-		return DtoToVoConverter.convert(getDAO().setSystemProperty(VoToModelConverter.convert(property)));
+		property = DtoToVoConverter.convert(getDAO().setSystemProperty(VoToModelConverter.convert(property)));
+		MemCacheFacade.instance().clearSystemPropertiesCache();
+		return property;
 	}
 
 	public ListingDocumentVO deleteDocument(UserVO loggedInUser, String docId) {
@@ -444,15 +446,5 @@ public class ServiceFacade {
 		list.setUser(loggedInUser);
 		
 		return list;
-	}
-
-	public void storeTransaction(Transaction trans) {
-		getDAO().storeTransaction(trans);
-	}
-	
-	public PricePoint storePricepoint(PricePoint pp) {
-		pp = getDAO().storePricePoint(pp);
-		MemCacheFacade.instance().cleanPricePointsCache();
-		return pp;
 	}
 }

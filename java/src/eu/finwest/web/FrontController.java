@@ -333,16 +333,16 @@ public class FrontController extends HttpServlet {
 		CampaignVO campaign = new CampaignVO();
 		campaign.setName(language == Language.EN ? "English projects" : "Polskie projekty");
 		campaign.setSpecial(true);
-		campaign.setCreator("Admin");
+		campaign.setCreator("system");
 		campaign.setCreated(new Date(0));
 		campaign.setActiveFrom(new Date(0));
 		campaign.setStatus(Campaign.Status.ACTIVE.toString());
 		campaign.setActiveTo(new Date(Long.MAX_VALUE - 1000));
 		campaign.setDescription(language == Language.EN ? "Main campaign" : "Główna kampania");
 		campaign.setComment(language == Language.EN ? "Campaign dedicated for english language projects" : "Kampania dla polskojęzycznych projektów");
-		campaign.setId(language.toString());
+		campaign.setId(language.name());
 		campaign.setSubdomain(language.name().toLowerCase());
-		campaign.setAllowedLanguage(language.toString());
+		campaign.setAllowedLanguage(language.name());
 		campaign.setPublicBrowsing(true);
 		return campaign;
 	}

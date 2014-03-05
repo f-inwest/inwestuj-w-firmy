@@ -36,6 +36,11 @@ public class SystemProperty {
 
 	public static final String FACEBOOK_CLIENT_ID = "facebook.client.id";
 	public static final String FACEBOOK_CLIENT_SECRET = "facebook.client.secret";
+	
+	public static final String PAYMENT_SECURITY_CODE = "payment.security.code";
+	public static final String PAYMENT_ACTION_URL = "payment.action.url";
+	public static final String PAYMENT_CUSTOMER_ID = "payment.customer.id";
+	public static final String PAYMENT_FREE_USAGE = "payment.free.usage";
 
 	@Id public String name;
 	public String value;
