@@ -160,7 +160,13 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
 
   <target name="compile-java" depends="check-appengine-home, copyjars"
       description="Compiles Java source and copies other source files to the WAR.">
-  	<mkdir dir="${java-classes}" />
+  	<copy todir="war" filtering="false">
+  	  <fileset dir=".">
+  	      <include name="pl.properties"/>
+  	      <include name="en.properties"/>
+  	  </fileset>
+  	</copy>
+    <mkdir dir="${java-classes}" />
     <copy todir="${java-classes}">
       <fileset dir="${java-src}">
         <exclude name="**/*.java" />
@@ -283,12 +289,6 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
 	  	<replace dir="war/pl" token="href='css/" value="href='pl/css/">
 			<include name="**/*.html"/>
 		</replace>
-	  	<copy todir="war" filtering="false">
-	  	  <fileset dir=".">
-	  	      <include name="pl.properties"/>
-	  	      <include name="en.properties"/>
-	  	  </fileset>
-	  	</copy>
 	</target>
   
 	<target name="ensure-test-name" unless="test">

@@ -12,7 +12,9 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -25,18 +27,28 @@ import com.googlecode.objectify.Key;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Campaign;
+import eu.finwest.datamodel.Campaign.Status;
 import eu.finwest.datamodel.Listing;
+import eu.finwest.datamodel.Listing.State;
+import eu.finwest.datamodel.PricePoint;
+import eu.finwest.datamodel.PricePoint.Group;
 import eu.finwest.datamodel.SBUser;
+import eu.finwest.datamodel.SystemProperty;
+import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.VoToModelConverter;
+import eu.finwest.datamodel.PricePoint.Codes;
 import eu.finwest.util.FacebookUser;
 import eu.finwest.util.ImageHelper;
+import eu.finwest.util.OfficeHelper;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ErrorCodes;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.ListingTileVO;
+import eu.finwest.vo.ListingVO;
+import eu.finwest.vo.PricePointVO;
 import eu.finwest.vo.UserAndUserVO;
 import eu.finwest.vo.UserBasicVO;
 import eu.finwest.vo.UserDataUpdatable;
@@ -55,6 +67,7 @@ public class UserMgmtFacade {
 	private static UserMgmtFacade instance;
 	
 	private DateTimeFormatter timeStampFormatter = DateTimeFormat.forPattern("yyyyMMdd_HHmmss_SSS");
+	private OfficeHelper oh = OfficeHelper.instance();
 	
 	public static UserMgmtFacade instance() {
 		if (instance == null) {
@@ -256,6 +269,8 @@ public class UserMgmtFacade {
 				allListings.add(result.getEditedListing());
 			}
 			applyUserStatistics(loggedInUser, loggedInUser);
+			
+			result.setPricePoints(getPricePoints(user, MemCacheFacade.instance().getUserCampaigns(user)));
 		} else {
 			user.setEmail("");
 			user.setLocation("");
@@ -266,6 +281,7 @@ public class UserMgmtFacade {
 		
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
 			result.setUser(user);
+			result.setOwnedCampaigns(MemCacheFacade.instance().getUserCampaigns(user));
 		} else {
 			((UserListingsForUsersVO)result).setUserBasic(new UserBasicVO(user));
 		}
@@ -561,7 +577,7 @@ public class UserMgmtFacade {
 		
 			NotificationFacade.instance().scheduleUserDragonRequestNotification(user);
 		} else {
-			log.warning("User not logged in");
+			log.warning("User has already requested dragon badge. " + user);
 			result.setErrorCode(ErrorCodes.APPLICATION_ERROR);
 			result.setErrorMessage("User has already requested dragon badge");
 			return result;
@@ -891,6 +907,231 @@ public class UserMgmtFacade {
 		campaign = DtoToVoConverter.convert(getDAO().storeCampaign(newCampaign));
 		MemCacheFacade.instance().cleanCampaingsCache();
 		return campaign;
+	}
+	
+	public List<PricePointVO> getPricePoints(UserVO loggedInUser, List<CampaignVO> campaigns) {
+		List<PricePointVO> list = new ArrayList<PricePointVO>();
+		if (loggedInUser == null) {
+			log.info("User not logged in, returning empty pricepoints.");
+		} else {
+			PricePoint.Codes code = PricePoint.Codes.valueOf(loggedInUser.getPaidCode() != null ? loggedInUser.getPaidCode() : "NONE");
+			if (code == Codes.NONE) {
+				List<PricePoint> pricePoints = MemCacheFacade.instance().getPricePoints(Group.INVESTOR);
+				LangVersion portalLang = FrontController.getLangVersion();
+				for (PricePoint pp : pricePoints) {
+					list.add(preparePricePointData(pp, loggedInUser, portalLang));
+				}
+				log.info("Returning " + list.size() + " pricepoints for user " + loggedInUser.getName());
+			} else {
+				log.info("User " + loggedInUser.getName() + " has already registered as investor.");
+				
+				if (loggedInUser.isAccreditedInvestor()) {
+					List<PricePoint> pricePoints = MemCacheFacade.instance().getPricePoints(Group.CAMPAIGN);
+					LangVersion portalLang = FrontController.getLangVersion();
+					for (CampaignVO campaign : campaigns) {
+						PricePoint.Codes campaignPaidCode = PricePoint.Codes.valueOf(campaign.getPaidCode() != null ? campaign.getPaidCode() : "NONE");
+						if (StringUtils.equalsIgnoreCase(Campaign.Status.NEW.toString(), campaign.getStatus())
+								&& campaignPaidCode == PricePoint.Codes.NONE) {
+							for (PricePoint pp : pricePoints) {
+								list.add(preparePricePointData(pp, loggedInUser, campaign, portalLang));
+							}
+						}
+					}
+				}
+			}
+		}
+		log.info("Returning " + list.size() + " pricepoints for user " + loggedInUser.getName());
+		return list;
+	}
+
+	public List<PricePointVO> getPricePoints(UserVO loggedInUser, ListingVO listing) {
+		List<PricePointVO> list = new ArrayList<PricePointVO>();
+		if (loggedInUser == null || listing == null) {
+			log.info("User not logged in or empty listing, returning empty pricepoints.");
+		} else if (!StringUtils.equalsIgnoreCase(Listing.State.NEW.toString(), listing.getState())
+				&& !StringUtils.equalsIgnoreCase(Listing.State.POSTED.toString(), listing.getState())
+				&& !StringUtils.equalsIgnoreCase(Listing.State.ACTIVE.toString(), listing.getState())) {
+			log.info("Only listings in NEW, POSTED and ACTIVE state will return pricepoints, returning empty pricepoints.");
+		} else {
+			LangVersion portalLang = FrontController.getLangVersion();
+			List<PricePoint> pricePoints = MemCacheFacade.instance().getPricePoints(Group.LISTING);			
+			if (StringUtils.equals(State.ACTIVE.name(), listing.getState())) {
+				for (PricePoint pp : pricePoints) {
+					if (pp.name.equals(Codes.PRJ_BP.toString()) || pp.name.equals(Codes.PRJ_PPT.toString())) {
+						list.add(preparePricePointData(pp, loggedInUser, listing, portalLang));
+					}
+				}
+			} else if (StringUtils.contains(listing.getPaidCode(), Codes.PRJ_ALL.toString())) {
+				// listing has all options already purchased
+			} else if (StringUtils.contains(listing.getPaidCode(), Codes.PRJ_BP.toString())) {
+				for (PricePoint pp : pricePoints) {
+					if (pp.name.equals(Codes.PRJ_PPT.toString())) {
+						list.add(preparePricePointData(pp, loggedInUser, listing, portalLang));
+					}
+				}
+			} else if (StringUtils.contains(listing.getPaidCode(), Codes.PRJ_PPT.toString())) {
+				for (PricePoint pp : pricePoints) {
+					if (pp.name.equals(Codes.PRJ_BP.toString())) {
+						list.add(preparePricePointData(pp, loggedInUser, listing, portalLang));
+					}
+				}
+			} else if (StringUtils.contains(listing.getPaidCode(), Codes.PRJ_ACT.toString())) {
+				for (PricePoint pp : pricePoints) {
+					if (pp.name.equals(Codes.PRJ_BP.toString()) || pp.name.equals(Codes.PRJ_PPT.toString())) {
+						list.add(preparePricePointData(pp, loggedInUser, listing, portalLang));
+					}
+				}
+			} else {
+				for (PricePoint pp : pricePoints) {
+					if (pp.name.equals(Codes.PRJ_ACT.toString()) || pp.name.equals(Codes.PRJ_ALL.toString())) {
+						list.add(preparePricePointData(pp, loggedInUser, listing, portalLang));
+					}
+				}
+			}
+			log.info("Returning " + list.size() + " pricepoints for user " + loggedInUser.getName());
+		}		
+		return list;
+	}
+	
+	private PricePointVO preparePricePointData(PricePoint pricePoint, UserVO loggedInUser, CampaignVO campaign, LangVersion portalLang) {
+		PricePointVO pp = new PricePointVO();
+		pp.setTransactionDescClient(oh.getTranslation(portalLang, "lang_payment_client_campaign_activation"));
+		pp.setTransactionDescSeller(oh.getTranslation(portalLang, "lang_payment_seller_campaign_activation") + " " + campaign.getSubdomain());
+
+		updateCommonFields(pricePoint, loggedInUser, portalLang, pp, campaign.getId());
+		return pp;
+	}
+
+	private PricePointVO preparePricePointData(PricePoint pricePoint, UserVO loggedInUser, LangVersion portalLang) {
+		PricePointVO pp = new PricePointVO();
+		pp.setTransactionDescClient(oh.getTranslation(portalLang, "lang_payment_client_investor_registration"));
+		pp.setTransactionDescSeller(oh.getTranslation(portalLang, "lang_payment_seller_investor_registration") + " " + loggedInUser.getEmail());
+		
+		updateCommonFields(pricePoint, loggedInUser, portalLang, pp, loggedInUser.getId());
+		return pp;
+	}
+
+	private PricePointVO preparePricePointData(PricePoint pricePoint, UserVO loggedInUser, ListingVO listing, LangVersion portalLang) {
+		PricePointVO pp = new PricePointVO();
+		pp.setTransactionDescClient(oh.getTranslation(portalLang, "lang_payment_client_project_service"));
+		pp.setTransactionDescSeller(oh.getTranslation(portalLang, "lang_payment_seller_project_service"));
+
+		updateCommonFields(pricePoint, loggedInUser, portalLang, pp, listing.getId());
+		return pp;
+	}
+	
+	private void updateCommonFields(PricePoint pricePoint, UserVO loggedInUser, LangVersion portalLang, PricePointVO pp, String id) {
+		boolean freeUsage = StringUtils.equals("true", MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_FREE_USAGE));
+
+		pp.setDescription(portalLang == LangVersion.PL ? pricePoint.descriptionPl : pricePoint.descriptionEn);
+		pp.setButtonText(oh.getTranslation(portalLang, freeUsage ? "lang_payment_free_usage_button" : "lang_payment_pay_button"));		
+		pp.setPaymentLanguage(portalLang.name().toLowerCase());
+
+		pp.setSellerId(MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_CUSTOMER_ID));
+		updateAmounts(pp, pricePoint, portalLang);
+		pp.setCrc(pricePoint.name + " " + id);
+		
+		String domain = null;
+		String subdomain = FrontController.getCampaign().getSubdomain();
+		boolean devEnvironment = false;
+		if (com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development) {
+			domain = subdomain + ".localhost:7777";
+			devEnvironment = true;
+		} else {
+			domain = subdomain + ".inwestujwfirmy.pl";
+		}
+		String returnUrl = pricePoint.successUrl.replace("<domain>", domain);
+		returnUrl = returnUrl.replace("<id>", id);
+		pp.setReturnUrlSuccess(returnUrl);
+		pp.setReturnUrlFailure("http://" + domain + "/error-page.html");
+		
+		if (devEnvironment || freeUsage) {
+			pp.setActionUrl("http://" + domain + "/system/transaction_confirmation.html");
+		} else {
+			pp.setActionUrl(MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_ACTION_URL));
+		}
+		
+		pp.setUserEmail(loggedInUser.getEmail());
+		pp.setUserName(loggedInUser.getName());
+		pp.setUserPhone(loggedInUser.getPhone());
+		updateMd5(pp);
+	}
+	
+	private void updateMd5(PricePointVO pp) {
+		String md5string = pp.getSellerId() + pp.getAmount() + pp.getCrc()
+				+ MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_SECURITY_CODE);
+		pp.setMd5sum(DigestUtils.md5Hex(md5string));
+	}
+	
+	private void updateAmounts(PricePointVO pp, PricePoint pricePoint, LangVersion portalLang) {
+		if (StringUtils.equals("true", MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_FREE_USAGE))) {
+			pp.setValueDisplayed(null);
+			pp.setAmount("0.00");
+		} else {
+			String value = "" + (pricePoint.amount / 100);
+			value += portalLang == LangVersion.PL ? "," : ".";
+			value += pricePoint.amount % 100 > 9 ? (pricePoint.amount % 100) : "0" + (pricePoint.amount % 100);
+			value += " " + pricePoint.currency;
+			pp.setValueDisplayed(value);
+			
+			value = "" + (pricePoint.amount / 100) + ".";
+			value += pricePoint.amount % 100 > 9 ? (pricePoint.amount % 100) : "0" + (pricePoint.amount % 100);
+			pp.setAmount(value);
+		}
+	}
+
+	public void storeTransaction(Transaction trans) {
+		trans = getDAO().storeTransaction(trans);
+		String[] crcData = trans.crc.split(" ");
+		PricePoint.Codes code = PricePoint.Codes.valueOf(crcData[0]);
+		
+		SBUser user = null;
+		switch(code) {
+		case INV_REG:
+			user = getDAO().getUser(crcData[1]);
+			log.info("User '" + user.email + "' has requested investor badge with transaction: " + trans);
+			requestDragon(DtoToVoConverter.convert(user));
+			break;
+		case CMP_1MT:
+		case CMP_6MT:
+		case CMP_1Y:
+			Campaign campaign = MemCacheFacade.instance().getCampaignById(crcData[1]);
+			user = getDAO().getUser(campaign.creator.getString());
+			campaign.paidCode = code.toString();
+			campaign.status = Status.ACTIVE;
+			if (code == Codes.CMP_1MT) {
+				campaign.activeTo = DateUtils.addDays(campaign.activeFrom, 31);
+			} else if (code == Codes.CMP_6MT) {
+				campaign.activeTo = DateUtils.addDays(campaign.activeFrom, 183);
+			} else {
+				campaign.activeTo = DateUtils.addDays(campaign.activeFrom, 365);
+			}
+			campaign.comment += "Activated by transaction " + trans.id + " done by user " + trans.email;
+			getDAO().storeCampaign(campaign);
+			log.info("Campaign '" + campaign.subdomain + "' has been activated by user " + user.email + " with transaction: " + trans);
+			break;
+		case PRJ_ACT:
+		case PRJ_BP:
+		case PRJ_PPT:
+		case PRJ_ALL:
+			Listing listing = getDAO().getListing(crcData[1]);
+			user = getDAO().getUser(listing.owner.getString());
+			listing.paidCode = listing.paidCode == null ? code.toString() : listing.paidCode + " " + code.toString();
+			listing.notes += "User " + user.email + " has paid " + code + " for listing " + new Date() + ", transaction " + trans.id + ".\n";
+			getDAO().storeListing(listing);
+			if (listing.state == State.NEW) {
+				ListingFacade.instance().postListing(DtoToVoConverter.convert(user), listing.getWebKey());
+			}
+			break;
+		case NONE:
+			// nothing will happen
+		}
+	}
+	
+	public PricePoint storePricepoint(PricePoint pp) {
+		pp = getDAO().storePricePoint(pp);
+		MemCacheFacade.instance().cleanPricePointsCache();
+		return pp;
 	}
 
 }

@@ -1,5 +1,5 @@
 application: inwestuj-w-firmy
-version: 201402211100
+version: 201402262029
 runtime: java
 
 static_files:
@@ -16,6 +16,8 @@ handlers:
     servlet: eu.finwest.web.servlets.HelloServlet
   - url: /setup/*
     servlet: eu.finwest.web.servlets.SetupServlet
+  - url: /payment/*
+    servlet: eu.finwest.web.servlets.PaymentsServlet
   - url: /twitter_login
     servlet: eu.finwest.web.servlets.TwitterLoginServlet
   - url: /twitter_logout

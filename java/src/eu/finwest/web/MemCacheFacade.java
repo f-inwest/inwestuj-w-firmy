@@ -29,6 +29,8 @@ import eu.finwest.datamodel.Category;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingLocation;
 import eu.finwest.datamodel.Location;
+import eu.finwest.datamodel.PricePoint;
+import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.UserVO;
@@ -54,6 +56,9 @@ public class MemCacheFacade {
 	private static final String MEMCACHE_CATEGORIES = "Categories";
 	private static final String MEMCACHE_CAMPAIGNS = "CampaingsVO";
 	private static final String MEMCACHE_CAMPAIGNS_RAW = "CampaingsDTO";
+	private static final String MEMCACHE_PRICEPOINTS_GROUPED = "PricePointsGrouped";
+	private static final String MEMCACHE_SYSTEM_PROPERTY_LIST = "ListOfSystemProperties";
+	private static final String MEMCACHE_SYSTEM_PROPERTY_MAP = "MapOfSystemProperties";
 	
 	private MemCacheFacade() {
 	}
@@ -207,7 +212,7 @@ public class MemCacheFacade {
 		@SuppressWarnings("unchecked")
 		Map<String, List<Object[]>> allData = (Map<String, List<Object[]>>)mem.get(MemCacheFacade.MEMCACHE_ALL_LISTING_LOCATIONS);
 		
-		List<Object[]> result = allData.get(FrontController.getCampaign().getSubdomain());
+		List<Object[]> result = allData.get(listing.campaign == null ? listing.lang.name().toLowerCase() : listing.campaign);
 		if (result == null) {
 			result = new ArrayList<Object[]>();
 			allData.put(FrontController.getCampaign().getSubdomain(), result);
@@ -291,7 +296,20 @@ public class MemCacheFacade {
 	}
 	
 	public CampaignVO getCampaign(String subdomain) {
-		return getAllCampaigns().get(subdomain);
+		Map<String, CampaignVO> map = getAllCampaigns();
+		return map == null ? null : map.get(subdomain);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Campaign getCampaignById(String id) {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		List<Campaign> allCampaigns = (List<Campaign>)mem.get(MemCacheFacade.MEMCACHE_CAMPAIGNS_RAW);
+		for (Campaign c : allCampaigns) {
+			if (StringUtils.equals(id, c.getWebKey())) {
+				return c;
+			}
+		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -317,4 +335,82 @@ public class MemCacheFacade {
 		return userCampaigns;
 	}
 
+	public void cleanPricePointsCache() {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Map<PricePoint.Group, List<PricePoint>> groupedPP = loadPricePoints();
+		mem.delete(MEMCACHE_PRICEPOINTS_GROUPED);
+		mem.put(MEMCACHE_PRICEPOINTS_GROUPED, groupedPP);
+	}
+
+	private Map<PricePoint.Group, List<PricePoint>> loadPricePoints() {
+		List<PricePoint> pricePoints = getDAO().getAllPricePoints();
+		Map<PricePoint.Group, List<PricePoint>> groupedPP = new HashMap<PricePoint.Group, List<PricePoint>>();
+		for (PricePoint pp : pricePoints) {
+			List<PricePoint> list = groupedPP.get(pp.group);
+			if (list == null) {
+				list = new ArrayList<PricePoint>();
+				groupedPP.put(pp.group, list);
+			}
+			list.add(pp);
+		}
+		return groupedPP;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PricePoint> getPricePoints(PricePoint.Group pricePointGroup) {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Map<PricePoint.Group, List<PricePoint>> groupedPP = (Map<PricePoint.Group, List<PricePoint>>)mem.get(MEMCACHE_PRICEPOINTS_GROUPED);
+		if (groupedPP == null) {
+			groupedPP = loadPricePoints();
+			mem.put(MEMCACHE_PRICEPOINTS_GROUPED, groupedPP);
+		}
+		return (List<PricePoint>)groupedPP.get(pricePointGroup);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<PricePoint.Group, List<PricePoint>> getAllPricePoints() {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Map<PricePoint.Group, List<PricePoint>> groupedPP = (Map<PricePoint.Group, List<PricePoint>>)mem.get(MEMCACHE_PRICEPOINTS_GROUPED);
+		if (groupedPP == null) {
+			groupedPP = loadPricePoints();
+			mem.put(MEMCACHE_PRICEPOINTS_GROUPED, groupedPP);
+		}
+		return groupedPP;
+	}
+	
+	public void clearSystemPropertiesCache() {
+		loadSystemProperties(MemcacheServiceFactory.getMemcacheService());
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, SystemProperty> getSystemProperties() {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Map<String, SystemProperty> map = (Map<String, SystemProperty>)mem.get(MEMCACHE_SYSTEM_PROPERTY_MAP);
+		if (map == null) {
+			map = loadSystemProperties(mem);
+		}
+		return map;
+	}
+
+	private Map<String, SystemProperty> loadSystemProperties(MemcacheService mem) {
+		Map<String, SystemProperty> map;
+		map = new HashMap<String, SystemProperty>();
+		List<SystemProperty> props = ObjectifyDatastoreDAO.getInstance().getSystemProperties();
+		for (SystemProperty prop : props) {
+			map.put(prop.name, prop);
+		}
+		mem.put(MEMCACHE_SYSTEM_PROPERTY_MAP, map);
+		mem.put(MEMCACHE_SYSTEM_PROPERTY_LIST, props);
+		return map;
+	}
+
+	public String getSystemProperty(String name) {
+		Map<String, SystemProperty> map = getSystemProperties();
+		if (map != null && map.containsKey(name)) {
+			return map.get(name).value;
+		} else {
+			return null;
+		}
+	}
+	
 }

@@ -6,9 +6,12 @@ import java.util.Date;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
+import eu.finwest.util.DateDeserializer;
 import eu.finwest.util.DateSerializer;
+import eu.finwest.util.ShortDateSerializer;
 
 /**
  * 
@@ -23,16 +26,19 @@ public class CampaignVO extends BaseVO implements Serializable {
 	@JsonProperty("special") private boolean special;
 	@JsonProperty("creator") private String creator;
 	@JsonProperty("subdomain") private String subdomain;
-	@JsonProperty("create_date") @JsonSerialize(using=DateSerializer.class) private Date created;
+	@JsonProperty("create_date") @JsonSerialize(using=ShortDateSerializer.class) private Date created;
 	@JsonProperty("name") private String name;
 	@JsonProperty("description") private String description;
-	@JsonProperty("comment") private String comment;
-	@JsonProperty("active_from") @JsonSerialize(using=DateSerializer.class) private Date   activeFrom;
-	@JsonProperty("active_to") @JsonSerialize(using=DateSerializer.class) private Date   activeTo;
+	private String comment;
+	@JsonProperty("active_from") @JsonSerialize(using=ShortDateSerializer.class) @JsonDeserialize(using=DateDeserializer.class)
+		private Date activeFrom;
+	@JsonProperty("active_to") @JsonSerialize(using=ShortDateSerializer.class)  @JsonDeserialize(using=DateDeserializer.class)
+		private Date activeTo;
 	@JsonProperty("public_browsing") private boolean	publicBrowsing;
-	@JsonProperty("admins") private String admins;
+	private String admins;
 	@JsonProperty("allowed_languages") private String allowedLanguage;
 	@JsonProperty("status") private String status;
+	private String paidCode;
 	
 	@Override
 	public String getId() {
@@ -118,5 +124,11 @@ public class CampaignVO extends BaseVO implements Serializable {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getPaidCode() {
+		return paidCode;
+	}
+	public void setPaidCode(String paidCode) {
+		this.paidCode = paidCode;
 	}
 }

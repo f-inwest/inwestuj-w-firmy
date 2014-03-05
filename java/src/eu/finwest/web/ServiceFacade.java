@@ -20,6 +20,7 @@ import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Comment;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.Monitor;
+import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.Transaction;
@@ -255,7 +256,9 @@ public class ServiceFacade {
 			return null;
 		}
 		property.setAuthor(loggedInUser.getEmail());
-		return DtoToVoConverter.convert(getDAO().setSystemProperty(VoToModelConverter.convert(property)));
+		property = DtoToVoConverter.convert(getDAO().setSystemProperty(VoToModelConverter.convert(property)));
+		MemCacheFacade.instance().clearSystemPropertiesCache();
+		return property;
 	}
 
 	public ListingDocumentVO deleteDocument(UserVO loggedInUser, String docId) {
@@ -444,9 +447,4 @@ public class ServiceFacade {
 		
 		return list;
 	}
-
-	public void storeTransaction(Transaction trans) {
-		getDAO().storeTransaction(trans);
-	}
-
 }

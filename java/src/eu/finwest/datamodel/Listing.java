@@ -60,7 +60,7 @@ public class Listing extends BaseObject<Listing> {
 	}
 	@Id public Long id;
 	
-	@Indexed public LangVersion lang;
+	@Indexed public LangVersion lang = LangVersion.PL;
 	
 	public Date modified;
 	@PrePersist void updateModifiedDate() {
@@ -126,7 +126,7 @@ public class Listing extends BaseObject<Listing> {
 	public Key<ListingDoc> pic1Id, pic2Id, pic3Id, pic4Id, pic5Id;
 	public String logoBase64;
 	public String videoUrl;
-		
+	
 	/** Answers for standard questions */
 	public String answer1;
 	public String answer2;
@@ -157,6 +157,8 @@ public class Listing extends BaseObject<Listing> {
 	public String answer27;
 	
 	public String valuationData;
+	
+	public String paidCode;
 	
 	public String getWebKey() {
 		return new Key<Listing>(Listing.class, id).getString();

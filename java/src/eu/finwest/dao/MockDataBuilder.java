@@ -54,6 +54,9 @@ import eu.finwest.datamodel.ListingLocation;
 import eu.finwest.datamodel.ListingStats;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.Notification;
+import eu.finwest.datamodel.PricePoint;
+import eu.finwest.datamodel.PricePoint.Group;
+import eu.finwest.datamodel.PricePoint.Type;
 import eu.finwest.datamodel.PrivateMessage;
 import eu.finwest.datamodel.PrivateMessageUser;
 import eu.finwest.datamodel.QuestionAnswer;
@@ -64,6 +67,7 @@ import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.Vote;
 import static eu.finwest.web.LangVersion.*;
+import eu.finwest.util.OfficeHelper;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.ListingAndUserVO;
@@ -193,8 +197,12 @@ public class MockDataBuilder {
 		getOfy().delete(ca);
 
 		QueryResultIterable<Key<Transaction>> ta = getOfy().query(Transaction.class).fetchKeys();
-		output.append("Deleted transactions: " + ca.toString() + "</br>");
-		getOfy().delete(ca);
+		output.append("Deleted transactions: " + ta.toString() + "</br>");
+		getOfy().delete(ta);
+
+		QueryResultIterable<Key<PricePoint>> pp = getOfy().query(PricePoint.class).fetchKeys();
+		output.append("Deleted pricepoints: " + pp.toString() + "</br>");
+		getOfy().delete(pp);
 
 		QueryResultIterable<Key<Listing>> l = getOfy().query(Listing.class).fetchKeys();
 		output.append("Deleted listings: " + l.toString() + "</br>");
@@ -298,7 +306,9 @@ public class MockDataBuilder {
 			getOfy().put(createCategories());
 		}
 		
+		createDefaultSystemProperties();
 		List<Campaign> campaigns = createMockCampaigns(users);
+		List<PricePoint> pricePoints = createPricePoints();
 
 		List<Listing> listings = createMockListings(users);
 
@@ -339,19 +349,152 @@ public class MockDataBuilder {
 		}
 		MemCacheFacade.instance().cleanCampaingsCache();
 		MemCacheFacade.instance().clearAllListingLocations();
+		MemCacheFacade.instance().clearSystemPropertiesCache();
 		
 		return output.toString();
+	}
+	
+	public List<SystemProperty> createDefaultSystemProperties() {
+		List<SystemProperty> list = new ArrayList<SystemProperty>();
+		
+		SystemProperty prop = new SystemProperty();
+		prop.name = SystemProperty.PAYMENT_SECURITY_CODE;
+		prop.value = "718N3Xa1b9qk1QG4";
+		prop.created = new Date();
+		prop.author = "system";
+		list.add(prop);
+		
+		prop = new SystemProperty();
+		prop.name = SystemProperty.PAYMENT_ACTION_URL;
+		prop.value = "https://secure.transferuj.pl";
+		prop.created = new Date();
+		prop.author = "system";
+		list.add(prop);
+		
+		prop = new SystemProperty();
+		prop.name = SystemProperty.PAYMENT_CUSTOMER_ID;
+		prop.value = "12330";
+		prop.created = new Date();
+		prop.author = "system";
+		list.add(prop);
+
+		prop = new SystemProperty();
+		prop.name = SystemProperty.PAYMENT_FREE_USAGE;
+		prop.value = "true";
+		prop.created = new Date();
+		prop.author = "system";
+		list.add(prop);
+
+		getOfy().put(list);
+		return list;
+	}
+	
+	public List<PricePoint> createPricePoints() {
+		List<PricePoint> list = new ArrayList<PricePoint>();
+		OfficeHelper oh = OfficeHelper.instance();
+		
+		PricePoint pp = new PricePoint();
+		pp.name = "INV_REG";
+		pp.group = Group.INVESTOR;
+		pp.type = Type.INVESTOR_REGISTRATION;
+		pp.amount = 5000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_investor_registration_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_investor_registration_desc");
+		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
+		list.add(pp);
+		
+		pp = new PricePoint();
+		pp.name = "PRJ_ACT";
+		pp.group = Group.LISTING;
+		pp.type = Type.LISTING_ACTIVATION;
+		pp.amount = 2000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_project_activation_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_project_activation_desc");
+		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
+		list.add(pp);
+		
+		pp = new PricePoint();
+		pp.name = "PRJ_BP";
+		pp.group = Group.LISTING;
+		pp.type = Type.LISTING_BP;
+		pp.amount = 1000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_project_bp_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_project_bp_desc");
+		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
+		list.add(pp);
+		
+		pp = new PricePoint();
+		pp.name = "PRJ_PPT";
+		pp.group = Group.LISTING;
+		pp.type = Type.LISTING_PPTX;
+		pp.amount = 1000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_project_ppt_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_project_ppt_desc");
+		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
+		list.add(pp);
+		
+		pp = new PricePoint();
+		pp.name = "PRJ_ALL";
+		pp.group = Group.LISTING;
+		pp.type = Type.LISTING_ACTIVATION;
+		pp.amount = 3000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_project_all_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_project_all_desc");
+		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
+		list.add(pp);
+
+		pp = new PricePoint();
+		pp.name = "CMP_1MT";
+		pp.group = Group.CAMPAIGN;
+		pp.type = Type.CAMPAIGN_MONTH;
+		pp.amount = 50000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_campaign_1month_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_campaign_1month_desc");
+		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
+		list.add(pp);
+		
+		pp = new PricePoint();
+		pp.name = "CMP_6MT";
+		pp.group = Group.CAMPAIGN;
+		pp.type = Type.CAMPAIGN_6MONTHS;
+		pp.amount = 200000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_campaign_6month_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_campaign_6month_desc");
+		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
+		list.add(pp);
+
+		pp = new PricePoint();
+		pp.name = "CMP_1Y";
+		pp.group = Group.CAMPAIGN;
+		pp.type = Type.CAMPAIGN_YEAR;
+		pp.amount = 350000;
+		pp.currency = Currency.PLN;
+		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_campaign_year_desc");
+		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_campaign_year_desc");
+		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
+		list.add(pp);
+
+		getOfy().put(list);
+		return list;
 	}
 
     public List<Campaign> createMockCampaigns(List<SBUser> users) {
     	List<Campaign> list = new ArrayList<Campaign>();
+    	OfficeHelper oh = OfficeHelper.instance();
+    	
     	Campaign c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 180L * 24 * 60 * 60 * 1000);
-    	c.name = "Kampania testowa";
-    	c.description = "Kampanie umożliwiają ograniczenie widoczności wysyłanych projektów. "
-    			+ "Właściciel kampanii jest jedynym użytkownikiem który może przeglądać takie projekty";
-    	c.comment = "Kampania przeznaczona dla celów testowych";
+    	c.name = oh.getTranslation(PL, "lang_campaign_test_name");
+    	c.description = oh.getTranslation(PL, "lang_campaign_test_desc");
+    	c.comment = "";
     	c.allowedLanguage = Campaign.Language.PL;
     	c.creator = new Key<SBUser>(SBUser.class, GREG.toKeyId());
     	c.creatorName = GREG.getName();
@@ -365,10 +508,9 @@ public class MockDataBuilder {
     	c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 10 * 1000);
-    	c.name = "Second Test Campaign";
-    	c.description = "Campaigns allow investors to run their own investing campaigns. "
-    			+ "Campaign owner can only browse submited listings.";
-    	c.comment = "This campaign was created for test purposes";
+    	c.name = oh.getTranslation(EN, "lang_campaign_test2_name");
+    	c.description = oh.getTranslation(EN, "lang_campaign_test2_desc");
+    	c.comment = "";
     	c.allowedLanguage = Campaign.Language.EN;
     	c.creator = new Key<SBUser>(SBUser.class, JOHN.toKeyId());
     	c.creatorName = JOHN.getName();
@@ -382,9 +524,9 @@ public class MockDataBuilder {
     	c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 180 * 24 * 60 * 60 * 1000);
-    	c.name = "Test3 Campaign";
-    	c.description = "This campaign was created for test purposes - public browsing";
-    	c.comment = "Comment on test campaign";
+    	c.name = oh.getTranslation(EN, "lang_campaign_test3_name");
+    	c.description = oh.getTranslation(EN, "lang_campaign_test3_desc");
+    	c.comment = "";
     	c.allowedLanguage = Campaign.Language.EN;
     	c.creator = new Key<SBUser>(SBUser.class, AHMED.toKeyId());
     	c.creatorName = AHMED.getName();
@@ -398,16 +540,16 @@ public class MockDataBuilder {
     	c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 180 * 24 * 60 * 60 * 1000);
-    	c.name = "Inactive Campaign";
-    	c.description = "This campaign was created for test purposes - not active";
-    	c.comment = "Comment on test campaign";
+    	c.name = oh.getTranslation(PL, "lang_campaign_dead_name");
+    	c.description = oh.getTranslation(PL, "lang_campaign_dead_desc");
+    	c.comment = "";
     	c.allowedLanguage = Campaign.Language.PL;
     	c.creator = new Key<SBUser>(SBUser.class, INSIDER.toKeyId());
     	c.creatorName = INSIDER.getName();
     	c.created = new Date();
     	c.mockData = true;
     	c.publicBrowsing = true;
-    	c.subdomain = "inactive";
+    	c.subdomain = "dead";
     	c.status = Campaign.Status.CLOSED;
     	list.add(c);
 

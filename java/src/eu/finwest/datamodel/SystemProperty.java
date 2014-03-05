@@ -4,6 +4,7 @@
  */
 package eu.finwest.datamodel;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Id;
@@ -24,7 +25,9 @@ import com.googlecode.objectify.annotation.Unindexed;
 @Unindexed
 @Entity
 @Cached(expirationSeconds=60*30*2)
-public class SystemProperty {
+public class SystemProperty implements Serializable {
+	private static final long serialVersionUID = 9579454626201L;
+	
 	public static final String GOOGLEDOC_USER = "googledoc.user";
 	public static final String GOOGLEDOC_PASSWORD = "googledoc.password";
 	public static final String GOOGLEPLACES_API_KEY = "googleplaces.apikey";
@@ -36,6 +39,11 @@ public class SystemProperty {
 
 	public static final String FACEBOOK_CLIENT_ID = "facebook.client.id";
 	public static final String FACEBOOK_CLIENT_SECRET = "facebook.client.secret";
+	
+	public static final String PAYMENT_SECURITY_CODE = "payment.security.code";
+	public static final String PAYMENT_ACTION_URL = "payment.action.url";
+	public static final String PAYMENT_CUSTOMER_ID = "payment.customer.id";
+	public static final String PAYMENT_FREE_USAGE = "payment.free.usage";
 
 	@Id public String name;
 	public String value;

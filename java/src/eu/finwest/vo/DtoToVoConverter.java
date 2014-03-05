@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -250,7 +249,8 @@ public class DtoToVoConverter {
 		listing.setAnswer25(listingDTO.answer25);
 		listing.setAnswer26(listingDTO.answer26);
 		listing.setAnswer27(listingDTO.answer27);
-
+		
+		listing.setPaidCode(listingDTO.paidCode);
 		listing.setValuationData(listingDTO.valuationData);
 		return listing;
 	}
@@ -373,6 +373,7 @@ public class DtoToVoConverter {
 		user.setNotifyEnabled(userDTO.notifyEnabled);
 		user.setEditedListing(keyToString(userDTO.editedListing));
 		user.setAvatar(userDTO.avatarUrl);
+		user.setPaidCode(userDTO.paidCode);
 		return user;
 	}
 
@@ -823,6 +824,7 @@ public class DtoToVoConverter {
 		campaignVO.setPublicBrowsing(campaign.publicBrowsing);
 		campaignVO.setSubdomain(campaign.subdomain);
 		campaignVO.setStatus(campaign.status.toString());
+		campaignVO.setPaidCode(campaign.paidCode);
 		return campaignVO;
 	}
 

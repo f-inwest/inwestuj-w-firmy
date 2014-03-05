@@ -1,6 +1,5 @@
 package eu.finwest.vo;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +18,7 @@ import eu.finwest.web.UserMgmtFacade;
 public class ListingAndUserVO extends BaseResultVO implements UserDataUpdatableContainer {
 	@JsonProperty("listing") private ListingVO listing;
 	@JsonProperty("categories") private Map<String, String> categories;
+	@JsonProperty("pricepoints") private List<PricePointVO> pricePoints;
 
 	public void updateUserData() {
 		UserMgmtFacade.instance().updateUserData(listing);
@@ -35,5 +35,11 @@ public class ListingAndUserVO extends BaseResultVO implements UserDataUpdatableC
 	}
 	public void setCategories(Map<String, String> categories) {
 		this.categories = categories;
+	}
+	public List<PricePointVO> getPricePoints() {
+		return pricePoints;
+	}
+	public void setPricePoints(List<PricePointVO> pricePoints) {
+		this.pricePoints = pricePoints;
 	}
 }

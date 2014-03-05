@@ -23,6 +23,7 @@ import eu.finwest.datamodel.Comment;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.Notification;
+import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.web.ListingFacade;
@@ -38,6 +39,24 @@ public class DatastoreMigration {
 		return ofy;
 	}
 
+	public static String resetPricePoints() {
+		StringBuffer report = new StringBuffer();
+
+		/* migrating Listings
+		 * - removing Language.ALL for Campaign
+		 */
+		report.append("Removing all pricepoints:<br/>\n<ul>\n");
+		QueryResultIterable<Key<PricePoint>> pp = getOfy().query(PricePoint.class).fetchKeys();
+		report.append("Deleted pricepoints: " + pp.toString() + "</br>");
+		getOfy().delete(pp);
+		
+		report.append("<br/>Initilizing price points:<br/>\n");
+		new MockDataBuilder().createPricePoints();
+		MemCacheFacade.instance().cleanPricePointsCache();
+		
+		return report.toString();
+	}
+	
 	public static String migrate20140225_to_current() {
 		StringBuffer report = new StringBuffer();
 
@@ -80,6 +99,13 @@ public class DatastoreMigration {
 		}
 		
 		getOfy().put(toMigrate);
+		
+		if (MemCacheFacade.instance().getAllPricePoints().size() == 0) {
+			report.append("<br/>Initilizing price points:<br/>\n");
+			new MockDataBuilder().createPricePoints();
+			MemCacheFacade.instance().cleanPricePointsCache();
+		}
+		
 		report.append("<br/>\n</ul>\n");
 		MemCacheFacade.instance().cleanCampaingsCache();
 

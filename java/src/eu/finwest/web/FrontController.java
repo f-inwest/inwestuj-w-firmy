@@ -52,6 +52,7 @@ public class FrontController extends HttpServlet {
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		String pathInfo = request.getPathInfo();
 		log.log(Level.INFO, ">>>>>>> Path info: " + pathInfo);
 //		if ("GET".equals(request.getMethod()) && !"true".equalsIgnoreCase(request.getHeader("X-AppEngine-Cron"))
@@ -129,7 +130,7 @@ public class FrontController extends HttpServlet {
 		}
 	}
 
-	private void setLanguageAndCampaign(HttpServletRequest request, HttpServletResponse response) {
+	public void setLanguageAndCampaign(HttpServletRequest request, HttpServletResponse response) {
 		langVersion.set(obtainLanguageVersion(request, response));
 		String userCampaign = obtainCampaign(request);
 		campaign.set(userCampaign);
@@ -332,16 +333,16 @@ public class FrontController extends HttpServlet {
 		CampaignVO campaign = new CampaignVO();
 		campaign.setName(language == Language.EN ? "English projects" : "Polskie projekty");
 		campaign.setSpecial(true);
-		campaign.setCreator("Admin");
+		campaign.setCreator("system");
 		campaign.setCreated(new Date(0));
 		campaign.setActiveFrom(new Date(0));
 		campaign.setStatus(Campaign.Status.ACTIVE.toString());
 		campaign.setActiveTo(new Date(Long.MAX_VALUE - 1000));
 		campaign.setDescription(language == Language.EN ? "Main campaign" : "Główna kampania");
 		campaign.setComment(language == Language.EN ? "Campaign dedicated for english language projects" : "Kampania dla polskojęzycznych projektów");
-		campaign.setId(language.toString());
+		campaign.setId(language.name());
 		campaign.setSubdomain(language.name().toLowerCase());
-		campaign.setAllowedLanguage(language.toString());
+		campaign.setAllowedLanguage(language.name());
 		campaign.setPublicBrowsing(true);
 		return campaign;
 	}

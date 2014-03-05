@@ -23,7 +23,6 @@ public class BaseResultVO {
 	@JsonProperty("fb_login_url") private String facebookLoginUrl;
 	
 	@JsonProperty("campaign") private CampaignVO campaign;
-	@JsonProperty("user_campaigns") private Collection<CampaignVO> userCampaigns;
 	@JsonProperty("all_campaigns") private Collection<CampaignVO> allCampaigns;
 
 	@JsonProperty("error_code") private int errorCode = ErrorCodes.OK;
@@ -82,12 +81,6 @@ public class BaseResultVO {
 	}
 	public void setCampaign(CampaignVO campaign) {
 		this.campaign = campaign;
-	}
-	public Collection<CampaignVO> getUserCampaigns() {
-		return userCampaigns;
-	}
-	public void setUserCampaigns(Collection<CampaignVO> userCampaigns) {
-		this.userCampaigns = userCampaigns;
 	}
 	public Collection<CampaignVO> getAllCampaigns() {
 		return allCampaigns;

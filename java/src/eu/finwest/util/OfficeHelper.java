@@ -87,13 +87,17 @@ public class OfficeHelper {
 		}
 	}
 	
-	private String getTranslation(LangVersion lang, String key) {
-		if (lang == LangVersion.PL) {
-			return plTranslations.getString(key);
-		} else if (lang == LangVersion.EN) {
-			return enTranslations.getString(key);
+	public String getTranslation(LangVersion lang, String key) {
+		try {
+			if (lang == LangVersion.PL) {
+				return plTranslations.getString(key);
+			} else if (lang == LangVersion.EN) {
+				return enTranslations.getString(key);
+			}
+			return key;
+		} catch (java.util.MissingResourceException e) {
+			return key;
 		}
-		return key;
 	}
 	
 	private String convertContent(String text) {

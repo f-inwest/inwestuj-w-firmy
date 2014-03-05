@@ -20,6 +20,7 @@ import com.google.gdata.util.AuthenticationException;
 
 import eu.finwest.dao.DatastoreMigration;
 import eu.finwest.dao.MockDataBuilder;
+import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.Transaction.Status;
@@ -27,8 +28,10 @@ import eu.finwest.vo.SystemPropertyVO;
 import eu.finwest.vo.UserVO;
 import eu.finwest.web.HttpHeaders;
 import eu.finwest.web.HttpHeadersImpl;
+import eu.finwest.web.MemCacheFacade;
 import eu.finwest.web.ModelDrivenController;
 import eu.finwest.web.ServiceFacade;
+import eu.finwest.web.UserMgmtFacade;
 
 /**
  *
@@ -64,25 +67,31 @@ public class SystemController extends ModelDrivenController {
 				return exportDatastore(request);
 			} else if("migrate20140225_to_current".equalsIgnoreCase(getCommand(1))) {
 				return migrate20140225_to_current(request);
+			} else if("reset_pricepoints".equalsIgnoreCase(getCommand(1))) {
+				return resetPricePoints(request);
 			} else if("associate_mock_images".equalsIgnoreCase(getCommand(1))) {
 				return associateMockImages(request);
 			} else if("update_avatars_dragon_lister".equalsIgnoreCase(getCommand(1))) {
 				return updateAvatarsDragonLister(request);
 			} else if("transferuj_pl_notification".equalsIgnoreCase(getCommand(1))) {
-				return transferujPlNotification(request);
+				return transferujPlConfirmation(request);
+			} else if("transaction_confirmation".equalsIgnoreCase(getCommand(1))) {
+				return transactionConfirmation(request);
+			} else if("store_pricepoint".equalsIgnoreCase(getCommand(1))) {
+				return storePricepoint(request);
 			}
 		}
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
-	private HttpHeaders transferujPlNotification(HttpServletRequest request) {
+	private HttpHeaders transferujPlConfirmation(HttpServletRequest request) {
 		HttpHeaders headers = new HttpHeadersImpl("transferuj_pl_notification");
 
 		try {
 			String remoteHost = request.getRemoteHost();
 			log.info("We got transferuj.pl confirmation from: " + remoteHost);
-			if (!StringUtils.equals("195.149.229.109,", remoteHost)) {
+			if (!StringUtils.equals("195.149.229.109", remoteHost)) {
 				log.warning("Transferuj.pl confirmation received from " + remoteHost + ", supposed to be 195.149.229.109");
 			}
 			
@@ -107,21 +116,109 @@ public class SystemController extends ModelDrivenController {
 			trans.crc = params.get("tr_crc") != null ? params.get("tr_crc")[0] : null;
 			trans.email = params.get("tr_email") != null ? params.get("tr_email")[0] : null;
 			trans.md5sum = params.get("md5sum") != null ? params.get("md5sum")[0] : null;
-			
-			if (!(trans.status == Status.OK && StringUtils.equalsIgnoreCase("none", trans.error))) {
-				log.info("Transaction " + trans.transactionId + " failed.");
-			}
-			
-			String md5string = trans.seller_id + trans.transactionId + trans.amountStr + trans.crc + "718N3Xa1b9qk1QG4";
+						
+			String md5string = trans.seller_id + trans.transactionId + trans.amountStr + trans.crc
+					+ MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_SECURITY_CODE);
 			String thedigest = DigestUtils.md5Hex(md5string);
 			if (!StringUtils.equals(trans.md5sum, thedigest)) {
+				// we'll return true even in case of wrong md5sum to prevent hacker attacks
+				model = "TRUE";
 				log.warning("MD5 not valid! string: " + md5string + " -> MD5 -> " + thedigest);
+			} else {
+				log.warning("Received valid transaction confirmation for crc: " + trans.crc);
+				if (!(trans.status == Status.OK && StringUtils.equalsIgnoreCase("none", trans.error))) {
+					log.info("Transaction (" + trans.transactionId + ") for crc " + trans.crc
+							+ " failed but we're going to store it anyway.");
+				}
+				model = "TRUE";
+				UserMgmtFacade.instance().storeTransaction(trans);
 			}
-			model = "TRUE";
-			ServiceFacade.instance().storeTransaction(trans);
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Error parsing transferuj.pl notification!", e);
 			model = "FALSE";
+		}
+		
+		return headers;
+	}
+
+	@SuppressWarnings("unchecked")
+	private HttpHeaders transactionConfirmation(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("transaction_confirmation");
+
+		String successUrl = null;
+		String failureUrl = null;
+		try {
+			Map<String, String[]> params = (Map<String, String[]>)request.getParameterMap();
+			for (Map.Entry<String, String[]> entry : params.entrySet()) {
+				StringBuffer buf = new StringBuffer();
+				for (String value : entry.getValue()) {
+					buf.append(" ").append(value);
+				}
+				log.info("Parameter " + entry.getKey() + " : " + buf.toString());
+			}
+			Transaction trans = new Transaction();
+			trans.seller_id = params.get("id") != null ? params.get("id")[0] : null;
+			trans.status = Status.OK;
+			trans.transactionId = "local_transaction";
+			trans.amountStr = params.get("kwota") != null ? params.get("kwota")[0] : null;
+			trans.paidStr = params.get("kwota") != null ? params.get("kwota")[0] : null;
+			trans.error = "none";
+			DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd hh:mm:ss");
+			trans.date = fmt.print(new Date().getTime());
+			trans.description = params.get("opis") != null ? params.get("opis")[0] : null;
+			trans.crc = params.get("crc") != null ? params.get("crc")[0] : null;
+			trans.email = params.get("email") != null ? params.get("email")[0] : null;
+			trans.md5sum = params.get("md5sum") != null ? params.get("md5sum")[0] : null;
+			
+			successUrl = params.get("pow_url") != null ? params.get("pow_url")[0] : null;
+			failureUrl = params.get("pow_url_blad") != null ? params.get("pow_url_blad")[0] : null;
+			
+			String md5string = trans.seller_id + trans.amountStr + trans.crc
+					+ MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_SECURITY_CODE);
+			String thedigest = DigestUtils.md5Hex(md5string);
+			if (!StringUtils.equals(trans.md5sum, thedigest)) {
+				model = "TRUE";
+				log.warning("MD5 not valid! string: " + md5string + " -> MD5 -> " + thedigest);
+			} else {
+				log.warning("Received valid transaction confirmation for crc: " + trans.crc);
+				model = "TRUE";
+				UserMgmtFacade.instance().storeTransaction(trans);
+			}
+			headers.setRedirectUrl(successUrl != null ? successUrl : "?");
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error parsing during transaction confirmation!", e);
+			model = "FALSE";
+			headers.setRedirectUrl(failureUrl != null ? failureUrl : "?");
+		}
+		
+		return headers;
+	}
+
+	@SuppressWarnings("unchecked")
+	private HttpHeaders storePricepoint(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("store_pricepoint");
+		UserVO loggedInUser = getLoggedInUser();
+		if (!(loggedInUser != null && loggedInUser.isAdmin())) {
+			log.info("Only admins can change pricepoints");
+			headers.setStatus(501);
+			return headers;
+		}
+		
+		try {
+			PricePoint pp = new PricePoint();
+			pp.name = getCommandOrParameter(request, 2, "name");
+			String amountTxt = getCommandOrParameter(request, 3, "amount");
+			amountTxt = amountTxt.replace(",", ".");
+			double amountDbl = Double.parseDouble(amountTxt);
+			pp.amount = (int)(amountDbl * 100);
+			pp.descriptionPl = getCommandOrParameter(request, 4, "descriptionPl");
+			pp.descriptionEn = getCommandOrParameter(request, 5, "descriptionEn");
+			log.info("Updating pricepoint " + pp.name + " with amount: " + pp.amount + ", descriptionPl: " + pp.descriptionPl
+					+ ", descriptionEn: " + pp.descriptionEn);
+			
+			model = UserMgmtFacade.instance().storePricepoint(pp);
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error handling store_pricepoint request!", e);
 		}
 		
 		return headers;
@@ -153,6 +250,16 @@ public class SystemController extends ModelDrivenController {
 		UserVO loggedInUser = getLoggedInUser();
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
 			model = DatastoreMigration.migrate20140225_to_current();
+		}
+		return headers;
+	}
+
+	private HttpHeaders resetPricePoints(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("reset_pricepoints");
+
+		UserVO loggedInUser = getLoggedInUser();
+		if (loggedInUser != null && loggedInUser.isAdmin()) {
+			model = DatastoreMigration.resetPricePoints();
 		}
 		return headers;
 	}

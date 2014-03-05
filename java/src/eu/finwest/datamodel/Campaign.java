@@ -59,8 +59,7 @@ public class Campaign extends BaseObject<Campaign> implements Serializable {
 	public String admins;
 	public Language allowedLanguage;
 	public Key<ListingDoc> logoId;
-	public boolean paid = false;
-	public Key<Transaction> payment;
+	public String paidCode;
 
 	public String getWebKey() {
 		return new Key<Campaign>(Campaign.class, id).getString();

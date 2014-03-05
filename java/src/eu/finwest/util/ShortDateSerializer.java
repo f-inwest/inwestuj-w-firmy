@@ -15,8 +15,8 @@ import org.joda.time.format.DateTimeFormatter;
  * 
  * @author "Grzegorz Nittner" <grzegorz.nittner@gmail.com>
  */
-public class DateSerializer extends JsonSerializer<Date> {
-	private static final String PATTERN = "yyyyMMddHHmmss";
+public class ShortDateSerializer extends JsonSerializer<Date> {
+	private static final String PATTERN = "yyyyMMdd";
 
 	@Override
 	public void serialize(Date value, JsonGenerator jgen, SerializerProvider provider)
