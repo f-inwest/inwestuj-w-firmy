@@ -21,8 +21,12 @@
                     <div class="welcomemessage initialhidden">@lang_innovatorsmessage@</div>
                 </div>
                 <div class="welcometext discoverwelcometext">
-                    <a href="/discover-page.html" class="welcomemessage welcomelink">@lang_investorslink@</a>
-                    <a href="/add-listing-page.html" class="welcomemessage welcomelink initialhidden">@lang_innovatorslink@</a>
+                    <a href="/nearby-page.html" class="welcomemessage welcomelink">
+                        <span class="welcomelink-inner">@lang_investorslink@</span>
+                    </a>
+                    <a href="/add-listing-page.html" class="welcomemessage welcomelink initialhidden">
+                        <span class="welcomelink-inner">@lang_innovatorslink@</span>
+                    </a>
                 </div>
             </div>
 

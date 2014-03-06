@@ -561,9 +561,10 @@ pl.implement(ProfilePageClass,{
             campaigns = self.json.user_campaigns,
             campaignFound = false;
         campaignList = new CampaignListClass();
-        campaignList.storeList(self.json);
-        if (campaigns && campaigns.length > 0)
+        if (campaigns && campaigns.length > 0) {
+            campaignList.storeList(self.json);
             campaignFound = true;
+        }
         if (canView)
             pl('#campaign_list_wrapper').show();
         if (canCreate) {

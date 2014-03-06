@@ -473,13 +473,20 @@ a:focus, a:hover { cursor: pointer; }
     width: 322px;
     height: 40px;
     top: 40px;
-    padding: 5px 40px 5px 40px;
     color: #fefefe !important;
     background: url(../img/slide_button.png) right no-repeat;
+    display: block;
 }
 .welcomelink:hover {
     text-decoration: none !important;
     transition: color .25s;
+}
+.welcomelink-inner {
+    padding-left: 40px;
+    padding-right: 40px;
+    text-align: center;
+    width: 322px;
+    line-height: 40px;
 }
 .welcomevideo { position: relative; }
 .welcomevideocontainer { margin: 10px 0; }
