@@ -18,6 +18,7 @@ import com.google.appengine.api.users.User;
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.vo.ErrorCodes;
+import eu.finwest.vo.UserAndUserVO;
 import eu.finwest.vo.UserListVO;
 import eu.finwest.vo.UserListingsForAdminVO;
 import eu.finwest.vo.UserVO;
@@ -89,8 +90,9 @@ public class UserMgmtFacadeTest extends BaseFacadeAbstractTest {
 
 	@Test
 	public void testCreateUser() {
-		UserVO createdUser = UserMgmtFacade.instance()
+		UserAndUserVO result = UserMgmtFacade.instance()
 				.createUser("new@sb.com", "password", "New User", "Outside city 34, Germany", false);
+		UserVO createdUser = result.getUser();
 		//userList was not updated so don't use it in this test
 		
 		// @FIXME we should check if admin flag is set (currently not)
@@ -108,19 +110,26 @@ public class UserMgmtFacadeTest extends BaseFacadeAbstractTest {
 		assertNotNull("Activation code should be set", newSBUser.activationCode);
 		assertEquals("User's status should be CREATED before activation", SBUser.Status.CREATED, newSBUser.status);
 
-		UserVO notCreatedUser = UserMgmtFacade.instance().createUser(null, "password", "New User", "Outside city 34, Germany", false);
+		result = UserMgmtFacade.instance().createUser(null, "password", "New User", "Outside city 34, Germany", false);
+		UserVO notCreatedUser = result.getUser();
 		assertNull("empty email should return null", notCreatedUser);
-		notCreatedUser = UserMgmtFacade.instance().createUser("mike", "password", "New User", "Outside city 34, Germany", false);
+		result = UserMgmtFacade.instance().createUser("mike", "password", "New User", "Outside city 34, Germany", false);
+		notCreatedUser = result.getUser();
 		assertNull("wrong email should return null", notCreatedUser);
-		notCreatedUser = UserMgmtFacade.instance().createUser("a@b", "password", "New User", "Outside city 34, Germany", false);
+		result = UserMgmtFacade.instance().createUser("a@b", "password", "New User", "Outside city 34, Germany", false);
+		notCreatedUser = result.getUser();
 		assertNull("short email should return null", notCreatedUser);
-		notCreatedUser = UserMgmtFacade.instance().createUser("fake@address.com", "pass", "New User", "Outside city 34, Germany", false);
+		result = UserMgmtFacade.instance().createUser("fake@address.com", "pass", "New User", "Outside city 34, Germany", false);
+		notCreatedUser = result.getUser();
 		assertNull("password too short, should return null", notCreatedUser);
-		notCreatedUser = UserMgmtFacade.instance().createUser("fake@address.com", "Password", "John Password", "Outside city 34, Germany", false);
+		result = UserMgmtFacade.instance().createUser("fake@address.com", "Password", "John Password", "Outside city 34, Germany", false);
+		notCreatedUser = result.getUser();
 		assertNull("password is part of name, should return null", notCreatedUser);
-		notCreatedUser = UserMgmtFacade.instance().createUser("fake@address.com", "password", "User", "Outside city 34, Germany", false);
+		result = UserMgmtFacade.instance().createUser("fake@address.com", "password", "User", "Outside city 34, Germany", false);
+		notCreatedUser = result.getUser();
 		assertNull("name too short, should return null", notCreatedUser);
-		notCreatedUser = UserMgmtFacade.instance().createUser("new@sb.com", "password", "User", "Outside city 34, Germany", false);
+		result = UserMgmtFacade.instance().createUser("new@sb.com", "password", "User", "Outside city 34, Germany", false);
+		notCreatedUser = result.getUser();
 		assertNull("email already registered, should return null", notCreatedUser);
 	}
 
@@ -155,7 +164,8 @@ public class UserMgmtFacadeTest extends BaseFacadeAbstractTest {
 		assertNotNull("Should not be null as activated correctly", user);
 		assertEquals("Should be activated", SBUser.Status.ACTIVE.toString(), user.getStatus());
 		
-		UserVO newUser = UserMgmtFacade.instance().createUser("test@sb.com", "password", "Test User", "Dog Fields 13", false);
+		UserAndUserVO result = UserMgmtFacade.instance().createUser("test@sb.com", "password", "Test User", "Dog Fields 13", false);
+		UserVO newUser = result.getUser();
 		SBUser newSBUser = ObjectifyDatastoreDAO.getInstance().getUser(newUser.getId());
 		assertNotNull("User should not be null", newSBUser);
 		assertNotNull("Activation code should be set", newSBUser.activationCode);
@@ -275,8 +285,9 @@ public class UserMgmtFacadeTest extends BaseFacadeAbstractTest {
 
 	@Test
 	public void testCheckUserCredentials() {
-		UserVO createdUser = UserMgmtFacade.instance()
+		UserAndUserVO result = UserMgmtFacade.instance()
 				.createUser("new@sb.com", "password", "New User", "Outside city 34, Germany", false);
+		UserVO createdUser = result.getUser();
 		assertNotNull("createUser should not return null for valid data", createdUser);
 		assertEquals("createUser email should be the same as passed one", createdUser.getEmail(), "new@sb.com");
 		
@@ -288,8 +299,9 @@ public class UserMgmtFacadeTest extends BaseFacadeAbstractTest {
 
 	@Test
 	public void testCheckUserCredentialsForAuthCookie() {
-		UserVO createdUser = UserMgmtFacade.instance()
+		UserAndUserVO result = UserMgmtFacade.instance()
 				.createUser("new@sb.com", "password", "New User", "Outside city 34, Germany", false);
+		UserVO createdUser = result.getUser();
 		assertNotNull("createUser should not return null for valid data", createdUser);
 		assertEquals("createUser email should be the same as passed one", createdUser.getEmail(), "new@sb.com");
 		
@@ -315,8 +327,9 @@ public class UserMgmtFacadeTest extends BaseFacadeAbstractTest {
 
 	@Test
 	public void testChangePassword() {
-		UserVO createdUser = UserMgmtFacade.instance()
+		UserAndUserVO result = UserMgmtFacade.instance()
 				.createUser("new@halloo.com", "password", "New User", "Outside city 34, Germany", false);
+		UserVO createdUser = result.getUser();
 		assertNotNull("createUser should not return null for valid data", createdUser);
 		assertEquals("createUser email should be the same as passed one", createdUser.getEmail(), "new@halloo.com");
 		

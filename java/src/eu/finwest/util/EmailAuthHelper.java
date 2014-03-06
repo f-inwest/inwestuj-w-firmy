@@ -12,7 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.SBUser;
-import eu.finwest.web.UserMgmtFacade;
 
 /**
  * @author grzegorznittner
@@ -27,16 +26,12 @@ public class EmailAuthHelper {
 	public static final String SESSION_EMAIL_USER = "email_user";
 	public static final String EMAIL_AUTHENTICATION_COOKIE = "EMAIL_AUTHENTICATION_COOKIE";
 	
-	public static Cookie authorizeUser(HttpServletRequest request, String email, String password) {
-		SBUser user = UserMgmtFacade.instance().authenticateUser(email, password);
-		if (user != null) {
-			request.getSession().setAttribute(SESSION_EMAIL_USER, user);
-			
-			Cookie authCookie = new Cookie(EMAIL_AUTHENTICATION_COOKIE, user.authCookie);
-			authCookie.setMaxAge(30 * 24 * 60 * 60);
-			return authCookie;
-		}
-		return null;
+	public static Cookie authorizeUser(HttpServletRequest request, SBUser user) {
+		request.getSession().setAttribute(SESSION_EMAIL_USER, user);
+		
+		Cookie authCookie = new Cookie(EMAIL_AUTHENTICATION_COOKIE, user.authCookie);
+		authCookie.setMaxAge(30 * 24 * 60 * 60);
+		return authCookie;
 	}
 	
 	public static Cookie logoutUser(HttpServletRequest request) {

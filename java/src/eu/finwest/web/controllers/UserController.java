@@ -16,6 +16,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import eu.finwest.datamodel.SBUser;
+import eu.finwest.datamodel.SBUser.Status;
 import eu.finwest.util.EmailAuthHelper;
 import eu.finwest.util.TwitterHelper;
 import eu.finwest.vo.CampaignVO;
@@ -23,6 +24,7 @@ import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.PrivateMessageListVO;
 import eu.finwest.vo.PrivateMessageUserListVO;
 import eu.finwest.vo.PrivateMessageVO;
+import eu.finwest.vo.UserAndUserVO;
 import eu.finwest.vo.UserVO;
 import eu.finwest.web.HttpHeaders;
 import eu.finwest.web.HttpHeadersImpl;
@@ -109,20 +111,36 @@ public class UserController extends ModelDrivenController {
 		return null;
 	}
 	
+	private String getJsonString(ObjectMapper mapper, HttpServletRequest request, String paramName) {
+		String paramValue = request.getParameter(paramName);
+		if (paramValue != null) {
+			try {
+				return mapper.readValue(paramValue, String.class);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+		return null;
+	}
+	
 	private HttpHeaders register(HttpServletRequest request) {
 		HttpHeaders headers = new HttpHeadersImpl("register");
 		
-		log.log(Level.INFO, "Parameters: " + request.getParameterMap());
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		String name = request.getParameter("name");
-		String location = request.getParameter("location");
+		UserAndUserVO result = new UserAndUserVO();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String email = getJsonString(mapper, request, "email");
+		String password = getJsonString(mapper, request, "password");
+		String name = getJsonString(mapper, request, "name");
+		String location = getJsonString(mapper, request, "location");
 		if (!StringUtils.isEmpty(email) && !StringUtils.isEmpty(password)) {
-			model = UserMgmtFacade.instance().createUser(email, password, name, location, false);
+			result = UserMgmtFacade.instance().createUser(email, password, name, location, false);
 		} else {
 			log.log(Level.WARNING, "Parameters 'email' and 'password' are mandatory!");
-			headers.setStatus(500);
+			result.setErrorCode(500);
+			result.setErrorMessage("Email and password are mandatory");
 		}
+		model = result;
 
 		return headers;
 	}
@@ -131,11 +149,17 @@ public class UserController extends ModelDrivenController {
 		HttpHeaders headers = new HttpHeadersImpl("activate");
     	String activationCode = getCommandOrParameter(request, 2, "code");
 		if (!StringUtils.isEmpty(activationCode)) {
-			model = UserMgmtFacade.instance().activateUser(activationCode);
-			headers.setRedirectUrl(request.getContextPath() + "/");
+			UserVO user = UserMgmtFacade.instance().activateUser(activationCode);
+			if (user != null && StringUtils.equals(SBUser.Status.ACTIVE.name(), user.getStatus())) {
+				log.info("User " + user.getEmail() + " has been activated");
+				headers.setRedirectUrl(request.getContextPath() + "/");
+			} else {
+				log.warning("Activation code is not valid");
+				headers.setRedirectUrl(request.getContextPath() + "/error_page.html");
+			}
 		} else {
 			log.log(Level.WARNING, "Parameter 'code' is mandatory!");
-			headers.setStatus(500);
+			headers.setRedirectUrl(request.getContextPath() + "/error_page.html");
 		}
 
 		return headers;
@@ -155,26 +179,35 @@ public class UserController extends ModelDrivenController {
 
 	private HttpHeaders authenticateByEmail(HttpServletRequest request) {
 		HttpHeaders headers = new HttpHeadersImpl("authenticate");
+		UserAndUserVO result = new UserAndUserVO();
+		model = result;
 		if (getLoggedInUser() != null) {
 			log.warning("User already logged in, cannot login again using email: " + getCommandOrParameter(request, 2, "email"));
-			headers.setStatus(500);
+			result.setErrorCode(500);
+			result.setErrorMessage("User is already logged in, must logout first.");
 			return headers;
 		}
 		
-    	String email = getCommandOrParameter(request, 2, "email");
-    	String password = getCommandOrParameter(request, 3, "password");
+		ObjectMapper mapper = new ObjectMapper();
+    	String email = getJsonString(mapper, request, "email");
+    	String password = getJsonString(mapper, request, "password");
     	
     	if (StringUtils.isNotBlank(email) && StringUtils.isNotBlank(password)) {
-    		Cookie authCookie = EmailAuthHelper.authorizeUser(request, email, password);
-			if (authCookie != null) {
+    		SBUser user = UserMgmtFacade.instance().authenticateUser(email, password);
+    		if (user == null) {
+				result.setErrorCode(500);
+				result.setErrorMessage("Invalid email or password");
+    		} else  if (user.status != Status.ACTIVE) {
+				result.setErrorCode(500);
+				result.setErrorMessage("User has not been activated yet.");
+    		} else {
+	    		Cookie authCookie = EmailAuthHelper.authorizeUser(request, user);
 				headers.addCookie(authCookie);
-				headers.setRedirectUrl(request.getContextPath() + "/");
-			} else {
-				headers.setRedirectUrl(request.getContextPath() + "/login_error.html");
-			}
+    		}
 		} else {
 			log.log(Level.WARNING, "Parameters 'email' and 'password' are mandatory!");
-			headers.setStatus(500);
+			result.setErrorCode(500);
+			result.setErrorMessage("Parameters 'email' and 'password' are mandatory");
 		}
 		return headers;
 	}

@@ -455,14 +455,28 @@ public class UserMgmtFacade {
 	 * Creates new user based on Google user object.
 	 * Should only be used to log in via google account.
 	 */
-	public UserVO createUser(String email, String password, String name, String location, boolean investor) {
-		UserVO user = null;
-		if (!validateEmailAddress(email) || !validateName(name) || !validatePassword(email, password, name)) {
-			return null;
+	public UserAndUserVO createUser(String email, String password, String name, String location, boolean investor) {
+		UserAndUserVO result = new UserAndUserVO();
+		if (!validateEmailAddress(email)) {
+			result.setErrorCode(500);
+			result.setErrorMessage("Not valid email address");
+			return result;
+		}
+		if (!validateName(name)) {
+			result.setErrorCode(500);
+			result.setErrorMessage("Provided name is already in use");
+			return result;
+		}
+		if (!validatePassword(email, password, name)) {
+			result.setErrorCode(500);
+			result.setErrorMessage("Not valid password. Must have min. 8 characters, including 2 digits");
+			return result;
 		}
 		String encryptedPassword = encryptPassword(password);
 		if (encryptedPassword == null) {
-			return null;
+			result.setErrorCode(500);
+			result.setErrorMessage("Error while encrypting password");
+			return result;
 		}
 		String authCookie = encryptPassword(encryptedPassword + new Date().getTime());
 		
@@ -472,9 +486,10 @@ public class UserMgmtFacade {
 		log.warning("************* cofirmation code: " + userDAO.activationCode);
 		log.warning("************************************************");
 		
-		user = DtoToVoConverter.convert(userDAO);
+		UserVO user = DtoToVoConverter.convert(userDAO);
 		applyUserStatistics(user, user);
-		return user;
+		result.setUser(user);
+		return result;
 	}
 	
 	public SBUser authenticateUser(String email, String password) {
