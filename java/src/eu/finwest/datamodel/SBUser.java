@@ -84,6 +84,7 @@ public class SBUser extends BaseObject<SBUser> implements Serializable {
 	public String password;
 	@Indexed(IfNotNull.class) public String activationCode;
 	@Indexed(IfNotNull.class) public String authCookie;
+	public Date emailActivationDate;
 
 	@Indexed public Date joined;
 	public Date lastLoggedIn;

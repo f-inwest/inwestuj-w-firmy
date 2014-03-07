@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -479,19 +480,67 @@ public class UserMgmtFacade {
 			return result;
 		}
 		String authCookie = encryptPassword(encryptedPassword + new Date().getTime());
+        
+		SBUser user = getDAO().getUserByEmail(email);
+		if (user != null) {
+            log.info("User with email '" + email + "' already exists: " + user);
+            if (user.status == SBUser.Status.ACTIVE) {
+            	// user already active, probably registered via google login
+            	if (user.emailActivationDate != null) {
+            		// user is already registered for email/pass usage
+        			result.setErrorCode(500);
+        			result.setErrorMessage("User has been already registered with provided email address");
+        			return result;
+            	}
+            } else {
+            	// user not yet active, probably previous registration was not finished
+            }
+        } else {
+            user = new SBUser();
+            user.email = email;
+    		user.name = name;
+    		user.status = SBUser.Status.CREATED;
+    		user.investor = false;
+        }
+		if (user.nickname == null) {
+			generateNickname(user);
+		}
+		user.password = encryptedPassword;
+		user.authCookie = authCookie;
+		user.location = location;
+        user.modified = user.lastLoggedIn = user.joined = new Date();
+		user.activationCode = "" + DigestUtils.md5Hex(email + user.joined.toString() + "25kj352025sfg");
 		
-		SBUser userDAO = getDAO().registerUser(email, encryptedPassword, authCookie, name, location, investor);
+		user = getDAO().registerUser(user);
 		log.warning("************************************************");
 		log.warning("************* EMAIL NEEDS TO BE SEND ***********");
-		log.warning("************* cofirmation code: " + userDAO.activationCode);
+		log.warning("************* cofirmation code: " + user.activationCode);
+		String activationUrl = "/user/activate.html?code=" + user.activationCode;
+		if (com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development) {
+			activationUrl = "http://localhost:7777" + activationUrl;
+		} else {
+			activationUrl = "http://www.inwestujwfirmy.pl" + activationUrl;
+		}
+		log.warning("************* " + activationUrl);
 		log.warning("************************************************");
 		
-		UserVO user = DtoToVoConverter.convert(userDAO);
-		applyUserStatistics(user, user);
-		result.setUser(user);
+		UserVO userVO = DtoToVoConverter.convert(user);
+		applyUserStatistics(userVO, userVO);
+		result.setUser(userVO);
 		return result;
 	}
 	
+	private void generateNickname(SBUser user) {
+		String baseNickname = user.nickname = user.email.contains("@") ? user.email.substring(0, user.email.indexOf("@"))
+        		: "anonymous" + String.valueOf(new Random().nextInt(1000000000));
+		String nickname = baseNickname;
+        while(getDAO().getUserByNickname(nickname) != null) {
+        	nickname = baseNickname + String.valueOf(new Random().nextInt(1000));
+        }
+        user.nickname = nickname;
+        user.nicknameLower = nickname.toLowerCase();
+	}
+
 	public SBUser authenticateUser(String email, String password) {
 		SBUser user = getDAO().getUserByEmail(email);
 		if (user == null) {

@@ -189,33 +189,9 @@ public class ObjectifyDatastoreDAO {
 		return user;
 	}
 
-	public SBUser registerUser(String email, String password, String authCookie, String name, String location, boolean investor) {
-        String userEmail = StringUtils.isNotEmpty(email) ? email : "anonymous" + String.valueOf(new Random().nextInt(1000000000)) + "@inwestujwfirmy.pl";
-        SBUser user = getUserByEmail(email);
-        if (user != null) {
-            log.warning("User with email '" + userEmail + "' already exists, cannot create user.");
-            return null;
-        }
-        String userNickname = userEmail.contains("@") ? email.substring(0, email.indexOf("@")) : "anonymous" + String.valueOf(new Random().nextInt(1000000000));
-        user = getUserByNickname(userNickname);
-        if (user != null) {
-            log.warning("User with nickname matching '" + userNickname + "' case insensitive already exists, cannot create user.");
-            return null;
-        }
-        user = new SBUser();
-        user.email = userEmail;
-        user.nickname = userNickname;
-        user.nicknameLower = userNickname.toLowerCase();
-		user.name = name;
-		user.password = password;
-		user.authCookie = authCookie;
-		user.location = location;
-		user.investor = investor;
-        user.modified = user.lastLoggedIn = user.joined = new Date();
-		user.status = SBUser.Status.CREATED;
-		user.activationCode = "" + (email + user.joined.toString()).hashCode();
+	public SBUser registerUser(SBUser user) {
 		getOfy().put(user);
-        log.info("Created user with defaulted nickname " + user.nickname + " as " + user);
+        log.info("Created/updated user: " + user);
 		return user;
 	}
 
@@ -1034,52 +1010,19 @@ public class ObjectifyDatastoreDAO {
 	public Comment getComment(long commentId) {
 		return getOfy().find(Comment.class, commentId);
 	}
-/*
-	public boolean userCanVoteForListing(long voterId, long listingId) {
-		Listing listing = null;
-		try {
-			listing = getOfy().get(Listing.class, listingId);
-		} catch (Exception e) {
-			log.log(Level.WARNING, "Listing entity '" + listingId + "' not found", e);
-			return false;
-		}
-		boolean notOwnerOfListing = (voterId != listing.owner.getId());
 
-		Vote vote = getOfy().query(Vote.class).filter("voter =", new Key<SBUser>(SBUser.class, voterId))
-			.filter("listing =", new Key<Listing>(Listing.class, listingId)).get();
-		boolean notVotedForListing = (vote == null);
-
-		return notOwnerOfListing && notVotedForListing;
-	}
-
-	public boolean userCanVoteForUser(long voterId, long userId) {
-		SBUser user = null;
-		try {
-			user = getOfy().get(SBUser.class, userId);
-		} catch (Exception e) {
-			log.log(Level.WARNING, "User entity '" + userId + "' not found", e);
-			return false;
-		}
-		boolean notOwnerOfListing = (voterId != user.id);
-
-		Vote vote = getOfy().query(Vote.class).filter("voter =", new Key<SBUser>(SBUser.class, voterId))
-			.filter("user =", new Key<SBUser>(SBUser.class, userId)).get();
-		boolean notVotedForListing = (vote == null);
-
-		return notOwnerOfListing && notVotedForListing;
-	}
-*/
 	public SBUser activateUser(String activationCode) {
 		try {
 			SBUser user = getOfy().query(SBUser.class).filter("activationCode =", activationCode).get();
 			if (user == null) {
 				return null;
 			}
-			if (user.status == SBUser.Status.ACTIVE) {
+			if (user.status == SBUser.Status.ACTIVE || user.emailActivationDate != null) {
 				// for already activated users don't do anything
 				return user;
 			}
 			user.status = SBUser.Status.ACTIVE;
+			user.emailActivationDate = new Date();
 			getOfy().put(user);
 			return user;
 		} catch (Exception e) {
