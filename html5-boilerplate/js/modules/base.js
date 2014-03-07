@@ -550,6 +550,7 @@ pl.implement(HeaderClass, {
                 pl('#light, #fade, #register-verify-text, #register-close-link').hide();
                 pl('#register-form, #login-panel-text, #social-login').show();
                 pl('#register-email').removeClass('register-email-input');
+                pl('#register-message').get(0).innerText = '';
             });
     },
     setLoggedIn: function(profile, logout_url) {
@@ -602,12 +603,11 @@ pl.implement(HeaderClass, {
                 password = pl('#register-password').get(0).value,
                 data = { email: email, password: password },
                 successFunc = function(json) {
-                    console.log('logged in to account', json);
                     location.reload();
                 },
                 errorFunc = function(json) {
-                    console.log('error loggin in to account', json);
-                    pl('#register-message').text('@lang_cant_login@');
+                    var msg = json && json.error_msg ? json.error_msg : '@lang_cant_login@';
+                    pl('#register-message').get(0).innerText = msg;
                 },
                 ajax = new AjaxClass('/user/authenticate', 'register-message', null, successFunc, null, errorFunc);
             ajax.setPostData(data);
@@ -618,13 +618,12 @@ pl.implement(HeaderClass, {
                 password = pl('#register-password').get(0).value,
                 data = { email: email, password: password },
                 successFunc = function(json) {
-                    console.log('created account', json);
                     pl('#register-form, #login-panel-text, #social-login').hide();
                     pl('#register-verify-text, #register-close-link').show();
                 },
                 errorFunc = function(json) {
-                    console.log('error creating account', json);
-                    pl('#register-message').text('@login_cant_register@');
+                    var msg = json && json.error_msg ? json.error_msg : '@lang_cant_register@';
+                    pl('#register-message').get(0).innerText = msg;
                 },
                 ajax = new AjaxClass('/user/register', 'register-message', null, successFunc, null, errorFunc);
             ajax.setPostData(data);
