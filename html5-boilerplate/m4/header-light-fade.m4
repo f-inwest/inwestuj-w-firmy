@@ -16,7 +16,7 @@
 				        <input id="register-password" name="password" type="password" value=""></input><br>
 				        <a href="#" id="signin-link" class="zaloguj-button signin-button">@lang_signin@</a>
 				        <a href="#" id="register-link" class="zaloguj-button register-button">@lang_new_user@</a>
-				        <div id="resgister-message" class="initialhidden"></div>
+				        <div id="register-message" class="register-massage attention"></div>
                     </form>
     		        <div id="register-verify-text" class="login-panel-text initialhidden">@lang_login_verify_message@</div>
 				    <a id="register-close-link" href="#"  class="zaloguj-button register-close initialhidden">@lang_close@</a>
