@@ -50,6 +50,7 @@ import eu.finwest.datamodel.PictureImport;
 import eu.finwest.datamodel.VoToModelConverter;
 import eu.finwest.util.HtmlConverter;
 import eu.finwest.util.ImageHelper;
+import eu.finwest.util.OfficeHelper;
 import eu.finwest.vo.ErrorCodes;
 import eu.finwest.vo.ImportQueryResultsVO;
 import eu.finwest.vo.ListingDocumentVO;
@@ -307,7 +308,7 @@ public class ListingImportService {
 		} else {
 			log.warning("Import type '" + type + "' not available!");
 			results.setErrorCode(ErrorCodes.APPLICATION_ERROR);
-			results.setErrorMessage("Import type '" + type + "' not available!");
+			results.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_import_wrong_type"));
 		}
 		return results;
 	}

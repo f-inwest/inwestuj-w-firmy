@@ -22,10 +22,8 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
-import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.PricePoint;
 import eu.finwest.util.TwitterHelper;
-import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.ListingVO;
 import eu.finwest.vo.PricePointVO;
 import eu.finwest.vo.UserListingsVO;

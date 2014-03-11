@@ -459,24 +459,19 @@ public class UserMgmtFacade {
 	public UserAndUserVO createUser(String email, String password, String name, String location, boolean investor) {
 		UserAndUserVO result = new UserAndUserVO();
 		if (!validateEmailAddress(email)) {
-			result.setErrorCode(500);
-			result.setErrorMessage("Not valid email address");
-			return result;
-		}
-		if (!validateName(name)) {
-			result.setErrorCode(500);
-			result.setErrorMessage("Provided name is already in use");
+			result.setErrorCode(101);
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_not_valid_email"));
 			return result;
 		}
 		if (!validatePassword(email, password, name)) {
-			result.setErrorCode(500);
-			result.setErrorMessage("Not valid password. Must have min. 8 characters, including 2 digits");
+			result.setErrorCode(102);
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_not_valid_password"));
 			return result;
 		}
 		String encryptedPassword = encryptPassword(password);
 		if (encryptedPassword == null) {
-			result.setErrorCode(500);
-			result.setErrorMessage("Error while encrypting password");
+			result.setErrorCode(103);
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_password_encryption"));
 			return result;
 		}
 		String authCookie = encryptPassword(encryptedPassword + new Date().getTime());
@@ -488,8 +483,8 @@ public class UserMgmtFacade {
             	// user already active, probably registered via google login
             	if (user.emailActivationDate != null) {
             		// user is already registered for email/pass usage
-        			result.setErrorCode(500);
-        			result.setErrorMessage("User has been already registered with provided email address");
+        			result.setErrorCode(104);
+        			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_already_registered"));
         			return result;
             	}
             } else {
@@ -630,7 +625,7 @@ public class UserMgmtFacade {
 		if (loggedInUser == null) {
 			log.warning("User not logged in");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage("User not logged in or is not an admin");
+			result.setErrorMessage("User not logged in");
 			return result;
 		}
 		SBUser user = getDAO().getUser(loggedInUser.getId());

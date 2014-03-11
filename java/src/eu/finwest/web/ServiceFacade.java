@@ -25,6 +25,7 @@ import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.VoToModelConverter;
+import eu.finwest.util.OfficeHelper;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.CommentListVO;
 import eu.finwest.vo.CommentVO;
@@ -142,7 +143,7 @@ public class ServiceFacade {
 		if (loggedInUser == null) {
 			log.log(Level.WARNING, "User is not logged in!", new Exception("Not logged in user"));
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage("User is not logged in!");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;
 		}
 		CommentVO comment = getComment(loggedInUser, commentId);
