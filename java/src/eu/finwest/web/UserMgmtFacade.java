@@ -49,6 +49,7 @@ import eu.finwest.vo.ErrorCodes;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.ListingTileVO;
 import eu.finwest.vo.ListingVO;
+import eu.finwest.vo.NewCampaignVO;
 import eu.finwest.vo.PricePointVO;
 import eu.finwest.vo.UserAndUserVO;
 import eu.finwest.vo.UserBasicVO;
@@ -217,7 +218,7 @@ public class UserMgmtFacade {
 		UserVO user = DtoToVoConverter.convert(getDAO().getUser(userId));
 		if (user == null) {
 			result.setErrorCode(ErrorCodes.APPLICATION_ERROR);
-			result.setErrorMessage("User with id '" + userId + "' doesn't exist!");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_found"));
 			log.info("User with id '" + userId + "' doesn't exist!");
 			return result;
 		}
@@ -601,14 +602,14 @@ public class UserMgmtFacade {
 		if (loggedInUser == null || !loggedInUser.isAdmin()) {
 			log.warning("User not logged in or is not an admin");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage("User not logged in or is not an admin");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_admin"));
 			return result;
 		}
 		SBUser user = getDAO().getUser(userId);
 		if (user == null) {
 			log.warning("User with id '" + userId + "' not found");
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("User not found");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_found"));
 			return result;
 		}
 		user.userClass = "dragon";
@@ -625,7 +626,7 @@ public class UserMgmtFacade {
 		if (loggedInUser == null) {
 			log.warning("User not logged in");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage("User not logged in");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;
 		}
 		SBUser user = getDAO().getUser(loggedInUser.getId());
@@ -638,7 +639,7 @@ public class UserMgmtFacade {
 		} else {
 			log.warning("User has already requested dragon badge. " + user);
 			result.setErrorCode(ErrorCodes.APPLICATION_ERROR);
-			result.setErrorMessage("User has already requested dragon badge");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_already_requested_dragon"));
 			return result;
 
 		}
@@ -934,20 +935,33 @@ public class UserMgmtFacade {
 		}
 	}
 
-	public CampaignVO storeCampaign(UserVO loggedInUser, CampaignVO campaign) {
-		if (loggedInUser == null || !(loggedInUser.isAccreditedInvestor() || loggedInUser.isAdmin())) {
+	public NewCampaignVO storeCampaign(UserVO loggedInUser, CampaignVO campaign) {
+		NewCampaignVO result = new NewCampaignVO();
+		if (loggedInUser == null) {
 			log.info("Not logged in or user is not admin/investor");
-			return null;
+			result.setErrorCode(305);
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			return result;
+		}
+		if (!(loggedInUser.isAccreditedInvestor() || loggedInUser.isAdmin())) {
+			log.info("Not logged in or user is not admin/investor");
+			result.setErrorCode(306);
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_investor"));
+			return result;
 		}
 		if (StringUtils.equalsIgnoreCase(campaign.getSubdomain(), "pl")
 				|| StringUtils.equalsIgnoreCase(campaign.getSubdomain(), "en")) {
 			log.info("User cannot update special campaigns");
-			return null;
+			result.setErrorCode(306);
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_admin"));
+			return result;
 		}
 		Campaign existingCampaign = getDAO().getCampaignByDomain(campaign.getSubdomain());
 		if (existingCampaign != null && (existingCampaign.creator.getId() != loggedInUser.toKeyId() || !loggedInUser.isAdmin())) {
 			log.info("User is not an admin of the campaign, creator: " + existingCampaign.creatorName + ", logged in user: " + loggedInUser);
-			return null;
+			result.setErrorCode(306);
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_campaign_user_not_owner"));
+			return result;
 		}
 		if (StringUtils.isBlank(campaign.getStatus())) {
 			campaign.setStatus(Campaign.Status.NEW.toString());
@@ -964,8 +978,9 @@ public class UserMgmtFacade {
 			newCampaign.status = Campaign.Status.NEW;
 		}
 		campaign = DtoToVoConverter.convert(getDAO().storeCampaign(newCampaign));
+		result.setNewCampaign(campaign);
 		MemCacheFacade.instance().cleanCampaingsCache();
-		return campaign;
+		return result;
 	}
 	
 	public List<PricePointVO> getPricePoints(UserVO loggedInUser, List<CampaignVO> campaigns) {
@@ -974,7 +989,7 @@ public class UserMgmtFacade {
 			log.info("User not logged in, returning empty pricepoints.");
 		} else {
 			PricePoint.Codes code = PricePoint.Codes.valueOf(loggedInUser.getPaidCode() != null ? loggedInUser.getPaidCode() : "NONE");
-			if (code == Codes.NONE) {
+			if (code == Codes.NONE && !loggedInUser.isAccreditedInvestor()) {
 				List<PricePoint> pricePoints = MemCacheFacade.instance().getPricePoints(Group.INVESTOR);
 				LangVersion portalLang = FrontController.getLangVersion();
 				for (PricePoint pp : pricePoints) {

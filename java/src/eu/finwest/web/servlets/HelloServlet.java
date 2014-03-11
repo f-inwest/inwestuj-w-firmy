@@ -238,12 +238,13 @@ public class HelloServlet extends HttpServlet {
 							+ "}"
 							+ "</textarea><input type=\"submit\" value=\"Update campaign " + camp.subdomain + "\"/></form>");
 			}
+			out.println("</br>Create new campaign:<br/>");
 			out.println("<br/><br/><form method=\"POST\" action=\"/user/store_campaign/.json\"><textarea autocomplete=\"off\" name=\"campaign\" rows=\"3\" cols=\"120\">"
 					+ "{\"subdomain\":\"" + "new" + "\", \"name\":\"" + "New campaign" + "\", \"description\":\"" + "Super fancy campaign"
 					+ "\", \"active_from\":\"" + fmt2.print(new Date().getTime()) + "\", \"active_to\":\"" + fmt2.print(new Date().getTime() + 30 * 24 * 60 * 60 * 1000)
 					+ "\", \"public_browsing\":\"" + "true"
-					+ "\", \"allowed_languages\":\"" + "PL"+ ", \"status\":\"" + "NEW" + "\"}"
-					+ "</textarea><input type=\"submit\" value=\"Create campaign\"/></form>");
+					+ "\", \"allowed_languages\":\"PL\""+ ", \"status\":\"" + "NEW" + "\"}"
+					+ "</textarea><input type=\"submit\" value=\"Create new campaign\"/></form>");
 
 
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Listings API:</p>");

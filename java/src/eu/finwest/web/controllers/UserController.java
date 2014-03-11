@@ -488,13 +488,17 @@ public class UserController extends ModelDrivenController {
 		ObjectMapper mapper = new ObjectMapper();
 		log.log(Level.INFO, "Parameters: " + request.getParameterMap());
 		String messageString = request.getParameter("campaign");
-		if (!StringUtils.isEmpty(messageString)) {
-			CampaignVO campaign = mapper.readValue(messageString, CampaignVO.class);
-			
-			campaign = UserMgmtFacade.instance().storeCampaign(getLoggedInUser(), campaign);
-			model = campaign;
-		} else {
-			log.severe("Missing campaign json parameter!");
+		try {
+			if (!StringUtils.isEmpty(messageString)) {
+				CampaignVO campaign = mapper.readValue(messageString, CampaignVO.class);
+				
+				model = UserMgmtFacade.instance().storeCampaign(getLoggedInUser(), campaign);
+			} else {
+				log.severe("Missing campaign json parameter!");
+				headers.setStatus(500);
+			}
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error parsing campaign data", e);
 			headers.setStatus(500);
 		}
 		return headers;
