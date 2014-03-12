@@ -2222,30 +2222,46 @@ function PricepointsClass(pricepoints) {
     self.pricepoints = pricepoints;
 }
 pl.implement(PricepointsClass, {
-    eligiblePricepoints: function(crcType) {
+    pricepointsForType: function(crcType) {
         var self = this,
             pricepoints = this.pricepoints,
-            eligiblePricepoints = [],
+            pricepointsForType = [],
             pricepoint,
             i;
         if (pricepoints) {
             for (i = 0; i < pricepoints.length; i++) {
                 pricepoint = pricepoints[i];
                 if (pricepoint.crc && pricepoint.crc.indexOf(crcType) == 0) {
-                    eligiblePricepoints.push(pricepoint);
+                    pricepointsForType.push(pricepoint);
                 }
             }
         }
-        return eligiblePricepoints;
+        return pricepointsForType;
     },
-    buttonsHTML: function(eligiblePricepoints) {
+    pricepointsForId: function(crcId) {
+        var self = this,
+            pricepoints = this.pricepoints,
+            pricepointsForId = [],
+            pricepoint,
+            i;
+        if (pricepoints) {
+            for (i = 0; i < pricepoints.length; i++) {
+                pricepoint = pricepoints[i];
+                if (pricepoint.crc && pricepoint.crc.indexOf(crcId) >= 0) {
+                    pricepointsForId.push(pricepoint);
+                }
+            }
+        }
+        return pricepointsForId;
+    },
+    buttonsHTML: function(pricepointsForType) {
         var self = this,
             pricepoint,
             html = '',
             i;
-        if (eligiblePricepoints) {
-            for (i = 0; i < eligiblePricepoints.length; i++) {
-                pricepoint = eligiblePricepoints[i];
+        if (pricepointsForType) {
+            for (i = 0; i < pricepointsForType.length; i++) {
+                pricepoint = pricepointsForType[i];
                 html += self.buttonHTML(pricepoint);
             }
         }
