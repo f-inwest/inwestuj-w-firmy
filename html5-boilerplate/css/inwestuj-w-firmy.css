@@ -91,16 +91,25 @@ body.nearby-page > #wrap > #main > div.container > div.nearbywrapper {
     overflow-y: visible;
 }
 .stopka-ue-poland {
-    margin-top: 75px;
-    width: 120px;
-    height: 60px;
-    background: url(../img/stopka-ue-poland.png) no-repeat;
+    margin-top: 62px;
+    width: 250px;
+    height: 84px;
+    background: url(../img/ue-poland.png) no-repeat;
+}
+.stopka-finwest {
+    margin-left: 100px;
+    margin-top: 82px;
+    width: 232px;
+    height: 45px;
+    background: url(../img/logo.png) no-repeat;
 }
 .stopka-ue-eu {
     margin-top: 75px;
-    width: 140px;
+    width: 250px;
     height: 60px;
-    background: url(../img/stopka-ue-eu.png) no-repeat;
+    background: url(../img/ue-flag.png) no-repeat;
+    right: 0;
+    position: absolute;
 }
 
 /* login */
@@ -3008,4 +3017,9 @@ color: #fff;
 }
 .register-message {
     padding-top: 85px;
+}
+.purchase-button {
+    width: 302px;
+    height: 40px;
+    font-size: 16px;
 }

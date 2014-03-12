@@ -19,7 +19,7 @@
                 <a href="main-page.html?type=latest"><span class="footerlink hoverlink">@lang_latest@</span></a>
                 <a href="nearby-page.html"><span class="footerlink hoverlink">@lang_nearby@</span></a>
                 <a href="profile-list-page.html?type=listers"><span class="footerlink hoverlink">@lang_entrepreneuers@</span></a>
-                <div class="stopka-ue-eu"></div>
+                <div class="stopka-finwest"></div>
             </div>
             <div class="span-4 footercol">
                 <div class="footerlinkheader">@lang_admin@</div>
@@ -52,7 +52,7 @@
                     </span>
                 </a>
                 <span class="footericonlink hoverlink">&nbsp;</span>
-                <div class="footercopyright">&copy; 2013 F-Inwest sp. z o.o.</div>
+                <div class="stopka-ue-eu"></div>
             </div>
 
         </div> <!-- end container -->

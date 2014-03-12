@@ -581,6 +581,7 @@ pl.implement(HeaderClass, {
         pl('#headeraddlistinglink').bind('click', function() {
             document.location = "add-listing-page.html"
         });
+        pl('#headerloginlink').hide();
         pl('#headerloggedin').show();
     },
     setLoggedOut: function(login_url, twitter_login_url, fb_login_url) {

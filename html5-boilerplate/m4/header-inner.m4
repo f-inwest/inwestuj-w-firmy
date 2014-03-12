@@ -11,7 +11,7 @@
       <a href="#" id="headeraddlistinglink"><span class="headerlink"><span class="hoverlink">@lang_add@</span></span></a>
     </div>
     <a href="#" id="headerloginlink">
-    <div class="span-2 headerrow headerrowlogin last initialhidden" id="headernotloggedin">
+    <div class="span-2 headerrow headerrowlogin last" id="headernotloggedin">
       <span class="headerrowlogintext"><span class="hoverlink">@lang_signin@</span></span>
     </div>
     </a>

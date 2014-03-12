@@ -25,6 +25,12 @@
         </div>
     </div>
 
+    <div class="initialhidden" id="pricepoints-wrapper">
+        <div class="boxtitle boxtitleside">@lang_subscriptions@</div>
+        <div class="sidebox applydragonbox" id="pricepoints-wrapper-inner">
+        </div>
+    </div>
+    <!--
     <div class="initialhidden" id="applydragonwrapper">
     <div class="boxtitle boxtitleside">@lang_apply_investor@</div>
     <div class="sidebox applydragonbox">
@@ -39,13 +45,13 @@
         </div>
     </div>
     </div>
-
     <div class="initialhidden" id="pendingdragonwrapper">
     <div class="boxtitle boxtitleside">@lang_application_pending@</div>
     <div class="sidebox pendingdragonbox">
         <p>@lang_application_pending_message@</p>
     </div>
     </div>
+    -->
 
     <div id="promotebox" class="promotebox">
         <div class="promotemsg attention" id="promotemsg">@lang_promote_this_user@</div>

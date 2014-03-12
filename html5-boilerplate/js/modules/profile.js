@@ -411,7 +411,8 @@ pl.implement(ProfileClass, {
     },
 
     displayFields: function() {
-        var profile = this.profile || this.loggedin_profile || {};
+        var self = this,
+            profile = this.profile || this.loggedin_profile || {};
  /*        var investor = json.investor ? 'Accredited Investor' : 'Entrepreneur';
             date = new DateClass(),
             joindate = json.joined_date ? date.format(json.joined_date) : 'unknown';
@@ -438,6 +439,90 @@ pl.implement(ProfileClass, {
         if (profile.user_class) {
             pl('#user_class').text(ProfileUserClass.prototype.format(profile.user_class));
         }
+
+        self.handlePaymentButtons();
+    },
+
+    handlePaymentButtons: function() {
+        var self = this,
+            pricepoints = this.pricepoints,
+            pricepoint,
+            html = '',
+            i;
+        if (pricepoints) {
+            for (i = 0; i < pricepoints.length; i++) {
+                pricepoint = pricepoints[i];
+                html += self.pricepointHTML(pricepoint);
+            }
+            pl('#pricepoints-wrapper').show();
+            if (pl('#pricepoints-wrapper-inner').get(0)) {
+                pl('#pricepoints-wrapper-inner').get(0).innerHTML = html;
+            }
+        }
+        else {
+            pl('#pricepoints-wrapper').hide();
+        }
+    },
+
+    pricepointHTML: function(pp) {
+        var html = '<div>'
+            + '<form action="' + pp.action_url + '" method="post" accept-charset="utf-8">'
+            + '<input type="hidden" name="id" value="' + pp.id + '">'
+            + '<input type="hidden" name="kwota" value="' + pp.kwota + '">'
+            + '<input type="hidden" name="opis" value="' + pp.opis + '">'
+            + '<input type="hidden" name="opis_sprzed" value="' + pp.opis_sprzed + '">'
+            + '<input type="hidden" name="crc" value="' + pp.crc + '">'
+            + '<input type="hidden" name="pow_url" value="' + pp.pow_url + '">'
+            + '<input type="hidden" name="pow_url_blad" value="' + pp.pow_url_blad + '">'
+            + '<input type="hidden" name="email" value="' + pp.email + '">'
+            + '<input type="hidden" name="nazwisko" value="' + pp.nazwisko + '">'
+            + '<input type="hidden" name="telefon" value="' + pp.telefon + '">'
+            + '<input type="hidden" name="jezyk" value="' + pp.jezyk + '">'
+            + '<input type="hidden" name="md5sum" value="' + pp.md5sum + '">'
+            + '<input type="submit" name="submit" value="' + pp.button_text + '" class="inputbutton purchase-button">'
+            + '</form>'
+            + '</div>';
+        return html;
+    },
+
+    /*
+     kwota: "0.00"
+     value_displayed: null
+
+     out.println("Description: " + pp.getDescription() + "</br>");
+     out.println("Amount: " + (pp.getValueDisplayed() == null ? "FREE" : pp.getValueDisplayed()) + "</br>");
+     out.println("<form action=\"" + pp.getActionUrl() + "\" method=\"post\" accept-charset=\"utf-8\">"); 
+     out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"id\" value=\"" + pp.getSellerId() + "\">");
+     out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"kwota\" value=\"" + pp.getAmount() + "\">");
+     out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"opis\" value=\"" + pp.getTransactionDescClient() + "\">");
+     out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"opis_sprzed\" value=\"" + pp.getTransactionDescSeller() + "\">");
+     out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"crc\" value=\"" + pp.getCrc() + "\">");
+     out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"pow_url\" value=\"" + pp.getReturnUrlSuccess() + "\">");
+     out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"pow_url_blad\" value=\"" + pp.getReturnUrlFailure() + "\">");
+     out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"email\" value=\"" + pp.getUserEmail() + "\">");
+     out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"nazwisko\" value=\"" + pp.getUserName() + "\">");
+     out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"telefon\" value=\"" + pp.getUserPhone() + "\">");
+     out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"jezyk\" value=\"" + pp.getPaymentLanguage() + "\">");
+     out.println("<input type=\"hidden\" autocomplete=\"off\" name=\"md5sum\" value=\"" + pp.getMd5sum() + "\">");
+     out.println("<input type=\"submit\" autocomplete=\"off\" name=\"submit\" value=\"" + pp.getButtonText() + "\">");
+     out.println("</form>");
+     
+        bindApplyDragon: function() {
+            pl('#applydragonbutton').unbind().bind('click', function() {
+                var complete = function(json) {
+                        pl('#applydragonwrapper').hide();
+                        pl('#pendingdragonwrapper').show();
+                    },
+
+                    ajax = new AjaxClass('/user/request_dragon', 'applydragonmessage', complete);
+                pl('#applydragonbutton').hide();
+                pl('#applydragonspinner').show();
+                ajax.setPost();
+                ajax.call();
+            });
+        },
+        
+
         if (this.loggedin_profile
             && !(this.loggedin_profile.user_class === 'dragon' || this.loggedin_profile.user_class === 'requested_dragon')
             && (!this.profile
@@ -453,26 +538,12 @@ pl.implement(ProfileClass, {
             this.bindApplyDragon();
         }
     },
-
+    */
+        
     getUsername: function() {
         var profile = this.profile || this.loggedin_profile || {},
             username = profile.username || 'anonymous';
         return username;
-    },
-
-    bindApplyDragon: function() {
-        pl('#applydragonbutton').unbind().bind('click', function() {
-            var complete = function(json) {
-                    pl('#applydragonwrapper').hide();
-                    pl('#pendingdragonwrapper').show();
-                },
-
-                ajax = new AjaxClass('/user/request_dragon', 'applydragonmessage', complete);
-            pl('#applydragonbutton').hide();
-            pl('#applydragonspinner').show();
-            ajax.setPost();
-            ajax.call();
-        });
     },
 
     displayPromote: function() {
