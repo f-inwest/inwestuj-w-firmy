@@ -1068,8 +1068,8 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMA
 }
 
 /* header num */
-.headernum { height: 21px; text-align: center; position: absolute; top:-7px; right: -5px; color:#f8f8f8; background-color:red; font-weight:bold; font-size: 14px; }
-.headernumdisplay { padding-left: 3px; padding-right: 3px; border-radius: 5px; border: 1px solid #222; }
+.headernum { height: 21px; text-align: center; position: absolute; top: 0; right: 0; color:#f8f8f8; background-color:red; font-size: 14px; line-height: 22px; }
+.headernumdisplay { padding-left: 3px; padding-right: 3px; }
 
 /* preloader */
 

@@ -412,6 +412,9 @@ pl.implement(ProfileClass, {
 
     displayFields: function() {
         var self = this,
+            pricepoints = new PricepointsClass(self.pricepoints),
+            eligiblePricepoints = pricepoints.eligiblePricepoints('INV_REG'),
+            pricepointHTML = pricepoints.buttonsHTML(eligiblePricepoints),
             profile = this.profile || this.loggedin_profile || {};
  /*        var investor = json.investor ? 'Accredited Investor' : 'Entrepreneur';
             date = new DateClass(),
@@ -440,49 +443,19 @@ pl.implement(ProfileClass, {
             pl('#user_class').text(ProfileUserClass.prototype.format(profile.user_class));
         }
 
-        self.handlePaymentButtons();
+        self.handlePaymentButtons(pricepointHTML);
     },
 
-    handlePaymentButtons: function() {
-        var self = this,
-            pricepoints = this.pricepoints,
-            pricepoint,
-            html = '',
-            i;
-        if (pricepoints) {
-            for (i = 0; i < pricepoints.length; i++) {
-                pricepoint = pricepoints[i];
-                html += self.pricepointHTML(pricepoint);
-            }
+    handlePaymentButtons: function(buttonsHTML) {
+        if (buttonsHTML) {
             pl('#pricepoints-wrapper').show();
             if (pl('#pricepoints-wrapper-inner').get(0)) {
-                pl('#pricepoints-wrapper-inner').get(0).innerHTML = html;
+                pl('#pricepoints-wrapper-inner').get(0).innerHTML = buttonsHTML;
             }
         }
         else {
             pl('#pricepoints-wrapper').hide();
         }
-    },
-
-    pricepointHTML: function(pp) {
-        var html = '<div>'
-            + '<form action="' + pp.action_url + '" method="post" accept-charset="utf-8">'
-            + '<input type="hidden" name="id" value="' + pp.id + '">'
-            + '<input type="hidden" name="kwota" value="' + pp.kwota + '">'
-            + '<input type="hidden" name="opis" value="' + pp.opis + '">'
-            + '<input type="hidden" name="opis_sprzed" value="' + pp.opis_sprzed + '">'
-            + '<input type="hidden" name="crc" value="' + pp.crc + '">'
-            + '<input type="hidden" name="pow_url" value="' + pp.pow_url + '">'
-            + '<input type="hidden" name="pow_url_blad" value="' + pp.pow_url_blad + '">'
-            + '<input type="hidden" name="email" value="' + pp.email + '">'
-            + '<input type="hidden" name="nazwisko" value="' + pp.nazwisko + '">'
-            + '<input type="hidden" name="telefon" value="' + pp.telefon + '">'
-            + '<input type="hidden" name="jezyk" value="' + pp.jezyk + '">'
-            + '<input type="hidden" name="md5sum" value="' + pp.md5sum + '">'
-            + '<input type="submit" name="submit" value="' + pp.button_text + '" class="inputbutton purchase-button">'
-            + '</form>'
-            + '</div>';
-        return html;
     },
 
     /*

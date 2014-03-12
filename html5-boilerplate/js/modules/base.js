@@ -2217,6 +2217,62 @@ ProfileUserClass.prototype.format = function(user_class) {
     return user_class.replace(/[_-]/g, ' ').toUpperCase();
 }
 
+function PricepointsClass(pricepoints) {
+    var self = this;
+    self.pricepoints = pricepoints;
+}
+pl.implement(PricepointsClass, {
+    eligiblePricepoints: function(crcType) {
+        var self = this,
+            pricepoints = this.pricepoints,
+            eligiblePricepoints = [],
+            pricepoint,
+            i;
+        if (pricepoints) {
+            for (i = 0; i < pricepoints.length; i++) {
+                pricepoint = pricepoints[i];
+                if (pricepoint.crc && pricepoint.crc.indexOf(crcType) == 0) {
+                    eligiblePricepoints.push(pricepoint);
+                }
+            }
+        }
+        return eligiblePricepoints;
+    },
+    buttonsHTML: function(eligiblePricepoints) {
+        var self = this,
+            pricepoint,
+            html = '',
+            i;
+        if (eligiblePricepoints) {
+            for (i = 0; i < eligiblePricepoints.length; i++) {
+                pricepoint = eligiblePricepoints[i];
+                html += self.buttonHTML(pricepoint);
+            }
+        }
+        return html;
+    },
+    buttonHTML: function(pp) {
+        var html = '<div>'
+            + '<form action="' + pp.action_url + '" method="post" accept-charset="utf-8">'
+            + '<input type="hidden" name="id" value="' + pp.id + '">'
+            + '<input type="hidden" name="kwota" value="' + pp.kwota + '">'
+            + '<input type="hidden" name="opis" value="' + pp.opis + '">'
+            + '<input type="hidden" name="opis_sprzed" value="' + pp.opis_sprzed + '">'
+            + '<input type="hidden" name="crc" value="' + pp.crc + '">'
+            + '<input type="hidden" name="pow_url" value="' + pp.pow_url + '">'
+            + '<input type="hidden" name="pow_url_blad" value="' + pp.pow_url_blad + '">'
+            + '<input type="hidden" name="email" value="' + pp.email + '">'
+            + '<input type="hidden" name="nazwisko" value="' + pp.nazwisko + '">'
+            + '<input type="hidden" name="telefon" value="' + pp.telefon + '">'
+            + '<input type="hidden" name="jezyk" value="' + pp.jezyk + '">'
+            + '<input type="hidden" name="md5sum" value="' + pp.md5sum + '">'
+            + '<input type="submit" name="submit" value="' + pp.button_text + '" class="inputbutton purchase-button">'
+            + '</form>'
+            + '</div>';
+        return html;
+    }
+});
+
 /* google analytics tracking code */
 window._gaq = [['_setAccount','UA-23942052-1'],['_trackPageview'],['_trackPageLoadTime']];
 (function() {
