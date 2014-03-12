@@ -28,6 +28,7 @@ import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.VoToModelConverter;
 import eu.finwest.datamodel.Listing.State;
 import eu.finwest.datamodel.Notification.Type;
+import eu.finwest.util.OfficeHelper;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ErrorCodes;
@@ -78,7 +79,7 @@ public class NotificationFacade {
 		NotificationListVO list = new NotificationListVO();
 		if (loggedInUser == null) {
 			list.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			list.setErrorMessage("User not logged in.");
+			list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			log.log(Level.WARNING, "User not logged in!");
 			return list;
 		}
@@ -95,7 +96,7 @@ public class NotificationFacade {
         NotificationListVO list = new NotificationListVO();
         if (loggedInUser == null) {
             list.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-            list.setErrorMessage("User not logged in.");
+            list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
             log.log(Level.WARNING, "User not logged in!");
             return list;
         }
@@ -114,7 +115,7 @@ public class NotificationFacade {
         NotificationListVO list = new NotificationListVO();
         if (loggedInUser == null) {
             list.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-            list.setErrorMessage("User not logged in.");
+            list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
             log.log(Level.WARNING, "User not logged in!");
             return list;
         }
@@ -140,7 +141,7 @@ public class NotificationFacade {
 		if (notification == null) {
 			log.warning("Notification with id '" + notifId + "' not found!");
 			result.setErrorCode(ErrorCodes.APPLICATION_ERROR);
-			result.setErrorMessage("Notification doesn't exist");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_notification_not_exists"));
 			return result;
 		}
 		notification.read = true;

@@ -13,6 +13,7 @@ import eu.finwest.datamodel.BidUser;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.VoToModelConverter;
+import eu.finwest.util.OfficeHelper;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.BidListVO;
 import eu.finwest.vo.BidUserListVO;
@@ -56,13 +57,13 @@ public class BidFacade {
 		if (loggedInUser == null) {
 			log.warning("User not logged in.");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage("User not logged in");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;
 		}
 		if (!SBUser.Status.ACTIVE.toString().equals(loggedInUser.getStatus())) {
 			log.warning("User is not active.");
 			result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
-			result.setErrorMessage("User not active!");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_active"));
 			return result;
 		}
 		SBUser investor = VoToModelConverter.convert(loggedInUser);
@@ -76,21 +77,21 @@ public class BidFacade {
 		} catch (Exception e) {
 			log.warning("Bid type not recognized: '" + type + "'");
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("Bid type not recognized");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_bid_not_recognized"));
 			return result;
 		}
 		Listing listing = getGeneralDAO().getListing(BaseVO.toKeyId(listingId));
 		if (listing.state != Listing.State.ACTIVE) {
 			log.warning("Listing is not active: " + listing);
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("Listing is not active");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_active"));
 			return result;
 		}
 		SBUser owner = getGeneralDAO().getUser(listing.owner.getString());
 		if (owner == null || owner.status != SBUser.Status.ACTIVE) {
 			log.warning("Listing owner doesn't exist or is not active: " + owner);
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("Investor doesn't exist or is not active");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_active"));
 			return result;
 		}
 		
@@ -99,13 +100,13 @@ public class BidFacade {
 		if (!validActions.contains(bidType.toString().toLowerCase())) {
 			log.warning("Action '" + bidType + "' is not allowed now");
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("Action '" + bidType + "' is not allowed now");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_bid_type_not_allowed"));
 			return result;
 		}
 		if (bidType == Bid.Type.INVESTOR_ACCEPT && (shorts[0].amount != amount || shorts[0].percentage != percentage)) {
 			log.warning("Accepted amount/percentage is not the same as in the offer. Last bid: " + shorts[0]);
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("Accepted amount/percentage is not the same as in the offer.");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_bid_accepted_value_not_correct"));
 			return result;
 		}
 		log.info("User '" + investor.nickname + "' is making '" + bidType + "' for listing '" + listing.name + "' owned by '" + owner.nickname + "'");
@@ -134,7 +135,7 @@ public class BidFacade {
 		if (loggedInUser == null) {
 			log.warning("User not logged in.");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage("User not logged in");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;
 		}
 		SBUser owner = VoToModelConverter.convert(loggedInUser);
@@ -148,21 +149,21 @@ public class BidFacade {
 		} catch (Exception e) {
 			log.warning("Bid type not recognized: '" + type + "'");
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("Bid type not recognized");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_bid_not_recognized"));
 			return result;
 		}
 		Listing listing = getGeneralDAO().getListing(BaseVO.toKeyId(listingId));
 		if (listing == null || listing.state != Listing.State.ACTIVE) {
 			log.warning("Listing is not active: " + listing);
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("Listing is not active");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_active"));
 			return result;
 		}
 		SBUser investor = getGeneralDAO().getUser(investorId);
 		if (investor == null || investor.status != SBUser.Status.ACTIVE) {
 			log.warning("Investor doesn't exist or is not active: " + investor);
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("Investor doesn't exist or is not active");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_active"));
 			return result;
 		}
 		BidUser[] shorts = getDAO().getBidShorts(listing, investor, owner);
@@ -170,13 +171,13 @@ public class BidFacade {
 		if (!validActions.contains(bidType.toString().toLowerCase())) {
 			log.warning("Action '" + bidType + "' is not allowed now");
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("Action '" + bidType + "' is not allowed now");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_bid_type_not_allowed"));
 			return result;
 		}
 		if (bidType == Bid.Type.OWNER_ACCEPT && (shorts[0].amount != amount || shorts[0].percentage != percentage)) {
 			log.warning("Accepted amount/percentage is not the same as in the offer. Last bid: " + shorts[0]);
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("Accepted amount/percentage is not the same as in the offer.");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_bid_accepted_value_not_correct"));
 			return result;
 		}
 
@@ -243,7 +244,7 @@ public class BidFacade {
 		if (listing == null) {
 			log.warning("Listing doesn't exist.");
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("Listing doesn't exist");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_found"));
 			return result;
 		}
 		result.setListing(DtoToVoConverter.convert(listing));
@@ -286,14 +287,14 @@ public class BidFacade {
 		if (loggedInUser == null) {
 			log.warning("User not logged in.");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage("User not logged in");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;
 		}
 		Listing listing = getGeneralDAO().getListing(BaseVO.toKeyId(listingId));
 		if (listing == null || listing.owner.getId() != loggedInUser.toKeyId()) {
 			log.warning("User not an owner of the listing.");
 			result.setErrorCode(ErrorCodes.NOT_AN_OWNER);
-			result.setErrorMessage("User not an owner of the listing");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_project_owner"));
 			return result;
 		}
 		result.setListing(DtoToVoConverter.convert(listing));
@@ -317,14 +318,14 @@ public class BidFacade {
 		if (loggedInUser == null) {
 			log.warning("User not logged in.");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage("User not logged in");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;
 		}
 		Listing listing = getGeneralDAO().getListing(BaseVO.toKeyId(listingId));
 		if (listing == null) {
 			log.warning("Listing doesn't exist.");
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage("Listing doesn't exist");
+			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_found"));
 			return result;
 		}
 		result.setListing(DtoToVoConverter.convert(listing));
@@ -340,7 +341,7 @@ public class BidFacade {
 			if (listing.owner.getId() != loggedInUser.toKeyId()) {
 				log.warning("User is not a listing owner.");
 				result.setErrorCode(ErrorCodes.NOT_AN_OWNER);
-				result.setErrorMessage("User is not a listing owner");
+				result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_project_owner"));
 				return result;
 			}
 			owner = VoToModelConverter.convert(loggedInUser);

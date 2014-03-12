@@ -49,6 +49,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import eu.finwest.dao.MockDataBuilder;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.SBUser;
+import eu.finwest.web.FrontController;
 import eu.finwest.web.LangVersion;
 
 public class OfficeHelper {
@@ -86,6 +87,10 @@ public class OfficeHelper {
 			log.log(Level.SEVERE, "Problem loading translations files", e);
 		}
 	}
+
+	public String getTranslation(String key) {
+		return getTranslation(FrontController.getLangVersion(), key);
+	}
 	
 	public String getTranslation(LangVersion lang, String key) {
 		try {
@@ -96,6 +101,7 @@ public class OfficeHelper {
 			}
 			return key;
 		} catch (java.util.MissingResourceException e) {
+			log.log(Level.SEVERE, "Missing translation key: " + key + " for " + lang);
 			return key;
 		}
 	}
