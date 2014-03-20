@@ -1,6 +1,7 @@
 package eu.finwest.vo;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
@@ -31,6 +32,14 @@ public class PricePointVO implements Serializable {
 	@JsonProperty("telefon") private String userPhone;
 	@JsonProperty("jezyk") private String paymentLanguage;
 	@JsonProperty("md5sum") private String md5sum;
+	private int order = 0;
+	
+	public static final Comparator<PricePointVO> BY_ORDER = new Comparator<PricePointVO>() {
+		@Override
+		public int compare(PricePointVO lhs, PricePointVO rhs) {
+			return lhs.order - rhs.order;
+		}
+	};
 	
 	public PricePointVO() {
 	}
@@ -161,6 +170,14 @@ public class PricePointVO implements Serializable {
 
 	public void setActionUrl(String actionUrl) {
 		this.actionUrl = actionUrl;
+	}
+
+	public int getOrder() {
+		return order;
+	}
+
+	public void setOrder(int order) {
+		this.order = order;
 	}
 
 }

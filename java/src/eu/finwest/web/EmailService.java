@@ -44,7 +44,9 @@ public class EmailService {
 
 	private static final String LINK_TO_HEADER_IMAGE = "##NOTIFICATION_LINK_TO_HEADER_IMAGE##";
 
+	private static final String NOT_DISPLAYING_PROPERLY = "##NOTIFICATION_NOT_DISPLAYING_PROPERLY##";
 	private static final String LINK_TO_VIEW_ON_INWESTUJ_W_FIRMY = "##NOTIFICATION_LINK_TO_VIEW_ON_INWESTUJ_W_FIRMY##";
+	private static final String VIEW_ON_INWESTUJ_W_FIRMY = "##NOTIFICATION_VIEW_ON_INWESTUJ_W_FIRMY##";
 	private static final String NOTIFICATION_TITLE = "##NOTIFICATION_TITLE##";
 	private static final String NOTIFICATION_TITLE_ESCAPED = "##NOTIFICATION_TITLE_ESCAPED##";
 	private static final String TEXT_NO_LINK = "##NOTIFICATION_TEXT_NO_LINK##";

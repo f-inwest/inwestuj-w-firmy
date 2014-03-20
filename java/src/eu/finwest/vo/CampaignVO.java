@@ -10,7 +10,6 @@ import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import eu.finwest.util.DateDeserializer;
-import eu.finwest.util.DateSerializer;
 import eu.finwest.util.ShortDateSerializer;
 
 /**

@@ -2,6 +2,7 @@ package eu.finwest.datamodel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +22,7 @@ import eu.finwest.vo.SystemPropertyVO;
 import eu.finwest.vo.UserVO;
 import eu.finwest.vo.VoteVO;
 import eu.finwest.web.LangVersion;
+import eu.finwest.web.MemCacheFacade;
 
 /**
  * Helper classes which converts VO objects to model objects.
@@ -143,7 +145,18 @@ public class VoToModelConverter {
 		} else if (name.equalsIgnoreCase("website")) {
 			listing.website = property.getPropertyValue();
 		} else if (name.equalsIgnoreCase("category")) {
-			listing.category = property.getPropertyValue();
+			String newCategory = property.getPropertyValue();
+			Map<String, Category> categories = MemCacheFacade.instance().getCategoriesMap();
+			if (categories.containsKey(newCategory)) {
+				listing.category = property.getPropertyValue();
+			} else {
+				for (Category cat : categories.values()) {
+					if (StringUtils.equals(newCategory, cat.namePl)) {
+						listing.category = cat.name;
+						break;
+					}
+				}
+			}
 		} else if (name.equalsIgnoreCase("address")) {
 			listing.address = property.getPropertyValue();
 		} else if (name.equalsIgnoreCase("latitude")) {

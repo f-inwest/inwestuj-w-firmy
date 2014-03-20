@@ -2,6 +2,7 @@ package eu.finwest.web;
 
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,7 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gdata.data.introspection.Collection;
 import com.googlecode.objectify.Key;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
@@ -1014,6 +1016,7 @@ public class UserMgmtFacade {
 				}
 			}
 		}
+		Collections.sort(list, PricePointVO.BY_ORDER);
 		log.info("Returning " + list.size() + " pricepoints for user " + loggedInUser.getName());
 		return list;
 	}
@@ -1062,8 +1065,9 @@ public class UserMgmtFacade {
 					}
 				}
 			}
-			log.info("Returning " + list.size() + " pricepoints for user " + loggedInUser.getName());
-		}		
+		}
+		Collections.sort(list, PricePointVO.BY_ORDER);
+		log.info("Returning " + list.size() + " pricepoints for user " + loggedInUser.getName());
 		return list;
 	}
 	
@@ -1095,16 +1099,8 @@ public class UserMgmtFacade {
 	}
 	
 	private void updateCommonFields(PricePoint pricePoint, UserVO loggedInUser, LangVersion portalLang, PricePointVO pp, String id) {
-		boolean freeUsage = StringUtils.equals("true", MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_FREE_USAGE));
-
-		pp.setDescription(portalLang == LangVersion.PL ? pricePoint.descriptionPl : pricePoint.descriptionEn);
-		pp.setButtonText(oh.getTranslation(portalLang, freeUsage ? "lang_payment_free_usage_button" : "lang_payment_pay_button"));		
-		pp.setPaymentLanguage(portalLang.name().toLowerCase());
-
-		pp.setSellerId(MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_CUSTOMER_ID));
-		updateAmounts(pp, pricePoint, portalLang);
-		pp.setCrc(pricePoint.name + " " + id);
-		
+		boolean freeUsage = StringUtils.equals("true", MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_FREE_USAGE))
+				&& pricePoint.group != Group.INVESTOR;		
 		String domain = null;
 		String subdomain = FrontController.getCampaign().getSubdomain();
 		boolean devEnvironment = false;
@@ -1114,6 +1110,15 @@ public class UserMgmtFacade {
 		} else {
 			domain = subdomain + ".inwestujwfirmy.pl";
 		}
+		
+		pp.setDescription(portalLang == LangVersion.PL ? pricePoint.descriptionPl : pricePoint.descriptionEn);
+		pp.setButtonText(oh.getTranslation(portalLang, freeUsage ? "lang_payment_free_usage_button" : "lang_payment_pay_button"));		
+		pp.setPaymentLanguage(portalLang.name().toLowerCase());
+
+		pp.setSellerId(MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_CUSTOMER_ID));
+		updateAmounts(pp, pricePoint, portalLang);
+		pp.setCrc(pricePoint.name + " " + id);
+
 		String returnUrl = pricePoint.successUrl.replace("<domain>", domain);
 		returnUrl = returnUrl.replace("<id>", id);
 		pp.setReturnUrlSuccess(returnUrl);
@@ -1129,6 +1134,8 @@ public class UserMgmtFacade {
 		pp.setUserName(loggedInUser.getName());
 		pp.setUserPhone(loggedInUser.getPhone());
 		updateMd5(pp);
+		
+		pp.setOrder(pricePoint.type.ordinal());
 	}
 	
 	private void updateMd5(PricePointVO pp) {
