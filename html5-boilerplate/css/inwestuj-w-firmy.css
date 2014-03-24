@@ -3023,3 +3023,22 @@ color: #fff;
     height: 40px;
     font-size: 16px;
 }
+.pricepoint-description-leftcol {
+    font-family: 'Ubuntu',sans-serif;
+    font-weight: 400;
+    color: #5b6773;
+    overflow: hidden;
+    line-height: 20px;
+    padding-top: 32px;
+    padding-bottom: 16px;
+}
+.pricepoint-description-rightbar {
+    font-family: 'Ubuntu',sans-serif;
+    font-weight: 400;
+    color: #5b6773;
+    overflow: hidden;
+    line-height: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    text-align: center;
+}

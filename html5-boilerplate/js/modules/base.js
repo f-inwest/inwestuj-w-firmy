@@ -2254,11 +2254,12 @@ pl.implement(PricepointsClass, {
         }
         return pricepointsForId;
     },
-    buttonsHTML: function(pricepointsForType) {
+    buttonsHTML: function(pricepointsForType, descriptionClass) {
         var self = this,
             pricepoint,
             html = '',
             i;
+        self.descriptionClass = descriptionClass;
         if (pricepointsForType) {
             for (i = 0; i < pricepointsForType.length; i++) {
                 pricepoint = pricepointsForType[i];
@@ -2268,21 +2269,28 @@ pl.implement(PricepointsClass, {
         return html;
     },
     buttonHTML: function(pp) {
-        var html = '<div>'
+        var self = this,
+            button = pp.button_text
+                ? '<input type="submit" name="submit" value="'
+                    + pp.button_text
+                    + '" class="inputbutton purchase-button"></input>'
+                : '',
+            html = '<div>'
             + '<form action="' + pp.action_url + '" method="post" accept-charset="utf-8">'
-            + '<input type="hidden" name="id" value="' + pp.id + '">'
-            + '<input type="hidden" name="kwota" value="' + pp.kwota + '">'
-            + '<input type="hidden" name="opis" value="' + pp.opis + '">'
-            + '<input type="hidden" name="opis_sprzed" value="' + pp.opis_sprzed + '">'
-            + '<input type="hidden" name="crc" value="' + pp.crc + '">'
-            + '<input type="hidden" name="pow_url" value="' + pp.pow_url + '">'
-            + '<input type="hidden" name="pow_url_blad" value="' + pp.pow_url_blad + '">'
-            + '<input type="hidden" name="email" value="' + pp.email + '">'
-            + '<input type="hidden" name="nazwisko" value="' + pp.nazwisko + '">'
-            + '<input type="hidden" name="telefon" value="' + pp.telefon + '">'
-            + '<input type="hidden" name="jezyk" value="' + pp.jezyk + '">'
-            + '<input type="hidden" name="md5sum" value="' + pp.md5sum + '">'
-            + '<input type="submit" name="submit" value="' + pp.button_text + '" class="inputbutton purchase-button">'
+            + '<input type="hidden" name="id" value="' + pp.id + '"></input>'
+            + '<input type="hidden" name="kwota" value="' + pp.kwota + '"></input>'
+            + '<input type="hidden" name="opis" value="' + pp.opis + '"></input>'
+            + '<input type="hidden" name="opis_sprzed" value="' + pp.opis_sprzed + '"></input>'
+            + '<input type="hidden" name="crc" value="' + pp.crc + '"></input>'
+            + '<input type="hidden" name="pow_url" value="' + pp.pow_url + '"></input>'
+            + '<input type="hidden" name="pow_url_blad" value="' + pp.pow_url_blad + '"></input>'
+            + '<input type="hidden" name="email" value="' + pp.email + '"></input>'
+            + '<input type="hidden" name="nazwisko" value="' + pp.nazwisko + '"></input>'
+            + '<input type="hidden" name="telefon" value="' + pp.telefon + '"></input>'
+            + '<input type="hidden" name="jezyk" value="' + pp.jezyk + '"></input>'
+            + '<input type="hidden" name="md5sum" value="' + pp.md5sum + '"></input>'
+            + '<div class="' + self.descriptionClass + '">' + pp.description + '</div>'
+            + button
             + '</form>'
             + '</div>';
         return html;

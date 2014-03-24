@@ -88,7 +88,7 @@ pl.implement(CampaignTileClass, {
             langStr = self.formattedAllowedLang(self.campaign.allowed_languages),
             statusStr = self.formattedStatus(self.campaign.status),
             pricepointObj = new PricepointsClass(self.campaign.pricepoints),
-            pricepointHTML = pricepointObj.buttonsHTML(self.campaign.pricepoints),
+            pricepointHTML = pricepointObj.buttonsHTML(self.campaign.pricepoints, 'pricepoint-description-leftcol'),
             html = '';
         console.log('CampaignClass::makeTile id=' + self.campaign.campaign_id);
         console.log(self.matchingPricepoints);
@@ -425,7 +425,7 @@ pl.implement(ProfileClass, {
         var self = this,
             pricepoints = new PricepointsClass(self.pricepoints),
             pricepointsForType = pricepoints.pricepointsForType('INV_REG'),
-            pricepointHTML = pricepoints.buttonsHTML(pricepointsForType),
+            pricepointHTML = pricepoints.buttonsHTML(pricepointsForType, 'pricepoint-description-rightbar'),
             profile = this.profile || this.loggedin_profile || {};
  /*        var investor = json.investor ? 'Accredited Investor' : 'Entrepreneur';
             date = new DateClass(),
