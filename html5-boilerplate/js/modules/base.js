@@ -570,7 +570,10 @@ pl.implement(HeaderClass, {
             pl('#headernumnotifications').text('').removeClass('headernumdisplay');
         }
         if (profile.admin) {
-            pl('#adminfooterlinks').show();
+            pl('.adminfooterlink').show();
+        }
+        else {
+            pl('.adminfooterlink').hide();
         }
         if (profile.avatar) {
             pl('#headeravatar').css('background-image', 'url(' + profile.avatar + ')');
@@ -2222,51 +2225,76 @@ function PricepointsClass(pricepoints) {
     self.pricepoints = pricepoints;
 }
 pl.implement(PricepointsClass, {
-    eligiblePricepoints: function(crcType) {
+    pricepointsForType: function(crcType) {
         var self = this,
             pricepoints = this.pricepoints,
-            eligiblePricepoints = [],
+            pricepointsForType = [],
             pricepoint,
             i;
         if (pricepoints) {
             for (i = 0; i < pricepoints.length; i++) {
                 pricepoint = pricepoints[i];
                 if (pricepoint.crc && pricepoint.crc.indexOf(crcType) == 0) {
-                    eligiblePricepoints.push(pricepoint);
+                    pricepointsForType.push(pricepoint);
                 }
             }
         }
-        return eligiblePricepoints;
+        return pricepointsForType;
     },
-    buttonsHTML: function(eligiblePricepoints) {
+    pricepointsForId: function(crcId) {
+        var self = this,
+            pricepoints = this.pricepoints,
+            pricepointsForId = [],
+            pricepoint,
+            i;
+        if (pricepoints) {
+            for (i = 0; i < pricepoints.length; i++) {
+                pricepoint = pricepoints[i];
+                if (pricepoint.crc && pricepoint.crc.indexOf(crcId) >= 0) {
+                    pricepointsForId.push(pricepoint);
+                }
+            }
+        }
+        return pricepointsForId;
+    },
+    buttonsHTML: function(pricepointsForType, descriptionClass, buttonClass) {
         var self = this,
             pricepoint,
             html = '',
             i;
-        if (eligiblePricepoints) {
-            for (i = 0; i < eligiblePricepoints.length; i++) {
-                pricepoint = eligiblePricepoints[i];
+        self.descriptionClass = descriptionClass;
+        self.buttonClass = buttonClass;
+        if (pricepointsForType) {
+            for (i = 0; i < pricepointsForType.length; i++) {
+                pricepoint = pricepointsForType[i];
                 html += self.buttonHTML(pricepoint);
             }
         }
         return html;
     },
     buttonHTML: function(pp) {
-        var html = '<div>'
+        var self = this,
+            button = pp.button_text
+                ? '<input type="submit" name="submit" value="'
+                    + pp.button_text
+                    + '" class="inputbutton ' + self.buttonClass + '"></input>'
+                : '',
+            html = '<div>'
             + '<form action="' + pp.action_url + '" method="post" accept-charset="utf-8">'
-            + '<input type="hidden" name="id" value="' + pp.id + '">'
-            + '<input type="hidden" name="kwota" value="' + pp.kwota + '">'
-            + '<input type="hidden" name="opis" value="' + pp.opis + '">'
-            + '<input type="hidden" name="opis_sprzed" value="' + pp.opis_sprzed + '">'
-            + '<input type="hidden" name="crc" value="' + pp.crc + '">'
-            + '<input type="hidden" name="pow_url" value="' + pp.pow_url + '">'
-            + '<input type="hidden" name="pow_url_blad" value="' + pp.pow_url_blad + '">'
-            + '<input type="hidden" name="email" value="' + pp.email + '">'
-            + '<input type="hidden" name="nazwisko" value="' + pp.nazwisko + '">'
-            + '<input type="hidden" name="telefon" value="' + pp.telefon + '">'
-            + '<input type="hidden" name="jezyk" value="' + pp.jezyk + '">'
-            + '<input type="hidden" name="md5sum" value="' + pp.md5sum + '">'
-            + '<input type="submit" name="submit" value="' + pp.button_text + '" class="inputbutton purchase-button">'
+            + '<input type="hidden" name="id" value="' + pp.id + '"></input>'
+            + '<input type="hidden" name="kwota" value="' + pp.kwota + '"></input>'
+            + '<input type="hidden" name="opis" value="' + pp.opis + '"></input>'
+            + '<input type="hidden" name="opis_sprzed" value="' + pp.opis_sprzed + '"></input>'
+            + '<input type="hidden" name="crc" value="' + pp.crc + '"></input>'
+            + '<input type="hidden" name="pow_url" value="' + pp.pow_url + '"></input>'
+            + '<input type="hidden" name="pow_url_blad" value="' + pp.pow_url_blad + '"></input>'
+            + '<input type="hidden" name="email" value="' + pp.email + '"></input>'
+            + '<input type="hidden" name="nazwisko" value="' + pp.nazwisko + '"></input>'
+            + '<input type="hidden" name="telefon" value="' + pp.telefon + '"></input>'
+            + '<input type="hidden" name="jezyk" value="' + pp.jezyk + '"></input>'
+            + '<input type="hidden" name="md5sum" value="' + pp.md5sum + '"></input>'
+            + '<div class="' + self.descriptionClass + '">' + pp.description + '</div>'
+            + button
             + '</form>'
             + '</div>';
         return html;

@@ -8,7 +8,7 @@
             <div class="span-4 footercol">
                 <div class="footerlinkheader">@lang_appname_lower@</div>
                 <a href="about-page.html" id="aboutlink"><span class="footerlink hoverlink">@lang_about@</span></a>
-                <a href="profile-list-page.html?type=dragons"><span class="footerlink hoverlink">@lang_investors@</span></a>
+                <a href="profile-list-page.html?type=dragons" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_investors@</span></a>
                 <a href="help-page.html"><span class="footerlink hoverlink">@lang_help@</span></a>
                 <a href="terms-page.html"><span class="footerlink hoverlink">@lang_tandcs@</span></a>
                 <div class="stopka-ue-poland"></div>
@@ -18,18 +18,16 @@
                 <a href="main-page.html?type=top"><span class="footerlink hoverlink">@lang_top@</span></a>
                 <a href="main-page.html?type=latest"><span class="footerlink hoverlink">@lang_latest@</span></a>
                 <a href="nearby-page.html"><span class="footerlink hoverlink">@lang_nearby@</span></a>
-                <a href="profile-list-page.html?type=listers"><span class="footerlink hoverlink">@lang_entrepreneuers@</span></a>
+                <a href="profile-list-page.html?type=listers" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_entrepreneuers@</span></a>
                 <div class="stopka-finwest"></div>
             </div>
             <div class="span-4 footercol">
                 <div class="footerlinkheader">@lang_admin@</div>
                 <a href="contact-page.html"><span class="footerlink hoverlink">@lang_contact@</span></a>
-                <a href="api-page.html"><span class="footerlink hoverlink">@lang_api@</span></a>
-                <div class="initialhidden" id="adminfooterlinks">
-                    <a href="/setup"><span class="footerlink hoverlink">@lang_setup@</span></a>
-                    <a href="/hello"><span class="footerlink hoverlink">@lang_hello@</span></a>
-                    <a href="profile-list-page.html?type=all"><span class="footerlink hoverlink">@lang_users@</span></a>
-                </div>
+                <a href="api-page.html" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_api@</span></a>
+                <a href="/setup" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_setup@</span></a>
+                <a href="/hello" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_hello@</span></a>
+                <a href="profile-list-page.html?type=all" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_users@</span></a>
             </div>
             <div class="span-8 footercol">
                 <div class="footerlinkheader">@lang_followus@</div>

@@ -16,13 +16,16 @@ pl.implement(CampaignTileClass, {
             status: 'NEW',
             name: '@lang_campaign_name@',
             description: '@lang_campaign_desc@',
-            subdomain: 'campaign-' + campaign_id
+            subdomain: 'campaign-' + campaign_id,
+            pricepoints: []
         };
     },
 
     store: function(campaign) {
         var self = this;
         self.campaign = campaign;
+        console.log('CampaignTileClass::store id=' + self.campaign.campaign_id);
+        console.log(self.campaign.pricepoints);
     },
 
     formattedDateStr: function(datetimestr) {
@@ -84,7 +87,11 @@ pl.implement(CampaignTileClass, {
             langCheckedPL = '',
             langStr = self.formattedAllowedLang(self.campaign.allowed_languages),
             statusStr = self.formattedStatus(self.campaign.status),
+            pricepointObj = new PricepointsClass(self.campaign.pricepoints),
+            pricepointHTML = pricepointObj.buttonsHTML(self.campaign.pricepoints, 'pricepoint-description-campaign', 'purchase-button-campaign'),
             html = '';
+        console.log('CampaignClass::makeTile id=' + self.campaign.campaign_id);
+        console.log(self.matchingPricepoints);
         if (self.campaign.allowed_languages === 'EN') {
             langCheckedEN = ' checked ';
         }
@@ -200,6 +207,7 @@ pl.implement(CampaignTileClass, {
             +   '<div class="campaign-item-button investbutton campaign-edit-button">@lang_edit@</div>'
             +   '<div class="campaign-item-button investbutton campaign-undo-button initialhidden">@lang_undo@</div>'
             +   '<div class="campaign-item-button investbutton campaign-save-button initialhidden">@lang_save@</div>'
+            +   pricepointHTML
             + '</div>';
         return html;
     },
@@ -352,6 +360,8 @@ pl.implement(CampaignListClass, {
         var html = "",
             campaigns = json.user_campaigns,
             isAdmin = json.loggedin_profile.admin,
+            pricepoints = new PricepointsClass(json.pricepoints),
+            tiles = [],
             campaign,
             tile,
             i;
@@ -366,16 +376,17 @@ pl.implement(CampaignListClass, {
         }
         for (i = 0; i < campaigns.length; i++) {
             campaign = campaigns[i];
+            campaign.pricepoints = pricepoints.pricepointsForId(campaign.campaign_id);
             tile  = new CampaignTileClass();
             tile.store(campaign);
-            html += tile.makeTile();
+            tiles.push(tile);
+        }
+        for (i = 0; i < tiles.length; i++) {
+            html += tiles[i].makeTile();
         }
         pl('#campaign_list').html(html);
-        for (i = 0; i < campaigns.length; i++) {
-            campaign = campaigns[i];
-            tile  = new CampaignTileClass();
-            tile.store(campaign);
-            tile.bindEvents({isAdmin: isAdmin});
+        for (i = 0; i < tiles.length; i++) {
+            tiles[i].bindEvents({isAdmin: isAdmin});
         }
     }
 });
@@ -413,8 +424,9 @@ pl.implement(ProfileClass, {
     displayFields: function() {
         var self = this,
             pricepoints = new PricepointsClass(self.pricepoints),
-            eligiblePricepoints = pricepoints.eligiblePricepoints('INV_REG'),
-            pricepointHTML = pricepoints.buttonsHTML(eligiblePricepoints),
+            pricepointsForType = pricepoints.pricepointsForType('INV_REG'),
+            //pricepointHTML = pricepoints.buttonsHTML(pricepointsForType, 'pricepoint-description-investor', 'purchase-button-investor'),
+            pricepointHTML = pricepoints.buttonsHTML(pricepointsForType, 'pricepoint-description-company', 'purchase-button-company'),
             profile = this.profile || this.loggedin_profile || {};
  /*        var investor = json.investor ? 'Accredited Investor' : 'Entrepreneur';
             date = new DateClass(),
