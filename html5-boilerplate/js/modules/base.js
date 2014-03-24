@@ -2254,12 +2254,13 @@ pl.implement(PricepointsClass, {
         }
         return pricepointsForId;
     },
-    buttonsHTML: function(pricepointsForType, descriptionClass) {
+    buttonsHTML: function(pricepointsForType, descriptionClass, buttonClass) {
         var self = this,
             pricepoint,
             html = '',
             i;
         self.descriptionClass = descriptionClass;
+        self.buttonClass = buttonClass;
         if (pricepointsForType) {
             for (i = 0; i < pricepointsForType.length; i++) {
                 pricepoint = pricepointsForType[i];
@@ -2273,7 +2274,7 @@ pl.implement(PricepointsClass, {
             button = pp.button_text
                 ? '<input type="submit" name="submit" value="'
                     + pp.button_text
-                    + '" class="inputbutton purchase-button"></input>'
+                    + '" class="inputbutton ' + self.buttonClass + '"></input>'
                 : '',
             html = '<div>'
             + '<form action="' + pp.action_url + '" method="post" accept-charset="utf-8">'

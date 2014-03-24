@@ -2,7 +2,7 @@
 <!-- right column -->
 <div class="span-8 last profilerightbar">
 
-    <div class="boxtitle boxtitleside profilerightbartitle">@lang_details@</div>
+    <div class="boxtitle boxtitleside boxtitleside-profile profilerightbartitle">@lang_details@</div>
     <div class="sidebox profilebox">
         <div class="profileavatar" id="avatar"></div>
         <!--
@@ -25,11 +25,20 @@
         </div>
     </div>
 
+    <div class="initialhidden company-side-menu-inner company-side-menu-inner-pricepoints" id="pricepoints-wrapper">
+        <div class="header-content header-title-sidebox">@lang_subscriptions@</div>
+        <div class="" id="pricepoints-wrapper-inner">
+        </div>
+    </div>
+
+    <!--
     <div class="initialhidden" id="pricepoints-wrapper">
         <div class="boxtitle boxtitleside">@lang_subscriptions@</div>
         <div class="sidebox applydragonbox" id="pricepoints-wrapper-inner">
         </div>
     </div>
+    -->
+
     <!--
     <div class="initialhidden" id="applydragonwrapper">
     <div class="boxtitle boxtitleside">@lang_apply_investor@</div>

@@ -40,7 +40,13 @@ include(images-panel.m4)
             <div class="sidebox company-menu-sidebox investbutton" id="presentationbutton">@lang_presentation@</div>
             </div>
 
-        <div class="company-side-menu-inner">
+            <div class="initialhidden company-side-menu-inner company-side-menu-inner-pricepoints" id="pricepoints-wrapper">
+                <div class="header-content header-title-sidebox">@lang_purchases@</div>
+                <div class="" id="pricepoints-wrapper-inner">
+                </div>
+            </div>
+
+            <div class="company-side-menu-inner">
             <div class="header-content header-title-sidebox">@lang_funding_status@</div>
             <div class="sidebox company-menu-sidebox uneditabletext askingbox">
                 <div class="sideboxdesc suggestedmsg" id="suggestedmsg"></div>

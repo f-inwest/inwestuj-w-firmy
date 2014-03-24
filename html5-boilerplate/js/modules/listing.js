@@ -18,6 +18,8 @@ pl.implement(ListingClass, {
         this.loggedin_profile_id = this.loggedin_profile && this.loggedin_profile.profile_id;
         this.listing_url = 'http://inwestujwfirmy.pl/company-page.html?id=' + this.listing_id;
         this.listing_public_title = 'Inwestuj w Firmy: ' + this.title;
+        this.pricepoints = json.pricepoints;
+        console.log('pricepoints:', this.pricepoints);
         if (this.preview) {
             pl('#header').hide();
             pl('#footer').hide();
@@ -67,6 +69,7 @@ pl.implement(ListingClass, {
         this.displayApprove();
         this.displaySendback();
         this.displayFreeze();
+        this.displayPricepoints();
         if (this.preview) {
             pl('#previewoverlay').show();
         }
@@ -772,6 +775,22 @@ pl.implement(ListingClass, {
                 return false;
             }
         });
+    },
+
+    displayPricepoints: function() {
+        var self = this,
+            pricepoints = new PricepointsClass(self.pricepoints),
+            buttonsHTML = pricepoints.buttonsHTML(self.pricepoints, 'pricepoint-description-company', 'purchase-button-company');
+        console.log('displayPricepoints ', self.pricepoints);
+        if (buttonsHTML) {
+            pl('#pricepoints-wrapper').show();
+            if (pl('#pricepoints-wrapper-inner').get(0)) {
+                pl('#pricepoints-wrapper-inner').get(0).innerHTML = buttonsHTML;
+            }
+        }
+        else {
+            pl('#pricepoints-wrapper').hide();
+        }
     }
 
 });

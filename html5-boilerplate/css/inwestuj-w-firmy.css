@@ -2182,6 +2182,9 @@ transition: left 500ms;
 .boxtitleside-location {
     margin-top: 230px;
 }
+.boxtitleside-profile {
+    width: 280px;
+}
 
 /* tim part two */
 /* tim fonts */
@@ -2292,9 +2295,9 @@ color: #fff;
 
 /* profiles */
 .profilebox {
-    width: 222px;
+    width: 280px;
     height: 150px;
-    padding: 15px 15px 15px 65px;
+    padding: 15px 15px 15px 15px;
     position: relative;
     overflow: hidden;
 }
@@ -2369,6 +2372,7 @@ color: #fff;
 }
 .profilerightbartitle {
     margin-top: 0;
+    width: 280px;
 }
 .editprofilebtn {
     position: absolute;
@@ -3018,12 +3022,22 @@ color: #fff;
 .register-message {
     padding-top: 85px;
 }
-.purchase-button {
+.purchase-button-investor {
     width: 302px;
     height: 40px;
     font-size: 16px;
 }
-.pricepoint-description-leftcol {
+.purchase-button-campaign {
+    width: 200px;
+    height: 32px;
+    font-size: 14px;
+}
+.purchase-button-company {
+    width: 280px;
+    height: 32px;
+    font-size: 16px;
+}
+.pricepoint-description-campaign {
     font-family: 'Ubuntu',sans-serif;
     font-weight: 400;
     color: #5b6773;
@@ -3032,7 +3046,7 @@ color: #fff;
     padding-top: 32px;
     padding-bottom: 16px;
 }
-.pricepoint-description-rightbar {
+.pricepoint-description-investor {
     font-family: 'Ubuntu',sans-serif;
     font-weight: 400;
     color: #5b6773;
@@ -3041,4 +3055,16 @@ color: #fff;
     padding-top: 8px;
     padding-bottom: 8px;
     text-align: center;
+}
+.pricepoint-description-company {
+    font-family: 'Ubuntu',sans-serif;
+    font-weight: 400;
+    color: #5b6773;
+    overflow: hidden;
+    line-height: 20px;
+    padding-top: 16px;
+    padding-bottom: 8px;
+}
+.company-side-menu-inner-pricepoints {
+    padding-bottom: 15px;
 }
