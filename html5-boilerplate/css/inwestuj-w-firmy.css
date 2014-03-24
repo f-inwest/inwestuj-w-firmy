@@ -2805,9 +2805,7 @@ color: #fff;
     /*text-decoration:none;
     color:#FFFFFF;
     */
-    background:#7EDAEF;
-    background-image:url('../img/gradient.png');
-    background-repeat:repeat-x;
+    background-color: rgba(126, 218, 239, 0.5);
 }
 .blueboxbutton {
     display: block;

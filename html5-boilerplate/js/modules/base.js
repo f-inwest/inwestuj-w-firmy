@@ -570,7 +570,10 @@ pl.implement(HeaderClass, {
             pl('#headernumnotifications').text('').removeClass('headernumdisplay');
         }
         if (profile.admin) {
-            pl('#adminfooterlinks').show();
+            pl('.adminfooterlink').show();
+        }
+        else {
+            pl('.adminfooterlink').hide();
         }
         if (profile.avatar) {
             pl('#headeravatar').css('background-image', 'url(' + profile.avatar + ')');
