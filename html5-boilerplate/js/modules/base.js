@@ -646,6 +646,7 @@ pl.implement(HeaderClass, {
             return false;
         });
         pl('#headernotloggedin').show();
+        pl('.adminfooterlink').hide();
 
         pl('a[href=/add-listing-page.html]').bind('click', function(e) {
             pl('#light, #fade').show();
