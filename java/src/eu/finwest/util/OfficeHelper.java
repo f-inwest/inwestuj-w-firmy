@@ -4,10 +4,12 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,17 +83,29 @@ public class OfficeHelper {
 	
 	private OfficeHelper() {
 		try {
-			plTranslations = new PropertyResourceBundle(new FileReader("pl.properties"));
-			enTranslations = new PropertyResourceBundle(new FileReader("en.properties"));
+			plTranslations = new PropertyResourceBundle(new InputStreamReader(new FileInputStream("pl.properties"), "UTF-8"));
+			enTranslations = new PropertyResourceBundle(new InputStreamReader(new FileInputStream("en.properties"), "UTF-8"));
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Problem loading translations files", e);
 		}
 	}
 
+	public static String getTrans(String key) {
+		return instance().getTranslation(FrontController.getLangVersion(), key);
+	}
+
+	public static String getTrans(String key, Object... params) {
+		return instance().getTranslation(key, params);
+	}
+
 	public String getTranslation(String key) {
 		return getTranslation(FrontController.getLangVersion(), key);
 	}
-	
+
+	public String getTranslation(String key, Object... params) {
+		return MessageFormat.format(getTranslation(FrontController.getLangVersion(), key), params);
+	}
+
 	public String getTranslation(LangVersion lang, String key) {
 		try {
 			if (lang == LangVersion.PL) {

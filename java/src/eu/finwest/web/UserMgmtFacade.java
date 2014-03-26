@@ -25,7 +25,6 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.gdata.data.introspection.Collection;
 import com.googlecode.objectify.Key;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
@@ -34,13 +33,13 @@ import eu.finwest.datamodel.Campaign.Status;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.Listing.State;
 import eu.finwest.datamodel.PricePoint;
+import eu.finwest.datamodel.PricePoint.Codes;
 import eu.finwest.datamodel.PricePoint.Group;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.VoToModelConverter;
-import eu.finwest.datamodel.PricePoint.Codes;
 import eu.finwest.util.FacebookUser;
 import eu.finwest.util.ImageHelper;
 import eu.finwest.util.OfficeHelper;
@@ -510,17 +509,8 @@ public class UserMgmtFacade {
 		user.activationCode = "" + DigestUtils.md5Hex(email + user.joined.toString() + "25kj352025sfg");
 		
 		user = getDAO().registerUser(user);
-		log.warning("************************************************");
-		log.warning("************* EMAIL NEEDS TO BE SEND ***********");
-		log.warning("************* cofirmation code: " + user.activationCode);
-		String activationUrl = "/user/activate.html?code=" + user.activationCode;
-		if (com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development) {
-			activationUrl = "http://localhost:7777" + activationUrl;
-		} else {
-			activationUrl = "http://www.inwestujwfirmy.pl" + activationUrl;
-		}
-		log.warning("************* " + activationUrl);
-		log.warning("************************************************");
+		
+		EmailService.instance().sendAccountActivation(user);
 		
 		UserVO userVO = DtoToVoConverter.convert(user);
 		applyUserStatistics(userVO, userVO);
@@ -1031,7 +1021,7 @@ public class UserMgmtFacade {
 			log.info("Only listings in NEW, POSTED and ACTIVE state will return pricepoints, returning empty pricepoints.");
 		} else {
 			LangVersion portalLang = FrontController.getLangVersion();
-			List<PricePoint> pricePoints = MemCacheFacade.instance().getPricePoints(Group.LISTING);			
+			List<PricePoint> pricePoints = MemCacheFacade.instance().getPricePoints(Group.LISTING);
 			if (StringUtils.equals(State.ACTIVE.name(), listing.getState())) {
 				for (PricePoint pp : pricePoints) {
 					if (pp.name.equals(Codes.PRJ_BP.toString()) || pp.name.equals(Codes.PRJ_PPT.toString())) {

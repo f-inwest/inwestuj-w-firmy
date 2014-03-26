@@ -104,6 +104,7 @@ public class SetupServlet extends HttpServlet {
             out.println("<li>twitter.consumer.secret - Twitter's OAuth Consumer Secret");
             out.println("<li>facebook.client.id - Facebook's OAuth Client Id");
             out.println("<li>facebook.client.secret - Twitter's OAuth Client Secret");
+            out.println("<li>notification_admin_email - Email address used as 'from' for all emails sent by portal (must be hosted by Google)");
             out.println("<li>notification_real_receivers - if true then notification emails are sent to real receivers");
             out.println("<li>notification_no_bcc_admins - if empty or false then notification emails are BCC to admins. Only when notification_real_receivers = true");
             out.println("</ul></p>");

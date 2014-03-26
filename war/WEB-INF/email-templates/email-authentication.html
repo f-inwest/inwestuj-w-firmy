@@ -62,7 +62,7 @@ h3, .h3{
         /*@editable*/ font-family:Ubuntu,sans-serif;
         /*@editable*/ font-size:18px;
         /*@editable*/ font-weight:bold;
-	/*@editable*/ line-height:100%;
+	/*@editable*/ line-height:150%;
 	margin-top:0;
 	margin-right:0;
 	margin-bottom:10px;
@@ -76,12 +76,17 @@ h4, .h4{
         /*@editable*/ font-family:Ubuntu,sans-serif;
         /*@editable*/ font-size:16px;
         /*@editable*/ font-weight:normal;
-	/*@editable*/ line-height:100%;
+	/*@editable*/ line-height:150%;
 	margin-top:0;
 	margin-right:0;
 	margin-bottom:10px;
 	margin-left:0;
 	/*@editable*/ text-align:left;
+}
+
+h4 a:link, h4 a:visited, .h4 a:link, .h4 a:visited{
+	/*@editable*/ text-decoration:none;
+	/*@editable*/ color: #7EDAEF;
 }
 
 .h4-gray{
@@ -90,7 +95,7 @@ h4, .h4{
         /*@editable*/ font-family:Ubuntu,sans-serif;
         /*@editable*/ font-size:16px;
         /*@editable*/ font-weight:normal;
-	/*@editable*/ line-height:100%;
+	/*@editable*/ line-height:150%;
 	margin-top:0;
 	margin-right:0;
 	margin-bottom:10px;
@@ -247,7 +252,7 @@ h4, .h4{
                                 	<table border="0" cellpadding="0" cellspacing="0" width="600" id="templateHeader" style="background-color:#FFFFFF;border-bottom:0;">
                                         <tr>
                                             <td class="headerContent" style="color:#202020;font-family:Ubuntu,sans-serif;font-size:34px;font-weight:bold;line-height:100%;padding:0;text-align:center;vertical-align:middle;">
-                                            	<img src="http://www.inwestujwfirmy.pl/pl/img/email-header.jpg" style="max-width:600px;" id="headerImage campaign-icon"/>
+                                            	<img src="http://www.inwestujwfirmy.pl/pl/img/email-header.png" style="max-width:600px;" id="headerImage campaign-icon"/>
                                             </td>
                                         </tr>
                                     </table>
@@ -263,9 +268,10 @@ h4, .h4{
                                                         <td valign="top">
                                                             <div>
                                                                 <center><h3 class="h3" style="color:#49515a;display:block;font-family:Ubuntu,sans-serif;font-size:18px;font-weight:bold;line-height:100%;margin-top:0;margin-right:0;margin-bottom:10px;margin-left:0;text-align:center;">##NOTIFICATION_TITLE_ESCAPED##</h3></center>
-                                                                <h4 class="h4" style="color:#7EDAEF;display:block;font-family:Ubuntu,sans-serif;font-size:16px;font-weight:normal;line-height:100%;margin-top:0;margin-right:0;margin-bottom:10px;margin-left:0;text-align:left;">##NOTIFICATION_TEXT_NO_LINK##</h4>
-                                                                <h4 class="h4-gray" style="color:#333333;display:block;font-family:Ubuntu,sans-serif;font-size:16px;font-weight:normal;line-height:100%;margin-top:0;margin-right:0;margin-bottom:10px;margin-left:0;text-align:left;">##NOTIFICATION_TEXT_1##</h4>
-                                                                <h4 class="h4-gray" style="color:#333333;display:block;font-family:Ubuntu,sans-serif;font-size:16px;font-weight:normal;line-height:100%;margin-top:0;margin-right:0;margin-bottom:10px;margin-left:0;text-align:left;">##NOTIFICATION_TEXT_2##</h4>
+                                                                <h4 class="h4" style="color:#7EDAEF;display:block;font-family:Ubuntu,sans-serif;font-size:16px;font-weight:normal;line-height:150%;margin-top:0;margin-right:0;margin-bottom:10px;margin-left:0;text-align:left;">##NOTIFICATION_TEXT_NO_LINK##</h4>
+                                                                <h4 class="h4-gray" style="color:#333333;display:block;font-family:Ubuntu,sans-serif;font-size:16px;font-weight:normal;line-height:150%;margin-top:0;margin-right:0;margin-bottom:10px;margin-left:0;text-align:left;">##NOTIFICATION_TEXT_1##</h4>
+                                                                <h4 class="h4-gray" style="color:#333333;display:block;font-family:Ubuntu,sans-serif;font-size:16px;font-weight:normal;line-height:150%;margin-top:0;margin-right:0;margin-bottom:10px;margin-left:0;text-align:left;">##NOTIFICATION_TEXT_2##</h4>
+                                                                <div style="color:#505050;font-family:Ubuntu,sans-serif;font-size:14px;line-height:150%;text-align:left;">##NOTIFICATION_TEXT_3##</div>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -284,13 +290,13 @@ h4, .h4{
                                                     <tr>
                                                         <td valign="top" width="350">
                                                             <div style="color:#707070;font-family:Ubuntu,sans-serif;font-size:12px;line-height:125%;text-align:left;">
-								<em>Copyright &copy; ##NOTIFICATION_COPYRIGHT_TEXT##, All rights reserved.</em>
+								<em>##NOTIFICATION_COPYRIGHT_TEXT##</em>
 								<br />
 
 								<br />
 								<strong>##NOTIFICATION_MAILING_LIST_ADDRESS_TEXT##</strong>
 								<br />
-								#NOTIFICATION_MAILING_LIST_ADDRESS##
+								##NOTIFICATION_MAILING_LIST_ADDRESS##
                                                             </div>
                                                         </td>
                                                         <td valign="top" width="190" id="monkeyRewards">
@@ -317,7 +323,7 @@ h4, .h4{
                                 	<table border="0" cellpadding="0" cellspacing="0" width="600" id="templateHeader" style="background-color:#FFFFFF;border-bottom:0;">
                                         <tr>
                                             <td class="headerContent" style="color:#202020;font-family:Ubuntu,sans-serif;font-size:34px;font-weight:bold;line-height:100%;padding:0;text-align:center;vertical-align:middle;">
-                                            	<img src="http://www.inwestujwfirmy.pl/pl/img/email-footer.jpg" style="max-width:600px;" id="headerImage campaign-icon"/>
+                                            	<img src="http://www.inwestujwfirmy.pl/pl/img/email-footer.png" style="max-width:600px;" id="headerImage campaign-icon"/>
                                             </td>
                                         </tr>
                                     </table>
