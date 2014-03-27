@@ -396,7 +396,7 @@ public class EmailService {
 			// send verification email with link /user/password_reset.html?code=<activationcode>
 			String resetUrl = com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development ?
 					"http://" + subdomain + "localhost:7777" : "http://" + subdomain + ".inwestujwfirmy.pl";
-			resetUrl += "/user/password_reset.html?code=" + user.activationCode;
+			resetUrl += "/profile-page.html?password_reset=" + user.activationCode;
 			
 			Map<String, String> props = preparePasswordResetProps(user, resetUrl);
 			String htmlTemplate = FileUtils.readFileToString(new File(htmlTemplateFile), "UTF-8");
