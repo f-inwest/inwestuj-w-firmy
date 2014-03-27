@@ -71,12 +71,6 @@ public class UserController extends ModelDrivenController {
 				return requestEmailAccess(request);
 			} else if("activate".equalsIgnoreCase(getCommand(1))) {
 				return activate(request);
-			} else if("request_reset_password".equalsIgnoreCase(getCommand(1))) {
-				return requestResetPassword(request);
-			} else if("reset_password".equalsIgnoreCase(getCommand(1))) {
-				return resetPassword(request);
-			} else if("not_valid_request_reset_password".equalsIgnoreCase(getCommand(1))) {
-				return notValidRequestResetPassword(request);
 			} else if("logout".equalsIgnoreCase(getCommand(1))) {
 				return logout(request);
 			} else {
@@ -107,6 +101,12 @@ public class UserController extends ModelDrivenController {
 				return register(request);
 			} else if("authenticate".equalsIgnoreCase(getCommand(1))) {
 				return authenticateByEmail(request);
+			} else if("request_reset_password".equalsIgnoreCase(getCommand(1))) {
+				return requestResetPassword(request);
+			} else if("reset_password".equalsIgnoreCase(getCommand(1))) {
+				return resetPassword(request);
+			} else if("not_valid_request_reset_password".equalsIgnoreCase(getCommand(1))) {
+				return notValidRequestResetPassword(request);
 			}
 		}
 		return null;
@@ -229,13 +229,30 @@ public class UserController extends ModelDrivenController {
 	}
 
 	private HttpHeaders resetPassword(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		HttpHeaders headers = new HttpHeadersImpl("reset_password");
+
+		log.info("Received parameter authcode: " + request.getParameter("code"));
+		
+		ObjectMapper mapper = new ObjectMapper();
+    	String authCode = getJsonString(mapper, request, "code");
+    	String password = getJsonString(mapper, request, "password");
+    	log.log(Level.INFO, "Received password reset request for code: " + authCode);
+    	model = UserMgmtFacade.instance().resetPassword(getLoggedInUser(), authCode, password);
+    			
+		return headers;
 	}
 
 	private HttpHeaders requestResetPassword(HttpServletRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		HttpHeaders headers = new HttpHeadersImpl("request_reset_password");
+
+		log.info("Received parameter email: " + request.getParameter("email"));
+		
+		ObjectMapper mapper = new ObjectMapper();
+    	String email = getJsonString(mapper, request, "email");
+    	log.log(Level.INFO, "Received password reset request " + email);
+    	model = UserMgmtFacade.instance().requestResetPassword(getLoggedInUser(), email);
+    			
+		return headers;
 	}
 
 	private HttpHeaders delete(HttpServletRequest request) {

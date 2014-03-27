@@ -418,7 +418,7 @@ public class UserMgmtFacade {
 	
 	private boolean validatePassword(String email, String password, String name) {
 		if (password == null || password.length() < 6) {
-			log.warning("Password is too short: " + password.length());
+			log.warning("Password is too short: " + (password == null ? 0 : password.length()));
 			return false;
 		}
 		if (email.contains(password)) {
@@ -508,7 +508,7 @@ public class UserMgmtFacade {
         user.modified = user.lastLoggedIn = user.joined = new Date();
 		user.activationCode = "" + DigestUtils.md5Hex(email + user.joined.toString() + "25kj352025sfg");
 		
-		user = getDAO().registerUser(user);
+		user = getDAO().saveUser(user);
 		
 		EmailService.instance().sendAccountActivation(user);
 		
@@ -796,11 +796,20 @@ public class UserMgmtFacade {
 	}
 	
 	public UserVO activateUser(String activationCode) {
-		UserVO user = DtoToVoConverter.convert(getDAO().activateUser(activationCode));
+		SBUser user = getDAO().getUserByActivationCode(activationCode);
 		if (user != null) {
-			applyUserStatistics(user);
+			if (user.status == SBUser.Status.ACTIVE || user.emailActivationDate != null) {
+				return DtoToVoConverter.convert(user);
+			}
+			user.status = SBUser.Status.ACTIVE;
+			user.emailActivationDate = new Date();
+			getDAO().saveUser(user);
+
+			UserVO userVO = DtoToVoConverter.convert(user);
+			applyUserStatistics(userVO);
+			return userVO;
 		}
-		return user;
+		return null;
 	}
 
 	public UserVO deactivateUser(UserVO loggedInUser, String userId) {
@@ -1203,6 +1212,85 @@ public class UserMgmtFacade {
 		pp = getDAO().storePricePoint(pp);
 		MemCacheFacade.instance().cleanPricePointsCache();
 		return pp;
+	}
+
+	public UserAndUserVO requestResetPassword(UserVO loggedInUser, String email) {
+		UserAndUserVO result = new UserAndUserVO();
+		result.setUser(loggedInUser);
+		if (StringUtils.isBlank(email)) {
+			log.info("Email is blank");
+			result.setErrorCode(1001);
+			result.setErrorMessage(OfficeHelper.getTrans("password_reset_request_blank_email"));
+			return result;
+		}
+		
+		SBUser user = getDAO().getUserByEmail(email);
+		if (user == null) {
+			log.info("User with email " + email + " not found");
+			result.setErrorCode(1002);
+			result.setErrorMessage(OfficeHelper.getTrans("password_reset_request_email_not_found"));
+		} else if (user.status == SBUser.Status.CREATED) {
+			log.info("User with email " + email + " is not active");
+			result.setErrorCode(1003);
+			result.setErrorMessage(OfficeHelper.getTrans("password_reset_request_activate_user_first"));
+		} else if (user.status == SBUser.Status.DEACTIVATED) {
+			log.info("User with email " + email + " is deactivated");
+			result.setErrorCode(1004);
+			result.setErrorMessage(OfficeHelper.getTrans("password_reset_request_user_deactivated"));
+		} else {
+			user.activationCode = "" + DigestUtils.md5Hex(email + new Date().toString() + "25kj352025sfg");
+			log.info("New activationCode for " + user.email + " is: " + user.activationCode);
+			getDAO().saveUser(user);
+			if (!EmailService.instance().sendPasswordResetEmail(user)) {
+				log.info("Error sending email for email " + email);
+				result.setErrorCode(1005);
+				result.setErrorMessage(OfficeHelper.getTrans("password_reset_request_email_not_sent"));
+			}
+		}
+		return result;
+	}
+	
+	public UserAndUserVO resetPassword(UserVO loggedInUser, String activationCode, String newPassword) {
+		UserAndUserVO result = new UserAndUserVO();
+		result.setUser(loggedInUser);
+		if (StringUtils.isBlank(activationCode)) {
+			log.info("Activation code has not been provided");
+			result.setErrorCode(1001);
+			result.setErrorMessage(OfficeHelper.getTrans("password_reset_blank_authcode"));
+			return result;
+		}
+		
+		SBUser user = getDAO().getUserByActivationCode(activationCode);
+		if (user != null && user.status == SBUser.Status.ACTIVE && StringUtils.equals(activationCode, user.activationCode)) {
+			if (!validatePassword(user.email, newPassword, user.name)) {
+				result.setErrorCode(102);
+				result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_not_valid_password"));
+				return result;
+			}
+			String encryptedPassword = encryptPassword(newPassword);
+			if (encryptedPassword == null) {
+				result.setErrorCode(103);
+				result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_password_encryption"));
+				return result;
+			}
+			String authCookie = encryptPassword(encryptedPassword + new Date().getTime());
+			user.password = encryptedPassword;
+			user.authCookie = authCookie;
+			user.activationCode = "";
+			getDAO().saveUser(user);
+		} else {
+			if (user == null) {
+				log.info("User for given activation code not found");
+			} else if (user.status != SBUser.Status.ACTIVE) {
+				log.info("User for given activation code is not active");
+			} else if (!StringUtils.equals(activationCode, user.activationCode)) {
+				log.info("Wrong activation code provided");
+			}
+			result.setErrorCode(1005);
+			result.setErrorMessage(OfficeHelper.getTrans("password_reset_password_reset_cannot_be_done"));
+		}
+		
+		return result;
 	}
 
 }

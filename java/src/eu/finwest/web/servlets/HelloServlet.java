@@ -93,7 +93,7 @@ public class HelloServlet extends HttpServlet {
 			out.println("<form method=\"POST\" action=\"/user/register.html\">"
 					+ "<input name=\"email\" autocomplete=\"off\" type=\"text\" value=\"test1@inwestujwfirmy.pl\"/>"
 					+ "<input name=\"password\" autocomplete=\"off\" type=\"password\" value=\"abcdef12\"/>"
-					+ "<input type=\"submit\" value=\"Register user\"/></form><br/>");
+					+ "<input type=\"submit\" value=\"Register user\"/></form>Values in quotes<br/>");
 			out.println("<form method=\"GET\" action=\"/user/activate.html\">"
 					+ "<input name=\"code\" autocomplete=\"off\" type=\"text\" value=\"code here ...\"/>"
 					+ "<input type=\"submit\" value=\"Activate user\"/></form><br/>");
@@ -104,8 +104,15 @@ public class HelloServlet extends HttpServlet {
 				out.println("<form method=\"POST\" action=\"/user/authenticate.html\">"
 					+ "<input name=\"email\" autocomplete=\"off\" type=\"text\" value=\"test1@inwestujwfirmy.pl\"/>"
 					+ "<input name=\"password\" autocomplete=\"off\" type=\"password\" value=\"abcdef12\"/>"
-					+ "<input type=\"submit\" value=\"Login\"/></form><br/>");
+					+ "<input type=\"submit\" value=\"Login\"/></form>Values in quotes (also password)<br/>");
 			}
+			out.println("<form method=\"POST\" action=\"/user/request_reset_password.json\">"
+					+ "<input name=\"email\" autocomplete=\"off\" type=\"text\" value=\"test1@inwestujwfirmy.pl\"/>"
+					+ "<input type=\"submit\" value=\"Request password reset\"/></form>Values in quotes<br/>");
+			out.println("<form method=\"POST\" action=\"/user/reset_password.json\">"
+					+ "<input name=\"code\" autocomplete=\"off\" type=\"text\" value=\"[code from email]\"/>"
+					+ "<input name=\"password\" autocomplete=\"off\" type=\"password\" value=\"\"/>"
+					+ "<input type=\"submit\" value=\"Password reset\"/></form>Values in quotes (also password)<br/>");
 
 			if (user == null && twitterUser == null) {
 				return;

@@ -189,7 +189,7 @@ public class ObjectifyDatastoreDAO {
 		return user;
 	}
 
-	public SBUser registerUser(SBUser user) {
+	public SBUser saveUser(SBUser user) {
 		getOfy().put(user);
         log.info("Created/updated user: " + user);
 		return user;
@@ -1011,19 +1011,9 @@ public class ObjectifyDatastoreDAO {
 		return getOfy().find(Comment.class, commentId);
 	}
 
-	public SBUser activateUser(String activationCode) {
+	public SBUser getUserByActivationCode(String activationCode) {
 		try {
 			SBUser user = getOfy().query(SBUser.class).filter("activationCode =", activationCode).get();
-			if (user == null) {
-				return null;
-			}
-			if (user.status == SBUser.Status.ACTIVE || user.emailActivationDate != null) {
-				// for already activated users don't do anything
-				return user;
-			}
-			user.status = SBUser.Status.ACTIVE;
-			user.emailActivationDate = new Date();
-			getOfy().put(user);
 			return user;
 		} catch (Exception e) {
 			log.log(Level.WARNING, "User with activationCode '" + activationCode + "' not found!", e);
