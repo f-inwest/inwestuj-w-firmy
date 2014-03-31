@@ -50,7 +50,6 @@ public class EmailService {
 	private static final String LINK_TO_HEADER_IMAGE = "##NOTIFICATION_LINK_TO_HEADER_IMAGE##";
 
 	private static final String NOT_DISPLAYING_PROPERLY = "##NOTIFICATION_NOT_DISPLAYING_PROPERLY##";
-	private static final String LINK_TO_VIEW_ON_INWESTUJ_W_FIRMY = "##NOTIFICATION_LINK_TO_VIEW_ON_INWESTUJ_W_FIRMY##";
 	private static final String VIEW_ON_INWESTUJ_W_FIRMY = "##NOTIFICATION_VIEW_ON_INWESTUJ_W_FIRMY##";
 	private static final String NOTIFICATION_TITLE = "##NOTIFICATION_TITLE##";
 	private static final String NOTIFICATION_TITLE_ESCAPED = "##NOTIFICATION_TITLE_ESCAPED##";
@@ -66,6 +65,7 @@ public class EmailService {
 	private static final String NOTIFICATION_MAILING_LIST_ADDRESS_TEXT = "##NOTIFICATION_MAILING_LIST_ADDRESS_TEXT##";
 	private static final String NOTIFICATION_MAILING_LIST_ADDRESS = "##NOTIFICATION_MAILING_LIST_ADDRESS##";
 
+	private static final String NOTIFICATION_FEATURED_PROJECTS = "##NOTIFICATION_FEATURED_PROJECTS##";
 	private static final String LINK_TO_LISTING_1 = "##NOTIFICATION_LINK_TO_LISTING_1##";
 	private static final String LINK_TO_LISTING_1_LOGO = "##NOTIFICATION_LINK_TO_LISTING_1_LOGO##";
 	private static final String LISTING_1_NAME = "##NOTIFICATION_LISTING_1_NAME##";
@@ -205,19 +205,23 @@ public class EmailService {
 	public Map<String, String> prepareListingNotificationProps(NotificationVO notification) {
 		Map<String, String> props = new HashMap<String, String>();
 
-		props.put(LINK_TO_VIEW_ON_INWESTUJ_W_FIRMY, "http://www.inwestujwfirmy.pl/notification-page.html?id=" + notification.getId());
+		props.put(NOT_DISPLAYING_PROPERLY, OfficeHelper.getTrans("email_not_displaying_properly"));
+		props.put(VIEW_ON_INWESTUJ_W_FIRMY, OfficeHelper.getTrans("email_view_on_portal", "http://www.inwestujwfirmy.pl/notifications-page.html"));
+
 		props.put(NOTIFICATION_TITLE, notification.getTitle());
-		props.put(NOTIFICATION_TITLE_ESCAPED, notification.getTitle().replaceAll("\\.", "<span>.</span>"));
-		props.put(TEXT_NO_LINK, notification.getText1().replaceAll("\\.", "<span>.</span>") + " <br/> <br/> <i>"
-				+ notification.getText2().replaceAll("\\.", "<span>.</span>") + "</i>");
+		props.put(NOTIFICATION_TITLE_ESCAPED, escape(notification.getTitle()));
+		props.put(TEXT_NO_LINK, escape(notification.getText1()) + " <br/> <br/> <i>" + escape(notification.getText2()) + "</i>");
 		props.put(VISIT_LISTING_TEXT, notification.getText3());
 		props.put(LINK_TO_LISTING, notification.getLink());
 		props.put(LINK_TO_LISTING_LOGO, notification.getListingLogoLink());
-		props.put(LISTING_NAME, notification.getListingName().replaceAll("\\.", "<span>.</span>"));
+		props.put(LISTING_NAME, escape(notification.getListingName()));
 		props.put(LISTING_CATEGORY_LOCATION, notification.getListingCategory() + " <br/>" + notification.getListingBriefAddress());
-		props.put(LISTING_MANTRA, notification.getListingMantra().replaceAll("\\.", "<span>.</span>"));
-		props.put(COPYRIGHT_TEXT, "2012 inwestujwfirmy.pl");
-		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, "http://www.inwestujwfirmy.pl/edit-profile-page.html");
+		props.put(LISTING_MANTRA, escape(notification.getListingMantra()));
+		
+		props.put(COPYRIGHT_TEXT, OfficeHelper.getTrans("email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, OfficeHelper.getTrans("email_mailing_address_text"));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, OfficeHelper.getTrans("email_mailing_address"));
+		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, OfficeHelper.getTrans("email_profil_page", "http://www.inwestujwfirmy.pl/edit-profile-page.html"));
 		return props;
 	}
 
@@ -230,8 +234,16 @@ public class EmailService {
 					ObjectifyDatastoreDAO.getInstance().getTopListings(listingsProps));
 			ListingTileVO listings[] = new ListingTileVO[3];
 			listings[0] = listingsTiles.get(0);
-			listings[1] = listingsTiles.get(1);
-			listings[2] = listingsTiles.get(2);
+			if (listingsTiles.size() == 1) {
+				listings[1] = listingsTiles.get(0);
+				listings[2] = listingsTiles.get(0);				
+			} else if (listingsTiles.size() == 2) {
+				listings[1] = listingsTiles.get(1);
+				listings[2] = listingsTiles.get(1);				
+			} else {
+				listings[1] = listingsTiles.get(1);
+				listings[2] = listingsTiles.get(2);				
+			}
 			Map<String, String> props = prepare3ListingNotificationProps(notification, listings);
 			String htmlTemplate = FileUtils.readFileToString(new File(htmlTemplateFile), "UTF-8");
 			String htmlBody = applyProperties(htmlTemplate, props);
@@ -247,35 +259,39 @@ public class EmailService {
 	public Map<String, String> prepare3ListingNotificationProps(NotificationVO notification, ListingTileVO listings[]) {
 		Map<String, String> props = new HashMap<String, String>();
 
-		props.put(LINK_TO_VIEW_ON_INWESTUJ_W_FIRMY, "http://www.inwestujwfirmy.pl/notification-page.html?id=" + notification.getId());
+		props.put(NOT_DISPLAYING_PROPERLY, OfficeHelper.getTrans("email_not_displaying_properly"));
+		props.put(VIEW_ON_INWESTUJ_W_FIRMY, OfficeHelper.getTrans("email_view_on_portal", "http://www.inwestujwfirmy.pl/notifications-page.html"));
+		
 		props.put(NOTIFICATION_TITLE, notification.getTitle());
-		props.put(NOTIFICATION_TITLE_ESCAPED, notification.getTitle().replaceAll("\\.", "<span>.</span>"));
-		props.put(TEXT_NO_LINK, notification.getText1().replaceAll("\\.", "<span>.</span>") + " <i>"
-				+ notification.getText2().replaceAll("\\.", "<span>.</span>") + "</i>");
-		props.put(VISIT_LISTING_TEXT, notification.getText3());
+		props.put(NOTIFICATION_TITLE_ESCAPED, escape(notification.getTitle()));
+		props.put(TEXT_NO_LINK, escape(notification.getText1()) + " <i>" + escape(notification.getText2()) + "</i>");
+		props.put(NOTIFICATION_TEXT_3, escape(notification.getText3()));
 
 		props.put(LINK_TO_HEADER_IMAGE, NOTIFICATION_IMAGE_URL);
+		props.put(NOTIFICATION_FEATURED_PROJECTS, OfficeHelper.getTrans("email_featured_projects"));
 
 		props.put(LINK_TO_LISTING_1, BaseVO.getServiceLocation() + "/company-page.html?id=" + listings[0].getId());
 		props.put(LINK_TO_LISTING_1_LOGO, BaseVO.getServiceLocation() + "/listing/logo?id=" + listings[0].getId());
-		props.put(LISTING_1_NAME, listings[0].getName().replaceAll("\\.", "<span>.</span>"));
+		props.put(LISTING_1_NAME, escape(listings[0].getName()));
 		props.put(LISTING_1_CATEGORY_LOCATION, listings[0].getCategory() + " <br/>" + listings[0].getBriefAddress());
-		props.put(LISTING_1_MANTRA, listings[0].getMantra().replaceAll("\\.", "<span>.</span>"));
+		props.put(LISTING_1_MANTRA, escape(listings[0].getMantra()));
 
 		props.put(LINK_TO_LISTING_2, BaseVO.getServiceLocation() + "/company-page.html?id=" + listings[1].getId());
 		props.put(LINK_TO_LISTING_2_LOGO, BaseVO.getServiceLocation() + "/listing/logo?id=" + listings[1].getId());
-		props.put(LISTING_2_NAME, listings[1].getName().replaceAll("\\.", "<span>.</span>"));
+		props.put(LISTING_2_NAME, escape(listings[1].getName()));
 		props.put(LISTING_2_CATEGORY_LOCATION, listings[1].getCategory() + " <br/>" + listings[1].getBriefAddress());
-		props.put(LISTING_2_MANTRA, listings[1].getMantra().replaceAll("\\.", "<span>.</span>"));
+		props.put(LISTING_2_MANTRA, escape(listings[1].getMantra()));
 
 		props.put(LINK_TO_LISTING_3, BaseVO.getServiceLocation() + "/company-page.html?id=" + listings[2].getId());
 		props.put(LINK_TO_LISTING_3_LOGO, BaseVO.getServiceLocation() + "/listing/logo?id=" + listings[2].getId());
-		props.put(LISTING_3_NAME, listings[2].getName().replaceAll("\\.", "<span>.</span>"));
+		props.put(LISTING_3_NAME, escape(listings[2].getName()));
 		props.put(LISTING_3_CATEGORY_LOCATION, listings[2].getCategory() + " <br/>" + listings[2].getBriefAddress());
-		props.put(LISTING_3_MANTRA, listings[2].getMantra().replaceAll("\\.", "<span>.</span>"));
+		props.put(LISTING_3_MANTRA, escape(listings[2].getMantra()));
 
-		props.put(COPYRIGHT_TEXT, "2012 inwestujwfirmy.pl");
-		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, "http://www.inwestujwfirmy.pl/edit-profile-page.html");
+		props.put(COPYRIGHT_TEXT, OfficeHelper.getTrans("email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, OfficeHelper.getTrans("email_mailing_address_text"));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, OfficeHelper.getTrans("email_mailing_address"));
+		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, OfficeHelper.getTrans("email_profil_page", "http://www.inwestujwfirmy.pl/edit-profile-page.html"));
 		return props;
 	}
 
@@ -297,14 +313,21 @@ public class EmailService {
 	public Map<String, String> prepareAdminNotificationProps(NotificationVO notification) {
 		Map<String, String> props = new HashMap<String, String>();
 
+		props.put(NOT_DISPLAYING_PROPERLY, OfficeHelper.getTrans("email_not_displaying_properly"));
+		props.put(VIEW_ON_INWESTUJ_W_FIRMY, OfficeHelper.getTrans("email_view_on_portal", "http://www.inwestujwfirmy.pl/notifications-page.html"));
+		
 		props.put(NOTIFICATION_TITLE, notification.getTitle());
-		props.put(NOTIFICATION_TITLE_ESCAPED, notification.getTitle().replaceAll("\\.", "<span>.</span>"));
-		props.put(NOTIFICATION_TEXT_1, notification.getText1().replaceAll("\\.", "<span>.</span>"));
-		props.put(NOTIFICATION_TEXT_2, notification.getText2().replaceAll("\\.", "<span>.</span>"));
-		props.put(NOTIFICATION_TEXT_3, notification.getText3().replaceAll("\\.", "<span>.</span>"));
+		props.put(NOTIFICATION_TITLE_ESCAPED, escape(notification.getTitle()));
+		props.put(NOTIFICATION_TEXT_1, escape(notification.getText1()));
+		props.put(NOTIFICATION_TEXT_2, escape(notification.getText2()));
+		props.put(NOTIFICATION_TEXT_3, escape(notification.getText3()));
 		props.put(NOTIFICATION_LINK_HREF, notification.getLink());
 		props.put(NOTIFICATION_LINK_TEXT, notification.getListingOwner());
-		props.put(COPYRIGHT_TEXT, "2012 inwestujwfirmy.pl");
+		
+		props.put(COPYRIGHT_TEXT, OfficeHelper.getTrans("email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, OfficeHelper.getTrans("email_mailing_address_text"));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, OfficeHelper.getTrans("email_mailing_address"));
+		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, OfficeHelper.getTrans("email_profil_page", "http://www.inwestujwfirmy.pl/edit-profile-page.html"));
 		return props;
 	}
 
@@ -332,14 +355,14 @@ public class EmailService {
 	public Map<String, String> prepareEmailVerificationProps(String receiverEmail, String accessUrl) {
 		Map<String, String> props = new HashMap<String, String>();
 
-		props.put(NOT_DISPLAYING_PROPERLY, OfficeHelper.getTrans("email_not_displaying_properly"));
-		props.put(VIEW_ON_INWESTUJ_W_FIRMY, OfficeHelper.getTrans("email_view_on_portal", "http://www.inwestujwfirmy.pl/notifications-page.html"));
+		props.put(NOT_DISPLAYING_PROPERLY, "&nbsp;");
+		props.put(VIEW_ON_INWESTUJ_W_FIRMY, "&nbsp;");
 		props.put(NOTIFICATION_TITLE, OfficeHelper.getTrans("email_address_verification_title"));
 		props.put(NOTIFICATION_TITLE_ESCAPED, OfficeHelper.getTrans("email_address_verification_title"));
 		props.put(TEXT_NO_LINK, "&nbsp;");
 		props.put(NOTIFICATION_TEXT_1, OfficeHelper.getTrans("email_address_verification_by_click_on", accessUrl));
 		props.put(NOTIFICATION_TEXT_2, OfficeHelper.getTrans("email_address_verification_you_confirm", receiverEmail));
-		props.put(NOTIFICATION_TEXT_3, OfficeHelper.getTrans("email_address_verification_info"));
+		props.put(NOTIFICATION_TEXT_3, OfficeHelper.getTrans("email_address_verification_info") + " " + escape(accessUrl));
 		props.put(COPYRIGHT_TEXT, OfficeHelper.getTrans("email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
 		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, OfficeHelper.getTrans("email_mailing_address_text"));
 		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, OfficeHelper.getTrans("email_mailing_address"));
@@ -372,15 +395,15 @@ public class EmailService {
 	public Map<String, String> prepareAccountActivationProps(String receiverEmail, String accessUrl) {
 		Map<String, String> props = new HashMap<String, String>();
 
-		props.put(NOT_DISPLAYING_PROPERLY, OfficeHelper.getTrans("email_not_displaying_properly"));
-		props.put(VIEW_ON_INWESTUJ_W_FIRMY, OfficeHelper.getTrans("email_view_on_portal", "http://www.inwestujwfirmy.pl/notifications-page.html"));
+		props.put(NOT_DISPLAYING_PROPERLY, "&nbsp;");
+		props.put(VIEW_ON_INWESTUJ_W_FIRMY, "&nbsp;");
 		props.put(NOTIFICATION_TITLE, OfficeHelper.getTrans("email_account_activation_title"));
 		props.put(NOTIFICATION_TITLE_ESCAPED, OfficeHelper.getTrans("email_account_activation_title_escaped"));
 		props.put(TEXT_NO_LINK, "&nbsp;");
 		props.put(NOTIFICATION_TEXT_1, OfficeHelper.getTrans("email_account_activation_message", accessUrl, escape(receiverEmail)));
 		props.put(NOTIFICATION_TEXT_2, "&nbsp;");
 		log.info("escaped access url: " + escape(accessUrl));
-		log.info("NOTIFICATION_TEXT_3 = " + OfficeHelper.getTrans("email_account_activation_info", escape(accessUrl)));
+		log.info("NOTIFICATION_TEXT_3 = " + OfficeHelper.getTrans("email_account_activation_info") + " " + escape(accessUrl));
 		props.put(NOTIFICATION_TEXT_3, OfficeHelper.getTrans("email_account_activation_info", escape(accessUrl)));
 		props.put(COPYRIGHT_TEXT, OfficeHelper.getTrans("email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
 		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, OfficeHelper.getTrans("email_mailing_address_text"));
@@ -413,14 +436,14 @@ public class EmailService {
 	public Map<String, String> preparePasswordResetProps(SBUser user, String resetUrl) {
 		Map<String, String> props = new HashMap<String, String>();
 
-		props.put(NOT_DISPLAYING_PROPERLY, OfficeHelper.getTrans("email_not_displaying_properly"));
-		props.put(VIEW_ON_INWESTUJ_W_FIRMY, OfficeHelper.getTrans("email_view_on_portal", "http://www.inwestujwfirmy.pl/notifications-page.html"));
+		props.put(NOT_DISPLAYING_PROPERLY, "&nbsp;");
+		props.put(VIEW_ON_INWESTUJ_W_FIRMY, "&nbsp;");
 		props.put(NOTIFICATION_TITLE, OfficeHelper.getTrans("email_password_reset_title"));
 		props.put(NOTIFICATION_TITLE_ESCAPED, OfficeHelper.getTrans("email_password_reset_title"));
 		props.put(TEXT_NO_LINK, "&nbsp;");
 		props.put(NOTIFICATION_TEXT_1, OfficeHelper.getTrans("email_password_reset_by_click_on", resetUrl));
 		props.put(NOTIFICATION_TEXT_2, OfficeHelper.getTrans("email_password_reset_you_confirm", user.email));
-		props.put(NOTIFICATION_TEXT_3, OfficeHelper.getTrans("email_password_reset_info", resetUrl));
+		props.put(NOTIFICATION_TEXT_3, OfficeHelper.getTrans("email_password_reset_info") + " " + escape(resetUrl));
 		props.put(COPYRIGHT_TEXT, OfficeHelper.getTrans("email_copyright", Calendar.getInstance().get(Calendar.YEAR)));
 		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, OfficeHelper.getTrans("email_mailing_address_text"));
 		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, OfficeHelper.getTrans("email_mailing_address"));
@@ -436,7 +459,7 @@ public class EmailService {
 	}
 	
 	private String escape(String text) {
-		text = text.replaceAll("@", "<span>{AT}</span>");
+		//text = text.replaceAll("@", "<span>{AT}</span>");
 		text = text.replaceAll("\\.", "<span>.</span>");
 		return text;
 	}
