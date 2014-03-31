@@ -141,7 +141,7 @@ public class ServiceFacade {
 	public CommentListVO deleteComment(UserVO loggedInUser, String commentId) {
 		CommentListVO result = new CommentListVO();
 		if (loggedInUser == null) {
-			log.log(Level.WARNING, "User is not logged in!", new Exception("Not logged in user"));
+			log.info("User is not logged in!");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;

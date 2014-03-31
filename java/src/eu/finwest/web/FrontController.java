@@ -187,7 +187,7 @@ public class FrontController extends HttpServlet {
 			IOUtils.copy(new FileInputStream(outFile), response.getOutputStream());
 		} else {
 			log.log(Level.WARNING, request.getMethod() + " " + request.getPathInfo() + " is not supported!  Redirecting to error page.");
-			response.sendRedirect(versioned(version, "/error-page.html"));
+			response.sendRedirect("/error-page.html");
 		}
 	}
 	

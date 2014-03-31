@@ -31,7 +31,7 @@
             </div>
             <div class="span-8 footercol">
                 <div class="footerlinkheader">@lang_followus@</div>
-                <a href="https://twitter.com/inwestuj-w-firmy">
+                <a href="https://twitter.com/inwestujwfirmy">
                     <span class="footericonlink hoverlink">
                         <!-- <div class="footericon headertwittersignin"></div> -->
                         <span class="footericonlabel">twitter</span>

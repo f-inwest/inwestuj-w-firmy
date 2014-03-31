@@ -80,7 +80,7 @@ public class NotificationFacade {
 		if (loggedInUser == null) {
 			list.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
-			log.log(Level.WARNING, "User not logged in!");
+			log.info("User not logged in!");
 			return list;
 		}
 		List<NotificationVO> notifications = DtoToVoConverter.convertNotifications(
@@ -97,7 +97,7 @@ public class NotificationFacade {
         if (loggedInUser == null) {
             list.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
             list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
-            log.log(Level.WARNING, "User not logged in!");
+            log.info("User not logged in!");
             return list;
         }
         List<NotificationVO> notifications = null;
@@ -116,7 +116,7 @@ public class NotificationFacade {
         if (loggedInUser == null) {
             list.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
             list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
-            log.log(Level.WARNING, "User not logged in!");
+            log.info("User not logged in!");
             return list;
         }
 

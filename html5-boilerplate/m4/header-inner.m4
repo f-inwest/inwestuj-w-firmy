@@ -31,17 +31,17 @@
                 <div class="headericonbar headerlogout button-content" title="Logout"></div>
             </a>
             <a href="/notifications-page.html">
-                <div class="headericonbar headernotifications button-content" title="Notifications">
+                <div class="headericonbar headernotifications button-content" title="@lang_notifications@">
                     <div class="headernum" id="headernumnotifications"></div>
                 </div>
             </a>
             <a href="/message-group-page.html">
-                <div class="headericonbar headermessages button-content" title="Messages">
+                <div class="headericonbar headermessages button-content" title="@lang_messages@">
                     <div class="headernum" id="headernummessages"></div>
                 </div>
             </a>
             <a href="/profile-page.html">
-                <div title="View Your Profile" class="headeravatar button-content" id="headeravatar"></div>
+                <div title="@lang_view_your_profile@" class="headeravatar button-content" id="headeravatar"></div>
             </a>
         </div>
     </div>

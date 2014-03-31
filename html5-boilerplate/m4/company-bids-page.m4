@@ -1,6 +1,6 @@
 `
 <!doctype html>
-<html lang="en">
+<html lang="@lang_html_language@">
 '
 include(head.m4)
 `
@@ -24,7 +24,7 @@ companybannermacro(`', `', `', `', `companynavselected', `', `')
 include(company-order-book.m4)
 `
 
-<div class="boxtitle" style="">SIGN IN TO MAKE A BID</div>
+<div class="boxtitle" style="">@lang_sign_in_to_bid@</div>
 <div class="boxpanel boxpanelfull">
     <div style="height: 100px;">
         <a id="google_login" href="">

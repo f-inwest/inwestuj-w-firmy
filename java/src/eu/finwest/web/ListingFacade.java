@@ -205,7 +205,7 @@ public class ListingFacade {
 	public ListingAndUserVO importListing(UserVO loggedInUser, String type, String id) {
 		ListingAndUserVO result = new ListingAndUserVO();
 		if (loggedInUser == null) {
-			log.log(Level.INFO, "Only logged in user can create listing", new Exception("Not logged in"));
+			log.log(Level.INFO, "Only logged in user can create listing");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 		} else {
@@ -324,6 +324,7 @@ public class ListingFacade {
 		ListingAndUserVO result = new ListingAndUserVO();
 
 		if (loggedInUser == null) {
+			log.info("User not logged in!");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;
@@ -709,7 +710,7 @@ public class ListingFacade {
 	public ListingAndUserVO activateListing(UserVO loggedInUser, String listingId) {
 		ListingAndUserVO returnValue = new ListingAndUserVO();
 		if (loggedInUser == null) {
-			log.log(Level.INFO, "User is not logged in!", new Exception("Not logged in user"));
+			log.log(Level.INFO, "User is not logged in!");
 			returnValue.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return returnValue;
@@ -766,7 +767,7 @@ public class ListingFacade {
 
 		Listing dbListing = getDAO().getListing(BaseVO.toKeyId(listingId));
 		if (loggedInUser == null || dbListing == null) {
-			log.log(Level.INFO, "User " + loggedInUser + " is logged in or listing doesn't exist", new Exception("Not logged in"));
+			log.log(Level.INFO, "User not logged in or listing doesn't exist");
 			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			returnValue.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			return returnValue;
@@ -1873,6 +1874,7 @@ public class ListingFacade {
 			blobstoreService.delete(doc.getBlob());
 			doc.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			doc.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			log.info("User not logged in!");
 			return doc;
 		}
 		long editedListingId = -1;

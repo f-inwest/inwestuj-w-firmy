@@ -70,7 +70,7 @@ public class MessageFacade {
 	public PrivateMessageUserListVO getPrivateMessageUsers(UserVO loggedInUser, ListPropertiesVO listProperties) {
 		PrivateMessageUserListVO result = new PrivateMessageUserListVO();
 		if (loggedInUser == null) {
-			log.warning("User not logged in.");
+			log.info("User not logged in.");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;
@@ -86,7 +86,7 @@ public class MessageFacade {
 	public PrivateMessageListVO getPrivateMessages(UserVO loggedInUser, String userId, ListPropertiesVO listProperties) {
 		PrivateMessageListVO result = new PrivateMessageListVO();
 		if (loggedInUser == null) {
-			log.warning("User not logged in.");
+			log.info("User not logged in.");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;
