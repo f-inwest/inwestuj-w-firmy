@@ -55,7 +55,7 @@ public class BidFacade {
 	public BidListVO makeBid(UserVO loggedInUser, String listingId, String type, int amount, int percentage, String text) {
 		BidListVO result = new BidListVO();
 		if (loggedInUser == null) {
-			log.warning("User not logged in.");
+			log.info("User not logged in.");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;
@@ -133,7 +133,7 @@ public class BidFacade {
 	public BidListVO ownerMakesBid(UserVO loggedInUser, String listingId, String investorId, String type, int amount, int percentage, String text) {
 		BidListVO result = new BidListVO();
 		if (loggedInUser == null) {
-			log.warning("User not logged in.");
+			log.info("User not logged in.");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;
@@ -285,7 +285,7 @@ public class BidFacade {
 	public BidUserListVO getInvestors(UserVO loggedInUser, String listingId, ListPropertiesVO listProperties) {
 		BidUserListVO result = new BidUserListVO();
 		if (loggedInUser == null) {
-			log.warning("User not logged in.");
+			log.info("User not logged in.");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;
@@ -316,7 +316,7 @@ public class BidFacade {
 	public BidListVO getBids(UserVO loggedInUser, String listingId, String investorId, ListPropertiesVO listProperties) {
 		BidListVO result = new BidListVO();
 		if (loggedInUser == null) {
-			log.warning("User not logged in.");
+			log.info("User not logged in.");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;

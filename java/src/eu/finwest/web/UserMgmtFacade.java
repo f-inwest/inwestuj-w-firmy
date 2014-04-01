@@ -592,7 +592,7 @@ public class UserMgmtFacade {
 	public UserAndUserVO promoteToDragon(UserVO loggedInUser, String userId) {
 		UserAndUserVO result = new UserAndUserVO();
 		if (loggedInUser == null || !loggedInUser.isAdmin()) {
-			log.warning("User not logged in or is not an admin");
+			log.info("User not logged in or is not an admin");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_admin"));
 			return result;
@@ -616,7 +616,7 @@ public class UserMgmtFacade {
 	public UserAndUserVO requestDragon(UserVO loggedInUser) {
 		UserAndUserVO result = new UserAndUserVO();
 		if (loggedInUser == null) {
-			log.warning("User not logged in");
+			log.info("User not logged in");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
 			return result;

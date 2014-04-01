@@ -152,7 +152,9 @@ public abstract class ModelDrivenController {
 				((BaseResultVO) model).setCampaign(FrontController.getCampaign());
 				((BaseResultVO) model).setAllCampaigns(MemCacheFacade.instance().getAllCampaigns().values());
 
-				if (((BaseResultVO) model).getErrorCode() != ErrorCodes.OK) {
+				if (((BaseResultVO) model).getErrorCode() == ErrorCodes.NOT_LOGGED_IN) {
+					headers.setStatus(401);
+				} else if (((BaseResultVO) model).getErrorCode() != ErrorCodes.OK) {
 					headers.setStatus(500);
 				}
 			}

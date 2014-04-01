@@ -289,6 +289,12 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
 	  	<replace dir="war/pl" token="href='css/" value="href='pl/css/">
 			<include name="**/*.html"/>
 		</replace>
+		
+	  	<copy todir="war" filtering="false" outputencoding="UTF-8" encoding="UTF-8">
+	  	  <fileset dir="html5-boilerplate/publish">
+	  	      <include name="*.txt"/>
+	  	  </fileset>
+	  	</copy>
 	</target>
   
 	<target name="ensure-test-name" unless="test">

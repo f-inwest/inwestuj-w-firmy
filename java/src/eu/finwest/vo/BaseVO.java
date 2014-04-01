@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.Key;
 
+import eu.finwest.web.FrontController;
+
 public abstract class BaseVO {
 	public abstract String getId();
 
@@ -17,8 +19,11 @@ public abstract class BaseVO {
 	}
 
 	public static String getServiceLocation () {
-		return SystemProperty.environment.value() == SystemProperty.Environment.Value.Development ?
-				"http://localhost:7777" : "http://www.inwestujwfirmy.pl";
+		boolean develEnv = SystemProperty.environment.value() == SystemProperty.Environment.Value.Development;
+		String subdomain = FrontController.getCampaign() != null ?
+				FrontController.getCampaign().getSubdomain() + ".": 
+				(develEnv ? "" : "www.");
+		return  develEnv ? "http://" + subdomain + "localhost:7777" : "http://" + subdomain + "inwestujwfirmy.pl";
 	}
 
 	public String toString() {

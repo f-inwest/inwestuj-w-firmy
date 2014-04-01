@@ -15,8 +15,8 @@
   <!-- <meta name="viewport" content="width=device-width,initial-scale=1"> -->
   <!-- <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0"> -->
 
-  <meta name="description" content="Inwestuj w Firmy - inwestuj poprzez zakup udzialow"/>
-  <meta name="keywords" content="inwestuj-w-firmy startup company auction bid business plan"/>
+  <meta name="description" content="@lang_meta_description@"/>
+  <meta name="keywords" content="@lang_meta_keywords@"/>
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory: mathiasbynens.be/notes/touch-icons -->
 
   <!-- CSS: implied media=all -->
@@ -26,7 +26,7 @@
  <link rel="stylesheet" href="css/style.css" type="text/css" />
   <!-- end CSS-->
 
-  <link rel="canonical" href="http://inwestujwfirmy.pl"/>
+  <link rel="canonical" href="http://www.inwestujwfirmy.pl"/>
 
   <!-- script>
 (function() {

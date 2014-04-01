@@ -27,6 +27,7 @@ import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Vote;
+import eu.finwest.util.OfficeHelper;
 import eu.finwest.web.FrontController;
 import eu.finwest.web.LangVersion;
 import eu.finwest.web.MemCacheFacade;
@@ -422,112 +423,112 @@ public class DtoToVoConverter {
 		String listingName = notifDTO.listingName;
 		switch(notifDTO.type) {
 		case NEW_LISTING:
-			notif.setTitle("New listing '" + listingName + "' posted");
+			notif.setTitle(OfficeHelper.getTrans("notif_new_listing_title", listingName));
 			String profileUrl = BaseVO.getServiceLocation() + "/profile-page.html?id=" + notifDTO.listingOwnerUser.getString();
-			notif.setText1("Listing has been posted by <a href=\"" + profileUrl + "\">" + notifDTO.listingOwner + "</a>");
+			notif.setText1(OfficeHelper.getTrans("notif_new_listing_text", profileUrl, notifDTO.listingOwner));
 			notif.setText2(notifDTO.message);
-			notif.setText3("Please visit <a href=\"" + listingLink + "\">company's page at inwestujwfirmy.pl</a>.");
+			notif.setText3(OfficeHelper.getTrans("notif_visit_listing", listingLink));
 			break;
 		case LISTING_ACTIVATED:
-			notif.setTitle("Listing '" + listingName + "' activated");
-			notif.setText1("Listing '" + listingName + "' has been activated by ADMINISTRATOR on inwestujwfirmy.pl");
+			notif.setTitle(OfficeHelper.getTrans("notif_listing_activated_title", listingName));
+			notif.setText1(OfficeHelper.getTrans("notif_listing_activated_text", listingName));
 			notif.setText2(notifDTO.message);
-			notif.setText3("Please visit <a href=\"" + listingLink + "\">company's page at inwestujwfirmy.pl</a>.");
+			notif.setText3(OfficeHelper.getTrans("notif_visit_listing", listingLink));
 			break;
 		case LISTING_FROZEN:
-			notif.setTitle("Listing '" + listingName + "' frozen");
-			notif.setText1("Listing '" + listingName + "' has been frozen by ADMINISTRATOR on inwestujwfirmy.pl");
+			notif.setTitle(OfficeHelper.getTrans("notif_listing_frozen_title", listingName));
+			notif.setText1(OfficeHelper.getTrans("notif_listing_frozen_text", listingName));
             notif.setText2(notifDTO.message);
-            notif.setText3("Please visit <a href=\"" + listingLink + "\">company's page at inwestujwfirmy.pl</a>.");
+            notif.setText3(OfficeHelper.getTrans("notif_visit_listing", listingLink));
 			break;
 		case LISTING_WITHDRAWN:
-			notif.setTitle("Listing '" + listingName + "' withdrawn");
-			notif.setText1("Listing '" + listingName + "' has been withdrawn by owner on inwestujwfirmy.pl");
+			notif.setTitle(OfficeHelper.getTrans("notif_listing_withdrawn_title", listingName));
+			notif.setText1(OfficeHelper.getTrans("notif_listing_withdrawn_text", listingName));
 			notif.setText2(notifDTO.message);
-			notif.setText3("Please visit <a href=\"" + listingLink + "\">company's page at inwestujwfirmy.pl</a>.");
+			notif.setText3(OfficeHelper.getTrans("notif_visit_listing", listingLink));
 			break;
         case LISTING_SENT_BACK:
-            notif.setTitle("Listing '" + listingName + "' sent back");
-            notif.setText1("Listing '" + listingName + "' has been sent back by ADMINISTRATOR on inwestujwfirmy.pl");
+            notif.setTitle(OfficeHelper.getTrans("notif_listing_sentback_title", listingName));
+            notif.setText1(OfficeHelper.getTrans("notif_listing_sentback_text", listingName));
             notif.setText2(notifDTO.message);
-            notif.setText3("Please visit <a href=\"" + listingLink + "\">your new listing page at inwestujwfirmy.pl</a>.");
+            notif.setText3(OfficeHelper.getTrans("notif_visit_listing", listingLink));
             break;
 		case NEW_COMMENT_FOR_MONITORED_LISTING:
-			notif.setTitle("New comment for listing '" + listingName + "'");
-			notif.setText1("Comment from user '" + notifDTO.userNickname + "': ");
+			notif.setTitle(OfficeHelper.getTrans("notif_comment_for_monitored_title", listingName));
+			notif.setText1(OfficeHelper.getTrans("notif_comment_for_monitored_text", notifDTO.userNickname));
 			notif.setText2(notifDTO.message);
-			notif.setText3("You can <a href=\"" + listingLink + "\">View or Reply To</a> this comment on inwestuj-w-firmy.");
+			notif.setText3(OfficeHelper.getTrans("notif_comment_visit_listing", listingLink));
 			break;
 		case NEW_COMMENT_FOR_YOUR_LISTING:
-			notif.setTitle("Your listing '" + listingName + "' received a comment");
-			notif.setText1("Comment from user '" + notifDTO.userNickname + "': ");
+			notif.setTitle(OfficeHelper.getTrans("notif_comment_for_your_listing_title", listingName));
+			notif.setText1(OfficeHelper.getTrans("notif_comment_for_your_listing_text", notifDTO.userNickname));
 			notif.setText2(notifDTO.message);
-			notif.setText3("You can <a href=\"" + listingLink + "\">View or Reply To</a> this comment on inwestuj-w-firmy.");
+			notif.setText3(OfficeHelper.getTrans("notif_comment_visit_listing", listingLink));
 			break;
 		case ASK_LISTING_OWNER:
-		    notif.setTitle("Question for listing '" + listingName + "'");
-            notif.setText1("A question concerning listing '" + listingName + "' has been posted:");
+		    notif.setTitle(OfficeHelper.getTrans("notif_ask_owner_title", listingName));
+            notif.setText1(OfficeHelper.getTrans("notif_ask_owner_text", listingName));
 			notif.setText2(notifDTO.message);
-			notif.setText3("Please visit <a href=\"" + listingLink + "\">company's page at inwestujwfirmy.pl</a>.");
+			notif.setText3(OfficeHelper.getTrans("notif_visit_listing", listingLink));
 			break;
 		case PRIVATE_MESSAGE:
-            String fromTitle = StringUtils.isEmpty(notifDTO.fromUserNickname) ? "" : " from " + notifDTO.fromUserNickname;
-		    notif.setTitle("You've received a private message" + fromTitle);
-            notif.setText1("Message: ");
+		    notif.setTitle(OfficeHelper.getTrans("notif_private_message_title"));
+            notif.setText1(OfficeHelper.getTrans("notif_private_message_text", notifDTO.fromUserNickname));
 		    notif.setText2(notifDTO.message);
 		    try {
 		    	String messagePageUrl = BaseVO.getServiceLocation() + "/messages-page.html?from_user_id=" + notifDTO.listingOwnerUser.getString()
 		    		+ "&from_user_nickname=" + notifDTO.fromUserNickname;
-		    	notif.setText3("Check your <a href=\"" + messagePageUrl + "\">conversation with " + notifDTO.fromUserNickname + " at inwestujwfirmy.pl</a>.");
+		    	notif.setText3(OfficeHelper.getTrans("notif_visit_coversation_with", messagePageUrl, notifDTO.fromUserNickname));
 		    } catch (Exception e) {
-		    	notif.setText3("Check your <a href=\"" + BaseVO.getServiceLocation() + "/message-group-page.html\">conversations at inwestujwfirmy.pl</a>.");
+		    	notif.setText3(OfficeHelper.getTrans("notif_visit_coversations", BaseVO.getServiceLocation() + "/message-group-page.html"));
 		    }
 			break;
 		case NEW_BID_FOR_YOUR_LISTING:
-			notif.setTitle("New bid for your listing '" + listingName + "'");
-			notif.setText1("Your listing '" + listingName + "' has received an offer from user '" + notifDTO.userNickname + "'.");
+			notif.setTitle(OfficeHelper.getTrans("notif_new_bid_title", listingName));
+			notif.setText1(OfficeHelper.getTrans("notif_new_bid_text", listingName, notifDTO.userNickname));
 			notif.setText2("");
-			notif.setText3("In order to view bid(s) please visit <a href=\"" + listingLink + "\">company's page at inwestujwfirmy.pl</a>.");
+			notif.setText3(OfficeHelper.getTrans("notif_visit_bids", listingLink));
 			break;
 		case YOUR_BID_WAS_COUNTERED:
-			notif.setTitle("Counter offer for listing '" + listingName + "'");
-			notif.setText1("Your listing '" + listingName + "' has received counter offer from user '" + notifDTO.userNickname + "'.");
+			notif.setTitle(OfficeHelper.getTrans("notif_counter_offer_title", listingName));
+			notif.setText1(OfficeHelper.getTrans("notif_counter_offer_text", listingName, notifDTO.userNickname));
 			notif.setText2("");
-			notif.setText3("In order to view bid(s) please visit <a href=\"" + listingLink + "\">company's page at inwestujwfirmy.pl</a>.");
+			notif.setText3(OfficeHelper.getTrans("notif_visit_bids", listingLink));
 			break;
 		case YOU_ACCEPTED_BID:
-			notif.setTitle("You accepted bid for listing '" + listingName + "'");
-			notif.setText1("You acceped bid for listing '" + listingName + "' from user '" + notifDTO.userNickname + "'.");
+			notif.setTitle(OfficeHelper.getTrans("notif_accepted_offer_title", listingName));
+			notif.setText1(OfficeHelper.getTrans("notif_accepted_offer_text", listingName, notifDTO.userNickname));
 			notif.setText2("");
-			notif.setText3("In order to view bid(s) please visit <a href=\"" + listingLink + "\">company's page at inwestujwfirmy.pl</a>.");
+			notif.setText3(OfficeHelper.getTrans("notif_visit_bids", listingLink));
 			break;
 		case YOUR_BID_WAS_ACCEPTED:
-			notif.setTitle("Accepted bid for listing '" + listingName + "'");
-			notif.setText1("Your bid for listing '" + listingName + "' has been accepted.");
+			notif.setTitle(OfficeHelper.getTrans("notif_your_bid_accepted_title", listingName));
+			notif.setText1(OfficeHelper.getTrans("notif_your_bid_accepted_text", listingName));
 			notif.setText2("");
-			notif.setText3("In order to view bid(s) please visit <a href=\"" + listingLink + "\">company's page at inwestujwfirmy.pl</a>.");
+			notif.setText3(OfficeHelper.getTrans("notif_visit_bids", listingLink));
 			break;
 		case BID_WAS_WITHDRAWN:
-			notif.setTitle("Withdrawn bid for listing '" + listingName + "'");
-			notif.setText1("Bid for listing '" + listingName + "' has been withdrawn.");
+			notif.setTitle(OfficeHelper.getTrans("notif_bid_withdrawn_title", listingName));
+			notif.setText1(OfficeHelper.getTrans("notif_bid_withdrawn_text", listingName));
 			notif.setText2("");
-			notif.setText3("In order to view bid(s) please visit <a href=\"" + listingLink + "\">company's page at inwestujwfirmy.pl</a>.");
+			notif.setText3(OfficeHelper.getTrans("notif_visit_bids", listingLink));
 			break;
 		case YOUR_BID_WAS_REJECTED:
-			notif.setTitle("Rejected bid for listing '" + listingName + "'");
-			notif.setText1("Bid for listing '" + listingName + "' has been rejected.");
+			notif.setTitle(OfficeHelper.getTrans("notif_bid_rejected_title", listingName));
+			notif.setText1(OfficeHelper.getTrans("notif_bid_rejected_text", listingName));
 			notif.setText2("");
-			notif.setText3("In order to view bid(s) please visit <a href=\"" + listingLink + "\">company's page at inwestujwfirmy.pl</a>.");
+			notif.setText3(OfficeHelper.getTrans("notif_visit_bids", listingLink));
 			break;
 		case YOU_PAID_BID:
 		case BID_PAID_FOR_YOUR_LISTING:
 			// payments are not handled yet
 			break;
 		case ADMIN_REQUEST_TO_BECOME_DRAGON:
-			notif.setTitle("User '" + notifDTO.listingOwner + "' Requested to Become a Dragon");
-			notif.setText1("User");
-			notif.setText2("sent request to become a Dragon on inwestujwfirmy.pl");
-			notif.setText3("To be a dragon one must have founded a startup, invested in a startup, or be a corporate or venture capital executive.");
+			notif.setTitle(OfficeHelper.getTrans("notif_dragon_request_title", notifDTO.listingOwner));
+			notif.setText1(OfficeHelper.getTrans("notif_dragon_request_text"));
+			notif.setText2("");
+			notif.setText3(OfficeHelper.getTrans("notif_visit_profile",
+					BaseVO.getServiceLocation() + "/profile-page.html?id=" + notifDTO.listingOwnerUser.getString()));
 			notif.setLink("/profile-page.html?id=" + notifDTO.listingOwnerUser.getString());
 			break;
 		}

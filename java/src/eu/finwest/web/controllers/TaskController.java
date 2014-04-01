@@ -193,7 +193,7 @@ public class TaskController extends ModelDrivenController {
 	
 	private HttpHeaders scheduleCommentNotifications(HttpServletRequest request) {
 		HttpHeaders headers = new HttpHeadersImpl("schedule-comment-notifications");		
-		String commentId = getCommandOrParameter(request, 2, "id");		
+		String commentId = getCommandOrParameter(request, 2, "id");
 		model = NotificationFacade.instance().createCommentNotification(commentId);
 		return headers;
 	}
