@@ -43,6 +43,10 @@ public class EmailService {
 	private static final Logger log = Logger.getLogger(EmailService.class.getName());
 	
 	private static final String ADMIN_EMAIL = "grzegorz.nittner@inwestujwfirmy.pl";
+	
+	private static final String TEMPLATE_AUTHORIZATION = "./WEB-INF/email-templates/email-authentication.html";
+	private static final String TEMPLATE_NOTIFICATION = "./WEB-INF/email-templates/notification.html";
+	private static final String TEMPLATE_3LISTING_NOTIFICATION = "./WEB-INF/email-templates/welcome-email.html";
 
 	private static final String WELCOME_IMAGE_URL = "http://www.inwestujwfirmy.pl/img/email-welcome.jpg";
 	private static final String NOTIFICATION_IMAGE_URL = "http://www.inwestujwfirmy.pl/img/email-notification.jpg";
@@ -149,11 +153,11 @@ public class EmailService {
 			} else {
 				log.info("Email will be sent to: " + to);
 			}
-			message.setSubject(subject);
+			message.setSubject(subject, "UTF-8");
 		} else {
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress("admins"));
 			log.info("Email will be sent to admins only");
-			message.setSubject(subject + " real addressee " + to);
+			message.setSubject(subject + " real addressee " + to, "UTF-8");
 		}
 
 		Multipart multipart = new MimeMultipart();
@@ -188,10 +192,9 @@ public class EmailService {
 	}
 
 	private boolean sendListingNotification(NotificationVO notification) {
-		String htmlTemplateFile = "./WEB-INF/email-templates/notification.html";
 		try {
 			Map<String, String> props = prepareListingNotificationProps(notification);
-			String htmlTemplate = FileUtils.readFileToString(new File(htmlTemplateFile), "UTF-8");
+			String htmlTemplate = FileUtils.readFileToString(new File(TEMPLATE_NOTIFICATION), "UTF-8");
 			String htmlBody = applyProperties(htmlTemplate, props);
 			String subject = props.get(NOTIFICATION_TITLE);
 			send(notification.getUserEmail(), subject, htmlBody, null);
@@ -226,10 +229,9 @@ public class EmailService {
 	}
 
 	private boolean send3ListingNotification(NotificationVO notification) {
-		String htmlTemplateFile = "./WEB-INF/email-templates/welcome-email.html";
 		try {
 			ListPropertiesVO listingsProps = new ListPropertiesVO();
-			listingsProps.setMaxResults(3);
+			listingsProps.setMaxResults(3); 
 			List<ListingTileVO> listingsTiles = DtoToVoConverter.convertListingTiles(
 					ObjectifyDatastoreDAO.getInstance().getTopListings(listingsProps));
 			ListingTileVO listings[] = new ListingTileVO[3];
@@ -245,7 +247,7 @@ public class EmailService {
 				listings[2] = listingsTiles.get(2);				
 			}
 			Map<String, String> props = prepare3ListingNotificationProps(notification, listings);
-			String htmlTemplate = FileUtils.readFileToString(new File(htmlTemplateFile), "UTF-8");
+			String htmlTemplate = FileUtils.readFileToString(new File(TEMPLATE_3LISTING_NOTIFICATION), "UTF-8");
 			String htmlBody = applyProperties(htmlTemplate, props);
 			String subject = props.get(NOTIFICATION_TITLE);
 			send(notification.getUserEmail(), subject, htmlBody, null);
@@ -296,10 +298,9 @@ public class EmailService {
 	}
 
 	private boolean sendAdminNotification(NotificationVO notification) {
-		String htmlTemplateFile = "./WEB-INF/email-templates/access-email.html";
 		try {
 			Map<String, String> props = prepareAdminNotificationProps(notification);
-			String htmlTemplate = FileUtils.readFileToString(new File(htmlTemplateFile), "UTF-8");
+			String htmlTemplate = FileUtils.readFileToString(new File(TEMPLATE_AUTHORIZATION), "UTF-8");
 			String htmlBody = applyProperties(htmlTemplate, props);
 			String subject = props.get(NOTIFICATION_TITLE);
 			sendAdmin("grzegorz.nittner@inwestujwfirmy.pl", notification.getUserEmail(), subject, htmlBody);
@@ -332,7 +333,6 @@ public class EmailService {
 	}
 
 	public boolean sendEmailVerification(SBUser userByTwitter) {
-		String htmlTemplateFile = "./WEB-INF/email-templates/email-authentication.html";
 		try {
 			String subdomain = FrontController.getCampaign().getSubdomain();
 			// send verification email with link /user/confirm_user_email?id=<twitter_id>&token=<token>
@@ -341,7 +341,7 @@ public class EmailService {
 			activationUrl += "/user/confirm_user_email?id=" + userByTwitter.twitterId + "&token=" +userByTwitter.activationCode;
 
 			Map<String, String> props = prepareEmailVerificationProps(userByTwitter.twitterEmail, activationUrl);
-			String htmlTemplate = FileUtils.readFileToString(new File(htmlTemplateFile), "UTF-8");
+			String htmlTemplate = FileUtils.readFileToString(new File(TEMPLATE_AUTHORIZATION), "UTF-8");
 			String htmlBody = applyProperties(htmlTemplate, props);
 			String subject = props.get(NOTIFICATION_TITLE);
 			send(userByTwitter.twitterEmail, subject, htmlBody, null);
@@ -371,7 +371,6 @@ public class EmailService {
 	}
 
 	public boolean sendAccountActivation(SBUser user) {
-		String htmlTemplateFile = "./WEB-INF/email-templates/email-authentication.html";
 		try {
 			String subdomain = FrontController.getCampaign().getSubdomain();
 			// send verification email with link /user/activate.html?code=<activationcode>
@@ -380,7 +379,7 @@ public class EmailService {
 			activationUrl += "/user/activate.html?code=" + user.activationCode;
 
 			Map<String, String> props = prepareAccountActivationProps(user.email, activationUrl);
-			String htmlTemplate = FileUtils.readFileToString(new File(htmlTemplateFile), "UTF-8");
+			String htmlTemplate = FileUtils.readFileToString(new File(TEMPLATE_AUTHORIZATION), "UTF-8");
 			String htmlBody = applyProperties(htmlTemplate, props);
 			String textBody = OfficeHelper.getTrans("email_account_activation_message", activationUrl, escape(user.email), escape(activationUrl));
 			String subject = props.get(NOTIFICATION_TITLE);
@@ -413,7 +412,6 @@ public class EmailService {
 	}
 
 	public boolean sendPasswordResetEmail(SBUser user) {
-		String htmlTemplateFile = "./WEB-INF/email-templates/email-authentication.html";
 		try {
 			String subdomain = FrontController.getCampaign().getSubdomain();
 			// send verification email with link /user/password_reset.html?code=<activationcode>
@@ -422,7 +420,7 @@ public class EmailService {
 			resetUrl += "/profile-page.html?password_reset=" + user.activationCode;
 			
 			Map<String, String> props = preparePasswordResetProps(user, resetUrl);
-			String htmlTemplate = FileUtils.readFileToString(new File(htmlTemplateFile), "UTF-8");
+			String htmlTemplate = FileUtils.readFileToString(new File(TEMPLATE_AUTHORIZATION), "UTF-8");
 			String htmlBody = applyProperties(htmlTemplate, props);
 			String subject = props.get(NOTIFICATION_TITLE);
 			send(user.email, subject, htmlBody, null);
