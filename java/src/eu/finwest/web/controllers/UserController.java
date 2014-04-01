@@ -139,7 +139,7 @@ public class UserController extends ModelDrivenController {
 		} else {
 			log.log(Level.WARNING, "Parameters 'email' and 'password' are mandatory!");
 			result.setErrorCode(500);
-			result.setErrorMessage("@lang_email_password_mandatory@");
+			result.setErrorMessage(OfficeHelper.getTrans("lang_email_password_mandatory"));
 		}
 		model = result;
 
