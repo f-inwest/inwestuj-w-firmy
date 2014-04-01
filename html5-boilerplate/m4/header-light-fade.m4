@@ -16,9 +16,11 @@
 				        <input id="register-password" name="password" type="password" value=""></input><br>
 				        <a href="#" id="signin-link" class="zaloguj-button signin-button">@lang_signin@</a>
 				        <a href="#" id="register-link" class="zaloguj-button register-button">@lang_new_user@</a>
+				        <a href="#" id="reset-password-link" class="zaloguj-button reset-password-button">@lang_forgot_password@</a>
 				        <div id="register-message" class="register-message attention"></div>
                     </form>
     		        <div id="register-verify-text" class="login-panel-text initialhidden">@lang_login_verify_message@</div>
+    		        <div id="reset-password-verify-text" class="login-panel-text initialhidden">@lang_login_verify_message@</div>
 				    <a id="register-close-link" href="#"  class="zaloguj-button register-close initialhidden">@lang_close@</a>
 			    </div>
 			    <div id="social-login">
@@ -34,6 +36,10 @@
 			    </div>
 		    </div>
 	    </div>
+	</div>
+	<div class="login-box-overlay initialhidden" id="login-box-overlay"></div>
+	<div class="login-box-message initialhidden" id="login-box-message">
+	    <span class="login-box-message-text" id="login-box-message-text">@lang_loading@</span>
 	</div>
 </div>
 <div id="fade" class="fade"></div>

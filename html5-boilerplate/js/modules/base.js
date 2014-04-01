@@ -358,6 +358,7 @@ function AjaxClass(url, statusId, completeFunc, successFunc, loadFunc, errorFunc
     // this.loadFunc = loadFunc || function() { pl(self.statusSel).html('<span class="inprogress">Loading...</span>'); };
     this.loadFunc = loadFunc || function() { };
     this.errorFunc = errorFunc || function(errorNum, json) {
+        console.log('AJAX errorNum=' + errorNum + " json=" + json);
         var errorStr = (json && json.error_msg) ? '@lang_error_from_server@: ' + json.error_msg
             : '@lang_error_from_server@ ' + errorNum;
         pl(self.statusSel).html('<span class="attention">' + errorStr + '</span>');
@@ -547,7 +548,7 @@ pl.implement(HeaderClass, {
         });
         pl('#login-close-box, #fade, #register-login-close-box, #register-close-link')
             .bind('click', function() {
-                pl('#light, #fade, #register-verify-text, #register-close-link').hide();
+                pl('#light, #fade, #register-verify-text, #reset-password-verify-text, #register-close-link').hide();
                 pl('#register-form, #login-panel-text, #social-login').show();
                 pl('#register-email').removeClass('register-email-input');
                 pl('#register-message').get(0).innerText = '';
@@ -607,13 +608,16 @@ pl.implement(HeaderClass, {
                 password = pl('#register-password').get(0).value,
                 data = { email: email, password: password },
                 successFunc = function(json) {
+                    pl('#login-box-overlay, #login-box-message').hide();
                     location.reload();
                 },
-                errorFunc = function(json) {
+                errorFunc = function(errorNum, json) {
                     var msg = json && json.error_msg ? json.error_msg : '@lang_cant_login@';
+                    pl('#login-box-overlay, #login-box-message').hide();
                     pl('#register-message').get(0).innerText = msg;
                 },
                 ajax = new AjaxClass('/user/authenticate', 'register-message', null, successFunc, null, errorFunc);
+            pl('#login-box-overlay, #login-box-message').show();
             ajax.setPostData(data);
             ajax.call();
         });
@@ -622,14 +626,37 @@ pl.implement(HeaderClass, {
                 password = pl('#register-password').get(0).value,
                 data = { email: email, password: password },
                 successFunc = function(json) {
+                    pl('#login-box-overlay, #login-box-message').hide();
                     pl('#register-form, #login-panel-text, #social-login').hide();
                     pl('#register-verify-text, #register-close-link').show();
                 },
-                errorFunc = function(json) {
+                errorFunc = function(errorNum, json) {
                     var msg = json && json.error_msg ? json.error_msg : '@lang_cant_register@';
-                    pl('#register-message').get(0).innerText = msg;
+                    console.log('error message:' + msg);
+                    pl('#login-box-overlay, #login-box-message').hide();
+                    pl('#register-message').get(0).innerHTML = msg;
                 },
                 ajax = new AjaxClass('/user/register', 'register-message', null, successFunc, null, errorFunc);
+            pl('#login-box-overlay, #login-box-message').show();
+            ajax.setPostData(data);
+            ajax.call();
+        });
+        pl('#reset-password-link').bind('click', function() {
+            var email = pl('#register-email').get(0).value,
+                data = { email: email },
+                successFunc = function(json) {
+                    pl('#login-box-overlay, #login-box-message').hide();
+                    pl('#register-form, #login-panel-text, #social-login').hide();
+                    pl('#reset-password-verify-text, #register-close-link').show();
+                },
+                errorFunc = function(errorNum, json) {
+                    var msg = json && json.error_msg ? json.error_msg : '@lang_cant_reset_password@';
+                    console.log('error message:' + msg);
+                    pl('#login-box-overlay, #login-box-message').hide();
+                    pl('#register-message').get(0).innerHTML = msg;
+                },
+                ajax = new AjaxClass('/user/request_reset_password.json', 'register-message', null, successFunc, null, errorFunc);
+            pl('#login-box-overlay, #login-box-message').show();
             ajax.setPostData(data);
             ajax.call();
         });
@@ -646,7 +673,7 @@ pl.implement(HeaderClass, {
             return false;
         });
         pl('#headernotloggedin').show();
-        pl('.adminfooterlink').hide();
+        //pl('.adminfooterlink').hide();
 
         pl('a[href=/add-listing-page.html]').bind('click', function(e) {
             pl('#light, #fade').show();

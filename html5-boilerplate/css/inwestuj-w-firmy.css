@@ -177,9 +177,9 @@ body.nearby-page > #wrap > #main > div.container > div.nearbywrapper {
     color: #5b6773;
     width: 635px;
     background-image: url(../img/header-content-bck.png);
-    left: 0px;
+    left: 1px;
     height: 30px;
-    line-height: 22px;
+    line-height: 30px;
 }
 .header-boxpanel-top {
 }
@@ -233,6 +233,11 @@ body.nearby-page > #wrap > #main > div.container > div.nearbywrapper {
 }
 .twitter-login {
     background: url(../img/twitter.png) no-repeat top left;
+}
+.social-login {
+    position: absolute;
+    top: 107px;
+    left: 380px;
 }
 .social-loginlink {
     margin-right: 10px;
@@ -693,6 +698,7 @@ a:focus, a:hover { cursor: pointer; }
 .companybannerstatusmsg {
     padding-top: 45px;
     width: 200px;
+    right: 220px;
 }
 .companybannermantra2 { font-style: italic; padding-top: 2px; }
 .companynavcontainer {
@@ -1976,11 +1982,6 @@ transition: height 300ms;
 left: 626px;
 top: -10px;
 }
-.sideinfodisplay {
-height: 130px;
-padding: 10px;
-border: 1px solid #cccccc;
-}
 #newlistingappwrapper .sideinfo, #newlistingcompanywrapper .sideinfo {
     left: 426px;
     width: 530px;
@@ -1991,7 +1992,11 @@ border: 1px solid #cccccc;
     top: 15px;
 }
 .sideinfodisplay {
-    height: 180px;
+    height: 280px;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    left: 626px;
+    padding: 15px;
 }
 .sideinfoitem { position: relative; }
 .sideinfoheader { font-size: 18px; font-weight: bold; line-height: 30px; }
@@ -3007,6 +3012,12 @@ color: #fff;
     width: 165px;
     float: left;
 }
+.reset-password-button {
+    width: 185px;
+    float: left;
+    clear: both;
+    margin-top: 20px;
+}
 .login-panel-left {
     margin-right: 25px !important;
 }
@@ -3018,7 +3029,10 @@ color: #fff;
     color: #5b6773 !important;
 }
 .register-message {
-    padding-top: 85px;
+    position: absolute;
+    right: 40px;
+    bottom: 30px;
+    width: 230px;
 }
 .purchase-button-investor {
     width: 302px;
@@ -3065,4 +3079,29 @@ color: #fff;
 }
 .company-side-menu-inner-pricepoints {
     padding-bottom: 15px;
+}
+
+
+.login-box-overlay {
+    width: 650px;
+    height: 350px;
+    background-color: rgba(0,0,0,0.5);
+    position: absolute;
+    top: 10px;
+}
+.login-box-message {
+    width: 350px;
+    height: 50px;
+    background-color: #fefefe;
+    position: absolute;
+    top: 160px;
+    left: 150px;
+    text-align: center;
+}
+.login-box-message-text {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: #00c700;
+    line-height: 50px;
 }
