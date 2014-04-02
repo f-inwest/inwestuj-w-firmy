@@ -418,7 +418,7 @@ pl.implement(ListingClass, {
         this.latitude = this.latitude || '51.499117116569';
         this.longitude = this.longitude || '-0.12359619140625';
         //this.mapurl = 'http://ojw.dev.openstreetmap.org/StaticMap/?lat=' + this.latitude + '&lon=' + this.longitude + '&z=5&show=1&fmt=png&w=302&h=302&att=none';
-        this.mapurl = 'https://maps.googleapis.com/maps/api/staticmap?center=' + this.latitude + ',' + this.longitude + '&zoom=7&size=302x302&maptype=roadmap&markers=color:blue%7Clabel:' + encodeURI(this.title) + '%7C' + encodeURI(this.address) + '&sensor=false';
+        this.mapurl = 'https://maps.googleapis.com/maps/api/staticmap?center=' + this.latitude + ',' + this.longitude + '&zoom=7&size=302x302&maptype=roadmap&markers=color:blue%7Clabel:' + encodeURI(this.title) + '%7C' + encodeURI(this.address) + '&style=feature:landscape|visibility:on|color:0xffffff|saturation:-100|lightness:4&style=feature:road.highway|visibility:on|color:0x4cc7df|saturation:100|lightness:-7&style=feature:road.arterial|visibility:on|color:0x4cc7df|saturation:-30|lightness:-3&style=feature:road.local|color:0xffffff|saturation:-30|lightness:-3&style=feature:landscape.natural|color:0xffffff|saturation:-30|lightness:-3&style=feature:poi.park|color:0xffffff|saturation:-30|lightness:-3&sensor=false';
         pl('#fulladdress').html(this.address || '@lang_unknown_address@');
         pl('#addresslink').attr({href: this.addressurl});
         pl('#mapimg').attr({src: this.mapurl});

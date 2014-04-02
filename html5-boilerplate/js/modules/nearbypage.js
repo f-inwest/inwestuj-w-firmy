@@ -43,7 +43,64 @@ pl.implement(MapPageClass,{
         var map = new google.maps.Map(pl('#map').get(0), {
                 center: center,
                 zoom: zoom,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+          		styles: [
+				{
+					featureType: 'landscape',
+					elementType: 'all',
+					stylers: [
+						{ "color": "#ffffff" },
+						{ saturation: -100 },
+						{ lightness: 4 },
+						{ visibility: 'on' }
+					]
+				},{
+					featureType: 'road.highway',
+					elementType: 'all',
+					stylers: [
+						{ "color": "#4cc7df"},
+						{ saturation: 100 },
+						{ lightness: -7 },
+						{ visibility: 'on' }
+					]
+				},{
+					featureType: 'road.arterial',
+					elementType: 'all',
+					stylers: [
+						{ "color": "#4cc7df" },
+						{ saturation: -30 },
+						{ lightness: -3 },
+						{ visibility: 'on' }
+					]
+				},{
+					featureType: 'road.local',
+					elementType: 'all',
+					stylers: [
+						{ "color": "#ffffff" },
+						{ saturation: -30 },
+						{ lightness: -3 },
+						{ visibility: 'on' }
+					]
+				},{
+					featureType: 'landscape.natural',
+					elementType: 'all',
+					stylers: [
+						{ "color": "#ffffff" },
+						{ saturation: -30 },
+						{ lightness: -3 },
+						{ visibility: 'on' }
+					]
+				},{
+					featureType: 'poi.park',
+					elementType: 'all',
+					stylers: [
+						{ "color": "#ffffff" },
+						{ saturation: -30 },
+						{ lightness: -3 },
+						{ visibility: 'on' }
+					]
+				}
+				]
             }),
             i,
             maplisting,
