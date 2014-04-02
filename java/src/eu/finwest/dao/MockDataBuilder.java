@@ -68,6 +68,7 @@ import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.Vote;
 import static eu.finwest.web.LangVersion.*;
 import eu.finwest.util.OfficeHelper;
+import eu.finwest.util.Translations;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.ListingAndUserVO;
@@ -391,7 +392,6 @@ public class MockDataBuilder {
 	
 	public List<PricePoint> createPricePoints() {
 		List<PricePoint> list = new ArrayList<PricePoint>();
-		OfficeHelper oh = OfficeHelper.instance();
 		
 		PricePoint pp = new PricePoint();
 		pp.name = "INV_REG";
@@ -399,8 +399,8 @@ public class MockDataBuilder {
 		pp.type = Type.INVESTOR_REGISTRATION;
 		pp.amount = 5000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_investor_registration_desc");
-		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_investor_registration_desc");
+		pp.descriptionPl = Translations.getText(PL, "lang_pp_investor_registration_desc");
+		pp.descriptionEn = Translations.getText(EN, "lang_pp_investor_registration_desc");
 		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
 		list.add(pp);
 		
@@ -410,8 +410,8 @@ public class MockDataBuilder {
 		pp.type = Type.LISTING_ACTIVATION;
 		pp.amount = 2000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_project_activation_desc");
-		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_project_activation_desc");
+		pp.descriptionPl = Translations.getText(PL, "lang_pp_project_activation_desc");
+		pp.descriptionEn = Translations.getText(EN, "lang_pp_project_activation_desc");
 		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
 		list.add(pp);
 		
@@ -421,8 +421,8 @@ public class MockDataBuilder {
 		pp.type = Type.LISTING_BP;
 		pp.amount = 1000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_project_bp_desc");
-		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_project_bp_desc");
+		pp.descriptionPl = Translations.getText(PL, "lang_pp_project_bp_desc");
+		pp.descriptionEn = Translations.getText(EN, "lang_pp_project_bp_desc");
 		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
 		list.add(pp);
 		
@@ -432,8 +432,8 @@ public class MockDataBuilder {
 		pp.type = Type.LISTING_PPTX;
 		pp.amount = 1000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_project_ppt_desc");
-		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_project_ppt_desc");
+		pp.descriptionPl = Translations.getText(PL, "lang_pp_project_ppt_desc");
+		pp.descriptionEn = Translations.getText(EN, "lang_pp_project_ppt_desc");
 		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
 		list.add(pp);
 		
@@ -443,8 +443,8 @@ public class MockDataBuilder {
 		pp.type = Type.LISTING_ACTIVATION;
 		pp.amount = 3000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_project_all_desc");
-		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_project_all_desc");
+		pp.descriptionPl = Translations.getText(PL, "lang_pp_project_all_desc");
+		pp.descriptionEn = Translations.getText(EN, "lang_pp_project_all_desc");
 		pp.successUrl = "http://<domain>/company-page.html?id=<id>";
 		list.add(pp);
 
@@ -454,8 +454,8 @@ public class MockDataBuilder {
 		pp.type = Type.CAMPAIGN_MONTH;
 		pp.amount = 50000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_campaign_1month_desc");
-		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_campaign_1month_desc");
+		pp.descriptionPl = Translations.getText(PL, "lang_pp_campaign_1month_desc");
+		pp.descriptionEn = Translations.getText(EN, "lang_pp_campaign_1month_desc");
 		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
 		list.add(pp);
 		
@@ -465,8 +465,8 @@ public class MockDataBuilder {
 		pp.type = Type.CAMPAIGN_6MONTHS;
 		pp.amount = 200000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_campaign_6month_desc");
-		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_campaign_6month_desc");
+		pp.descriptionPl = Translations.getText(PL, "lang_pp_campaign_6month_desc");
+		pp.descriptionEn = Translations.getText(EN, "lang_pp_campaign_6month_desc");
 		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
 		list.add(pp);
 
@@ -476,8 +476,8 @@ public class MockDataBuilder {
 		pp.type = Type.CAMPAIGN_YEAR;
 		pp.amount = 350000;
 		pp.currency = Currency.PLN;
-		pp.descriptionPl = oh.getTranslation(PL, "lang_pp_campaign_year_desc");
-		pp.descriptionEn = oh.getTranslation(EN, "lang_pp_campaign_year_desc");
+		pp.descriptionPl = Translations.getText(PL, "lang_pp_campaign_year_desc");
+		pp.descriptionEn = Translations.getText(EN, "lang_pp_campaign_year_desc");
 		pp.successUrl = "http://<domain>/profile-page.html?id=<id>";
 		list.add(pp);
 
@@ -487,13 +487,12 @@ public class MockDataBuilder {
 
     public List<Campaign> createMockCampaigns(List<SBUser> users) {
     	List<Campaign> list = new ArrayList<Campaign>();
-    	OfficeHelper oh = OfficeHelper.instance();
     	
     	Campaign c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 180L * 24 * 60 * 60 * 1000);
-    	c.name = oh.getTranslation(PL, "lang_campaign_test_name");
-    	c.description = oh.getTranslation(PL, "lang_campaign_test_desc");
+    	c.name = Translations.getText(PL, "lang_campaign_test_name");
+    	c.description = Translations.getText(PL, "lang_campaign_test_desc");
     	c.comment = "";
     	c.allowedLanguage = Campaign.Language.PL;
     	c.creator = new Key<SBUser>(SBUser.class, GREG.toKeyId());
@@ -508,8 +507,8 @@ public class MockDataBuilder {
     	c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 10 * 1000);
-    	c.name = oh.getTranslation(EN, "lang_campaign_test2_name");
-    	c.description = oh.getTranslation(EN, "lang_campaign_test2_desc");
+    	c.name = Translations.getText(EN, "lang_campaign_test2_name");
+    	c.description = Translations.getText(EN, "lang_campaign_test2_desc");
     	c.comment = "";
     	c.allowedLanguage = Campaign.Language.EN;
     	c.creator = new Key<SBUser>(SBUser.class, JOHN.toKeyId());
@@ -524,8 +523,8 @@ public class MockDataBuilder {
     	c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 180 * 24 * 60 * 60 * 1000);
-    	c.name = oh.getTranslation(EN, "lang_campaign_test3_name");
-    	c.description = oh.getTranslation(EN, "lang_campaign_test3_desc");
+    	c.name = Translations.getText(EN, "lang_campaign_test3_name");
+    	c.description = Translations.getText(EN, "lang_campaign_test3_desc");
     	c.comment = "";
     	c.allowedLanguage = Campaign.Language.EN;
     	c.creator = new Key<SBUser>(SBUser.class, AHMED.toKeyId());
@@ -540,8 +539,8 @@ public class MockDataBuilder {
     	c = new Campaign();
     	c.activeFrom = new Date();
     	c.activeTo = new Date(new Date().getTime() + 180 * 24 * 60 * 60 * 1000);
-    	c.name = oh.getTranslation(PL, "lang_campaign_dead_name");
-    	c.description = oh.getTranslation(PL, "lang_campaign_dead_desc");
+    	c.name = Translations.getText(PL, "lang_campaign_dead_name");
+    	c.description = Translations.getText(PL, "lang_campaign_dead_desc");
     	c.comment = "";
     	c.allowedLanguage = Campaign.Language.PL;
     	c.creator = new Key<SBUser>(SBUser.class, INSIDER.toKeyId());

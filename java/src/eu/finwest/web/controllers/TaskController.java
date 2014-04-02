@@ -21,6 +21,7 @@ import eu.finwest.datamodel.SBUser;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ListingVO;
+import eu.finwest.vo.NotificationVO;
 import eu.finwest.web.DocService;
 import eu.finwest.web.EmailService;
 import eu.finwest.web.HttpHeaders;
@@ -159,7 +160,10 @@ public class TaskController extends ModelDrivenController {
 			SBUser receiver = ObjectifyDatastoreDAO.getInstance().getUserByEmail(notification.userEmail);
 			if (receiver.notifyEnabled && receiver.email != null) {
 				log.info("Sending notification: " + notification);
-				if (EmailService.instance().sendNotificationEmail(DtoToVoConverter.convert(notification))) {
+				NotificationVO notifVO = DtoToVoConverter.convert(notification);
+				notifVO.setUserRecentDomain(receiver.recentDomain);
+				notifVO.setUserRecentLang(receiver.recentLang);
+				if (EmailService.instance().sendNotificationEmail(notifVO)) {
 					notification.sentDate = new Date();
 					NotificationObjectifyDatastoreDAO.getInstance().storeNotification(notification);
 				}

@@ -22,7 +22,7 @@
   <!-- for facebook -->
   <meta property="og:title" content="inwestuj-w-firmy" />
   <meta property="og:type" content="company" />
-  <meta property="og:url" content="http://www.inwestujwfirmy.pl" />
+  <meta property="og:url" content="https://www.inwestujwfirmy.pl" />
   <meta property="og:image" content="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/41604_200032480112098_936268874_n.jpg" />
   <meta property="og:site_name" content="inwestuj-w-firmy" />
   <meta property="fb:admins" content="1244884534" />
@@ -37,6 +37,6 @@
   <link rel="stylesheet" href="css/style.css" type="text/css" />
   <!-- end CSS-->
 
-  <link rel="canonical" href="http://inwestujwfirmy.pl"/>
+  <link rel="canonical" href="https://inwestujwfirmy.pl"/>
 </head>
 '

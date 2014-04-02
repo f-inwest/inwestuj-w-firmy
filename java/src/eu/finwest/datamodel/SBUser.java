@@ -18,6 +18,8 @@ import com.googlecode.objectify.annotation.Indexed;
 import com.googlecode.objectify.annotation.Unindexed;
 import com.googlecode.objectify.condition.IfNotNull;
 
+import eu.finwest.web.LangVersion;
+
 /**
  * @author "Grzegorz Nittner" <grzegorz.nittner@gmail.com>
  *
@@ -85,6 +87,9 @@ public class SBUser extends BaseObject<SBUser> implements Serializable {
 	@Indexed(IfNotNull.class) public String activationCode;
 	@Indexed(IfNotNull.class) public String authCookie;
 	public Date emailActivationDate;
+	
+	public String recentDomain = "www.inwestujwfirmy.pl";
+	public LangVersion recentLang = LangVersion.PL;
 
 	@Indexed public Date joined;
 	public Date lastLoggedIn;

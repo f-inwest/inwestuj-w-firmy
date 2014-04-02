@@ -58,6 +58,8 @@ public class UserVO extends BaseVO {
 	@JsonProperty("avatar") private String avatar;
 	private String paidCode;
 	private Map<String, String> locationHeaders;
+	private String recentDomain;
+	private LangVersion recentLang;
 	
 	public UserVO() {
 	}
@@ -245,5 +247,17 @@ public class UserVO extends BaseVO {
 	}
 	public void setPaidCode(String paidCode) {
 		this.paidCode = paidCode;
+	}
+	public String getRecentDomain() {
+		return recentDomain;
+	}
+	public void setRecentDomain(String recentDomain) {
+		this.recentDomain = recentDomain;
+	}
+	public LangVersion getRecentLang() {
+		return recentLang;
+	}
+	public void setRecentLang(LangVersion recentLang) {
+		this.recentLang = recentLang;
 	}
 }

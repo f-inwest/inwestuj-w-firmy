@@ -7,8 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -20,12 +18,10 @@ import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Comment;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.Monitor;
-import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
-import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.VoToModelConverter;
-import eu.finwest.util.OfficeHelper;
+import eu.finwest.util.Translations;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.CommentListVO;
 import eu.finwest.vo.CommentVO;
@@ -143,7 +139,7 @@ public class ServiceFacade {
 		if (loggedInUser == null) {
 			log.info("User is not logged in!");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			return result;
 		}
 		CommentVO comment = getComment(loggedInUser, commentId);

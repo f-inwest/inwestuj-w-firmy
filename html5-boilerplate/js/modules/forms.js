@@ -26,17 +26,17 @@ pl.implement(VideoCheckClass, {
         var matcher = {
                 yahoo: {
                     regex: /(https?:\/\/)?[^\/]*(youtube.com|youtu.be)\/(embed\/|.*v=)?([^\/&]*)/,
-                    prefix: 'http://www.youtube.com/embed/',
+                    prefix: 'https://www.youtube.com/embed/',
                     postfix: ''
                 },
                 vimeo: {
                     regex: /(https?:\/\/)?[^\/]*vimeo.com\/(video\/)?([^\/&]*)/,
-                    prefix: 'http://player.vimeo.com/video/',
+                    prefix: 'https://player.vimeo.com/video/',
                     postfix: '?title=0&byline=0&portrait=0'
                 },
                 dailymotion: {
                     regex: /(https?:\/\/)?[^\/]*dailymotion.com\/(.*#)?video[\/=]([^\/&]*)/,
-                    prefix: 'http://www.dailymotion.com/embed/video/',
+                    prefix: 'https://www.dailymotion.com/embed/video/',
                     postfix: ''
                 }
             },

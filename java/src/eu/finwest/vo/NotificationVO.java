@@ -9,6 +9,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import eu.finwest.util.DateSerializer;
 import eu.finwest.util.LowecaseSerializer;
+import eu.finwest.web.LangVersion;
 
 /**
  * @author "Grzegorz Nittner" <grzegorz.nittner@gmail.com>
@@ -21,6 +22,8 @@ public class NotificationVO extends BaseVO {
     @JsonProperty("user_id") private String user;
 	@JsonProperty("user_nickname") private String userNickname;
 	private String userEmail;
+	private String userRecentDomain;
+	private LangVersion userRecentLang;
 	@JsonProperty("listing_id")	private String listing;
 	@JsonProperty("listing_name") private String listingName;
 	@JsonProperty("listing_owner") private String listingOwner;
@@ -158,6 +161,18 @@ public class NotificationVO extends BaseVO {
 	}
 	public void setUserEmail(String userEmail) {
 		this.userEmail = userEmail;
+	}
+	public String getUserRecentDomain() {
+		return userRecentDomain;
+	}
+	public void setUserRecentDomain(String userRecentDomain) {
+		this.userRecentDomain = userRecentDomain;
+	}
+	public LangVersion getUserRecentLang() {
+		return userRecentLang;
+	}
+	public void setUserRecentLang(LangVersion userRecentLang) {
+		this.userRecentLang = userRecentLang;
 	}
 	public String getLink() {
 		return link;

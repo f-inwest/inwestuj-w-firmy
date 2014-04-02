@@ -74,6 +74,7 @@ import eu.finwest.datamodel.VoToModelConverter;
 import eu.finwest.util.ImageHelper;
 import eu.finwest.util.OfficeHelper;
 import eu.finwest.util.OfficeHelper.Template;
+import eu.finwest.util.Translations;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.DiscoverListingsVO;
 import eu.finwest.vo.DtoToVoConverter;
@@ -167,7 +168,7 @@ public class ListingFacade {
 		if (loggedInUser == null) {
 			log.log(Level.INFO, "Only logged in user can create listing");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 		} else {
 			Listing l = new Listing();
 			l.lang = FrontController.getLangVersion();
@@ -207,7 +208,7 @@ public class ListingFacade {
 		if (loggedInUser == null) {
 			log.log(Level.INFO, "Only logged in user can create listing");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 		} else {
 			Listing newListing = null;
 			if (loggedInUser.getEditedListing() != null) {
@@ -306,12 +307,12 @@ public class ListingFacade {
 				listingAndUser.setListing(listing);
 			} else {
 				listingAndUser.setErrorCode(ErrorCodes.DATASTORE_ERROR);
-				listingAndUser.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_found"));
+				listingAndUser.setErrorMessage(Translations.getText("lang_error_listing_not_found"));
 			}
 		} catch (Exception e) {
 			log.warning("Invalid key passed '" + listingId + "'");
 			listingAndUser.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			listingAndUser.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_found"));
+			listingAndUser.setErrorMessage(Translations.getText("lang_error_listing_not_found"));
 		}
 		return listingAndUser;
 	}
@@ -326,12 +327,12 @@ public class ListingFacade {
 		if (loggedInUser == null) {
 			log.info("User not logged in!");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			return result;
 		}
 		if (listingId == null && loggedInUser.getEditedListing() == null) {
 			result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_edited_not_exist"));
+			result.setErrorMessage(Translations.getText("lang_error_listing_edited_not_exist"));
 			return result;
 		}
 		String editedListingId = loggedInUser.getEditedListing();
@@ -342,12 +343,12 @@ public class ListingFacade {
 		Listing listing = getDAO().getListing(BaseVO.toKeyId(editedListingId));
 		if (listing == null) {
 			result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_edited_not_exist"));
+			result.setErrorMessage(Translations.getText("lang_error_listing_edited_not_exist"));
 			return result;
 		}
 		if (!(loggedInUser.isAdmin() || listing.owner.getId() == loggedInUser.toKeyId())) {
 			result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_project_owner"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_project_owner"));
 			return result;
 		}
 		if (listing.state != Listing.State.NEW) {
@@ -362,7 +363,7 @@ public class ListingFacade {
 
 			if (propsToUpdate.isEmpty()) {
 				result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
-				result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_new"));
+				result.setErrorMessage(Translations.getText("lang_error_listing_not_new"));
 				return result;
 			}
 			properties = propsToUpdate;
@@ -383,7 +384,7 @@ public class ListingFacade {
                 if (doc == null) {
                 	log.warning("Error updating property " + prop + " of listing " + listing);
                     result.setErrorCode(ErrorCodes.DATASTORE_ERROR);
-                    result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listingdoc_error"));
+                    result.setErrorMessage(Translations.getText("lang_error_listingdoc_error"));
                     return result;
                 }
                 if (doc.getErrorCode() != ErrorCodes.OK) {
@@ -401,7 +402,7 @@ public class ListingFacade {
                 else {
                 	log.warning("Error updating listing. " + infos.toString());
 					result.setErrorCode(ErrorCodes.DATASTORE_ERROR);
-					result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listingdoc_error"));
+					result.setErrorMessage(Translations.getText("lang_error_listingdoc_error"));
 					fetchError = true;
 					break;
 				}
@@ -418,7 +419,7 @@ public class ListingFacade {
 			log.warning("Nothing to update. " + infos.toString());
 			result.setListing(DtoToVoConverter.convert(listing));
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_updated"));
+			result.setErrorMessage(Translations.getText("lang_error_listing_not_updated"));
 			return result;
 		}
 
@@ -441,19 +442,19 @@ public class ListingFacade {
 
 		if (loggedInUser == null || loggedInUser.getEditedListing() == null) {
 			result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in_or_not_editing"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in_or_not_editing"));
 			return result;
 		}
 		// retrieving edited listing
 		Listing listing = getDAO().getListing(BaseVO.toKeyId(loggedInUser.getEditedListing()));
 		if (listing == null) {
 			result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_edited_not_exist"));
+			result.setErrorMessage(Translations.getText("lang_error_listing_edited_not_exist"));
 			return result;
 		}
 		if (listing.state != Listing.State.NEW) {
 			result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_edited_not_new"));
+			result.setErrorMessage(Translations.getText("lang_error_listing_edited_not_new"));
 			return result;
 		}
 		StringBuffer infos = new StringBuffer();
@@ -477,7 +478,7 @@ public class ListingFacade {
 		if (infos.length() > 0 ) {
 			log.info("Missing mandatory address field(s): " + infos.toString());
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_edited_missing_address"));
+			result.setErrorMessage(Translations.getText("lang_error_listing_edited_missing_address"));
 			return result;
 		}
 
@@ -712,14 +713,14 @@ public class ListingFacade {
 		if (loggedInUser == null) {
 			log.log(Level.INFO, "User is not logged in!");
 			returnValue.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			return returnValue;
 		}
 		// Only admins can do activation
 		if (!loggedInUser.isAdmin()) {
 			log.log(Level.WARNING, "User " + loggedInUser + " is not an admin. Only admin can activate listings.", new Exception("Not an admin"));
 			returnValue.setErrorCode(ErrorCodes.NOT_AN_ADMIN);
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_admin"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_user_not_admin"));
 			return returnValue;
 		}
 
@@ -727,7 +728,7 @@ public class ListingFacade {
 		if (dbListing.state != Listing.State.POSTED && dbListing.state != Listing.State.FROZEN) {
 			log.log(Level.INFO, "Only posted and frozen listings can be activated. This listing is " + dbListing.state, new Exception("Not valid state"));
 			returnValue.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_posted_or_frozen"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_listing_not_posted_or_frozen"));
 			return returnValue;
 		}
 		// activation also could be done for FROZEN listings
@@ -768,20 +769,20 @@ public class ListingFacade {
 		Listing dbListing = getDAO().getListing(BaseVO.toKeyId(listingId));
 		if (loggedInUser == null || dbListing == null) {
 			log.log(Level.INFO, "User not logged in or listing doesn't exist");
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			returnValue.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			return returnValue;
 		}
 		if (!StringUtils.equals(loggedInUser.getId(), dbListing.owner.getString())) {
 			log.log(Level.INFO, "User '" + loggedInUser + "' is not an owner of listing " + dbListing, new Exception("Not listing owner"));
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_project_owner"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_user_not_project_owner"));
 			returnValue.setErrorCode(ErrorCodes.NOT_AN_OWNER);
 			return returnValue;
 		}
 		if (FrontController.getCampaign() != null && !FrontController.getCampaign().getSubdomain().equals(dbListing.campaign)) {
 			log.log(Level.INFO, "User in campaign mode but listing doesn't have campaign selected or is different (user campaign "
 					+ FrontController.getCampaign().getSubdomain() + ", listing's campaign " + dbListing.campaign + ")", new Exception("Not valid state"));
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_for_different_campaign"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_listing_for_different_campaign"));
 			returnValue.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
 			return returnValue;
 		}
@@ -820,7 +821,7 @@ public class ListingFacade {
 			return returnValue;
 		}
 		log.log(Level.INFO, "Only NEW listing can be marked as POSTED (state is " + dbListing.state + ")", new Exception("Not valid state"));
-		returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_new"));
+		returnValue.setErrorMessage(Translations.getText("lang_error_listing_not_new"));
 		returnValue.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
 		return returnValue;
 	}
@@ -919,20 +920,20 @@ public class ListingFacade {
 
 		if (loggedInUser == null) {
 			log.log(Level.INFO, "User not logged in");
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			returnValue.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			return returnValue;
 		}
 		Listing dbListing = getDAO().getListing(BaseVO.toKeyId(listingId));
 		if (dbListing == null) {
 			log.log(Level.INFO, "Listing doesn't exist", new Exception("Listing doesn't exist"));
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_found"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_listing_not_found"));
 			returnValue.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
 			return returnValue;
 		}
 		if (!StringUtils.equals(loggedInUser.getId(), dbListing.owner.getString())) {
 			log.log(Level.WARNING, "User must be an owner of the listing", new Exception("Not an owner"));
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_project_owner"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_user_not_project_owner"));
 			returnValue.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
 			return returnValue;
 		}
@@ -949,7 +950,7 @@ public class ListingFacade {
 				scheduleUpdateOfListingStatistics(updatedListing.getWebKey(), UpdateReason.NONE);
 				NotificationFacade.instance().scheduleListingStateNotification(updatedListing);
 			} else {
-				returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_updated"));
+				returnValue.setErrorMessage(Translations.getText("lang_error_listing_not_updated"));
 				returnValue.setErrorCode(ErrorCodes.DATASTORE_ERROR);
 			}
 			ListingVO toReturn = DtoToVoConverter.convert(updatedListing);
@@ -961,7 +962,7 @@ public class ListingFacade {
 			return returnValue;
 		}
 		log.log(Level.INFO, "CLOSED or WITHDRAWN listings cannot be withdrawn (state was " + dbListing.state + ")", new Exception("Not valid state"));
-		returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_allowed_for_closed_or_withdrawn"));
+		returnValue.setErrorMessage(Translations.getText("lang_error_listing_not_allowed_for_closed_or_withdrawn"));
 		returnValue.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
 		return returnValue;
 	}
@@ -975,7 +976,7 @@ public class ListingFacade {
 		Listing dbListing = getDAO().getListing(BaseVO.toKeyId(listingId));
 		if (loggedInUser == null || dbListing == null || !loggedInUser.isAdmin()) {
 			log.info("User " + loggedInUser + " is not admin");
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			returnValue.setErrorCode(ErrorCodes.NOT_AN_ADMIN);
 			return returnValue;
 		}
@@ -983,7 +984,7 @@ public class ListingFacade {
 		SBUser user = getDAO().getUser(dbListing.owner.getString());
 		if (user == null) {
 			log.warning("Listing owner " + dbListing.owner + " cannot be found!");
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_found"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_user_not_found"));
 			returnValue.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
 			return returnValue;
 		}
@@ -1012,7 +1013,7 @@ public class ListingFacade {
 					"Listing sent back on " + new Date() + " by " + loggedInUser.getNickname());
 			if (updatedListing == null) {
                 log.severe("Could not update listing in datastore to NEW status: " + forUpdate.getId());
-				returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_updated"));
+				returnValue.setErrorMessage(Translations.getText("lang_error_listing_not_updated"));
 				returnValue.setErrorCode(ErrorCodes.DATASTORE_ERROR);
 			} else {
                 user.editedListing = dbListing.getKey();
@@ -1034,7 +1035,7 @@ public class ListingFacade {
 			returnValue.setListing(toReturn);
 			return returnValue;
 		}
-		returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_cannot_be_sent_back"));
+		returnValue.setErrorMessage(Translations.getText("lang_error_listing_cannot_be_sent_back"));
 		returnValue.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
 		return returnValue;
 	}
@@ -1046,7 +1047,7 @@ public class ListingFacade {
 		ListingAndUserVO returnValue = new ListingAndUserVO();
 		if (loggedInUser == null || !loggedInUser.isAdmin()) {
 			log.info("User not logged in or '" + loggedInUser + "' is not an admin");
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_admin"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_user_not_admin"));
 			returnValue.setErrorCode(ErrorCodes.NOT_AN_ADMIN);
 			return returnValue;
 		}
@@ -1054,7 +1055,7 @@ public class ListingFacade {
 		Listing dbListing = getDAO().getListing(BaseVO.toKeyId(listingId));
 		if (dbListing == null || dbListing.state == Listing.State.NEW || dbListing.state == Listing.State.POSTED) {
 			log.info("Listing does not exist or is not yet activated. Listing: " + dbListing);
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_doesnt_exist"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_listing_doesnt_exist"));
 			returnValue.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
 			return returnValue;
 		}
@@ -1067,7 +1068,7 @@ public class ListingFacade {
 		Listing updatedListing = getDAO().updateListingStateAndDates(VoToModelConverter.convert(forUpdate),
 				"Listing frozen on " + new Date() + " by " + loggedInUser.getNickname());
 		if (updatedListing == null) {
-			returnValue.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_updated"));
+			returnValue.setErrorMessage(Translations.getText("lang_error_listing_not_updated"));
 			returnValue.setErrorCode(ErrorCodes.DATASTORE_ERROR);
 		} else {
 			scheduleUpdateOfListingStatistics(updatedListing.getWebKey(), UpdateReason.NONE);
@@ -1096,7 +1097,7 @@ public class ListingFacade {
 
 		if (loggedInUser == null) {
 			log.info("User not logged in");
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			return result;
 		} else if (loggedInUser.isAdmin() && StringUtils.isNotEmpty(listingId)) {
@@ -1107,7 +1108,7 @@ public class ListingFacade {
 		} else {
 			log.info("User can only delete own listings");
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_delete_not_owner"));
+			result.setErrorMessage(Translations.getText("lang_error_listing_delete_not_owner"));
 			return result;
 		}
 
@@ -1115,7 +1116,7 @@ public class ListingFacade {
 		if (deletedListing == null) {
 			log.info("Listing '" + listingKey + "' has not been deleted");
 			result.setErrorCode(ErrorCodes.DATASTORE_ERROR);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_deleted"));
+			result.setErrorMessage(Translations.getText("lang_error_listing_not_deleted"));
 			return result;
 		}
 		log.info("Listing deleted: " + deletedListing);
@@ -1273,7 +1274,7 @@ public class ListingFacade {
 		if (loggedInUser == null) {
 			log.info("User not logged in.");
 			list.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			list.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			return list;
 		}
 		UserVO user = loggedInUser;
@@ -1281,7 +1282,7 @@ public class ListingFacade {
 			user = DtoToVoConverter.convert(getDAO().getUser(userId));
 			if (user == null) {
 				list.setErrorCode(ErrorCodes.APPLICATION_ERROR);
-				list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_found"));
+				list.setErrorMessage(Translations.getText("lang_error_user_not_found"));
 				return list;
 			}
 		}
@@ -1422,7 +1423,7 @@ public class ListingFacade {
 		Listing.State state = stateString != null ? Listing.State.valueOf(stateString.toUpperCase()) : null;
 		if (loggedInUser == null && state != Listing.State.ACTIVE) {
 			log.log(Level.INFO, "User not logged in but requested non active listings");
-			list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			list.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			list.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
 			return list;
 		}
@@ -1433,13 +1434,13 @@ public class ListingFacade {
 			user = DtoToVoConverter.convert(getDAO().getUser(userId));
 			if (user == null) {
 				list.setErrorCode(ErrorCodes.APPLICATION_ERROR);
-				list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_found"));
+				list.setErrorMessage(Translations.getText("lang_error_user_not_found"));
 				return list;
 			}
 		}
 		if (!(isAdmin || ownerListings) && state != Listing.State.ACTIVE) {
 			log.log(Level.INFO, "Only admins and owner can request non active listings");
-			list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_admin"));
+			list.setErrorMessage(Translations.getText("lang_error_user_not_admin"));
 			list.setErrorCode(ErrorCodes.NOT_AN_OWNER);
 			return list;
 		}
@@ -1498,7 +1499,7 @@ public class ListingFacade {
 		ListingListVO list = new ListingListVO();
 		if (loggedInUser == null || !loggedInUser.isAdmin()) {
 			list.setErrorCode(ErrorCodes.NOT_AN_ADMIN);
-			list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_admin"));
+			list.setErrorMessage(Translations.getText("lang_error_user_not_admin"));
 			return list;
 		}
 		List<ListingTileVO> listings = DtoToVoConverter.convertListingTiles(getDAO().getPostedListings(listingProperties));
@@ -1542,7 +1543,7 @@ public class ListingFacade {
 		ListingListVO list = new ListingListVO();
 		if (loggedInUser == null || !loggedInUser.isAdmin()) {
 			list.setErrorCode(ErrorCodes.NOT_AN_ADMIN);
-			list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_admin"));
+			list.setErrorMessage(Translations.getText("lang_error_user_not_admin"));
 			return list;
 		}
 		List<ListingTileVO> listings = DtoToVoConverter.convertListingTiles(getDAO().getFrozenListings(listingProperties));
@@ -1873,7 +1874,7 @@ public class ListingFacade {
 		if (loggedInUser == null) {
 			blobstoreService.delete(doc.getBlob());
 			doc.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			doc.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			doc.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			log.info("User not logged in!");
 			return doc;
 		}
@@ -1887,14 +1888,14 @@ public class ListingFacade {
 		} else {
 			blobstoreService.delete(doc.getBlob());
 			doc.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
-			doc.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			doc.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			return doc;
 		}
 		Listing listing = getDAO().getListing(editedListingId);
 		if (!(loggedInUser.isAdmin() || StringUtils.equals(loggedInUser.getId(), listing.owner.getString()))) {
 			blobstoreService.delete(doc.getBlob());
 			doc.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
-			doc.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_project_owner"));
+			doc.setErrorMessage(Translations.getText("lang_error_user_not_project_owner"));
 			return doc;
 		}
 		ListingDoc.Type docType = ListingDoc.Type.valueOf(doc.getType());
@@ -2102,7 +2103,7 @@ public class ListingFacade {
 		Listing listing = getDAO().getListing(BaseVO.toKeyId(listingId));
 		if (!loggedInUser.isAdmin() && !StringUtils.equals(listing.owner.getString(), loggedInUser.getId())) {
 			result.setErrorCode(ErrorCodes.NOT_AN_OWNER);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_project_owner"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_project_owner"));
 			return result;
 		}
 //		if (!loggedInUser.isAdmin() && (listing.state == Listing.State.ACTIVE
@@ -2113,7 +2114,7 @@ public class ListingFacade {
 //		}
 		if (listing.state == Listing.State.CLOSED || listing.state == Listing.State.WITHDRAWN) {
 			result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_listing_not_allowed_for_closed_or_withdrawn"));
+			result.setErrorMessage(Translations.getText("lang_error_listing_not_allowed_for_closed_or_withdrawn"));
 			return result;
 		}
 

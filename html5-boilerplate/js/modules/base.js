@@ -479,7 +479,7 @@ pl.implement(CampaignDropdownClass, {
             subdomain = campaign.subdomain;
             if (subdomain === current_campaign.subdomain)
                 continue;
-            campaignLink = 'http://' + subdomain + '.' + hostRoot;
+            campaignLink = window.location.protocol + '//' + subdomain + '.' + hostRoot;
             textboxen += '<div class="campaign-textbox">'
                 + '<a href="' + campaignLink + '" target="_blank" class="campaign-textbox-link">'
                 + campaign.name
