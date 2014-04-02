@@ -9,7 +9,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -29,8 +28,7 @@ import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Notification;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
-import eu.finwest.util.OfficeHelper;
-import eu.finwest.vo.BaseVO;
+import eu.finwest.util.Translations;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.ListingTileVO;
@@ -141,25 +139,38 @@ public class EmailService {
 		Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
 
-		MimeMessage message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(from));
 		if (realReceivers != null && realReceivers.booleanValue()) {
 			// notification_real_receivers == true
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(from));
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-			if (noBccAdmins == null || (noBccAdmins !=null && !noBccAdmins.booleanValue())) {
-				// notification_no_bcc_admins == null OR notification_no_bcc_admins == false
-				message.addRecipient(Message.RecipientType.BCC, new InternetAddress("admins"));
-				log.info("Email will be sent to: " + to + " bcc: admins");
-			} else {
-				log.info("Email will be sent to: " + to);
-			}
 			message.setSubject(subject, "UTF-8");
+			sendEmail(htmlBody, textBody, message);
+			
+			if (noBccAdmins == null || (noBccAdmins != null && !noBccAdmins.booleanValue())) {
+				log.info("Email will be sent to: " + to + " and to admins");
+				sendAdminEmail(to, subject, htmlBody, textBody, from, session);
+			}
 		} else {
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress("admins"));
 			log.info("Email will be sent to admins only");
-			message.setSubject(subject + " real addressee " + to, "UTF-8");
+			sendAdminEmail(to, subject, htmlBody, textBody, from, session);
 		}
+	}
 
+	private void sendAdminEmail(String to, String subject, String htmlBody, String textBody, String from, Session session) {
+		try {
+			MimeMessage message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(from));
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress("admins"));
+			message.setSubject(subject + " real addressee " + to, "UTF-8");
+			sendEmail(htmlBody, textBody, message);
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Error sending admin email", e);
+		}
+	}
+
+	private void sendEmail(String htmlBody, String textBody, MimeMessage message)
+			throws MessagingException {
 		Multipart multipart = new MimeMultipart();
 		BodyPart htmlPart = new MimeBodyPart();
 		htmlPart.setContent(htmlBody, "text/html");
@@ -172,12 +183,7 @@ public class EmailService {
 			textPart.setDisposition(BodyPart.INLINE);
 			multipart.addBodyPart(textPart);
 		}
-		
 		message.setContent(multipart);
-
-		for(Address address : message.getAllRecipients()) {
-			log.info("Message to: " + address);
-		}
 		Transport.send(message, message.getAllRecipients());
 	}
 
@@ -208,8 +214,8 @@ public class EmailService {
 	public Map<String, String> prepareListingNotificationProps(NotificationVO notification) {
 		Map<String, String> props = new HashMap<String, String>();
 
-		props.put(NOT_DISPLAYING_PROPERLY, OfficeHelper.getTrans("email_not_displaying_properly"));
-		props.put(VIEW_ON_INWESTUJ_W_FIRMY, OfficeHelper.getTrans("email_view_on_portal", "http://www.inwestujwfirmy.pl/notifications-page.html"));
+		props.put(NOT_DISPLAYING_PROPERLY, getText(notification, "email_not_displaying_properly"));
+		props.put(VIEW_ON_INWESTUJ_W_FIRMY, getText(notification, "email_view_on_portal", getDomainUrl(notification, "/notifications-page.html")));
 
 		props.put(NOTIFICATION_TITLE, notification.getTitle());
 		props.put(NOTIFICATION_TITLE_ESCAPED, escape(notification.getTitle()));
@@ -221,10 +227,10 @@ public class EmailService {
 		props.put(LISTING_CATEGORY_LOCATION, notification.getListingCategory() + " <br/>" + notification.getListingBriefAddress());
 		props.put(LISTING_MANTRA, escape(notification.getListingMantra()));
 		
-		props.put(COPYRIGHT_TEXT, OfficeHelper.getTrans("email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
-		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, OfficeHelper.getTrans("email_mailing_address_text"));
-		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, OfficeHelper.getTrans("email_mailing_address"));
-		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, OfficeHelper.getTrans("email_profil_page", "http://www.inwestujwfirmy.pl/edit-profile-page.html"));
+		props.put(COPYRIGHT_TEXT, getText(notification, "email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, getText(notification, "email_mailing_address_text"));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, getText(notification, "email_mailing_address"));
+		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, getText(notification, "email_profil_page", getDomainUrl(notification, "/edit-profile-page.html")));
 		return props;
 	}
 
@@ -261,8 +267,8 @@ public class EmailService {
 	public Map<String, String> prepare3ListingNotificationProps(NotificationVO notification, ListingTileVO listings[]) {
 		Map<String, String> props = new HashMap<String, String>();
 
-		props.put(NOT_DISPLAYING_PROPERLY, OfficeHelper.getTrans("email_not_displaying_properly"));
-		props.put(VIEW_ON_INWESTUJ_W_FIRMY, OfficeHelper.getTrans("email_view_on_portal", "http://www.inwestujwfirmy.pl/notifications-page.html"));
+		props.put(NOT_DISPLAYING_PROPERLY, getText(notification, "email_not_displaying_properly"));
+		props.put(VIEW_ON_INWESTUJ_W_FIRMY, getText(notification, "email_view_on_portal", getDomainUrl(notification, "/notifications-page.html")));
 		
 		props.put(NOTIFICATION_TITLE, notification.getTitle());
 		props.put(NOTIFICATION_TITLE_ESCAPED, escape(notification.getTitle()));
@@ -270,30 +276,30 @@ public class EmailService {
 		props.put(NOTIFICATION_TEXT_3, escape(notification.getText3()));
 
 		props.put(LINK_TO_HEADER_IMAGE, NOTIFICATION_IMAGE_URL);
-		props.put(NOTIFICATION_FEATURED_PROJECTS, OfficeHelper.getTrans("email_featured_projects"));
+		props.put(NOTIFICATION_FEATURED_PROJECTS, getText(notification, "email_featured_projects"));
 
-		props.put(LINK_TO_LISTING_1, BaseVO.getServiceLocation() + "/company-page.html?id=" + listings[0].getId());
-		props.put(LINK_TO_LISTING_1_LOGO, BaseVO.getServiceLocation() + "/listing/logo?id=" + listings[0].getId());
+		props.put(LINK_TO_LISTING_1, getDomainUrl(notification, "/company-page.html?id=" + listings[0].getId()));
+		props.put(LINK_TO_LISTING_1_LOGO, getDomainUrl(notification, "/listing/logo?id=" + listings[0].getId()));
 		props.put(LISTING_1_NAME, escape(listings[0].getName()));
 		props.put(LISTING_1_CATEGORY_LOCATION, listings[0].getCategory() + " <br/>" + listings[0].getBriefAddress());
 		props.put(LISTING_1_MANTRA, escape(listings[0].getMantra()));
 
-		props.put(LINK_TO_LISTING_2, BaseVO.getServiceLocation() + "/company-page.html?id=" + listings[1].getId());
-		props.put(LINK_TO_LISTING_2_LOGO, BaseVO.getServiceLocation() + "/listing/logo?id=" + listings[1].getId());
+		props.put(LINK_TO_LISTING_2, getDomainUrl(notification, "/company-page.html?id=" + listings[1].getId()));
+		props.put(LINK_TO_LISTING_2_LOGO, getDomainUrl(notification, "/listing/logo?id=" + listings[1].getId()));
 		props.put(LISTING_2_NAME, escape(listings[1].getName()));
 		props.put(LISTING_2_CATEGORY_LOCATION, listings[1].getCategory() + " <br/>" + listings[1].getBriefAddress());
 		props.put(LISTING_2_MANTRA, escape(listings[1].getMantra()));
 
-		props.put(LINK_TO_LISTING_3, BaseVO.getServiceLocation() + "/company-page.html?id=" + listings[2].getId());
-		props.put(LINK_TO_LISTING_3_LOGO, BaseVO.getServiceLocation() + "/listing/logo?id=" + listings[2].getId());
+		props.put(LINK_TO_LISTING_3, getDomainUrl(notification, "/company-page.html?id=" + listings[2].getId()));
+		props.put(LINK_TO_LISTING_3_LOGO, getDomainUrl(notification, "/listing/logo?id=" + listings[2].getId()));
 		props.put(LISTING_3_NAME, escape(listings[2].getName()));
 		props.put(LISTING_3_CATEGORY_LOCATION, listings[2].getCategory() + " <br/>" + listings[2].getBriefAddress());
 		props.put(LISTING_3_MANTRA, escape(listings[2].getMantra()));
 
-		props.put(COPYRIGHT_TEXT, OfficeHelper.getTrans("email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
-		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, OfficeHelper.getTrans("email_mailing_address_text"));
-		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, OfficeHelper.getTrans("email_mailing_address"));
-		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, OfficeHelper.getTrans("email_profil_page", "http://www.inwestujwfirmy.pl/edit-profile-page.html"));
+		props.put(COPYRIGHT_TEXT, getText(notification, "email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, getText(notification, "email_mailing_address_text"));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, getText(notification, "email_mailing_address"));
+		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, getText(notification, "email_profil_page", getDomainUrl(notification, "/edit-profile-page.html")));
 		return props;
 	}
 
@@ -314,8 +320,8 @@ public class EmailService {
 	public Map<String, String> prepareAdminNotificationProps(NotificationVO notification) {
 		Map<String, String> props = new HashMap<String, String>();
 
-		props.put(NOT_DISPLAYING_PROPERLY, OfficeHelper.getTrans("email_not_displaying_properly"));
-		props.put(VIEW_ON_INWESTUJ_W_FIRMY, OfficeHelper.getTrans("email_view_on_portal", "http://www.inwestujwfirmy.pl/notifications-page.html"));
+		props.put(NOT_DISPLAYING_PROPERLY, getText(notification, "email_not_displaying_properly"));
+		props.put(VIEW_ON_INWESTUJ_W_FIRMY, getText(notification, "email_view_on_portal", getDomainUrl(notification, "/notifications-page.html")));
 		
 		props.put(NOTIFICATION_TITLE, notification.getTitle());
 		props.put(NOTIFICATION_TITLE_ESCAPED, escape(notification.getTitle()));
@@ -325,22 +331,17 @@ public class EmailService {
 		props.put(NOTIFICATION_LINK_HREF, notification.getLink());
 		props.put(NOTIFICATION_LINK_TEXT, notification.getListingOwner());
 		
-		props.put(COPYRIGHT_TEXT, OfficeHelper.getTrans("email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
-		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, OfficeHelper.getTrans("email_mailing_address_text"));
-		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, OfficeHelper.getTrans("email_mailing_address"));
-		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, OfficeHelper.getTrans("email_profil_page", "http://www.inwestujwfirmy.pl/edit-profile-page.html"));
+		props.put(COPYRIGHT_TEXT, getText(notification, "email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, getText(notification, "email_mailing_address_text"));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, getText(notification, "email_mailing_address"));
+		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, getText(notification, "email_profil_page", getDomainUrl(notification, "/edit-profile-page.html")));
 		return props;
 	}
 
 	public boolean sendEmailVerification(SBUser userByTwitter) {
 		try {
-			String subdomain = FrontController.getCampaign().getSubdomain();
 			// send verification email with link /user/confirm_user_email?id=<twitter_id>&token=<token>
-			String activationUrl = com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development ?
-					"http://" + subdomain + "localhost:7777" : "http://" + subdomain + ".inwestujwfirmy.pl";
-			activationUrl += "/user/confirm_user_email?id=" + userByTwitter.twitterId + "&token=" +userByTwitter.activationCode;
-
-			Map<String, String> props = prepareEmailVerificationProps(userByTwitter.twitterEmail, activationUrl);
+			Map<String, String> props = prepareEmailVerificationProps(userByTwitter);
 			String htmlTemplate = FileUtils.readFileToString(new File(TEMPLATE_AUTHORIZATION), "UTF-8");
 			String htmlBody = applyProperties(htmlTemplate, props);
 			String subject = props.get(NOTIFICATION_TITLE);
@@ -352,36 +353,35 @@ public class EmailService {
 		}
 	}
 
-	public Map<String, String> prepareEmailVerificationProps(String receiverEmail, String accessUrl) {
+	public Map<String, String> prepareEmailVerificationProps(SBUser userByTwitter) {
 		Map<String, String> props = new HashMap<String, String>();
+
+		String activationUrl = getDomainUrl(userByTwitter, "/user/confirm_user_email?id="
+				+ userByTwitter.twitterId + "&token=" +userByTwitter.activationCode);
 
 		props.put(NOT_DISPLAYING_PROPERLY, "&nbsp;");
 		props.put(VIEW_ON_INWESTUJ_W_FIRMY, "&nbsp;");
-		props.put(NOTIFICATION_TITLE, OfficeHelper.getTrans("email_address_verification_title"));
-		props.put(NOTIFICATION_TITLE_ESCAPED, OfficeHelper.getTrans("email_address_verification_title"));
+		props.put(NOTIFICATION_TITLE, getText(userByTwitter, "email_address_verification_title"));
+		props.put(NOTIFICATION_TITLE_ESCAPED, getText(userByTwitter, "email_address_verification_title"));
 		props.put(TEXT_NO_LINK, "&nbsp;");
-		props.put(NOTIFICATION_TEXT_1, OfficeHelper.getTrans("email_address_verification_by_click_on", accessUrl));
-		props.put(NOTIFICATION_TEXT_2, OfficeHelper.getTrans("email_address_verification_you_confirm", receiverEmail));
-		props.put(NOTIFICATION_TEXT_3, OfficeHelper.getTrans("email_address_verification_info") + " " + escape(accessUrl));
-		props.put(COPYRIGHT_TEXT, OfficeHelper.getTrans("email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
-		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, OfficeHelper.getTrans("email_mailing_address_text"));
-		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, OfficeHelper.getTrans("email_mailing_address"));
-		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, OfficeHelper.getTrans("email_profil_page", "http://www.inwestujwfirmy.pl/edit-profile-page.html"));
+		props.put(NOTIFICATION_TEXT_1, getText(userByTwitter, "email_address_verification_by_click_on", activationUrl));
+		props.put(NOTIFICATION_TEXT_2, getText(userByTwitter, "email_address_verification_you_confirm", userByTwitter.twitterEmail));
+		props.put(NOTIFICATION_TEXT_3, getText(userByTwitter, "email_address_verification_info") + " " + escape(activationUrl));
+		props.put(COPYRIGHT_TEXT, getText(userByTwitter, "email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, getText(userByTwitter, "email_mailing_address_text"));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, getText(userByTwitter, "email_mailing_address"));
+		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, getText(userByTwitter, "email_profil_page", getDomainUrl(userByTwitter, "/edit-profile-page.html")));
 		return props;
 	}
 
 	public boolean sendAccountActivation(SBUser user) {
 		try {
-			String subdomain = FrontController.getCampaign().getSubdomain();
-			// send verification email with link /user/activate.html?code=<activationcode>
-			String activationUrl = com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development ?
-					"http://" + subdomain + "localhost:7777" : "http://" + subdomain + ".inwestujwfirmy.pl";
-			activationUrl += "/user/activate.html?code=" + user.activationCode;
+			String activationUrl = getDomainUrl(user, "/user/activate.html?code=" + user.activationCode);
 
-			Map<String, String> props = prepareAccountActivationProps(user.email, activationUrl);
+			Map<String, String> props = prepareAccountActivationProps(user, activationUrl);
 			String htmlTemplate = FileUtils.readFileToString(new File(TEMPLATE_AUTHORIZATION), "UTF-8");
 			String htmlBody = applyProperties(htmlTemplate, props);
-			String textBody = OfficeHelper.getTrans("email_account_activation_message", activationUrl, escape(user.email), escape(activationUrl));
+			String textBody = getText(user, "email_account_activation_message", activationUrl, escape(user.email), escape(activationUrl));
 			String subject = props.get(NOTIFICATION_TITLE);
 			send(user.email, subject, htmlBody, textBody);
 			return true;
@@ -391,35 +391,29 @@ public class EmailService {
 		}
 	}
 
-	public Map<String, String> prepareAccountActivationProps(String receiverEmail, String accessUrl) {
+	public Map<String, String> prepareAccountActivationProps(SBUser user, String accessUrl) {
 		Map<String, String> props = new HashMap<String, String>();
 
 		props.put(NOT_DISPLAYING_PROPERLY, "&nbsp;");
 		props.put(VIEW_ON_INWESTUJ_W_FIRMY, "&nbsp;");
-		props.put(NOTIFICATION_TITLE, OfficeHelper.getTrans("email_account_activation_title"));
-		props.put(NOTIFICATION_TITLE_ESCAPED, OfficeHelper.getTrans("email_account_activation_title_escaped"));
+		props.put(NOTIFICATION_TITLE, getText(user, "email_account_activation_title"));
+		props.put(NOTIFICATION_TITLE_ESCAPED, getText(user, "email_account_activation_title_escaped"));
 		props.put(TEXT_NO_LINK, "&nbsp;");
-		props.put(NOTIFICATION_TEXT_1, OfficeHelper.getTrans("email_account_activation_message", accessUrl, escape(receiverEmail)));
+		props.put(NOTIFICATION_TEXT_1, getText(user, "email_account_activation_message", accessUrl, escape(user.email)));
 		props.put(NOTIFICATION_TEXT_2, "&nbsp;");
 		log.info("escaped access url: " + escape(accessUrl));
-		log.info("NOTIFICATION_TEXT_3 = " + OfficeHelper.getTrans("email_account_activation_info") + " " + escape(accessUrl));
-		props.put(NOTIFICATION_TEXT_3, OfficeHelper.getTrans("email_account_activation_info", escape(accessUrl)));
-		props.put(COPYRIGHT_TEXT, OfficeHelper.getTrans("email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
-		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, OfficeHelper.getTrans("email_mailing_address_text"));
-		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, OfficeHelper.getTrans("email_mailing_address"));
-		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, OfficeHelper.getTrans("email_profil_page", "http://www.inwestujwfirmy.pl/edit-profile-page.html"));
+		log.info("NOTIFICATION_TEXT_3 = " + getText(user, "email_account_activation_info") + " " + escape(accessUrl));
+		props.put(NOTIFICATION_TEXT_3, getText(user, "email_account_activation_info", escape(accessUrl)));
+		props.put(COPYRIGHT_TEXT, getText(user, "email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, getText(user, "email_mailing_address_text"));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, getText(user, "email_mailing_address"));
+		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, getText(user, "email_profil_page", getDomainUrl(user, "/edit-profile-page.html")));
 		return props;
 	}
 
 	public boolean sendPasswordResetEmail(SBUser user) {
 		try {
-			String subdomain = FrontController.getCampaign().getSubdomain();
-			// send verification email with link /user/password_reset.html?code=<activationcode>
-			String resetUrl = com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development ?
-					"http://" + subdomain + "localhost:7777" : "http://" + subdomain + ".inwestujwfirmy.pl";
-			resetUrl += "/profile-page.html?password_reset=" + user.activationCode;
-			
-			Map<String, String> props = preparePasswordResetProps(user, resetUrl);
+			Map<String, String> props = preparePasswordResetProps(user);
 			String htmlTemplate = FileUtils.readFileToString(new File(TEMPLATE_AUTHORIZATION), "UTF-8");
 			String htmlBody = applyProperties(htmlTemplate, props);
 			String subject = props.get(NOTIFICATION_TITLE);
@@ -431,21 +425,23 @@ public class EmailService {
 		}
 	}
 
-	public Map<String, String> preparePasswordResetProps(SBUser user, String resetUrl) {
+	public Map<String, String> preparePasswordResetProps(SBUser user) {
 		Map<String, String> props = new HashMap<String, String>();
+
+		String resetUrl = getDomainUrl(user, "/profile-page.html?code=" + user.activationCode);
 
 		props.put(NOT_DISPLAYING_PROPERLY, "&nbsp;");
 		props.put(VIEW_ON_INWESTUJ_W_FIRMY, "&nbsp;");
-		props.put(NOTIFICATION_TITLE, OfficeHelper.getTrans("email_password_reset_title"));
-		props.put(NOTIFICATION_TITLE_ESCAPED, OfficeHelper.getTrans("email_password_reset_title"));
+		props.put(NOTIFICATION_TITLE, getText(user, "email_password_reset_title"));
+		props.put(NOTIFICATION_TITLE_ESCAPED, getText(user, "email_password_reset_title"));
 		props.put(TEXT_NO_LINK, "&nbsp;");
-		props.put(NOTIFICATION_TEXT_1, OfficeHelper.getTrans("email_password_reset_by_click_on", resetUrl));
-		props.put(NOTIFICATION_TEXT_2, OfficeHelper.getTrans("email_password_reset_you_confirm", user.email));
-		props.put(NOTIFICATION_TEXT_3, OfficeHelper.getTrans("email_password_reset_info") + " " + escape(resetUrl));
-		props.put(COPYRIGHT_TEXT, OfficeHelper.getTrans("email_copyright", Calendar.getInstance().get(Calendar.YEAR)));
-		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, OfficeHelper.getTrans("email_mailing_address_text"));
-		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, OfficeHelper.getTrans("email_mailing_address"));
-		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, OfficeHelper.getTrans("email_profil_page", "http://www.inwestujwfirmy.pl/edit-profile-page.html"));
+		props.put(NOTIFICATION_TEXT_1, getText(user, "email_password_reset_by_click_on", resetUrl, user.email));
+		props.put(NOTIFICATION_TEXT_2, "");
+		props.put(NOTIFICATION_TEXT_3, getText(user, "email_password_reset_info") + " " + escape(resetUrl));
+		props.put(COPYRIGHT_TEXT, getText(user, "email_copyright", Calendar.getInstance().get(Calendar.YEAR)));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, getText(user, "email_mailing_address_text"));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, getText(user, "email_mailing_address"));
+		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, getText(user, "email_profil_page", getDomainUrl(user, "/edit-profile-page.html")));
 		return props;
 	}
 
@@ -461,4 +457,37 @@ public class EmailService {
 		text = text.replaceAll("\\.", "<span>.</span>");
 		return text;
 	}
+	
+	private String getDomainUrl(NotificationVO notif, String path) {
+		String domain = notif.getUserRecentDomain();
+		if (StringUtils.isBlank(domain)) {
+			domain = "www.inwestujwfirmy.pl";
+		}
+		return "http://" + domain + path;
+	}
+	
+	private String getDomainUrl(SBUser user, String path) {
+		String domain = user.recentDomain;
+		if (StringUtils.isBlank(domain)) {
+			domain = "www.inwestujwfirmy.pl";
+		}
+		return "http://" + domain + path;
+	}
+	
+	private String getText(NotificationVO notification, String key) {
+		return Translations.getText(notification.getUserRecentLang(), key);
+	}
+
+	private String getText(NotificationVO notification, String key, Object... params) {
+		return Translations.getText(notification.getUserRecentLang(), key, params);
+	}
+
+	private String getText(SBUser user, String key) {
+		return Translations.getText(user.recentLang, key);
+	}
+
+	private String getText(SBUser user, String key, Object... params) {
+		return Translations.getText(user.recentLang, key, params);
+	}
+
 }

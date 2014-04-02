@@ -43,6 +43,7 @@ import eu.finwest.datamodel.VoToModelConverter;
 import eu.finwest.util.FacebookUser;
 import eu.finwest.util.ImageHelper;
 import eu.finwest.util.OfficeHelper;
+import eu.finwest.util.Translations;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.DtoToVoConverter;
@@ -70,7 +71,6 @@ public class UserMgmtFacade {
 	private static UserMgmtFacade instance;
 	
 	private DateTimeFormatter timeStampFormatter = DateTimeFormat.forPattern("yyyyMMdd_HHmmss_SSS");
-	private OfficeHelper oh = OfficeHelper.instance();
 	
 	public static UserMgmtFacade instance() {
 		if (instance == null) {
@@ -219,7 +219,7 @@ public class UserMgmtFacade {
 		UserVO user = DtoToVoConverter.convert(getDAO().getUser(userId));
 		if (user == null) {
 			result.setErrorCode(ErrorCodes.APPLICATION_ERROR);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_found"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_found"));
 			log.info("User with id '" + userId + "' doesn't exist!");
 			return result;
 		}
@@ -462,18 +462,18 @@ public class UserMgmtFacade {
 		UserAndUserVO result = new UserAndUserVO();
 		if (!validateEmailAddress(email)) {
 			result.setErrorCode(101);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_not_valid_email"));
+			result.setErrorMessage(Translations.getText("lang_error_not_valid_email"));
 			return result;
 		}
 		if (!validatePassword(email, password, name)) {
 			result.setErrorCode(102);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_not_valid_password"));
+			result.setErrorMessage(Translations.getText("lang_error_not_valid_password"));
 			return result;
 		}
 		String encryptedPassword = encryptPassword(password);
 		if (encryptedPassword == null) {
 			result.setErrorCode(103);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_password_encryption"));
+			result.setErrorMessage(Translations.getText("lang_error_password_encryption"));
 			return result;
 		}
 		String authCookie = encryptPassword(encryptedPassword + new Date().getTime());
@@ -486,7 +486,7 @@ public class UserMgmtFacade {
             	if (user.emailActivationDate != null) {
             		// user is already registered for email/pass usage
         			result.setErrorCode(104);
-        			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_already_registered"));
+        			result.setErrorMessage(Translations.getText("lang_error_user_already_registered"));
         			return result;
             	}
             } else {
@@ -594,14 +594,14 @@ public class UserMgmtFacade {
 		if (loggedInUser == null || !loggedInUser.isAdmin()) {
 			log.info("User not logged in or is not an admin");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_admin"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_admin"));
 			return result;
 		}
 		SBUser user = getDAO().getUser(userId);
 		if (user == null) {
 			log.warning("User with id '" + userId + "' not found");
 			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_found"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_found"));
 			return result;
 		}
 		user.userClass = "dragon";
@@ -618,7 +618,7 @@ public class UserMgmtFacade {
 		if (loggedInUser == null) {
 			log.info("User not logged in");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			return result;
 		}
 		SBUser user = getDAO().getUser(loggedInUser.getId());
@@ -631,7 +631,7 @@ public class UserMgmtFacade {
 		} else {
 			log.warning("User has already requested dragon badge. " + user);
 			result.setErrorCode(ErrorCodes.APPLICATION_ERROR);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_already_requested_dragon"));
+			result.setErrorMessage(Translations.getText("lang_error_user_already_requested_dragon"));
 			return result;
 
 		}
@@ -719,6 +719,16 @@ public class UserMgmtFacade {
 			//ServiceFacade.instance().createNotification(user.getId(), user.getId(), Notification.Type.YOUR_PROFILE_WAS_MODIFIED, "");
 		}
 		return user;
+	}
+	
+	public UserVO updateUserRecentData(UserVO loggedInUser, String currentDomain, LangVersion recentLang) {
+		SBUser user = getDAO().getUser(loggedInUser.getId());
+		if (user != null && !StringUtils.equalsIgnoreCase(user.recentDomain, currentDomain)) {
+			user.recentDomain = currentDomain;
+			user.recentLang = recentLang;
+			getDAO().storeUser(user);
+		}
+		return loggedInUser;
 	}
 
 	/**
@@ -941,27 +951,27 @@ public class UserMgmtFacade {
 		if (loggedInUser == null) {
 			log.info("Not logged in or user is not admin/investor");
 			result.setErrorCode(305);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			return result;
 		}
 		if (!(loggedInUser.isAccreditedInvestor() || loggedInUser.isAdmin())) {
 			log.info("Not logged in or user is not admin/investor");
 			result.setErrorCode(306);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_investor"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_investor"));
 			return result;
 		}
 		if (StringUtils.equalsIgnoreCase(campaign.getSubdomain(), "pl")
 				|| StringUtils.equalsIgnoreCase(campaign.getSubdomain(), "en")) {
 			log.info("User cannot update special campaigns");
 			result.setErrorCode(306);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_admin"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_admin"));
 			return result;
 		}
 		Campaign existingCampaign = getDAO().getCampaignByDomain(campaign.getSubdomain());
 		if (existingCampaign != null && (existingCampaign.creator.getId() != loggedInUser.toKeyId() || !loggedInUser.isAdmin())) {
 			log.info("User is not an admin of the campaign, creator: " + existingCampaign.creatorName + ", logged in user: " + loggedInUser);
 			result.setErrorCode(306);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_campaign_user_not_owner"));
+			result.setErrorMessage(Translations.getText("lang_error_campaign_user_not_owner"));
 			return result;
 		}
 		if (StringUtils.isBlank(campaign.getStatus())) {
@@ -1072,8 +1082,8 @@ public class UserMgmtFacade {
 	
 	private PricePointVO preparePricePointData(PricePoint pricePoint, UserVO loggedInUser, CampaignVO campaign, LangVersion portalLang) {
 		PricePointVO pp = new PricePointVO();
-		pp.setTransactionDescClient(oh.getTranslation(portalLang, "lang_payment_client_campaign_activation"));
-		pp.setTransactionDescSeller(oh.getTranslation(portalLang, "lang_payment_seller_campaign_activation") + " " + campaign.getSubdomain());
+		pp.setTransactionDescClient(Translations.getText(portalLang, "lang_payment_client_campaign_activation"));
+		pp.setTransactionDescSeller(Translations.getText(portalLang, "lang_payment_seller_campaign_activation") + " " + campaign.getSubdomain());
 
 		updateCommonFields(pricePoint, loggedInUser, portalLang, pp, campaign.getId());
 		return pp;
@@ -1081,8 +1091,8 @@ public class UserMgmtFacade {
 
 	private PricePointVO preparePricePointData(PricePoint pricePoint, UserVO loggedInUser, LangVersion portalLang) {
 		PricePointVO pp = new PricePointVO();
-		pp.setTransactionDescClient(oh.getTranslation(portalLang, "lang_payment_client_investor_registration"));
-		pp.setTransactionDescSeller(oh.getTranslation(portalLang, "lang_payment_seller_investor_registration") + " " + loggedInUser.getEmail());
+		pp.setTransactionDescClient(Translations.getText(portalLang, "lang_payment_client_investor_registration"));
+		pp.setTransactionDescSeller(Translations.getText(portalLang, "lang_payment_seller_investor_registration") + " " + loggedInUser.getEmail());
 		
 		updateCommonFields(pricePoint, loggedInUser, portalLang, pp, loggedInUser.getId());
 		return pp;
@@ -1090,8 +1100,8 @@ public class UserMgmtFacade {
 
 	private PricePointVO preparePricePointData(PricePoint pricePoint, UserVO loggedInUser, ListingVO listing, LangVersion portalLang) {
 		PricePointVO pp = new PricePointVO();
-		pp.setTransactionDescClient(oh.getTranslation(portalLang, "lang_payment_client_project_service"));
-		pp.setTransactionDescSeller(oh.getTranslation(portalLang, "lang_payment_seller_project_service"));
+		pp.setTransactionDescClient(Translations.getText(portalLang, "lang_payment_client_project_service"));
+		pp.setTransactionDescSeller(Translations.getText(portalLang, "lang_payment_seller_project_service"));
 
 		updateCommonFields(pricePoint, loggedInUser, portalLang, pp, listing.getId());
 		return pp;
@@ -1111,7 +1121,7 @@ public class UserMgmtFacade {
 		}
 		
 		pp.setDescription(portalLang == LangVersion.PL ? pricePoint.descriptionPl : pricePoint.descriptionEn);
-		pp.setButtonText(oh.getTranslation(portalLang, freeUsage ? "lang_payment_free_usage_button" : "lang_payment_pay_button"));		
+		pp.setButtonText(Translations.getText(portalLang, freeUsage ? "lang_payment_free_usage_button" : "lang_payment_pay_button"));		
 		pp.setPaymentLanguage(portalLang.name().toLowerCase());
 
 		pp.setSellerId(MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_CUSTOMER_ID));
@@ -1220,7 +1230,7 @@ public class UserMgmtFacade {
 		if (StringUtils.isBlank(email)) {
 			log.info("Email is blank");
 			result.setErrorCode(1001);
-			result.setErrorMessage(OfficeHelper.getTrans("password_reset_request_blank_email"));
+			result.setErrorMessage(Translations.getText("password_reset_request_blank_email"));
 			return result;
 		}
 		
@@ -1228,15 +1238,15 @@ public class UserMgmtFacade {
 		if (user == null) {
 			log.info("User with email " + email + " not found");
 			result.setErrorCode(1002);
-			result.setErrorMessage(OfficeHelper.getTrans("password_reset_request_email_not_found"));
+			result.setErrorMessage(Translations.getText("password_reset_request_email_not_found"));
 		} else if (user.status == SBUser.Status.CREATED) {
 			log.info("User with email " + email + " is not active");
 			result.setErrorCode(1003);
-			result.setErrorMessage(OfficeHelper.getTrans("password_reset_request_activate_user_first"));
+			result.setErrorMessage(Translations.getText("password_reset_request_activate_user_first"));
 		} else if (user.status == SBUser.Status.DEACTIVATED) {
 			log.info("User with email " + email + " is deactivated");
 			result.setErrorCode(1004);
-			result.setErrorMessage(OfficeHelper.getTrans("password_reset_request_user_deactivated"));
+			result.setErrorMessage(Translations.getText("password_reset_request_user_deactivated"));
 		} else {
 			user.activationCode = "" + DigestUtils.md5Hex(email + new Date().toString() + "25kj352025sfg");
 			log.info("New activationCode for " + user.email + " is: " + user.activationCode);
@@ -1244,7 +1254,7 @@ public class UserMgmtFacade {
 			if (!EmailService.instance().sendPasswordResetEmail(user)) {
 				log.info("Error sending email for email " + email);
 				result.setErrorCode(1005);
-				result.setErrorMessage(OfficeHelper.getTrans("password_reset_request_email_not_sent"));
+				result.setErrorMessage(Translations.getText("password_reset_request_email_not_sent"));
 			}
 		}
 		return result;
@@ -1256,7 +1266,7 @@ public class UserMgmtFacade {
 		if (StringUtils.isBlank(activationCode)) {
 			log.info("Activation code has not been provided");
 			result.setErrorCode(1001);
-			result.setErrorMessage(OfficeHelper.getTrans("password_reset_blank_authcode"));
+			result.setErrorMessage(Translations.getText("password_reset_blank_authcode"));
 			return result;
 		}
 		
@@ -1264,13 +1274,13 @@ public class UserMgmtFacade {
 		if (user != null && user.status == SBUser.Status.ACTIVE && StringUtils.equals(activationCode, user.activationCode)) {
 			if (!validatePassword(user.email, newPassword, user.name)) {
 				result.setErrorCode(102);
-				result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_not_valid_password"));
+				result.setErrorMessage(Translations.getText("lang_error_not_valid_password"));
 				return result;
 			}
 			String encryptedPassword = encryptPassword(newPassword);
 			if (encryptedPassword == null) {
 				result.setErrorCode(103);
-				result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_password_encryption"));
+				result.setErrorMessage(Translations.getText("lang_error_password_encryption"));
 				return result;
 			}
 			String authCookie = encryptPassword(encryptedPassword + new Date().getTime());
@@ -1287,7 +1297,7 @@ public class UserMgmtFacade {
 				log.info("Wrong activation code provided");
 			}
 			result.setErrorCode(1005);
-			result.setErrorMessage(OfficeHelper.getTrans("password_reset_password_reset_cannot_be_done"));
+			result.setErrorMessage(Translations.getText("password_reset_password_reset_cannot_be_done"));
 		}
 		
 		return result;

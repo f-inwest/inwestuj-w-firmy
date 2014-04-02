@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -99,6 +98,11 @@ public abstract class ModelDrivenController {
 		} else {
 			// not logged in
 			loggedInUser = null;
+		}
+		
+		if (loggedInUser != null) {
+			String currentDomain = request.getServerName();
+			UserMgmtFacade.instance().updateUserRecentData(loggedInUser, currentDomain, FrontController.getLangVersion());
 		}
 
 		if (loggedInUser != null && !StringUtils.isEmpty(loggedInUser.getEditedListing())) {

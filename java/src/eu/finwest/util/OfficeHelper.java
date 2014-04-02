@@ -1,21 +1,16 @@
 package eu.finwest.util;
 
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,8 +46,6 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import eu.finwest.dao.MockDataBuilder;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.SBUser;
-import eu.finwest.web.FrontController;
-import eu.finwest.web.LangVersion;
 
 public class OfficeHelper {
 	private static final Logger log = Logger.getLogger(OfficeHelper.class.getName());
@@ -79,45 +72,7 @@ public class OfficeHelper {
 		return instance;
 	}
 	
-	private ResourceBundle plTranslations, enTranslations;
-	
 	private OfficeHelper() {
-		try {
-			plTranslations = new PropertyResourceBundle(new InputStreamReader(new FileInputStream("pl.properties"), "UTF-8"));
-			enTranslations = new PropertyResourceBundle(new InputStreamReader(new FileInputStream("en.properties"), "UTF-8"));
-		} catch (Exception e) {
-			log.log(Level.SEVERE, "Problem loading translations files", e);
-		}
-	}
-
-	public static String getTrans(String key) {
-		return instance().getTranslation(FrontController.getLangVersion(), key);
-	}
-
-	public static String getTrans(String key, Object... params) {
-		return instance().getTranslation(key, params);
-	}
-
-	public String getTranslation(String key) {
-		return getTranslation(FrontController.getLangVersion(), key);
-	}
-
-	public String getTranslation(String key, Object... params) {
-		return MessageFormat.format(getTranslation(FrontController.getLangVersion(), key), params);
-	}
-
-	public String getTranslation(LangVersion lang, String key) {
-		try {
-			if (lang == LangVersion.PL) {
-				return plTranslations.getString(key);
-			} else if (lang == LangVersion.EN) {
-				return enTranslations.getString(key);
-			}
-			return key;
-		} catch (java.util.MissingResourceException e) {
-			log.log(Level.SEVERE, "Missing translation key: " + key + " for " + lang);
-			return key;
-		}
 	}
 	
 	private String convertContent(String text) {
@@ -135,47 +90,47 @@ public class OfficeHelper {
 		mappings.put("MASTER_TITLE", owner.name + "\n" + listing.website);
 		mappings.put("SUBTITLE_BOTTOM", listing.address + "\n"
 				+ (listing.askedForFunding ?
-						getTranslation(listing.lang, "lang_asking") + " " + listing.suggestedAmount + " " + getTranslation(listing.lang, "lang_for_equity") + " " + listing.suggestedPercentage + "%"
-						: getTranslation(listing.lang, "lang_not_asking_funds_now")));
+						Translations.getText(listing.lang, "lang_asking") + " " + listing.suggestedAmount + " " + Translations.getText(listing.lang, "lang_for_equity") + " " + listing.suggestedPercentage + "%"
+						: Translations.getText(listing.lang, "lang_not_asking_funds_now")));
 		
-		mappings.put("TITLE_2", getTranslation(listing.lang, "lang_elevator_pitch"));
+		mappings.put("TITLE_2", Translations.getText(listing.lang, "lang_elevator_pitch"));
 		mappings.put("CONTENT_2", convertContent(listing.answer27));
-		mappings.put("TITLE_3", getTranslation(listing.lang, "lang_the_problem"));
+		mappings.put("TITLE_3", Translations.getText(listing.lang, "lang_the_problem"));
 		mappings.put("CONTENT_3", convertContent(listing.answer10));
-		mappings.put("TITLE_4", getTranslation(listing.lang, "lang_the_solution"));
+		mappings.put("TITLE_4", Translations.getText(listing.lang, "lang_the_solution"));
 		mappings.put("CONTENT_4", convertContent(listing.answer11));
-		mappings.put("TITLE_5", getTranslation(listing.lang, "lang_features_and_benefits"));
+		mappings.put("TITLE_5", Translations.getText(listing.lang, "lang_features_and_benefits"));
 		mappings.put("CONTENT_5", convertContent(listing.answer1));
-		mappings.put("TITLE_6", getTranslation(listing.lang, "lang_current_status"));
+		mappings.put("TITLE_6", Translations.getText(listing.lang, "lang_current_status"));
 		mappings.put("CONTENT_6", convertContent(listing.answer13));
-		mappings.put("TITLE_7", getTranslation(listing.lang, "lang_the_market"));
+		mappings.put("TITLE_7", Translations.getText(listing.lang, "lang_the_market"));
 		mappings.put("CONTENT_7", convertContent(listing.answer14));
-		mappings.put("TITLE_8", getTranslation(listing.lang, "lang_the_customer"));
+		mappings.put("TITLE_8", Translations.getText(listing.lang, "lang_the_customer"));
 		mappings.put("CONTENT_8", convertContent(listing.answer15));
-		mappings.put("TITLE_9", getTranslation(listing.lang, "lang_competitors"));
+		mappings.put("TITLE_9", Translations.getText(listing.lang, "lang_competitors"));
 		mappings.put("CONTENT_9", convertContent(listing.answer16));
-		mappings.put("TITLE_10", getTranslation(listing.lang, "lang_competitive_comparison"));
+		mappings.put("TITLE_10", Translations.getText(listing.lang, "lang_competitive_comparison"));
 		mappings.put("CONTENT_10", convertContent(listing.answer17));
-		mappings.put("TITLE_11", getTranslation(listing.lang, "lang_business_model"));
+		mappings.put("TITLE_11", Translations.getText(listing.lang, "lang_business_model"));
 		mappings.put("CONTENT_11", convertContent(listing.answer18));
-		mappings.put("TITLE_12", getTranslation(listing.lang, "lang_marketing_plan"));
+		mappings.put("TITLE_12", Translations.getText(listing.lang, "lang_marketing_plan"));
 		mappings.put("CONTENT_12", convertContent(listing.answer19));
-		mappings.put("TITLE_13", getTranslation(listing.lang, "lang_the_team"));
+		mappings.put("TITLE_13", Translations.getText(listing.lang, "lang_the_team"));
 		mappings.put("CONTENT_13", convertContent(listing.answer20));
-		mappings.put("TITLE_14", getTranslation(listing.lang, "lang_values_and_methods"));
+		mappings.put("TITLE_14", Translations.getText(listing.lang, "lang_values_and_methods"));
 		mappings.put("CONTENT_14", convertContent(listing.answer21));
-		mappings.put("TITLE_15", getTranslation(listing.lang, "lang_current_financials"));
+		mappings.put("TITLE_15", Translations.getText(listing.lang, "lang_current_financials"));
 		mappings.put("CONTENT_15", convertContent(listing.answer22));
-		mappings.put("TITLE_16", getTranslation(listing.lang, "lang_financial_projections"));
+		mappings.put("TITLE_16", Translations.getText(listing.lang, "lang_financial_projections"));
 		mappings.put("CONTENT_16", convertContent(listing.answer23));
-		mappings.put("TITLE_17", getTranslation(listing.lang, "lang_current_ownership"));
+		mappings.put("TITLE_17", Translations.getText(listing.lang, "lang_current_ownership"));
 		mappings.put("CONTENT_17", convertContent(listing.answer24));
-		mappings.put("TITLE_18", getTranslation(listing.lang, "lang_use_of_proceeds"));
+		mappings.put("TITLE_18", Translations.getText(listing.lang, "lang_use_of_proceeds"));
 		mappings.put("CONTENT_18", convertContent(listing.answer25));
-		mappings.put("TITLE_19", getTranslation(listing.lang, "lang_conclusion"));
+		mappings.put("TITLE_19", Translations.getText(listing.lang, "lang_conclusion"));
 		mappings.put("CONTENT_19", convertContent(listing.answer26));
-		mappings.put("TITLE_20", getTranslation(listing.lang, "lang_thank_you"));
-		mappings.put("CONTENT_20", getTranslation(listing.lang, "lang_please_contact") + "\n"
+		mappings.put("TITLE_20", Translations.getText(listing.lang, "lang_thank_you"));
+		mappings.put("CONTENT_20", Translations.getText(listing.lang, "lang_please_contact") + "\n"
 				+ owner.name + "\n" + listing.website + "\n" + listing.address);
 
 		return mappings;

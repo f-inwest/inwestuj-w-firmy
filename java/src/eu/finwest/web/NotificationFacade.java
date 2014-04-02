@@ -3,7 +3,6 @@ package eu.finwest.web;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.joda.time.format.DateTimeFormat;
@@ -20,15 +19,15 @@ import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Bid;
 import eu.finwest.datamodel.Comment;
 import eu.finwest.datamodel.Listing;
+import eu.finwest.datamodel.Listing.State;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.Notification;
+import eu.finwest.datamodel.Notification.Type;
 import eu.finwest.datamodel.PrivateMessage;
 import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.VoToModelConverter;
-import eu.finwest.datamodel.Listing.State;
-import eu.finwest.datamodel.Notification.Type;
-import eu.finwest.util.OfficeHelper;
+import eu.finwest.util.Translations;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ErrorCodes;
@@ -79,7 +78,7 @@ public class NotificationFacade {
 		NotificationListVO list = new NotificationListVO();
 		if (loggedInUser == null) {
 			list.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			list.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			log.info("User not logged in!");
 			return list;
 		}
@@ -96,7 +95,7 @@ public class NotificationFacade {
         NotificationListVO list = new NotificationListVO();
         if (loggedInUser == null) {
             list.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-            list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+            list.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
             log.info("User not logged in!");
             return list;
         }
@@ -115,7 +114,7 @@ public class NotificationFacade {
         NotificationListVO list = new NotificationListVO();
         if (loggedInUser == null) {
             list.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-            list.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+            list.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
             log.info("User not logged in!");
             return list;
         }
@@ -141,7 +140,7 @@ public class NotificationFacade {
 		if (notification == null) {
 			log.warning("Notification with id '" + notifId + "' not found!");
 			result.setErrorCode(ErrorCodes.APPLICATION_ERROR);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_notification_not_exists"));
+			result.setErrorMessage(Translations.getText("lang_error_notification_not_exists"));
 			return result;
 		}
 		notification.read = true;

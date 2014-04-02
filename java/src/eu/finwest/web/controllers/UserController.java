@@ -18,7 +18,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SBUser.Status;
 import eu.finwest.util.EmailAuthHelper;
-import eu.finwest.util.OfficeHelper;
+import eu.finwest.util.Translations;
 import eu.finwest.util.TwitterHelper;
 import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.ListPropertiesVO;
@@ -139,7 +139,7 @@ public class UserController extends ModelDrivenController {
 		} else {
 			log.log(Level.WARNING, "Parameters 'email' and 'password' are mandatory!");
 			result.setErrorCode(500);
-			result.setErrorMessage(OfficeHelper.getTrans("lang_email_password_mandatory"));
+			result.setErrorMessage(Translations.getText("lang_email_password_mandatory"));
 		}
 		model = result;
 
@@ -185,7 +185,7 @@ public class UserController extends ModelDrivenController {
 		if (getLoggedInUser() != null) {
 			log.warning("User already logged in, cannot login again using email: " + getCommandOrParameter(request, 2, "email"));
 			result.setErrorCode(500);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_already_logged_in"));
+			result.setErrorMessage(Translations.getText("lang_error_user_already_logged_in"));
 			return headers;
 		}
 		
@@ -197,10 +197,10 @@ public class UserController extends ModelDrivenController {
     		SBUser user = UserMgmtFacade.instance().authenticateUser(email, password);
     		if (user == null) {
 				result.setErrorCode(500);
-				result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_invalid_email_or_password"));
+				result.setErrorMessage(Translations.getText("lang_error_user_invalid_email_or_password"));
     		} else  if (user.status != Status.ACTIVE) {
 				result.setErrorCode(500);
-				result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_activated"));
+				result.setErrorMessage(Translations.getText("lang_error_user_not_activated"));
     		} else {
 	    		Cookie authCookie = EmailAuthHelper.authorizeUser(request, user);
 				headers.addCookie(authCookie);
@@ -208,7 +208,7 @@ public class UserController extends ModelDrivenController {
 		} else {
 			log.log(Level.WARNING, "Parameters 'email' and 'password' are mandatory!");
 			result.setErrorCode(500);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_invalid_email_or_password"));
+			result.setErrorMessage(Translations.getText("lang_error_user_invalid_email_or_password"));
 		}
 		return headers;
 	}

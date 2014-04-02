@@ -406,6 +406,12 @@ public class ObjectifyDatastoreDAO {
 			return null;
 		}
 	}
+	
+	public SBUser storeUser(SBUser user) {
+		getOfy().put(user);
+		log.info("Put into datastore " + user);
+		return user;
+	}
 
 	public SBUser prepareUpdateUsersEmailByTwitter(SBUser twitterUser, String email) {
 		twitterUser.twitterEmail = email;

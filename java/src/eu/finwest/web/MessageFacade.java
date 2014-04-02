@@ -11,6 +11,7 @@ import eu.finwest.datamodel.PrivateMessage;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.VoToModelConverter;
 import eu.finwest.util.OfficeHelper;
+import eu.finwest.util.Translations;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ErrorCodes;
 import eu.finwest.vo.ListPropertiesVO;
@@ -72,7 +73,7 @@ public class MessageFacade {
 		if (loggedInUser == null) {
 			log.info("User not logged in.");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			return result;
 		}
 		SBUser user = VoToModelConverter.convert(loggedInUser);
@@ -88,7 +89,7 @@ public class MessageFacade {
 		if (loggedInUser == null) {
 			log.info("User not logged in.");
 			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
-			result.setErrorMessage(OfficeHelper.instance().getTranslation("lang_error_user_not_logged_in"));
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
 			return result;
 		}
 		SBUser user = VoToModelConverter.convert(loggedInUser);
