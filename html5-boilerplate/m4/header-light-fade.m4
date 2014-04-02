@@ -6,11 +6,11 @@
 	    </div>
 	    <div class="login-panel">
 		    <div class="header-content-login">
-			    <span>@lang_login_header@</span>
+			    <span id="login-panel-header">@lang_login_header@</span>
 		    </div>
 		    <div id="login-panel-text" class="login-panel-text">@lang_login_detail@</div>
 		    <div class="login-box">
-			    <div class="login-panel-left">
+			    <div id="login-panel-left" class="login-panel-left">
 				    <form id="register-form" method="POST" action="/user/register.html">
 				        <input id="register-email" name="email" type="text" value="@lang_login_username@"></input><br>
 				        <input id="register-password" name="password" type="password" value=""></input><br>
@@ -20,8 +20,19 @@
 				        <div id="register-message" class="register-message attention"></div>
                     </form>
     		        <div id="register-verify-text" class="login-panel-text initialhidden">@lang_login_verify_message@</div>
-    		        <div id="reset-password-verify-text" class="login-panel-text initialhidden">@lang_login_verify_message@</div>
+    		        <div id="reset-password-verify-text" class="login-panel-text initialhidden">@lang_reset_password_verify@</div>
 				    <a id="register-close-link" href="#"  class="zaloguj-button register-close initialhidden">@lang_close@</a>
+			    </div>
+			    <div id="change-password-panel" class="login-panel-left initialhidden">
+				    <form id="change-password-form" method="POST" action="/user/reset_password.json">
+				        <input id="change-password-code" name="code" type="hidden" value=""></input>
+				        <input id="change-password-input" name="password" type="password" value=""></input><br>
+				        <input id="change-password-input-confirm" name="password" type="password" value=""></input><br>
+				        <a href="#" id="change-password-link" class="zaloguj-button register-button">@lang_change_password@</a>
+				        <div id="change-password-message" class="change-password-message register-message attention"></div>
+                    </form>
+    		        <div id="change-password-changed-text" class="login-panel-text initialhidden">@lang_reset_password_changed@</div>
+				    <a id="change-password-close-link" href="#"  class="zaloguj-button register-close initialhidden">@lang_close@</a>
 			    </div>
 			    <div id="social-login">
 				    <div class="headericon headersignin">

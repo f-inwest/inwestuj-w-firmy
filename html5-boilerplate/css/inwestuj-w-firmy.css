@@ -211,7 +211,7 @@ body.nearby-page > #wrap > #main > div.container > div.nearbywrapper {
     margin-top: 15px;
     color: #fefefe;
     font-family: 'Ubuntu', sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 300;
     height: 40px;
     display: block;
@@ -248,7 +248,7 @@ body.nearby-page > #wrap > #main > div.container > div.nearbywrapper {
     padding-left: 42px;
     text-decoration: none;
     font-family: 'Ubuntu', sans-serif;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 300;
     color: #5b6773;
     line-height: 32px;
@@ -1087,7 +1087,7 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMA
 .preloaderfloater { height: 50%; margin-bottom: -16px; }
 
 /* infowindow */
-.infowindowwrapper { min-height: 288px; background:#f8f8f8; padding:5px; }
+.infowindowwrapper { min-height: 288px; background:#ffffff; padding:5px; }
 .infowindow { font-weight: bold; font-size: 12px; line-height: 16px; }
 .infotitle { font-size: 20px; line-height: 20px; }
 /* .infomantra { color: #4083a9; } */
@@ -1987,15 +1987,14 @@ top: -10px;
     width: 530px;
 }
 .sideinfo, .sideinfodisplay  {
-    left: 420px;
     width: 530px;
     top: 15px;
+    left: 626px;
+    height: 0;
 }
 .sideinfodisplay {
     height: 280px;
-    padding: 10px;
     border: 1px solid #cccccc;
-    left: 626px;
     padding: 15px;
 }
 .sideinfoitem { position: relative; }
@@ -3009,14 +3008,24 @@ color: #fff;
     margin-right: 25px;
 }
 .register-button {
-    width: 165px;
+    width: 155px;
     float: left;
 }
 .reset-password-button {
     width: 185px;
     float: left;
     clear: both;
-    margin-top: 20px;
+    margin-top: 10px;
+    background: none;
+    color: #7edaef;
+    padding-left: 0;
+    font-size: 16px;
+    height: 20px;
+    line-height: 30px;
+}
+.reset-password-button:hover {
+    color: #7edaef;
+    font-weight: 500;
 }
 .login-panel-left {
     margin-right: 25px !important;

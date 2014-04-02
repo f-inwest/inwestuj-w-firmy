@@ -2,14 +2,13 @@
 <!doctype html>
 <html lang="@lang_html_language@">
 '
-include(mainhead.m4)
+include(head.m4)
 `
 <body class="message-group-page">
 <div id="wrap">
 <div id="main">
 '
-include(header-main.m4)
-include(banner.m4)
+include(header.m4)
 `
 <div class="container">
 
