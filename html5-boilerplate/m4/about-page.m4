@@ -24,10 +24,10 @@ include(header.m4)
 <!-- left column -->
 <div class="span-16">
     <div class="boxtitle">@lang_how_it_works@
-        <a class="videolink about-videolink" href="http://youtu.be/hq5gaQ1FtAU" id="videolink">(@lang_view_on_youtube@)</a>
+        <a class="videolink about-videolink" href="https://youtu.be/hq5gaQ1FtAU" id="videolink">(@lang_view_on_youtube@)</a>
     </div>
     <div class="boxpanel-youtube">
-   	    <iframe width="626" height="382" src="http://www.youtube.com/embed/hq5gaQ1FtAU" frameborder="0" allowfullscreen></iframe>
+   	    <iframe width="626" height="382" src="https://www.youtube.com/embed/hq5gaQ1FtAU" frameborder="0" allowfullscreen></iframe>
     </div>
 
     <div class="boxtitle">@lang_what_we_do@</div>

@@ -67,9 +67,9 @@ include(header.m4)
         <div class="formitem clear">
             <span class="inputlabel"></span>
             <span class="inputcaptcha">
-  	        <script type="text/javascript" src="http://www.google.com/recaptcha/api/challenge?k=6LdaiMsSAAAAAM1nDtyXO1iXqRc15_qZ0D81_s0K"></script>
+  	        <script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?k=6LdaiMsSAAAAAM1nDtyXO1iXqRc15_qZ0D81_s0K"></script>
   	        <noscript>
-                <iframe src="http://www.google.com/recaptcha/api/noscript?k=6LdaiMsSAAAAAM1nDtyXO1iXqRc15_qZ0D81_s0K" height="300" width="500" frameborder="0"></iframe><br>
+                <iframe src="https://www.google.com/recaptcha/api/noscript?k=6LdaiMsSAAAAAM1nDtyXO1iXqRc15_qZ0D81_s0K" height="300" width="500" frameborder="0"></iframe><br>
                 <textarea name="recaptcha_challenge_field" rows="3" cols="40"></textarea>
                 <input type="hidden" name="recaptcha_response_field" value="manual_challenge">
             </noscript>

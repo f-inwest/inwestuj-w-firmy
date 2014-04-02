@@ -21,12 +21,12 @@
 
   <!-- CSS: implied media=all -->
   <!-- CSS concatenated and minified via ant build script-->
- <link href="http://fonts.googleapis.com/css?family=Ubuntu:400,300,300italic,400italic,500,700,500italic,700italic&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+ <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,300,300italic,400italic,500,700,500italic,700italic&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
  <link href="css/font.css" rel="stylesheet" type="text/css">
  <link rel="stylesheet" href="css/style.css" type="text/css" />
   <!-- end CSS-->
 
-  <link rel="canonical" href="http://www.inwestujwfirmy.pl"/>
+  <link rel="canonical" href="https://www.inwestujwfirmy.pl"/>
 
   <!-- script>
 (function() {

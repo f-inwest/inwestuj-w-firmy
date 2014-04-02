@@ -18,6 +18,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.google.appengine.api.utils.SystemProperty;
+
 import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Campaign.Language;
 import eu.finwest.vo.CampaignVO;
@@ -67,6 +69,18 @@ public class FrontController extends HttpServlet {
 //			return;
 //		}
 		
+		boolean develEnv = SystemProperty.environment.value() == SystemProperty.Environment.Value.Development;
+		if (!develEnv && !request.isSecure() && "GET".equals(request.getMethod()) && StringUtils.endsWith(pathInfo, ".html")) {
+			String redirectUrl = "https://" + request.getServerName() + request.getServletPath();
+			String queryString = request.getQueryString();
+			if (StringUtils.isNotEmpty(queryString)) {
+				redirectUrl += "?" + queryString;
+			}
+			log.info("Got insecure request to: " + request.getServerName() + request.getServletPath() + ", redirecting to: " + redirectUrl);
+			response.sendRedirect(redirectUrl);
+			return;
+		}
+				
 		try {
 			setLanguageAndCampaign(request, response);
 	

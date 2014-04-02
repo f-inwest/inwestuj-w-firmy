@@ -42,8 +42,8 @@ include(header.m4)
 '
 include(footer.m4)
 `
-<script src="http://maps.googleapis.com/maps/api/js?libraries=maps&sensor=true&language=en-GB"></script>
-<script src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?libraries=maps&sensor=true&language=@lang_mapsapi_version@"></script>
+<script src="https://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
 <script src="js/modules/base.js"></script>
 <script src="js/modules/nearbypage.js"></script>
 '

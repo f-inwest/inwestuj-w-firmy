@@ -349,7 +349,7 @@ include(new-listing-bottom-buttons.m4)
 '
 include(footer.m4)
 `
-<script src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=true&language=en-GB"></script>
+<script src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=true&language=@lang_mapsapi_version@"></script>
 <script src="js/modules/base.js"></script>
 <script src="js/modules/forms.js"></script>
 <script src="js/modules/newlistingbase.js"></script>
