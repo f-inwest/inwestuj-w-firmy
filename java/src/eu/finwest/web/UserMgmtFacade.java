@@ -1107,8 +1107,11 @@ public class UserMgmtFacade {
 	}
 	
 	private void updateCommonFields(PricePoint pricePoint, UserVO loggedInUser, LangVersion portalLang, PricePointVO pp, String id) {
-		boolean freeUsage = StringUtils.equals("true", MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_FREE_USAGE))
-				&& pricePoint.group != Group.INVESTOR;
+		boolean paymentFreeUsage = MemCacheFacade.instance().getSystemProperty(true, SystemProperty.PAYMENT_FREE_USAGE);
+		boolean paymentFreeInvestorReg = MemCacheFacade.instance().getSystemProperty(true, SystemProperty.PAYMENT_FREE_INVESTOR_REG);
+		boolean freeUsage = (pricePoint.type != PricePoint.Type.INVESTOR_REGISTRATION && paymentFreeUsage)
+				|| (pricePoint.type == PricePoint.Type.INVESTOR_REGISTRATION && paymentFreeInvestorReg);
+		
 		boolean developEnv = com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development;
 		String domain = null;
 		String protocol = "https://";
@@ -1127,7 +1130,7 @@ public class UserMgmtFacade {
 		pp.setPaymentLanguage(portalLang.name().toLowerCase());
 
 		pp.setSellerId(MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_CUSTOMER_ID));
-		updateAmounts(pp, pricePoint, portalLang);
+		updateAmounts(pp, pricePoint, portalLang, freeUsage);
 		pp.setCrc(pricePoint.name + " " + id);
 
 		String returnUrl = pricePoint.successUrl.replace("<domain>", domain);
@@ -1155,11 +1158,8 @@ public class UserMgmtFacade {
 		pp.setMd5sum(DigestUtils.md5Hex(md5string));
 	}
 	
-	private void updateAmounts(PricePointVO pp, PricePoint pricePoint, LangVersion portalLang) {
-		boolean paymentFreeUsage = MemCacheFacade.instance().getSystemProperty(true, SystemProperty.PAYMENT_FREE_USAGE);
-		boolean paymentFreeInvestorReg = MemCacheFacade.instance().getSystemProperty(true, SystemProperty.PAYMENT_FREE_INVESTOR_REG);
-		if ((pricePoint.type != PricePoint.Type.INVESTOR_REGISTRATION && paymentFreeUsage)
-				|| (pricePoint.type == PricePoint.Type.INVESTOR_REGISTRATION && paymentFreeInvestorReg)) {
+	private void updateAmounts(PricePointVO pp, PricePoint pricePoint, LangVersion portalLang, boolean freeUsage) {
+		if (freeUsage) {
 			pp.setValueDisplayed(null);
 			pp.setAmount("0.00");
 		} else {

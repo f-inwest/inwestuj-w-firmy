@@ -112,7 +112,7 @@ public class EmailService {
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(from));
 		message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-		message.setSubject(subject);
+		message.setSubject(subject, "UTF-8");
 
 		Multipart multipart = new MimeMultipart();
 		BodyPart htmlPart = new MimeBodyPart();
@@ -309,7 +309,7 @@ public class EmailService {
 			String htmlTemplate = FileUtils.readFileToString(new File(TEMPLATE_AUTHORIZATION), "UTF-8");
 			String htmlBody = applyProperties(htmlTemplate, props);
 			String subject = props.get(NOTIFICATION_TITLE);
-			sendAdmin("grzegorz.nittner@inwestujwfirmy.pl", notification.getUserEmail(), subject, htmlBody);
+			sendAdmin(ADMIN_EMAIL, notification.getUserEmail(), subject, htmlBody);
 			return true;
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Error sending notification email", e);
