@@ -111,6 +111,10 @@ pl.implement(MapPageClass,{
             marker,
             markers = [],
             markerCluster,
+            markerStyle = {
+                maxZoom: 15,
+                textColor: 0x4cc7df
+            },
             infowindow = new google.maps.InfoWindow(),
             genInfoDisplay = function(listingid, marker, infowindow) {
                 return function() {
@@ -140,12 +144,13 @@ pl.implement(MapPageClass,{
             marker = new google.maps.Marker({
                 cursor: 'pointer',
                 position: latLng,
-                raiseOnDrag: false
+                raiseOnDrag: false,
+                icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
             });
             google.maps.event.addListener(marker, 'click', genInfoDisplay(listingid, marker, infowindow));
             markers.push(marker);
         }
-        markerCluster = new MarkerClusterer(map, markers, { maxZoom: 15 });
+        markerCluster = new MarkerClusterer(map, markers, markerStyle);
     }
 });
 
