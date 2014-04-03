@@ -46,8 +46,8 @@ public class EmailService {
 	private static final String TEMPLATE_NOTIFICATION = "./WEB-INF/email-templates/notification.html";
 	private static final String TEMPLATE_3LISTING_NOTIFICATION = "./WEB-INF/email-templates/welcome-email.html";
 
-	private static final String WELCOME_IMAGE_URL = "http://www.inwestujwfirmy.pl/img/email-welcome.jpg";
-	private static final String NOTIFICATION_IMAGE_URL = "http://www.inwestujwfirmy.pl/img/email-notification.jpg";
+	private static final String WELCOME_IMAGE_URL = "https://www.inwestujwfirmy.pl/img/email-welcome.jpg";
+	private static final String NOTIFICATION_IMAGE_URL = "https://www.inwestujwfirmy.pl/img/email-notification.jpg";
 
 	private static final String LINK_TO_HEADER_IMAGE = "##NOTIFICATION_LINK_TO_HEADER_IMAGE##";
 
@@ -188,7 +188,7 @@ public class EmailService {
 	}
 
 	public boolean sendNotificationEmail(NotificationVO notification) {
-		if (Notification.Type.ADMIN_REQUEST_TO_BECOME_DRAGON.toString().equalsIgnoreCase(notification.getType())) {
+		if (Notification.Type.USER_PROMOTED_TO_INVESTOR.toString().equalsIgnoreCase(notification.getType())) {
 			return sendAdminNotification(notification);
 		} if (Notification.Type.PRIVATE_MESSAGE.toString().equalsIgnoreCase(notification.getType())) {
 			return send3ListingNotification(notification);
@@ -463,7 +463,7 @@ public class EmailService {
 		if (StringUtils.isBlank(domain)) {
 			domain = "www.inwestujwfirmy.pl";
 		}
-		return "http://" + domain + path;
+		return "https://" + domain + path;
 	}
 	
 	private String getDomainUrl(SBUser user, String path) {
@@ -471,7 +471,7 @@ public class EmailService {
 		if (StringUtils.isBlank(domain)) {
 			domain = "www.inwestujwfirmy.pl";
 		}
-		return "http://" + domain + path;
+		return "https://" + domain + path;
 	}
 	
 	private String getText(NotificationVO notification, String key) {

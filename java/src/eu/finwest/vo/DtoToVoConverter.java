@@ -525,8 +525,9 @@ public class DtoToVoConverter {
 			// payments are not handled yet
 			break;
 		case ADMIN_REQUEST_TO_BECOME_DRAGON:
-			notif.setTitle(Translations.getText("notif_dragon_request_title", notifDTO.listingOwner));
-			notif.setText1(Translations.getText("notif_dragon_request_text"));
+		case USER_PROMOTED_TO_INVESTOR:
+			notif.setTitle(Translations.getText("notif_user_promoted_to_investor_title", notifDTO.listingOwner));
+			notif.setText1(Translations.getText("notif_user_promoted_to_investor_text"));
 			notif.setText2("");
 			notif.setText3(Translations.getText("notif_visit_profile",
 					BaseVO.getServiceLocation() + "/profile-page.html?id=" + notifDTO.listingOwnerUser.getString()));

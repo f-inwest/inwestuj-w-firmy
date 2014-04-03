@@ -454,10 +454,10 @@ public class NotificationFacade {
 		List<Notification> toStore = new ArrayList<Notification>();
 
 		Notification notification = new Notification();
-		notification.message = "User '" + user.nickname + "' sent request to become dragon";
+		notification.message = "User '" + user.nickname + "' has got investor badge";
 		notification.listingOwner = user.nickname;
 		notification.listingOwnerUser = user.getKey();
-        notification.type = Notification.Type.ADMIN_REQUEST_TO_BECOME_DRAGON;
+        notification.type = Notification.Type.USER_PROMOTED_TO_INVESTOR;
 
 		SBUser admin1 = getUserDAO().getUserByEmail("grzegorz.nittner@gmail.com");
 		SBUser admin2 = getUserDAO().getUserByEmail("johnarleyburns@gmail.com");
