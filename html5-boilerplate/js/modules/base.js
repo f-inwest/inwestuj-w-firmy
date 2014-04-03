@@ -531,6 +531,8 @@ pl.implement(HeaderClass, {
         dropdown.bindEvents(json);
     },
     setHeader: function(profile, login_url, logout_url, twitter_login_url, fb_login_url) {
+        var params = this.getSearchParameters(),
+            code = params['code'];
         if (profile) {
             this.setLoggedIn(profile, logout_url);
         }
@@ -553,6 +555,60 @@ pl.implement(HeaderClass, {
                 pl('#register-email').removeClass('register-email-input');
                 pl('#register-message').get(0).innerText = '';
             });
+        if (code) {
+            this.showChangePassword(code);
+        }
+    },
+    showChangePassword: function(code) {
+        pl('#social-login, #login-panel-left').hide();
+        pl('#login-panel-header').get(0).innerText = '@lang_change_password@';
+        pl('#login-panel-text').get(0).innerText = '@lang_enter_new_password@';
+        pl('#change-password-code').get(0).value = code;
+        pl('#change-password-link').bind('click', function() {
+            var code = pl('#change-password-code').get(0).value,
+                password = pl('#change-password-input').get(0).value,
+                passwordConfirm = pl('#change-password-input-confirm').get(0).value,
+                data = {
+                    code: code,
+                    password: password
+                },
+                successFunc = function(json) {
+                    pl('#login-box-overlay, #login-box-message').hide();
+                    pl('#change-password-form, #login-panel-text').hide();
+                    pl('#change-password-close-link').bind('click', function() {
+                        window.location = "/";
+                    });
+                    pl('#change-password-changed-text, #change-password-close-link').show();
+                },
+                errorFunc = function(errorNum, json) {
+                    var msg = json && json.error_msg ? json.error_msg : '@lang_cant_change_password@';
+                    console.log('error message:' + msg);
+                    pl('#login-box-overlay, #login-box-message').hide();
+                    pl('#change-password-message').get(0).innerHTML = msg;
+                },
+                ajax = new AjaxClass('/user/reset_password', 'change-password-message', null, successFunc, null, errorFunc);
+            if (password !== passwordConfirm) {
+                pl('#change-password-message').get(0).innerText = '@lang_password_doesnt_match@';
+                return;
+            }
+            pl('#login-box-overlay, #login-box-message').show();
+            ajax.setPostData(data);
+            ajax.call();
+        });
+        pl('#change-password-panel, #light, #fade').show();
+    },
+    getSearchParameters: function() {
+        var prmstr = window.location.search.substr(1),
+            transformToAssocArray = function(prmstr) {
+                var params = {};
+                var prmarr = prmstr.split("&");
+                for ( var i = 0; i < prmarr.length; i++) {
+                    var tmparr = prmarr[i].split("=");
+                    params[tmparr[0]] = tmparr[1];
+                }
+                return params;
+            };
+        return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
     },
     setLoggedIn: function(profile, logout_url) {
         var num_notifications = profile.num_notifications || 0,

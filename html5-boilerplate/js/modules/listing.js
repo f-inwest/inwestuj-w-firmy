@@ -16,7 +16,7 @@ pl.implement(ListingClass, {
         this.login_url = json && json.login_url;
         this.loggedin_profile = json && json.loggedin_profile;
         this.loggedin_profile_id = this.loggedin_profile && this.loggedin_profile.profile_id;
-        this.listing_url = 'http://inwestujwfirmy.pl/company-page.html?id=' + this.listing_id;
+        this.listing_url = 'https://inwestujwfirmy.pl/company-page.html?id=' + this.listing_id;
         this.listing_public_title = 'Inwestuj w Firmy: ' + this.title;
         this.pricepoints = json.pricepoints;
         console.log('pricepoints:', this.pricepoints);
@@ -88,9 +88,11 @@ pl.implement(ListingClass, {
     },
 
     displayVideo: function() {
-        if (this.video) {
-            pl('#videolink').attr({href: this.video});
-            pl('#videopresentation').attr({src: this.video});
+        var url = this.video,
+            secureUrl = url && url.indexOf('http:') == 0 ? url.replace('http:', 'https:') : url;
+        if (secureUrl) {
+            pl('#videolink').attr({href: secureUrl});
+            pl('#videopresentation').attr({src: secureUrl});
             pl('#videowrapper').show();
         }
     },
@@ -511,7 +513,7 @@ pl.implement(ListingClass, {
             'og:title': this.listing_public_title,
             'og:type': 'company',
             'og:url': this.listing_url,
-            'og:image': 'http://inwestujwfirmy.pl/listing/logo/' + this.listing_id,
+            'og:image': 'https://inwestujwfirmy.pl/listing/logo/' + this.listing_id,
             'og:site_name': 'inwestuj-w-firmy',
             'fb:app_id': '3063944677997'
         });
@@ -529,7 +531,7 @@ pl.implement(ListingClass, {
         this.addMetaTags('itemprop', {
             'name': this.listing_public_title,
             'description': this.summary,
-            'og:image': 'http://inwestujwfirmy.pl/listing/logo/' + this.listing_id
+            'og:image': 'https://inwestujwfirmy.pl/listing/logo/' + this.listing_id
         });
         pl('#gplusbanner').html('<g:plusone size="medium" annotation="inline" width="290" href="' + this.listing_url + '"></g:plusone>');
   (function() {
