@@ -1,18 +1,35 @@
 package eu.finwest.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 
+import com.google.api.client.json.JsonFactory;
+import com.google.api.services.plus.Plus;
+import com.google.api.services.plus.PlusRequestInitializer;
+import com.google.api.services.plus.model.PeopleFeed;
+import com.google.api.services.plus.model.Person;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+
+import eu.finwest.datamodel.SystemProperty;
+import eu.finwest.web.MemCacheFacade;
 
 public class ImageHelper {
 	private static final Logger log = Logger.getLogger(ImageHelper.class.getName());
@@ -126,31 +143,44 @@ public class ImageHelper {
 	private static String fetchUrl(String url) {
 		try {
 			log.info("Fetching Google Plus avatar url from " + url);
-			HttpURLConnection con = (HttpURLConnection)new URL(url).openConnection();
-			con.setInstanceFollowRedirects(false);
-			IOUtils.toByteArray(con.getInputStream());
-			String locationHeader = con.getHeaderField("Location");
-			if (StringUtils.isNotEmpty(locationHeader)) {
-				return locationHeader;
-			} else {
-				return null;
-			}
+			return IOUtils.toString(new InputStreamReader(new URL(url).openStream()));
 		} catch (Exception e) {
 			log.log(Level.WARNING, "Error fetching avatar url from " + url, e);
 			return null;
 		}
 	}
 
-	public static String getGooglePlusAvatarUrl(String googleId, String email) {
-		String avatarUrl = fetchUrl("http://profiles.google.com/s2/photos/profile/" + googleId);
-		log.info("Fetched Google Plus avatar url: " + avatarUrl);
-		if (avatarUrl == null && email != null) {
-			String emailParts[] = StringUtils.split(email, "@");
-			log.info("Trying to fetch avatar for google email address: " + emailParts[0]);
-			avatarUrl = fetchUrl("http://profiles.google.com/s2/photos/profile/" + emailParts[0]);
-			log.info("Fetched Google Plus avatar url: " + avatarUrl);
+	public static String getGooglePlusAvatarUrl(com.google.appengine.api.users.User user) {
+		String apiKey = MemCacheFacade.instance().getSystemProperty(SystemProperty.GOOGLE_API_KEY);
+		if (StringUtils.isBlank(apiKey)) {
+			apiKey = "AIzaSyCyUJqBsLWYgxQwnS6uOUC5yX8ASSN0P7o";
 		}
-		return avatarUrl;
+		
+		try {
+			Plus plus = new Plus.Builder(new UrlFetchTransport(), new JacksonFactory(), (com.google.api.client.http.HttpRequestInitializer)null)
+		    	.setApplicationName("").setGoogleClientRequestInitializer(new PlusRequestInitializer(apiKey)).build();
+			Plus.People.Search searchPeople = plus.people().search(user.getNickname());
+			searchPeople.setMaxResults(5L);
+			PeopleFeed peopleFeed = searchPeople.execute();
+			List<Person> people = peopleFeed.getItems();
+			if (people == null || people.size() == 0) {
+				return null;
+			}
+			String avatarJson = fetchUrl("https://www.googleapis.com/plus/v1/people/" + people.get(0).getId()
+					+ "?fields=image&key=" + apiKey);
+			log.info("Fetched Google Plus avatar json: " + avatarJson);
+			
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode avatar = mapper.readValue(avatarJson, JsonNode.class);
+			if (avatar.has("image") && avatar.get("image").has("url")) {
+				String avatarUrl = avatar.get("image").get("url").getValueAsText();
+				log.info("Fetched Google Plus avatar url: " + avatarUrl);
+				return avatarUrl;
+			}
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Error fetching Google Plus avatar", e);
+		}
+		return null;
 	}
 	
 	public static String getFacebookAvatarUrl(String facebookId) {

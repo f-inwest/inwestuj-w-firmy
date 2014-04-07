@@ -31,6 +31,7 @@ public class SystemProperty implements Serializable {
 	public static final String GOOGLEDOC_USER = "googledoc.user";
 	public static final String GOOGLEDOC_PASSWORD = "googledoc.password";
 	public static final String GOOGLEPLACES_API_KEY = "googleplaces.apikey";
+	public static final String GOOGLE_API_KEY = "google.apikey";
 
 	public static final String TWITTER_CONSUMER_KEY = "twitter.consumer.key";
 	public static final String TWITTER_CONSUMER_SECRET = "twitter.consumer.secret";

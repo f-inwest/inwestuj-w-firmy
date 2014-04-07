@@ -25,6 +25,7 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.repackaged.org.joda.time.DateMidnight;
 import com.googlecode.objectify.Key;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
@@ -321,9 +322,13 @@ public class UserMgmtFacade {
 			user.googleName = googleUser.getNickname();
 			needsUpdate = true;
 		}
-		if (StringUtils.isEmpty(user.avatarUrl) && StringUtils.isNotEmpty(user.googleId)) {
-			user.avatarUrl = ImageHelper.getGooglePlusAvatarUrl(user.googleId, user.googleEmail);
-			needsUpdate =  true;
+		if (StringUtils.isNotEmpty(user.googleId)) {
+			if (StringUtils.isEmpty(user.avatarUrl) || user.avatarUpdateDate == null
+					|| user.avatarUpdateDate.getTime() < DateMidnight.now().minusDays(7).getMillis()) {
+				user.avatarUrl = ImageHelper.getGooglePlusAvatarUrl(googleUser);
+				user.avatarUpdateDate = new Date();
+				needsUpdate =  true;
+			}
 		}
 		if (needsUpdate) {
 			user = getDAO().updateUser(user);

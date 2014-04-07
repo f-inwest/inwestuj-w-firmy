@@ -396,6 +396,7 @@ public class ObjectifyDatastoreDAO {
             user.facebookName = newUser.facebookName;
             user.facebookEmail = newUser.facebookEmail;
             user.avatarUrl = newUser.avatarUrl;
+            user.avatarUpdateDate = newUser.avatarUpdateDate;
 
 			getOfy().put(user);
 
