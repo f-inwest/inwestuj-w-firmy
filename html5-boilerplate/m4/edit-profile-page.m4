@@ -55,21 +55,21 @@ include(profile-not-found.m4)
             <p class="sideinfo">
                 <label class="sideinfoheader">@lang_nickname@</label>
                 <br />
-                @lang_username_desc@
+                @lang_nickname_desc@
             </p>
             <span class="inputicon">
                 <div id="usernameicon"></div>
             </span>
         </div>
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="name">@lang_name@</label>
+            <label class="inputlabel" for="name">@lang_username@</label>
             <span class="inputfield">
                 <input class="text inputwidetext" type="text" name="name" id="name" value=""></input>
             </span>
             <p class="sideinfo">
-                <label class="sideinfoheader">@lang_name@</label>
+                <label class="sideinfoheader">@lang_username@</label>
                 <br />
-                @lang_name_desc@
+                @lang_username_desc@
             </p>
             <span class="inputicon">
                 <div id="nameicon"></div>

@@ -202,7 +202,7 @@ pl.implement(NewListingBaseClass, {
                     pl('#savebuttonspinner').show();
                     setTimeout(function() {
                         pl('#savebuttonspinner').hide();
-                        pl('#savebutton').text('SAVED').show();
+                        pl('#savebutton').text('@lang_saved_changes@').show();
                     }, 1000);
                     return false;
                 };
