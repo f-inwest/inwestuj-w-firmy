@@ -251,7 +251,8 @@ function SingleNotificationPageClass() {
 };
 pl.implement(SingleNotificationPageClass,{
     loadPage: function() {
-        var completeFunc = function(json) {
+        var notif_id = this.notification_id,
+            completeFunc = function(json) {
                 var header = new HeaderClass(),
                     notification = new NotificationClass();
                 header.setLogin(json);
@@ -259,8 +260,13 @@ pl.implement(SingleNotificationPageClass,{
                 pl('.preloader').hide();
                 pl('.wrapper').show();
              },
-            ajax = new AjaxClass('/notification/get/' + this.notification_id, 'notificationmsg', completeFunc);
-        ajax.call();
+            ajax = new AjaxClass('/notification/get/' + notif_id, 'notificationmsg', completeFunc);
+        if (notif_id) {
+            ajax.call();
+        }
+        else {
+            window.location = '/';
+        }
     }
 });
 

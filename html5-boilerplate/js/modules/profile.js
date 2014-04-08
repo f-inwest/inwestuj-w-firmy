@@ -534,7 +534,7 @@ pl.implement(ProfileClass, {
     displayPromote: function() {
         var profile = this.profile || this.loggedin_profile,
             is_loggedin_admin = this.loggedin_profile && this.loggedin_profile.admin,
-            not_yet_dragon = !profile.user_class || profile.user_class !== 'dragon',
+            not_yet_dragon = profile == null || !profile.user_class || profile.user_class !== 'dragon',
             promotable = is_loggedin_admin && not_yet_dragon;
         if (promotable) {
             this.bindPromoteButton();
