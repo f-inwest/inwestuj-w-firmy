@@ -1,6 +1,5 @@
 package test.eu.finwest;
 
-import java.io.Console;
 import java.io.File;
 import java.util.Date;
 import java.util.Map;

@@ -412,5 +412,14 @@ public class MemCacheFacade {
 			return null;
 		}
 	}
-	
+
+	public boolean getSystemProperty(boolean defaultValue, String name) {
+		Map<String, SystemProperty> map = getSystemProperties();
+		if (map != null && map.containsKey(name)) {
+			return Boolean.valueOf(map.get(name).value);
+		} else {
+			return defaultValue;
+		}
+	}
+
 }

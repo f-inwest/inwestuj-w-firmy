@@ -426,9 +426,9 @@ pl.implement(NewListingValuationClass, {
                 },
                 complete = function(json) {
                     pl('#savebuttonspinner').hide();
-                    pl('#savebutton').text('SAVED').show();
+                    pl('#savebutton').text('@lang_saved_changes@').show();
                     setTimeout(function() {
-                        pl('#savebutton').text('SAVE').show();
+                        pl('#savebutton').text('@lang_save@').show();
                     }, 1000);
                 },
                 ajax = new AjaxClass('/listing/update_field/.json', 'newlistingmsg', complete);

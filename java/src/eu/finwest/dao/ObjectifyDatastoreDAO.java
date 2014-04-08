@@ -147,19 +147,11 @@ public class ObjectifyDatastoreDAO {
             log.warning("User with email '" + userEmail + "' already exists, cannot create user.");
             return null;
         }
-        String userNickname = (StringUtils.isNotEmpty(nickname) && !nickname.equalsIgnoreCase(email))
-                    ? nickname
-                    : (userEmail.contains("@") ? email.substring(0, email.indexOf("@")) : "anonymous" + String.valueOf(new Random().nextInt(1000000000)));
-        user = getUserByNickname(userNickname);
-        if (user != null) {
-            log.warning("User with nickname " + userNickname + " already exists, cannot create user.");
-            return null;
-        }
+        
     	user = new SBUser();
         user.email = userEmail;
-        user.nickname = userNickname;
-        user.nicknameLower = userNickname.toLowerCase();
     	user.name = name;
+        generateNickname(user, nickname);
 	    user.modified = user.lastLoggedIn = user.joined = new Date();
 		user.status = SBUser.Status.ACTIVE;
 		user.notifyEnabled = true;
@@ -179,14 +171,24 @@ public class ObjectifyDatastoreDAO {
     	user.twitterId = twitterId;
     	user.twitterScreenName = twitterScreenName;
         user.email = "<twitter_login>";
-        user.nickname = twitterScreenName;
-        user.nicknameLower = twitterScreenName.toLowerCase();
+        generateNickname(user, twitterScreenName);
+        
 	    user.modified = user.lastLoggedIn = user.joined = new Date();
 		user.status = SBUser.Status.CREATED;
 		user.notifyEnabled = false;
 		getOfy().put(user);
         log.info("Created user with twitter id " + twitterId + " as " + user);
 		return user;
+	}
+	
+	public void generateNickname(SBUser user, String proposal) {
+		String baseNickname = proposal.contains("@") ? proposal.substring(0, proposal.indexOf("@")) : proposal;
+		String nickname = baseNickname;
+        while(getUserByNickname(nickname) != null) {
+        	nickname = baseNickname + String.valueOf(new Random().nextInt(1000));
+        }
+        user.nickname = nickname;
+        user.nicknameLower = nickname.toLowerCase();
 	}
 
 	public SBUser saveUser(SBUser user) {
@@ -396,6 +398,7 @@ public class ObjectifyDatastoreDAO {
             user.facebookName = newUser.facebookName;
             user.facebookEmail = newUser.facebookEmail;
             user.avatarUrl = newUser.avatarUrl;
+            user.avatarUpdateDate = newUser.avatarUpdateDate;
 
 			getOfy().put(user);
 

@@ -82,6 +82,7 @@ public class SBUser extends BaseObject<SBUser> implements Serializable {
 
 	/* Avatar data */
 	public String avatarUrl;
+	public Date avatarUpdateDate;
 
 	public String password;
 	@Indexed(IfNotNull.class) public String activationCode;

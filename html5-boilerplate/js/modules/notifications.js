@@ -9,31 +9,31 @@ pl.implement(NotificationClass, {
         self.messageclass = self.read ? '' : ' inputmsg'; // unread
         if (!self.notify_type) {
             self.type = 'notification';
-            self.linktext = 'page';
+            self.linktext = '@lang_notification_page@';
         }
         else if (self.notify_type.match('comment')) {
             self.type = 'comment';
-            self.linktext = 'comment page';
+            self.linktext = '@lang_notification_comment_page@';
         }
         else if (self.notify_type.match('bid')) {
             self.type = 'bid';
-            self.linktext = 'investment page';
+            self.linktext = '@lang_notification_investment_page@';
         }
         else if (self.notify_type.match('ask_listing_owner')) {
             self.type = 'ask_listing_owner';
-            self.linktext = 'questions and answer page';
+            self.linktext = '@lang_notification_qa_page@';
         }
         else if (self.notify_type.match('private_message')) {
             self.type = 'private_message';
-            self.linktext = 'private message page';
+            self.linktext = '@lang_notification_private_msg_page@';
         }
         else if (self.notify_type.match(/.*listing.*/)) {
             self.type = 'notification';
-            self.linktext = 'listing page';
+            self.linktext = '@lang_notification_listing_page@';
         }
         else {
             self.type = 'notification';
-            self.linktext = 'page';
+            self.linktext = '@lang_notification_page@';
         }
         self.date = self.create_date || self.sent_date;
         self.datetext = self.date ? DateClass.prototype.format(self.date) : '';

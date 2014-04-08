@@ -134,6 +134,7 @@ pl.implement(MapPageClass,{
                     ajax.call();
                 }
             };
+            
         this.map = map;
         for (i = 0; i < this.maplistings.length; i++) {
             maplisting = this.maplistings[i];
@@ -145,7 +146,10 @@ pl.implement(MapPageClass,{
                 cursor: 'pointer',
                 position: latLng,
                 raiseOnDrag: false,
-                icon: 'https://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+                icon: {
+	        		anchor: new google.maps.Point(25,15), // wspolzedne poczatku na ikonie tu center statku
+	        		url: 'img/statek-ico.png'
+        		}
             });
             google.maps.event.addListener(marker, 'click', genInfoDisplay(listingid, marker, infowindow));
             markers.push(marker);

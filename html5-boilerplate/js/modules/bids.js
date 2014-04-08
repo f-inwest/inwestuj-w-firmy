@@ -391,7 +391,7 @@ pl.implement(BidClass, {
             <p class="span-3">@lang_bid@</p>\
             <p class="span-2">@lang_equity@</p>\
             <p class="span-3">@lang_valuation@</p>\
-            <p class="span-9">@lang_notes@</p>\
+            <p class="span-9">@lang_bid_notes@</p>\
             <p class="investorbiddateheader">@lang_date@</p>\
         </div>\
         ';
@@ -424,40 +424,40 @@ function SingleInvestorBidListClass() {
     this.investor_id = queryString.vars.investor_id;
     this.investor_nickname = queryString.vars.investor_nickname;
     this.confirmtext = {
-        investor_accept: 'You hereby agree to accept this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        investor_reject: 'You hereby agree to reject this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        investor_withdraw: 'You hereby agree to withdraw this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        investor_post: 'You hereby agree to make this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        investor_counter: 'You hereby agree to make this counter offer according to the <a href="/terms-page.html">terms and conditions</a>.',
-        owner_accept: 'You hereby agree to accept this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        owner_reject: 'You hereby agree to reject this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        owner_withdraw: 'You hereby agree to withdraw this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        owner_post: 'You hereby agree to make this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        owner_counter: 'You hereby agree to make this counter offer according to the <a href="/terms-page.html">terms and conditions</a>.'
+        investor_accept: '@lang_bids_investor_accept@',
+        investor_reject: '@lang_bids_investor_reject@',
+        investor_withdraw: '@lang_bids_investor_withdraw@',
+        investor_post: '@lang_bids_investor_post@',
+        investor_counter: '@lang_bids_investor_counter@',
+        owner_accept: '@lang_bids_owner_accept@',
+        owner_reject: '@lang_bids_owner_reject@',
+        owner_withdraw: '@lang_bids_owner_withdraw@',
+        owner_post: '@lang_bids_owner_post@',
+        owner_counter: '@lang_bids_owner_counter@'
     };
     this.successtext = {
-        investor_post: 'Bid posted',
-        investor_counter: 'Counter-offer posted',
-        investor_accept: 'Bid accepted',
-        investor_reject: 'Bid rejected',
-        investor_withdraw: 'Bid withdrawn',
-        owner_post: 'Bid posted',
-        owner_counter: 'Counter-offer posted',
-        owner_accept: 'Bid accepted',
-        owner_reject: 'Bid rejected',
-        owner_withdraw: 'Bid withdrawn'
+        investor_post: '@lang_bids_success_investor_post@',
+        investor_counter: '@lang_bids_success_investor_counter@',
+        investor_accept: '@lang_bids_success_investor_accept@',
+        investor_reject: '@lang_bids_success_investor_reject@',
+        investor_withdraw: '@lang_bids_success_investor_withdraw@',
+        owner_post: '@lang_bids_success_owner_post@',
+        owner_counter: '@lang_bids_success_owner_counter@',
+        owner_accept: '@lang_bids_success_owner_accept@',
+        owner_reject: '@lang_bids_success_owner_reject@',
+        owner_withdraw: '@lang_bids_success_owner_withdraw@'
     };
     this.waitingtext = {
-        investor_post: 'Owner is evaluating your bid',
-        investor_counter: 'Owner is evaluating your counter-offer',
-        investor_accept: 'You have accepted the counter-offer, contact the owner to conclude the legal agreement',
-        investor_reject: 'You have rejected the counter-offer',
-        investor_withdraw: 'You have withdrawn your bid',
-        owner_post: 'Owner has posted a bid',
-        owner_counter: 'Owner has proposed a counter-offer and is awaiting your response',
-        owner_accept: 'Owner has accepted your bid, contact them to conclude the legal agreement',
-        owner_reject: 'Owner has rejected your bid',
-        owner_withdraw: 'Owner has withdrawn their counter-offer'
+        investor_post: '@lang_bids_waiting_investor_post@',
+        investor_counter: '@lang_bids_waiting_investor_counter@',
+        investor_accept: '@lang_bids_waiting_investor_accept@',
+        investor_reject: '@lang_bids_waiting_investor_reject@',
+        investor_withdraw: '@lang_bids_waiting_investor_withdraw@',
+        owner_post: '@lang_bids_waiting_owner_post@',
+        owner_counter: '@lang_bids_waiting_owner_counter@',
+        owner_accept: '@lang_bids_waiting_owner_accept@',
+        owner_reject: '@lang_bids_waiting_owner_reject@',
+        owner_withdraw: '@lang_bids_waiting_owner_withdraw@'
     };
 }
 pl.implement(SingleInvestorBidListClass, {
@@ -523,7 +523,7 @@ pl.implement(SingleInvestorBidListClass, {
             html = BidClass.prototype.makeHeader();
             if (this.more_results_url) {
             	html += '<div class="showmore hoverlink" id="moreresults"><span class="initialhidden" id="moreresultsurl">'
-                    + self.more_results_url + '</span><span id="moreresultsmsg">Earlier bids...</span></div>\n';
+                    + self.more_results_url + '</span><span id="moreresultsmsg">@lang_bids_earlier@</span></div>\n';
             }
             for (i = 0; i < this.bids.length; i++) {
                 bid = this.bids[i];
@@ -551,7 +551,7 @@ pl.implement(SingleInvestorBidListClass, {
 	                    html = '',
 	                    bid,
 	                    i;
-		                self.investor_nickname = json.investor && json.investor.username || 'Anonymous';
+		                self.investor_nickname = json.investor && json.investor.username || '@lang_anonymous@';
 		                self.bidsprops = bidsprops;
 		                self.validactions = validactions;
 		                self.bids = [];
@@ -577,7 +577,7 @@ pl.implement(SingleInvestorBidListClass, {
                         }
                         if (self.more_results_url) {
                             pl('#moreresultsurl').text(self.more_results_url);
-                            pl('#moreresultsmsg').text('Earlier bids...');
+                            pl('#moreresultsmsg').text('@lang_bids_earlier@');
                         }
                         else {
                             pl('#moreresultsmsg').text('');
@@ -727,7 +727,7 @@ pl.implement(SingleInvestorBidListClass, {
 
             blur: function() {
                 if (!pl(textsel).hasClass('edited')) {
-                    pl(textsel).attr({value: 'Put your note to the owner here...'});
+                    pl(textsel).attr({value: '@lang_bids_note_for_owner@'});
                 }
             }
         });
@@ -739,9 +739,9 @@ pl.implement(SingleInvestorBidListClass, {
                 <span class="span-4">&nbsp;</span>\
                 <span class="span-15">\
                     <div class="formitem clear">\
-                        <label class="inputlabel" for="note">@lang_notes@</label>\
+                        <label class="inputlabel" for="note">@lang_bid_notes@</label>\
                         <span class="inputfield">\
-                            <textarea class="textarea new_bid_textarea" name="note" id="existing_bid_text" cols="20" rows="5">Put your note to the owner here...</textarea>\
+                            <textarea class="textarea new_bid_textarea" name="note" id="existing_bid_text" cols="20" rows="5">@lang_bids_note_for_owner@</textarea>\
                         </span>\
                         <span class="inputicon">\
                             <div id="new_bid_texticon"></div>\
@@ -756,9 +756,9 @@ pl.implement(SingleInvestorBidListClass, {
         var waitingtext = bid ? (this.waitingtext[bid.type] || '') : '';
         return '\
 <div class="bidactionline" id="existingbidbuttons">\
-    <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_withdraw_btn">@lang_withdraw@</span>\
-    <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_reject_btn">@lang_reject@</span>\
-    <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_accept_btn">@lang_accept@</span>\
+    <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_withdraw_btn">@lang_bid_withdraw@</span>\
+    <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_reject_btn">@lang_bid_reject@</span>\
+    <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_accept_btn">@lang_bid_accept@</span>\
     <span class="span-16 bidconfirmmessage" id="existingbidmsg">' + waitingtext + '</span>\
 </div>\
 <div class="bidactionline initialhidden" id="existingconfirmbuttons">\
@@ -809,7 +809,7 @@ pl.implement(SingleInvestorBidListClass, {
     makeBidAction: function(type, neworexisting) {    
         var self = this,
             complete = function(json) {
-                pl('#investor_' + neworexisting + '_msg').addClass('successful').text(self.successtext[type] + ', reloading...');
+                pl('#investor_' + neworexisting + '_msg').addClass('successful').text(self.successtext[type] + '@lang_bids_reloading@');
                 setTimeout(function() { location.reload(); }, 3000);
             },
 
@@ -847,7 +847,7 @@ pl.implement(SingleInvestorBidListClass, {
             if (!pl('#investor_new_confirm_btn').hasClass('submitting')) {
                 pl('#investor_new_confirm_btn, #investor_new_cancel_btn').css({visibility: 'hidden'});
                 pl('#investor_new_confirm_btn').addClass('submitting');
-                pl('#investor_new_msg').addClass('inprogress').text('Submitting...');
+                pl('#investor_new_msg').addClass('inprogress').text('@lang_bids_submitting@');
                 self.newBidAction(type);
             }
         });
@@ -872,7 +872,7 @@ pl.implement(SingleInvestorBidListClass, {
             if (!pl('#investor_existing_confirm_btn').hasClass('submitting')) {
                 pl('#investor_existing_confirm_btn').addClass('submitting');
                 pl('#investor_existing_confirm_btn, #investor_existing_cancel_btn').css({visibility: 'hidden'});
-                pl('#investor_existing_msg').addClass('inprogress').text('Submitting...');
+                pl('#investor_existing_msg').addClass('inprogress').text('@lang_bids_submitting@');
                 self.existingBidAction(type);
             }
         });
@@ -990,7 +990,7 @@ pl.implement(InvestorBidGroupClass, {
         this.pcttext = pct ? PercentClass.prototype.format(pct) + '%' : '';
         this.valtext = val ? CurrencyClass.prototype.format(val, this.bidslist.listing.currency) : '';
         this.typetext = type ? type.replace(/(investor_|owner_)/, '') : '';
-        this.bidtext = this.last_text ? SafeStringClass.prototype.htmlEntities(this.last_text) : 'None';
+        this.bidtext = this.last_text ? SafeStringClass.prototype.htmlEntities(this.last_text) : '@lang_bids_none@';
         this.datetext = this.last_date ? DateClass.prototype.format(this.last_date) : '';
         this.usertext = this.investor_nickname + countertext;
         this.typeclass = '';
@@ -1011,7 +1011,7 @@ pl.implement(InvestorBidGroupClass, {
                 last_pct: null,
                 last_val: null,
                 last_type: null,
-                last_text: 'No bids received for this listing.',
+                last_text: '@lang_bids_no_bids_received@',
                 last_date: null,
                 read: true
             };
@@ -1093,7 +1093,7 @@ pl.implement(InvestorBidGroupListClass, {
             html += investor.makeHtml();
         }
         if (this.more_results_url) {
-        	html += '<div class="showmore hoverlink" id="moreresults"><span class="initialhidden" id="moreresultsurl">' + self.more_results_url + '</span><span id="moreresultsmsg">More investors...</span></div>\n';
+        	html += '<div class="showmore hoverlink" id="moreresults"><span class="initialhidden" id="moreresultsurl">' + self.more_results_url + '</span><span id="moreresultsmsg">@lang_bids_more_investors@</span></div>\n';
         }
         pl('#investorgrouplist').html(html);
         if (this.more_results_url) {
@@ -1135,7 +1135,7 @@ pl.implement(InvestorBidGroupListClass, {
                         }
                         if (self.more_results_url) {
                             pl('#moreresultsurl').text(self.more_results_url);
-                            pl('#moreresultsmsg').text('Earlier bids...');
+                            pl('#moreresultsmsg').text('@lang_bids_earlier@');
                         }
                         else {
                             pl('#moreresultsmsg').text('');
@@ -1193,40 +1193,40 @@ function OwnerSingleInvestorBidListClass() {
     this.listing_id = queryString.vars.id;
     this.investor_id = queryString.vars.investor_id;
     this.confirmtext = {
-        investor_accept: 'You hereby agree to accept this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        investor_reject: 'You hereby agree to reject this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        investor_withdraw: 'You hereby agree to withdraw this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        investor_post: 'You hereby agree to make this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        investor_counter: 'You hereby agree to make this counter offer according to the <a href="/terms-page.html">terms and conditions</a>.',
-        owner_accept: 'You hereby agree to accept this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        owner_reject: 'You hereby agree to reject this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        owner_withdraw: 'You hereby agree to withdraw this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        owner_post: 'You hereby agree to make this bid according to the <a href="/terms-page.html">terms and conditions</a>.',
-        owner_counter: 'You hereby agree to make this counter offer according to the <a href="/terms-page.html">terms and conditions</a>.'
+        investor_accept: '@lang_bids_investor_accept@',
+        investor_reject: '@lang_bids_investor_reject@',
+        investor_withdraw: '@lang_bids_investor_withdraw@',
+        investor_post: '@lang_bids_investor_post@',
+        investor_counter: '@lang_bids_investor_counter@',
+        owner_accept: '@lang_bids_owner_accept@',
+        owner_reject: '@lang_bids_owner_reject@',
+        owner_withdraw: '@lang_bids_owner_withdraw@',
+        owner_post: '@lang_bids_owner_post@',
+        owner_counter: '@lang_bids_owner_counter@'
     };
     this.successtext = {
-        investor_post: 'Bid posted',
-        investor_counter: 'Counter-offer posted',
-        investor_accept: 'Bid accepted',
-        investor_reject: 'Bid rejected',
-        investor_withdraw: 'Bid withdrawn',
-        owner_post: 'Bid posted',
-        owner_counter: 'Counter-offer posted',
-        owner_accept: 'Bid accepted',
-        owner_reject: 'Bid rejected',
-        owner_withdraw: 'Bid withdrawn'
+        investor_post: '@lang_bids_success_investor_post@',
+        investor_counter: '@lang_bids_success_investor_counter@',
+        investor_accept: '@lang_bids_success_investor_accept@',
+        investor_reject: '@lang_bids_success_investor_reject@',
+        investor_withdraw: '@lang_bids_success_investor_withdraw@',
+        owner_post: '@lang_bids_success_owner_post@',
+        owner_counter: '@lang_bids_success_owner_counter@',
+        owner_accept: '@lang_bids_success_owner_accept@',
+        owner_reject: '@lang_bids_success_owner_reject@',
+        owner_withdraw: '@lang_bids_success_owner_withdraw@'
     };
     this.waitingtext = {
-        investor_post: 'Investor has made a bid and is awaiting your response',
-        investor_counter: 'Investor has proposed a counter-offer and is awaiting your response',
-        investor_accept: 'Investor has accepted your counter-offer, contact the investor to conclude the legal agreement',
-        investor_reject: 'Investor has rejected your counter-offer',
-        investor_withdraw: 'Investor has withdrawn their bid',
-        owner_post: 'You have posted a bid',
-        owner_counter: 'Investor is reviewing your counter-offer',
-        owner_accept: 'You have accepted the bid, contact the investor to conclude the legal agreement',
-        owner_reject: 'You have rejected the bid',
-        owner_withdraw: 'You have withdrawn your counter-offer'
+        investor_post: '@lang_bids_waiting_inv_investor_post@',
+        investor_counter: '@lang_bids_waiting_inv_investor_counter@',
+        investor_accept: '@lang_bids_waiting_inv_investor_accept@',
+        investor_reject: '@lang_bids_waiting_inv_investor_reject@',
+        investor_withdraw: '@lang_bids_waiting_inv_investor_withdraw@',
+        owner_post: '@lang_bids_waiting_inv_owner_post@',
+        owner_counter: '@lang_bids_waiting_inv_owner_counter@',
+        owner_accept: '@lang_bids_waiting_inv_owner_accept@',
+        owner_reject: '@lang_bids_waiting_inv_owner_reject@',
+        owner_withdraw: '@lang_bids_waiting_inv_owner_withdraw@'
     };
 }
 pl.implement(OwnerSingleInvestorBidListClass, {
@@ -1264,7 +1264,7 @@ pl.implement(OwnerSingleInvestorBidListClass, {
             jsonlist = json && json.bids || [],
             bid,
             i;
-        this.investor_nickname = json.investor && json.investor.username || 'Anonymous';
+        this.investor_nickname = json.investor && json.investor.username || '@lang_anonymous@';
         this.investor = json.investor;
         this.bidsprops = bidsprops;
         this.validactions = validactions;
@@ -1300,7 +1300,7 @@ pl.implement(OwnerSingleInvestorBidListClass, {
         if (this.bids.length) {
             html = BidClass.prototype.makeHeader();
             if (this.more_results_url) {
-            	html += '<div class="showmore hoverlink" id="moreresults"><span class="initialhidden" id="moreresultsurl">' + self.more_results_url + '</span><span id="moreresultsmsg">Earlier bids...</span></div>\n';
+            	html += '<div class="showmore hoverlink" id="moreresults"><span class="initialhidden" id="moreresultsurl">' + self.more_results_url + '</span><span id="moreresultsmsg">@lang_bids_earlier@</span></div>\n';
             }
             for (i = 0; i < this.bids.length; i++) {
                 bid = this.bids[i];
@@ -1333,7 +1333,7 @@ pl.implement(OwnerSingleInvestorBidListClass, {
 	                    html = '',
 	                    bid,
 	                    i;
-		                self.investor_nickname = json.investor && json.investor.username || 'Anonymous';
+		                self.investor_nickname = json.investor && json.investor.username || '@lang_anonymous@';
 		                self.bidsprops = bidsprops;
 		                self.validactions = validactions;
 		                self.bids = [];
@@ -1359,7 +1359,7 @@ pl.implement(OwnerSingleInvestorBidListClass, {
                         }
                         if (self.more_results_url) {
                             pl('#moreresultsurl').text(self.more_results_url);
-                            pl('#moreresultsmsg').text('Earlier bids...');
+                            pl('#moreresultsmsg').text('@lang_bids_earlier@');
                         }
                         else {
                             pl('#moreresultsmsg').text('');
@@ -1589,7 +1589,7 @@ pl.implement(OwnerSingleInvestorBidListClass, {
     makeBidAction: function(type, neworexisting) {    
         var self = this,
             complete = function(json) {
-                pl('#owner_' + neworexisting + '_msg').addClass('successful').text(self.successtext[type] + ', reloading...');
+                pl('#owner_' + neworexisting + '_msg').addClass('successful').text(self.successtext[type] + '@lang_bids_reloading@');
                 setTimeout(function() { location.reload(); }, 3000);
             },
 
@@ -1627,7 +1627,7 @@ pl.implement(OwnerSingleInvestorBidListClass, {
             if (!pl('#owner_new_confirm_btn').hasClass('submitting')) {
                 pl('#owner_new_confirm_btn, #owner_new_cancel_btn').css({visibility: 'hidden'});
                 pl('#owner_new_confirm_btn').addClass('submitting');
-                pl('#owner_new_msg').addClass('inprogress').text('Submitting...');
+                pl('#owner_new_msg').addClass('inprogress').text('@lang_bids_submitting@');
                 self.newBidAction(type);
             }
         });
@@ -1652,7 +1652,7 @@ pl.implement(OwnerSingleInvestorBidListClass, {
             if (!pl('#owner_existing_confirm_btn').hasClass('submitting')) {
                 pl('#owner_existing_confirm_btn').addClass('submitting');
                 pl('#owner_existing_confirm_btn, #owner_existing_cancel_btn').css({visibility: 'hidden'});
-                pl('#owner_existing_msg').addClass('inprogress').text('Submitting...');
+                pl('#owner_existing_msg').addClass('inprogress').text('@lang_bids_submitting@');
                 self.existingBidAction(type);
             }
         });

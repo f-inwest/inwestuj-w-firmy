@@ -25,6 +25,7 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.repackaged.org.joda.time.DateMidnight;
 import com.googlecode.objectify.Key;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
@@ -42,7 +43,6 @@ import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.VoToModelConverter;
 import eu.finwest.util.FacebookUser;
 import eu.finwest.util.ImageHelper;
-import eu.finwest.util.OfficeHelper;
 import eu.finwest.util.Translations;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.CampaignVO;
@@ -322,9 +322,13 @@ public class UserMgmtFacade {
 			user.googleName = googleUser.getNickname();
 			needsUpdate = true;
 		}
-		if (StringUtils.isEmpty(user.avatarUrl) && StringUtils.isNotEmpty(user.googleId)) {
-			user.avatarUrl = ImageHelper.getGooglePlusAvatarUrl(user.googleId, user.googleEmail);
-			needsUpdate =  true;
+		if (StringUtils.isNotEmpty(user.googleId)) {
+			if (StringUtils.isEmpty(user.avatarUrl) || user.avatarUpdateDate == null
+					|| user.avatarUpdateDate.getTime() < DateMidnight.now().minusDays(7).getMillis()) {
+				user.avatarUrl = ImageHelper.getGooglePlusAvatarUrl(googleUser);
+				user.avatarUpdateDate = new Date();
+				needsUpdate =  true;
+			}
 		}
 		if (needsUpdate) {
 			user = getDAO().updateUser(user);
@@ -499,9 +503,8 @@ public class UserMgmtFacade {
     		user.status = SBUser.Status.CREATED;
     		user.investor = false;
         }
-		if (user.nickname == null) {
-			generateNickname(user);
-		}
+		getDAO().generateNickname(user, name);
+		
 		user.password = encryptedPassword;
 		user.authCookie = authCookie;
 		user.location = location;
@@ -518,17 +521,6 @@ public class UserMgmtFacade {
 		return result;
 	}
 	
-	private void generateNickname(SBUser user) {
-		String baseNickname = user.nickname = user.email.contains("@") ? user.email.substring(0, user.email.indexOf("@"))
-        		: "anonymous" + String.valueOf(new Random().nextInt(1000000000));
-		String nickname = baseNickname;
-        while(getDAO().getUserByNickname(nickname) != null) {
-        	nickname = baseNickname + String.valueOf(new Random().nextInt(1000));
-        }
-        user.nickname = nickname;
-        user.nicknameLower = nickname.toLowerCase();
-	}
-
 	public SBUser authenticateUser(String email, String password) {
 		SBUser user = getDAO().getUserByEmail(email);
 		if (user == null) {
@@ -1108,13 +1100,19 @@ public class UserMgmtFacade {
 	}
 	
 	private void updateCommonFields(PricePoint pricePoint, UserVO loggedInUser, LangVersion portalLang, PricePointVO pp, String id) {
-		boolean freeUsage = StringUtils.equals("true", MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_FREE_USAGE))
-				&& pricePoint.group != Group.INVESTOR;		
+		boolean paymentFreeUsage = MemCacheFacade.instance().getSystemProperty(true, SystemProperty.PAYMENT_FREE_USAGE);
+		boolean paymentFreeInvestorReg = MemCacheFacade.instance().getSystemProperty(true, SystemProperty.PAYMENT_FREE_INVESTOR_REG);
+		boolean freeUsage = (pricePoint.type != PricePoint.Type.INVESTOR_REGISTRATION && paymentFreeUsage)
+				|| (pricePoint.type == PricePoint.Type.INVESTOR_REGISTRATION && paymentFreeInvestorReg);
+		
+		boolean developEnv = com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development;
 		String domain = null;
+		String protocol = "https://";
 		String subdomain = FrontController.getCampaign().getSubdomain();
 		boolean devEnvironment = false;
-		if (com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development) {
+		if (developEnv) {
 			domain = subdomain + ".localhost:7777";
+			protocol = "http://";
 			devEnvironment = true;
 		} else {
 			domain = subdomain + ".inwestujwfirmy.pl";
@@ -1125,16 +1123,16 @@ public class UserMgmtFacade {
 		pp.setPaymentLanguage(portalLang.name().toLowerCase());
 
 		pp.setSellerId(MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_CUSTOMER_ID));
-		updateAmounts(pp, pricePoint, portalLang);
+		updateAmounts(pp, pricePoint, portalLang, freeUsage);
 		pp.setCrc(pricePoint.name + " " + id);
 
 		String returnUrl = pricePoint.successUrl.replace("<domain>", domain);
 		returnUrl = returnUrl.replace("<id>", id);
 		pp.setReturnUrlSuccess(returnUrl);
-		pp.setReturnUrlFailure("http://" + domain + "/error-page.html");
+		pp.setReturnUrlFailure(protocol + domain + "/error-page.html");
 		
 		if (devEnvironment || freeUsage) {
-			pp.setActionUrl("http://" + domain + "/system/transaction_confirmation.html");
+			pp.setActionUrl(protocol + domain + "/system/transaction_confirmation.html");
 		} else {
 			pp.setActionUrl(MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_ACTION_URL));
 		}
@@ -1153,8 +1151,8 @@ public class UserMgmtFacade {
 		pp.setMd5sum(DigestUtils.md5Hex(md5string));
 	}
 	
-	private void updateAmounts(PricePointVO pp, PricePoint pricePoint, LangVersion portalLang) {
-		if (StringUtils.equals("true", MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_FREE_USAGE))) {
+	private void updateAmounts(PricePointVO pp, PricePoint pricePoint, LangVersion portalLang, boolean freeUsage) {
+		if (freeUsage) {
 			pp.setValueDisplayed(null);
 			pp.setAmount("0.00");
 		} else {
@@ -1180,7 +1178,11 @@ public class UserMgmtFacade {
 		case INV_REG:
 			user = getDAO().getUser(crcData[1]);
 			log.info("User '" + user.email + "' has requested investor badge with transaction: " + trans);
-			requestDragon(DtoToVoConverter.convert(user));
+			user.investor = true;
+			user.paidCode = user.paidCode == null ? code.toString() : user.paidCode + " " + code.toString();
+			getDAO().storeUser(user);
+			
+			NotificationFacade.instance().scheduleUserDragonRequestNotification(user);
 			break;
 		case CMP_1MT:
 		case CMP_6MT:

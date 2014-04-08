@@ -483,8 +483,14 @@ public class UserController extends ModelDrivenController {
 
 	private HttpHeaders requestDragon(HttpServletRequest request) {
 		HttpHeaders headers = new HttpHeadersImpl("request_dragon");
+		UserAndUserVO result = new UserAndUserVO();
+		result.setUser(getLoggedInUser());
+		result.setErrorCode(1000);
+		result.setErrorMessage(Translations.getText("lang_error_dragon_not_supported"));
+		model = result;
 		
-		model = UserMgmtFacade.instance().requestDragon(getLoggedInUser());
+		// we don't do that anymore
+		//model = UserMgmtFacade.instance().requestDragon(getLoggedInUser());
 		
 		return headers;
 	}

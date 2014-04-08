@@ -171,7 +171,7 @@ public class NotificationController extends ModelDrivenController {
 		case BID_PAID_FOR_YOUR_LISTING:
 			// payments are not handled yet
 			break;
-		case ADMIN_REQUEST_TO_BECOME_DRAGON:
+		case USER_PROMOTED_TO_INVESTOR:
 			notif.message = "Request for a dragon's badge";
 			break;
 		}

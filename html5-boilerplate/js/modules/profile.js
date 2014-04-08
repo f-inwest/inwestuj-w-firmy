@@ -300,7 +300,7 @@ pl.implement(CampaignTileClass, {
                         }
                     },
                     successFunc = function() {
-                        pl(messageSel).addClass('successful').get(0).innerText = 'saved';
+                        pl(messageSel).addClass('successful').get(0).innerText = '@lang_saved_changes@';
                         self.campaign.subdomain = subdomain;
                         self.campaign.name = name;
                         self.campaign.description = description;
@@ -1094,7 +1094,7 @@ pl.implement(ProfileListClass, {
                 ? '<span class="profilelistuserclass">' + ProfileUserClass.prototype.format(listitem.user_class) + '</span>'
                 : '',
             nametext = listitem.name
-                ? '@lang_name@:<span class="profilelistlastlogin">'
+                ? '@lang_username@:<span class="profilelistlastlogin">'
                     + SafeStringClass.prototype.htmlEntities(listitem.name) + '</span></br>'
                 : '',
             locationtext = listitem.location

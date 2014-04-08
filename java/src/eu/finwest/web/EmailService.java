@@ -46,8 +46,8 @@ public class EmailService {
 	private static final String TEMPLATE_NOTIFICATION = "./WEB-INF/email-templates/notification.html";
 	private static final String TEMPLATE_3LISTING_NOTIFICATION = "./WEB-INF/email-templates/welcome-email.html";
 
-	private static final String WELCOME_IMAGE_URL = "http://www.inwestujwfirmy.pl/img/email-welcome.jpg";
-	private static final String NOTIFICATION_IMAGE_URL = "http://www.inwestujwfirmy.pl/img/email-notification.jpg";
+	private static final String WELCOME_IMAGE_URL = "https://www.inwestujwfirmy.pl/img/email-welcome.jpg";
+	private static final String NOTIFICATION_IMAGE_URL = "https://www.inwestujwfirmy.pl/img/email-notification.jpg";
 
 	private static final String LINK_TO_HEADER_IMAGE = "##NOTIFICATION_LINK_TO_HEADER_IMAGE##";
 
@@ -112,7 +112,7 @@ public class EmailService {
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(from));
 		message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-		message.setSubject(subject);
+		message.setSubject(subject, "UTF-8");
 
 		Multipart multipart = new MimeMultipart();
 		BodyPart htmlPart = new MimeBodyPart();
@@ -188,7 +188,7 @@ public class EmailService {
 	}
 
 	public boolean sendNotificationEmail(NotificationVO notification) {
-		if (Notification.Type.ADMIN_REQUEST_TO_BECOME_DRAGON.toString().equalsIgnoreCase(notification.getType())) {
+		if (Notification.Type.USER_PROMOTED_TO_INVESTOR.toString().equalsIgnoreCase(notification.getType())) {
 			return sendAdminNotification(notification);
 		} if (Notification.Type.PRIVATE_MESSAGE.toString().equalsIgnoreCase(notification.getType())) {
 			return send3ListingNotification(notification);
@@ -309,7 +309,7 @@ public class EmailService {
 			String htmlTemplate = FileUtils.readFileToString(new File(TEMPLATE_AUTHORIZATION), "UTF-8");
 			String htmlBody = applyProperties(htmlTemplate, props);
 			String subject = props.get(NOTIFICATION_TITLE);
-			sendAdmin("grzegorz.nittner@inwestujwfirmy.pl", notification.getUserEmail(), subject, htmlBody);
+			sendAdmin(ADMIN_EMAIL, notification.getUserEmail(), subject, htmlBody);
 			return true;
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Error sending notification email", e);
@@ -325,6 +325,7 @@ public class EmailService {
 		
 		props.put(NOTIFICATION_TITLE, notification.getTitle());
 		props.put(NOTIFICATION_TITLE_ESCAPED, escape(notification.getTitle()));
+		props.put(TEXT_NO_LINK, "");
 		props.put(NOTIFICATION_TEXT_1, escape(notification.getText1()));
 		props.put(NOTIFICATION_TEXT_2, escape(notification.getText2()));
 		props.put(NOTIFICATION_TEXT_3, escape(notification.getText3()));
@@ -463,7 +464,7 @@ public class EmailService {
 		if (StringUtils.isBlank(domain)) {
 			domain = "www.inwestujwfirmy.pl";
 		}
-		return "http://" + domain + path;
+		return "https://" + domain + path;
 	}
 	
 	private String getDomainUrl(SBUser user, String path) {
@@ -471,7 +472,7 @@ public class EmailService {
 		if (StringUtils.isBlank(domain)) {
 			domain = "www.inwestujwfirmy.pl";
 		}
-		return "http://" + domain + path;
+		return "https://" + domain + path;
 	}
 	
 	private String getText(NotificationVO notification, String key) {

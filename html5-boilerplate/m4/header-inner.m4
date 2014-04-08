@@ -28,7 +28,7 @@
     <div class="span-6 last loginspan headerrow initialhidden" id="headerloggedin">
         <div class="headericonset">
             <a id="logoutlink" href="">
-                <div class="headericonbar headerlogout button-content" title="Logout"></div>
+                <div class="headericonbar headerlogout button-content" title="@lang_logout@"></div>
             </a>
             <a href="/notifications-page.html">
                 <div class="headericonbar headernotifications button-content" title="@lang_notifications@">

@@ -115,8 +115,8 @@ include(company-order-book.m4)
             </div>
     
             <div class="newbidactionline" id="newbidbuttons">
-                <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_counter_btn">@lang_counter@</span>
-                <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_post_btn">@lang_bid@</span>
+                <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_counter_btn">@lang_make_counter@</span>
+                <span class="span-3 inputbutton bidactionbutton initialhidden" id="investor_post_btn">@lang_make_bid@</span>
                 <span class="span-17 bidconfirmmessage" id="new_bid_msg"></span>
             </div>
             <div class="newbidactionline initialhidden" id="newconfirmbuttons">

@@ -23,7 +23,7 @@ public abstract class BaseVO {
 		String subdomain = FrontController.getCampaign() != null ?
 				FrontController.getCampaign().getSubdomain() + ".": 
 				(develEnv ? "" : "www.");
-		return  develEnv ? "http://" + subdomain + "localhost:7777" : "http://" + subdomain + "inwestujwfirmy.pl";
+		return  develEnv ? "http://" + subdomain + "localhost:7777" : "https://" + subdomain + "inwestujwfirmy.pl";
 	}
 
 	public String toString() {
