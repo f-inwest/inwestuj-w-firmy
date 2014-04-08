@@ -154,7 +154,7 @@ public class FrontController extends HttpServlet {
 				langVersion.set(LangVersion.valueOf(campaign.getAllowedLanguage()));
 				log.info("Setting language from campaign: " + langVersion.get());
 			} catch (Exception e) {
-				log.log(Level.WARNING, "Error while setting language from campaign.", e);
+				log.log(Level.WARNING, "Error while setting language from campaign, we'll use default lang version");
 			}
 		}
 	}

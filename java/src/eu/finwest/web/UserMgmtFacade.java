@@ -503,9 +503,8 @@ public class UserMgmtFacade {
     		user.status = SBUser.Status.CREATED;
     		user.investor = false;
         }
-		if (user.nickname == null) {
-			generateNickname(user);
-		}
+		getDAO().generateNickname(user, name);
+		
 		user.password = encryptedPassword;
 		user.authCookie = authCookie;
 		user.location = location;
@@ -522,17 +521,6 @@ public class UserMgmtFacade {
 		return result;
 	}
 	
-	private void generateNickname(SBUser user) {
-		String baseNickname = user.nickname = user.email.contains("@") ? user.email.substring(0, user.email.indexOf("@"))
-        		: "anonymous" + String.valueOf(new Random().nextInt(1000000000));
-		String nickname = baseNickname;
-        while(getDAO().getUserByNickname(nickname) != null) {
-        	nickname = baseNickname + String.valueOf(new Random().nextInt(1000));
-        }
-        user.nickname = nickname;
-        user.nicknameLower = nickname.toLowerCase();
-	}
-
 	public SBUser authenticateUser(String email, String password) {
 		SBUser user = getDAO().getUserByEmail(email);
 		if (user == null) {

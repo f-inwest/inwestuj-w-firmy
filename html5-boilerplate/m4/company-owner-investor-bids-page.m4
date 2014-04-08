@@ -24,7 +24,7 @@ companybannermacro(`', `', `', `', `companynavselected', `', `')
     <div class="span-16">
         <a href="#" class="backbuttonlink">
             <span class="push-1 span-6 inputbutton backbutton investorbackbutton">
-                &lt;&lt; BACK TO INVESTOR LIST
+                &lt;&lt; @lang_bids_back_to_investor@
             </span>
         </a>
     </div>
@@ -32,7 +32,7 @@ companybannermacro(`', `', `', `', `companynavselected', `', `')
 '
 include(company-order-book.m4)
 `
-<div class="boxtitlegap smokegrey clear">BIDS FROM INVESTOR <a id="investor_nickname" href="#"></a>
+<div class="boxtitlegap smokegrey clear">@lang_bids_from_investor@ <a id="investor_nickname" href="#"></a>
     <span class="newlistingtitlemsg" id="bidtitlemsg"></span>
 </div>
 <div class="initialhidden clear" id="bidsloggedin">
@@ -40,7 +40,7 @@ include(company-order-book.m4)
         <div id="bidlistlast"></div>
     </div>
 
-    <div class="boxtitlegap smokegrey clear initialhidden" id="new_bid_boxtitle">MAKE A COUNTER OFFER
+    <div class="boxtitlegap smokegrey clear initialhidden" id="new_bid_boxtitle">@lang_bids_make_counter_offer@
         <span class="newlistingtitlemsg" id="newbidtitlemsg"></span>
     </div>
 
@@ -59,7 +59,7 @@ include(company-order-book.m4)
             </div>
     
             <div class="formitem sideinfoitem clear">
-                <span class="inputlabel biglabel">AMOUNT</span>
+                <span class="inputlabel biglabel">@lang_bids_amount@</span>
                 <span class="inputfield">
                     <input class="text askinginputtext" type="text" name="new_bid_amt" id="new_bid_amt" maxlength="8"></input>
                 </span>
@@ -68,8 +68,7 @@ include(company-order-book.m4)
                 </span>
                 <span class="newbiddesc">
                     <p>
-                    The amount of money you are providing for investment, between $100 and $500,000 USD.  This bid will be sent to the listing owner
-                    who may accept, reject or counter the offer.  You may withdraw this offer at any time prior to action by the listing owner.
+                    @lang_new_bid_desc@
                     </p>
                 </span>
             </div>
@@ -85,7 +84,7 @@ include(company-order-book.m4)
             </div>
     
             <div class="formitem sideinfoitem clear">
-                <span class="inputlabel biglabel">FOR</span>
+                <span class="inputlabel biglabel">@lang_bids_for@</span>
                 <span class="inputfield inputpctfield">
                     <input class="text askinginputtext" type="text" name="new_bid_pct" id="new_bid_pct" maxlength="8"></input>
                 </span>
@@ -117,9 +116,9 @@ include(company-order-book.m4)
             </div>
     
             <div class="formitem clear">
-                <label class="inputlabel newbidnotelabel" for="note">NOTE</label>
+                <label class="inputlabel newbidnotelabel" for="note">@lang_bids_note@</label>
                 <span class="inputfield">
-                    <textarea class="textarea new_bid_textarea" name="note" id="new_bid_text" cols="20" rows="5">Put your note to the owner here...</textarea>
+                    <textarea class="textarea new_bid_textarea" name="note" id="new_bid_text" cols="20" rows="5">@lang_bids_note_for_owner@</textarea>
                 </span>
                 <span class="inputicon">
                     <div id="new_bid_texticon"></div>
@@ -127,12 +126,12 @@ include(company-order-book.m4)
             </div>
     
             <div class="newbidactionline" id="newbidbuttons">
-                <span class="span-3 inputbutton bidactionbutton initialhidden" id="owner_counter_btn">COUNTER</span>
+                <span class="span-3 inputbutton bidactionbutton initialhidden" id="owner_counter_btn">@lang_bids_counter@</span>
                 <span class="span-17 bidconfirmmessage" id="new_bid_msg"></span>
             </div>
             <div class="newbidactionline initialhidden" id="newconfirmbuttons">
-                <span class="span-3 inputbutton bidactionbutton" id="owner_new_cancel_btn">CANCEL</span>
-                <span class="span-3 inputbutton bidactionbutton" id="owner_new_confirm_btn">CONFIRM</span>
+                <span class="span-3 inputbutton bidactionbutton" id="owner_new_cancel_btn">@lang_bids_cancel@</span>
+                <span class="span-3 inputbutton bidactionbutton" id="owner_new_confirm_btn">@lang_bids_confirm@</span>
                 <span class="span-17 bidconfirmmessage" id="owner_new_msg"></span>
             </div>
 

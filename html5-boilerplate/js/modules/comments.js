@@ -196,7 +196,7 @@ pl.implement(CommentClass, {
                 ? ' style="background-image: url(' + comment.profile_avatar + ')"'
                 : '',
             isowner = comment.profile_id === this.listing.profile_id,
-            ownermarker = isowner ? '<span class="commentowner">Owner</span> ' : '',
+            ownermarker = isowner ? '<span class="commentowner">@lang_owner@</span> ' : '',
             usertext = '<span class="commentusername">' + comment.profile_username + '</span>',
 			userclasstext =  comment.profile_user_class
                 ? '<span class="profilelistuserclass">' + ProfileUserClass.prototype.format(comment.profile_user_class) + '</span>'

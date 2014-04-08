@@ -138,7 +138,7 @@ include(images-panel.m4)
             </div>
 
             <div id="sendbackbox" class="sendbackbox">
-            <input class="text sideinputtext" type="text" name="sendbacktext" id="sendbacktext" value="" length="35" maxlength="100"></input>
+            <input class="text sideinputtext" type="text" name="sendbacktext" id="sendbacktext" value="@lang_send_back_reason@" length="35" maxlength="100"></input>
             <div class="sendbackmsg attention" id="sendbackmsg">@lang_are_you_sure@</div>
             <a href="#" id="sendbackbtn"><div class="sideboxbutton company-menu-sidebox hoverlink">@lang_send_back@</div></a>
             <a href="#" class="sendbackcancelbtn" id="sendbackcancelbtn"><div class="sideboxbutton company-menu-sidebox hoverlink">@lang_cancel@</div></a>

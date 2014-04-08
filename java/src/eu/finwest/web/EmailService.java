@@ -325,6 +325,7 @@ public class EmailService {
 		
 		props.put(NOTIFICATION_TITLE, notification.getTitle());
 		props.put(NOTIFICATION_TITLE_ESCAPED, escape(notification.getTitle()));
+		props.put(TEXT_NO_LINK, "");
 		props.put(NOTIFICATION_TEXT_1, escape(notification.getText1()));
 		props.put(NOTIFICATION_TEXT_2, escape(notification.getText2()));
 		props.put(NOTIFICATION_TEXT_3, escape(notification.getText3()));
