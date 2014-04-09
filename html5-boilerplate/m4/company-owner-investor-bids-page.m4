@@ -21,7 +21,7 @@ companybannermacro(`', `', `', `', `companynavselected', `', `')
 
 <div class="container bidscontainer initialhidden wrapper">
 
-    <div class="span-16">
+    <div style="height: 110px">
         <a href="#" class="backbuttonlink">
             <span class="push-1 span-6 inputbutton backbutton investorbackbutton">
                 &lt;&lt; @lang_bids_back_to_investor@
@@ -32,7 +32,7 @@ companybannermacro(`', `', `', `', `companynavselected', `', `')
 '
 include(company-order-book.m4)
 `
-<div class="boxtitlegap smokegrey clear">@lang_bids_from_investor@ <a id="investor_nickname" href="#"></a>
+<div class="header-content header-boxpanel-initial header-boxpanel-full">@lang_bids_from_investor@ <a id="investor_nickname" href="#"></a>
     <span class="newlistingtitlemsg" id="bidtitlemsg"></span>
 </div>
 <div class="initialhidden clear" id="bidsloggedin">

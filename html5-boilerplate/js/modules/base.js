@@ -643,6 +643,10 @@ pl.implement(HeaderClass, {
         });
         pl('#headerloginlink').hide();
         pl('#headerloggedin').show();
+        pl('#header-profile-line-button').bind('click', function() {
+            document.location = "/profile-page.html?id=" + profile.profile_id;
+        });
+        pl('#header-profile-line').show();
     },
     setLoggedOut: function(login_url, twitter_login_url, fb_login_url) {
         var self = this;

@@ -995,8 +995,8 @@ pl.implement(InvestorBidGroupClass, {
         this.usertext = this.investor_nickname + countertext;
         this.typeclass = '';
         //this.typeclass = this.typeclassmap[this.last_type] || '';
-        this.url = this.investor_id ? '/company-owner-investor-bids-page.html'
-            + '?id=' + this.listing_id
+        this.url = this.investor_id && this.bidslist.listing.listing_id ? '/company-owner-investor-bids-page.html'
+            + '?id=' + this.bidslist.listing.listing_id
             + '&investor_id=' + this.investor_id : '#';
         this.openanchor = this.url ? '<a href="' + this.url + '" class="hoverlink' + this.messageclass + ' ' + this.typeclass + '">' : '';
         this.closeanchor = this.url ? '</a>' : '';
@@ -1022,11 +1022,11 @@ pl.implement(InvestorBidGroupClass, {
         return '\
         <div class="messageline investorgroupheader">\
             <p class="span-4">@lang_investor@</p>\
-            <p class="span-2">@lang_action@</p>\
+            <p class="span-2">@lang_bid_action@</p>\
             <p class="span-3">@lang_bid@</p>\
             <p class="span-1 investorgroupequityheader">@lang_equity@</p>\
             <p class="span-3">@lang_valuation@</p>\
-            <p class="span-8">@lang_note@</p>\
+            <p class="span-8">@lang_bid_notes@</p>\
             <p class="investorgroupdateheader">@lang_date@</p>\
         </div>\
         ';
@@ -1061,13 +1061,13 @@ pl.implement(InvestorBidGroupListClass, {
         this.investors = [];
         if (jsonlist.length) {
             for (i = 0; i < jsonlist.length; i++) {
-                investor = new InvestorBidGroupClass(this);
+                investor = new InvestorBidGroupClass(json);
                 investor.store(jsonlist[i]);
                 this.investors.push(investor);
             }
         }
         else {
-            investor = new InvestorBidGroupClass(this);
+            investor = new InvestorBidGroupClass(json);
             investor.setEmpty();
             this.investors.push(investor);
         }
@@ -1077,20 +1077,21 @@ pl.implement(InvestorBidGroupListClass, {
     display: function(json) {
         var html = '',
             i,
+            investorGroup,
             investor;
         if (json !== undefined) {
             this.store(json);
         }
-        investor = new InvestorBidGroupClass(this);
-        html += investor.makeHeader();
+        investorGroup = new InvestorBidGroupClass(json);
+        html += investorGroup.makeHeader();
         for (i = 0; i < this.investors.length; i++) {
             investor = this.investors[i];
             html += investor.makeHtml();
         }
         if (!this.investors.length) {
-            investor = new InvestorBidGroupClass();
-            investor.setEmpty();
-            html += investor.makeHtml();
+            investorGroup = new InvestorBidGroupClass();
+            investorGroup.setEmpty();
+            html += investorGroup.makeHtml();
         }
         if (this.more_results_url) {
         	html += '<div class="showmore hoverlink" id="moreresults"><span class="initialhidden" id="moreresultsurl">' + self.more_results_url + '</span><span id="moreresultsmsg">@lang_bids_more_investors@</span></div>\n';
@@ -1114,7 +1115,7 @@ pl.implement(InvestorBidGroupListClass, {
 		                self.investors = [];
 		                if (jsonlist.length) {
 		                    for (i = 0; i < jsonlist.length; i++) {
-		                        investor = new InvestorBidGroupClass(self);
+		                        investor = new InvestorBidGroupClass(json);
 		                        investor.store(jsonlist[i]);
 		                        self.investors.push(investor);
 		                    }
@@ -1124,7 +1125,7 @@ pl.implement(InvestorBidGroupListClass, {
 		                    }
 		                }
 		                else {
-		                    investor = new InvestorBidGroupClass(this);
+		                    investor = new InvestorBidGroupClass(json);
 		                    investor.setEmpty();
 		                    self.investors.push(investor);
 		                }
@@ -1296,7 +1297,7 @@ pl.implement(OwnerSingleInvestorBidListClass, {
             this.store(json);
         }
         pl('.backbuttonlink').attr({ href: '/company-owner-bids-page.html?id=' + this.listing.listing_id });
-        pl('#investor_nickname').attr({ href: '/profile-page.html?id=' + this.investor.profile_id }).text(this.investor_nickname.toUpperCase());
+        pl('#investor_nickname').attr({ href: '/profile-page.html?id=' + this.investor.profile_id }).text(this.investor_nickname);
         if (this.bids.length) {
             html = BidClass.prototype.makeHeader();
             if (this.more_results_url) {

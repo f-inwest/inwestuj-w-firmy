@@ -409,9 +409,10 @@ pl.implement(QuestionClass, {
             answertext = HTMLMarkup.prototype.stylize(SafeStringClass.prototype.htmlEntities(question.answer)),
             replyblock = question.answer
                 ? '<span class="messageanswer">' + answertext + '</span>'
-                : '<span class="messageanswer" id="qanda_replyanswer_' + question.question_id + '">@lang_not_answered@</span>';
+                : '<span class="messageanswer" id="qanda_replyanswer_' + question.question_id + '">@lang_not_answered@</span>',
+            profileId = question.profile_id || question.from_user_id;
         return '<div class="commentline" id="qanda_' + question.question_id + '">'
-                + '<a class="hoverlink" href="/profile-page.html?id=' + question.profile_id + '">'
+                + '<a class="hoverlink" href="/profile-page.html?id=' + profileId + '">'
                 + '<div class="commentavatar"' + avatarstyle + '></div>'
                 + '<div class="commentheaderline">' + usertext + userclasstext + ' ' + datetext + '</div>'
                 + '</a>'
