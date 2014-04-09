@@ -2113,6 +2113,7 @@ pl.implement(DiscoverPageClass,{
             this.store(json);
         }
         this.displayExistingListing();
+        this.displayMyProjectsBar();
         this.displayListings();
         this.displayCategories();
         this.displayLocations();
@@ -2155,6 +2156,16 @@ pl.implement(DiscoverPageClass,{
                 document.location = url;
             });
             pl('#existinglisting').show();
+        }
+    },
+
+    displayMyProjectsBar: function() {
+        var self = this;
+        if (this.loggedin_profile && this.loggedin_profile.num_listings && this.loggedin_profile.num_listings > 0) {
+            pl('#myprofile').bind('click', function() {
+                document.location = '/profile-page.html';
+            });
+            pl('#myprojectsbar').show();
         }
     }
  });

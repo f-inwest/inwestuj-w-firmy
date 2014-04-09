@@ -281,7 +281,7 @@ include(images-panel-editable.m4)
     <div class="boxtitle boxtitleside clear boxtitleside-logo header-nobottom">@lang_upload_logo@</span></div>
     <div class="uploadbox uploadbox-logo">
         <div class="formitem">
-            <span class="uploadinfo">@lang_upload_desc@</span>
+            <span class="uploadinfo">@lang_upload_logo_desc@</span>
         </div>
         <div class="formitem clear">
             <span class="inputfield">
@@ -307,7 +307,7 @@ include(images-panel-editable.m4)
     <div class="boxtitle boxtitleside clear header-nobottom">@lang_upload_image@ <span id="picnum">1</span></div>
     <div class="uploadbox">
         <div class="formitem">
-            <span class="uploadinfo">@lang_upload_desc@</span>
+            <span class="uploadinfo">@lang_upload_image_desc@</span>
         </div>
         <div class="formitem clear">
             <span class="inputfield">

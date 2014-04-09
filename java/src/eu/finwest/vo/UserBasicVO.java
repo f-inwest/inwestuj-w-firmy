@@ -24,6 +24,7 @@ public class UserBasicVO extends BaseVO {
 	@JsonProperty("edited_listing") private String editedListing;
 	@JsonProperty("edited_status")	@JsonSerialize(using=LowecaseSerializer.class) private String editedStatus;
 	@JsonProperty("num_notifications") private long numberOfNotifications;
+	@JsonProperty("num_listings") private long numberOfListings;
 	@JsonProperty("admin") private boolean admin;
 	@JsonProperty("user_class") private String userClass;
 	@JsonProperty("avatar") private String avatar;
@@ -39,6 +40,7 @@ public class UserBasicVO extends BaseVO {
 		this.editedListing = user.getEditedListing();
 		this.editedStatus = user.getEditedStatus();
 		this.numberOfNotifications = user.getNumberOfNotifications();
+		this.numberOfListings = user.getNumberOfListings();
 		this.admin = user.isAdmin();
 		this.userClass = user.getUserClass();
 		this.avatar = user.getAvatar();
@@ -115,5 +117,11 @@ public class UserBasicVO extends BaseVO {
 	}
 	public void setNotifyEnabled(boolean notifyEnabled) {
 		this.notifyEnabled = notifyEnabled;
+	}
+	public long getNumberOfListings() {
+		return numberOfListings;
+	}
+	public void setNumberOfListings(long numberOfListings) {
+		this.numberOfListings = numberOfListings;
 	}
 }

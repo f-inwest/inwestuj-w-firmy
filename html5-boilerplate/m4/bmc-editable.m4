@@ -26,7 +26,7 @@
 -->
     </div>
     <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink" id="bmc-activate-deactivate-btn"></span>
-    <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink" id="bmc-preview-btn">@lang_show@</span>
+    <span class="span-3 smallinputbutton darkblue bmctitlebtn hoverlink" id="bmc-preview-btn">@lang_bmc_view_mode@</span>
     <span class="bmctitleboxbtn"><div id="bmcfieldicon"></div></span>
     <span class="bmctitlemsg" id="bmc-editable-msg">@lang_click_to_edit@</span>
 </div>
@@ -141,6 +141,7 @@
                 <p class="bmcinfo bmcinfochannels">
                     <label class="bmcinfoheader">@lang_channels@</label>
                     <br />
+                    @lang_bmc_inst_ch_body@
                 </p>
             </div>
             <textarea class="bmctextareashort" cols="20" rows="5" name="answer6" id="answer6">@lang_bmc_inst_ch_short@</textarea>

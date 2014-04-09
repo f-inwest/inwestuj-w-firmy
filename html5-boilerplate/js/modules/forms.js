@@ -64,7 +64,7 @@ pl.implement(VideoCheckClass, {
     check: function(str) {
         var url = VideoCheckClass.prototype.preformat(str);
         if (!url) {
-            return 'Must be a valid youtube, vimeo, or dailymotion URL.';
+            return '@lang_video_must_be_valid@';
         }
         return 0;
     }
@@ -86,31 +86,31 @@ pl.implement(EmailCheckClass, {
         var domainPat=new RegExp("^" + atom + "(\\." + atom +")*$");
         var matchArray = emailStr ? emailStr.match(emailPat) : '';
         if (!emailStr) {
-            return "Email address must not be empty";
+            return "@lang_email_address_not_empty@";
         }
         if (matchArray==null) {
-            return "Email address seems incorrect (check @ and .'s)";
+            return "@lang_email_seems_incorrect@";
         }
         var user=matchArray[1];
         var domain=matchArray[2];
         for (i=0; i<user.length; i++) {
                 if (user.charCodeAt(i)>127) {
-                        return "This username contains invalid characters.";
+                        return "@lang_email_contains_invalid_chars@";
                 }
         }
         for (i=0; i<domain.length; i++) {
                 if (domain.charCodeAt(i)>127) {
-                        return "This domain name contains invalid characters.";
+                        return "@lang_email_domain_invalid_chars@";
                 }
         }
         if (user.match(userPat)==null) {
-                return "The username doesn't seem to be valid.";
+                return "@lang_email_doesnt_seem_valid@";
         }
         var IPArray=domain.match(ipDomainPat);
         if (IPArray!=null) {
                 for (var i=1;i<=4;i++) {
                         if (IPArray[i]>255) {
-                                return "Destination IP address is invalid!";
+                                return "@lang_email_destination_ip_invalid@";
                         }
                 }
         }
@@ -119,15 +119,15 @@ pl.implement(EmailCheckClass, {
         var len=domArr.length;
         for (i=0;i<len;i++) {
                 if (domArr[i].search(atomPat)==-1) {
-                        return "The domain name does not seem to be valid.";
+                        return "@lang_email_domain_not_valid@";
                 }
         }
         if (checkTLD && domArr[domArr.length-1].length!=2 && 
                         domArr[domArr.length-1].search(knownDomsPat)==-1) {
-                return "The address must end in a well-known domain or two letter country.";
+                return "@lang_email_must_be_two_letter@";
         }
         if (len<2) {
-                return "This address does not have a hostname.";
+                return "@lang_email_no_host@";
         }
         return 0;
     }
@@ -146,7 +146,7 @@ pl.implement(ValidatorClass, {
             return 0;
         }
         else {
-            return 'Must be checked or unchecked';
+            return '@lang_must_be_checked_or_unchecked@';
         }
     },
     isNotEmpty: function(str) {
@@ -155,16 +155,16 @@ pl.implement(ValidatorClass, {
             return 0;
         }
         else {
-            return "Value cannot be empty.";
+            return "@lang_value_cannot_be_empty@";
         }
     },
     isSelected: function(val) {
         var str = '' + val;
-        if (str !== 'Select...') {
+        if (str !== '@lang_combo_select@') {
             return 0;
         }
         else {
-            return "Selection must be made.";
+            return "@lang_combo_selection_must_be_made@";
         }
     },
     makeLengthChecker: function(m, n) {
@@ -172,13 +172,13 @@ pl.implement(ValidatorClass, {
             max = n;
         return function(str) {
             if (min > 0 && (!str || str.length === 0)) {
-                return "Cannot be empty.";
+                return "@lang_cannot_be_empty@";
             }
             if (min > 0 && str.length < min) {
-                return "Must be at least " + min + " characters.";
+                return "@lang_must_be_at_least@ " + min + " @lang_characters@";
             }
             if (max > 0 && str.length > max) {
-                return "Must be no more than " + max + " characters.";
+                return "@lang_must_be_no_more_than@ " + max + " @lang_characters@";
             }
             return 0;
         }
@@ -209,10 +209,10 @@ pl.implement(ValidatorClass, {
                 return 'Please enter a number';
             }
             if (n < min) {
-                return 'You must enter at least ' + min;
+                return '@lang_number_at_least@ ' + min;
             }
             if (n > max) {
-                return 'You must enter at most ' + max;
+                return '@lang_number_at_most@ ' + max;
             }
             return 0;
         }
@@ -379,7 +379,7 @@ pl.implement(FieldBaseClass, {
     getLoadFunc: function() {
         var self = this;
         return function() {
-            self.msg.show('inprogress', 'Saving changes...');
+            self.msg.show('inprogress', '@lang_saving_changes@');
         };
     },
     getErrorFunc: function(displayFunc) {
@@ -466,7 +466,7 @@ pl.implement(SelectFieldClass, {
             optval,
             optdisplay;
         field.options.length = 0;
-        field.options[0] = new Option('Select...', 'Select...', true, false);
+        field.options[0] = new Option('@lang_combo_select@', '@lang_combo_select@', true, false);
         for (i = 0; i < opts.length; i++) {
             opt = opts[i];
             optval = opt[0];
@@ -482,7 +482,7 @@ pl.implement(SelectFieldClass, {
             i,
             optval;
         field.options.length = 0;
-        field.options[0] = new Option('Select...', 'Select...', true, false);
+        field.options[0] = new Option('@lang_combo_select@', '@lang_combo_select@', true, false);
         for (i = 0; i < opts.length; i++) {
             optval = opts[i];
             field.options[i+1] = new Option(optval, optval, false, (val === optval ? true : false));
