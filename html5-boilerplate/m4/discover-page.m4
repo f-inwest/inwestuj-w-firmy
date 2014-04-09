@@ -20,9 +20,9 @@ include(banner.m4)
 </div>
 
 <div class="span-24 initialhidden wrapper existing-listing-wrapper">
-    <div class="header-content header-boxpanel-profile-line initialhidden" id="header-profile-line">
-        <span class="header-title">@lang_your_projects@</span>
-        <a class="more more-profile-button" id="header-profile-line-button">@lang_go@</a>
+    <div class="header-content header-boxpanel-top initialhidden" id="existinglisting">
+        <span class="header-title">@lang_pending_listing_msg@</span>
+        <a class="more more-header" id="editlisting">@lang_edit_listing@</a>
     </div>
 </div>
 
