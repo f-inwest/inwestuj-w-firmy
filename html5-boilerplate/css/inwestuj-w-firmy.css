@@ -2760,6 +2760,38 @@ color: #fff;
 }
 .valuationinput { width: 252px !important; padding: 0 5px !important; }
 
+.cashflowbutton { position: relative; top: 5px; padding-top: 7px; padding-bottom: 7px; }
+.cashflowfield {
+    height: 100px;
+    width: 257px;
+    text-align: right;
+    margin-right: 50px;
+    margin-top: 10px;
+}
+.cashflowpanel {
+    /*
+    overflow: visible !important; position: relative; margin-bottom: 40px;
+    */
+}
+.cashflowtypepanel {
+    width: 950px;
+}
+.cashflowwrapper {
+    background: #fefefe;
+    padding: 15px;
+    width: 920px;
+}
+.cashflowlabel { font-size: 14px; line-height: 14px; margin-top: 10px; font-weight: normal; }
+.cashflowhelptext { font-size: 14px; line-height: 14px; position: relative; top: 17px; }
+.cashflowtext {
+    position: relative;
+    top: 11px;
+    font-family: 'Ubuntu',sans-serif;
+    font-size: 25px !important;
+    font-weight: 500;
+}
+.cashflowinput { width: 252px !important; padding: 0 5px !important; }
+
 /* new listing styles */
 .bottombuttons {
     position: relative;
@@ -2805,7 +2837,17 @@ color: #fff;
     border-color: #e6e6e6;
     margin-left: 20px;
 }
-.developmentstageselect, .valuationtypeselect {
+.developmentstageselect {
+    width: 265px !important;
+    height: 40px;
+    padding-right: 0px !important;
+}
+.valuationtypeselect {
+    width: 265px !important;
+    height: 40px;
+    padding-right: 0px !important;
+}
+.cashflowtypeselect {
     width: 265px !important;
     height: 40px;
     padding-right: 0px !important;

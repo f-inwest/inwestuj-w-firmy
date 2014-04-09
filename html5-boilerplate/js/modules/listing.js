@@ -122,6 +122,7 @@ pl.implement(ListingClass, {
 
     displayGoto: function() {
         this.displayValuationButton();
+        this.displayCashFlowButton();
         this.displayModelButton();
         this.displayPresentationButton();
         this.displayAddDocumentButton();
@@ -196,6 +197,79 @@ pl.implement(ListingClass, {
         }
         else if (url) {
             pl('#valuationbutton').bind('click', function() {
+                document.location = url;
+            });
+        }
+    },
+
+    displayCashFlowButton: function() {
+        var self = this,
+            hasCashFlow = MicroListingClass.prototype.getHasCashFlow(this),
+            text,
+            ajax,
+            url;
+        if (this.status === 'new') {
+            if (hasCashFlow) {
+                text = '@lang_cashflow@';
+            }
+            else {
+                text = '@lang_cashflow@';
+            }
+            url = '/new-listing-cashflow-page.html';
+        }
+        else if (this.status === 'posted' || this.status === 'active') {
+            if (hasCashFlow) {
+                if (this.loggedin_profile && this.loggedin_profile.profile_id === this.profile_id) {
+                    text = '@lang_cashflow@';
+                    url = '/active-listing-cashflow-page.html?id=' + this.listing_id;
+                }
+                else {
+                    text = '@lang_cashflow@';
+                    url = '/company-cashflow-page.html?id=' + this.listing_id;
+                }
+            }
+            else {
+                if (this.loggedin_profile) {
+                    if (this.loggedin_profile.profile_id === this.profile_id) {
+                        text = '@lang_cashflow@';
+                        url = '/active-listing-cashflow-page.html?id=' + this.listing_id;
+                    }
+                    else {
+                        text = '@lang_request_cashflow@';
+                        ajax = new AjaxClass('/listing/ask_owner', 'cashflowbutton', function() {
+                            document.location = '/company-questions-page.html?id=' + self.listing_id;
+                        });
+                        ajax.setPostData({
+                            message: {
+                                listing_id: this.listing_id,
+                                text: '@lang_cashflow_request_message@'
+                            }
+                        })
+                    }
+                }
+                else {
+                    if (this.login_url) {
+                        text = '@lang_sign_in_to_request_cashflow@';
+                        url = '/login-page.html?url=' + encodeURIComponent('/company-page.html?id=' + this.listing_id);
+                    }
+                    else {
+                        text = '@lang_no_cashflow@';
+                    }
+                }
+            }
+        }
+        else {
+            text = '@lang_no_cashflow@';
+        }
+        pl('#cashflowbutton').text(text);
+        if (ajax) {
+            pl('#cashflowbutton').bind('click', function() {
+                pl('#cashflowbutton').unbind();
+                ajax.call();
+            });
+        }
+        else if (url) {
+            pl('#cashflowbutton').bind('click', function() {
                 document.location = url;
             });
         }

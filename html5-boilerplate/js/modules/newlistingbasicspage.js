@@ -77,6 +77,7 @@ pl.implement(NewListingBasicsClass, {
         this.displayAskFundingButton();
         this.displayVideoButton();
         this.displayValuationButton();
+        this.displayCashFlowButton();
         this.displayModelButton();
         this.displayPresentationButton();
         this.displayDocumentButton();
@@ -97,6 +98,12 @@ pl.implement(NewListingBasicsClass, {
     displayValuationButton: function() {
         if (MicroListingClass.prototype.getHasValuation(this.base.listing)) {
             pl('#valuationbutton').text('@lang_edit_valuation@');
+        }
+    },
+
+    displayCashFlowButton: function() {
+        if (MicroListingClass.prototype.getHasCashFlow(this.base.listing)) {
+            pl('#cashflowbutton').text('@lang_edit_cashflow@');
         }
     },
 
