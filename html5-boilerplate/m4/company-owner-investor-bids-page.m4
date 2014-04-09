@@ -104,7 +104,7 @@ include(company-order-book.m4)
             </div>
     
             <div class="formitem clear">
-                <span class="inputlabel newbidvallabel">VALUATION</span>
+                <span class="inputlabel newbidvallabel">@lang_valuation_is@</span>
                 <span class="inputfield newbidvaluationfield">
                     <div class="financialsvaluationtext" id="new_bid_val"></div>
                 </span>

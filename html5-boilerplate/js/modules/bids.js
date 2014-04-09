@@ -392,7 +392,7 @@ pl.implement(BidClass, {
             <p class="span-2">@lang_equity@</p>\
             <p class="span-3">@lang_valuation@</p>\
             <p class="span-9">@lang_bid_notes@</p>\
-            <p class="investorbiddateheader">@lang_date@</p>\
+            <p class="investorbiddateheader">@lang_bid_date@</p>\
         </div>\
         ';
     },
@@ -1027,7 +1027,7 @@ pl.implement(InvestorBidGroupClass, {
             <p class="span-1 investorgroupequityheader">@lang_equity@</p>\
             <p class="span-3">@lang_valuation@</p>\
             <p class="span-8">@lang_bid_notes@</p>\
-            <p class="investorgroupdateheader">@lang_date@</p>\
+            <p class="investorgroupdateheader">@lang_bid_date@</p>\
         </div>\
         ';
     },

@@ -1,5 +1,5 @@
 `
-<div class="bannertextsmall"><span id="listingtype"></span> VALUATION</div>
+<div class="bannertextsmall"><span id="listingtype"></span> @lang_valuation_is@</div>
 
 '
 include(valuation-company-panel.m4)
