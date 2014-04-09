@@ -253,6 +253,8 @@ public class VoToModelConverter {
 			listing.videoUrl = property.getPropertyValue();
 		} else if (name.equalsIgnoreCase("valuation_data")) {
 			listing.valuationData = property.getPropertyValue();
+		} else if (name.equalsIgnoreCase("cashflow_data")) {
+			listing.cashflowData = property.getPropertyValue();
 		}
 	}
 

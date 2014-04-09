@@ -253,6 +253,7 @@ public class DtoToVoConverter {
 		
 		listing.setPaidCode(listingDTO.paidCode);
 		listing.setValuationData(listingDTO.valuationData);
+		listing.setCashflowData(listingDTO.cashflowData);
 		return listing;
 	}
 

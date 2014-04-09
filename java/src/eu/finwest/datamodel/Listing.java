@@ -157,6 +157,7 @@ public class Listing extends BaseObject<Listing> {
 	public String answer27;
 	
 	public String valuationData;
+	public String cashflowData;
 	
 	public String paidCode;
 	
