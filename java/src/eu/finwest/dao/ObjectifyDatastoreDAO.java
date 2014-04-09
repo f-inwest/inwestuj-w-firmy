@@ -749,6 +749,16 @@ public class ObjectifyDatastoreDAO {
 		return listings;
 	}
 
+	public int getUserListingsCount(long userId) {
+		Query<Listing> query = getOfy().query(Listing.class)
+				.filter("owner =", new Key<SBUser>(SBUser.class, userId));
+		query.filter("state !=", Listing.State.NEW).order("state");
+		ListPropertiesVO listingProperties = new ListPropertiesVO();
+		listingProperties.setMaxResults(1000);
+		List<Key<Listing>> keyList = new CursorHandler<Listing>().handleQuery(listingProperties, query);
+		return keyList.size();
+	}
+
     public List<Listing> getListingsForCategory(String category, ListPropertiesVO listingProperties) {
         Query<Listing> query = getOfy().query(Listing.class)
         	.filter("campaign =", FrontController.getCampaign().getSubdomain())

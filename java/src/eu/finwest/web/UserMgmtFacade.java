@@ -1305,4 +1305,9 @@ public class UserMgmtFacade {
 		return result;
 	}
 
+	public void updateUserListings(UserVO loggedInUser) {
+		int count = getDAO().getUserListingsCount(loggedInUser.toKeyId());
+		loggedInUser.setNumberOfListings(count);
+	}
+
 }

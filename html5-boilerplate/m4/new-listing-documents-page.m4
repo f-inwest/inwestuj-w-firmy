@@ -61,7 +61,7 @@ include(company-not-found.m4)
                     </form>
                 </span>
                 <a href="" id="presentationdeletelink">
-                    <span class="span-3 inputbutton uploaddelete">@lang_delete@</span>
+                    <span class="span-3 inputbutton uploaddelete">@lang_delete_file@</span>
                 </a>
             </div>
             <div class="formitem clear">
@@ -102,7 +102,7 @@ include(company-not-found.m4)
                     </form>
                 </span>
                 <a href="" id="business_plandeletelink">
-                    <span class="span-3 inputbutton uploaddelete">@lang_delete@</span>
+                    <span class="span-3 inputbutton uploaddelete">@lang_delete_file@</span>
                 </a>
             </div>
             <div class="formitem clear">
@@ -143,7 +143,7 @@ include(company-not-found.m4)
                     </form>
                 </span>
                 <a href="" id="financialsdeletelink">
-                    <span class="span-3 inputbutton uploaddelete">@lang_delete@</span>
+                    <span class="span-3 inputbutton uploaddelete">@lang_delete_file@</span>
                 </a>
             </div>
             <div class="formitem clear">

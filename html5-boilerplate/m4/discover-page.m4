@@ -26,6 +26,13 @@ include(banner.m4)
     </div>
 </div>
 
+<div class="span-24 initialhidden wrapper myprojects-wrapper">
+    <div class="header-content header-boxpanel-top initialhidden" id="myprojectsbar">
+        <span class="header-title">@lang_your_projectsbar_msg@</span>
+        <a class="more more-header" id="myprofile">@lang_your_projectsbar@</a>
+    </div>
+</div>
+
 <div class="span-16 initialhidden wrapper">
     <div class="header-content">
         <div class="header-title">@lang_top_listings@</div>

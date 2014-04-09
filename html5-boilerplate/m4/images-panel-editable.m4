@@ -16,7 +16,7 @@
             <ul id="pic5nav" class="dotnav"><li></li></ul>
         </div>
     </div>
-    <div class="span-3 smallinputbutton deleteimagebutton initialhidden" id="deleteimagebutton">@lang_delete@</div>
+    <div class="span-3 smallinputbutton deleteimagebutton initialhidden" id="deleteimagebutton">@lang_delete_image@</div>
 </div>
 <div class="boxpanel imagespaneleditable">
     <div class="piccontainer">
