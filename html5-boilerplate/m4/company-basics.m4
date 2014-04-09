@@ -36,6 +36,7 @@ include(images-panel.m4)
         	<div class="header-content header-title-sidebox">@lang_revise_info@</div>
             <a class="sidebox company-menu-sidebox investbutton initialhidden blueboxbutton firstsidebutton" style="display: block;" href="#" id="investbutton">@lang_invest@</a>
             <div class="sidebox company-menu-sidebox investbutton" id="valuationbutton">@lang_valuation@</div>
+            <div class="sidebox company-menu-sidebox investbutton" id="cashflowbutton">@lang_cashflow@</div>
             <div class="sidebox company-menu-sidebox investbutton" id="modelbutton">@lang_model@</div>
             <div class="sidebox company-menu-sidebox investbutton" id="presentationbutton">@lang_presentation@</div>
         </div>

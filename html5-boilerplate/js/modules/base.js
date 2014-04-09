@@ -810,6 +810,10 @@ pl.implement(MicroListingClass, {
         return listing.valuation_data ? true : false;
     },
 
+    getHasCashFlow: function(listing) {
+        return listing.cashflow_data ? true : false;
+    },
+
     getHasBmc: function(listing) {
         return listing.has_bmc ? true : false;
     },
@@ -1725,6 +1729,9 @@ pl.implement(CompanyBannerClass, {
         }
         if (!MicroListingClass.prototype.getHasValuation(this)) {
             pl('#valuationtab').hide();
+        }
+        if (!MicroListingClass.prototype.getHasCashFlow(this)) {
+            pl('#cashflowtab').hide();
         }
         if (!MicroListingClass.prototype.getHasBmc(this)) {
             pl('#modeltab').hide();

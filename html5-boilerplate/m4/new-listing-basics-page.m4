@@ -266,6 +266,10 @@ include(images-panel-editable.m4)
         <div class="sidebox investbutton" id="valuationbutton">@lang_add_valuation@</div>
     </a>
 
+    <a href="/new-listing-cashflow-page.html">
+        <div class="sidebox investbutton" id="cashflowbutton">@lang_add_cashflow@</div>
+    </a>
+
     <a href="/new-listing-bmc-page.html">
         <div class="sidebox investbutton" id="modelbutton">@lang_add_model@</div>
     </a>
