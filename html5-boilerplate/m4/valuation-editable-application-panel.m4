@@ -53,7 +53,7 @@
         </div>
 
         <div class="formitem clear">
-            <span class="inputlabel valuationlabel"></span>
+            <span class="inputlabel valuationlabel">@lang_projected_peak@</span>
             <span class="inputfield valuationfield">
                 <span class="valuationtext" id="projected_peak"></span>
             </span>
@@ -63,7 +63,7 @@
         </div>
     
         <div class="formitem clear">
-            <span class="inputlabel valuationlabel"></span>
+            <span class="inputlabel valuationlabel">@lang_future_earnings@</span>
             <span class="inputfield valuationfield">
                 <span class="valuationtext" id="future_earnings"></span>
             </span>

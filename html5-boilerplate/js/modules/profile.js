@@ -24,8 +24,8 @@ pl.implement(CampaignTileClass, {
     store: function(campaign) {
         var self = this;
         self.campaign = campaign;
-        console.log('CampaignTileClass::store id=' + self.campaign.campaign_id);
-        console.log(self.campaign.pricepoints);
+        //console.log('CampaignTileClass::store id=' + self.campaign.campaign_id);
+        //console.log(self.campaign.pricepoints);
     },
 
     formattedDateStr: function(datetimestr) {
@@ -90,8 +90,8 @@ pl.implement(CampaignTileClass, {
             pricepointObj = new PricepointsClass(self.campaign.pricepoints),
             pricepointHTML = pricepointObj.buttonsHTML(self.campaign.pricepoints, 'pricepoint-description-campaign', 'purchase-button-campaign'),
             html = '';
-        console.log('CampaignClass::makeTile id=' + self.campaign.campaign_id);
-        console.log(self.matchingPricepoints);
+        //console.log('CampaignClass::makeTile id=' + self.campaign.campaign_id);
+        //console.log(self.matchingPricepoints);
         if (self.campaign.allowed_languages === 'EN') {
             langCheckedEN = ' checked ';
         }

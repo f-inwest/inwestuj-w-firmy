@@ -534,8 +534,8 @@ a:focus, a:hover { cursor: pointer; }
     background: url(../img/slide_bubbles.png) no-repeat;
 }
 .bannerbackground {
-    left: 50%;
-    width: 2214px;
+    right: 0;
+    width: 714px;
     height: 500px;
     top: -80px;
     position: absolute;
@@ -545,7 +545,7 @@ a:focus, a:hover { cursor: pointer; }
 .bannership {
     position: absolute;
     top: 127px;
-    left: 50%;
+    right: 270px;
     margin-left: 200px;
     width: 242px;
     height: 144px;
@@ -2747,6 +2747,7 @@ color: #fff;
     background: #fefefe;
     padding: 15px;
     width: 920px;
+    font-size: 14px;
 }
 
 .valuationlabel { font-size: 14px; line-height: 14px; margin-top: 10px; font-weight: normal; }
@@ -2768,11 +2769,7 @@ color: #fff;
     margin-right: 50px;
     margin-top: 10px;
 }
-.cashflowpanel {
-    /*
-    overflow: visible !important; position: relative; margin-bottom: 40px;
-    */
-}
+
 .cashflowtypepanel {
     width: 950px;
 }
@@ -2780,12 +2777,13 @@ color: #fff;
     background: #fefefe;
     padding: 15px;
     width: 920px;
+    font-size: 14px;
 }
-.cashflowlabel { font-size: 14px; line-height: 14px; margin-top: 10px; font-weight: normal; }
+.cashflowlabel { font-size: 14px; line-height: 16px; margin-top: 10px; font-weight: normal; }
 .cashflowhelptext { font-size: 14px; line-height: 14px; position: relative; top: 17px; }
 .cashflowtext {
     position: relative;
-    top: 11px;
+    top: 14px;
     font-family: 'Ubuntu',sans-serif;
     font-size: 25px !important;
     font-weight: 500;
@@ -2853,12 +2851,6 @@ color: #fff;
     padding-right: 0px !important;
 }
 .isappreleased { height: 80px; }
-
-/* hidden */
-.initialhidden { display: none; }
-
-/* debug styles */
-/* .container { background: url(../img/blueprint.jpg); background-position: -160px 0px; } */
 
 /* new styles from design resources */
 .button-content:hover {
@@ -3170,3 +3162,43 @@ color: #fff;
     color: #00c700;
     line-height: 50px;
 }
+.cashflow-percent {
+    position: relative;
+    left: -40px;
+    top: -14px;
+    display: block;
+}
+.cashflow-table {
+    position: relative;
+    margin-left: 15px;
+    margin-right: 15px;
+    overflow: auto;
+}
+.cashflow-chart {
+    position: relative;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 30px;
+    overflow: visible;
+}
+.valuation-wrapper {
+    padding: 15px;
+    background: #fefefe;
+    font-size: 14px;
+    padding-bottom: 30px;
+    width: 920px;
+}
+.cashflow-wrapper {
+    padding: 15px;
+    background: #fefefe;
+    font-size: 14px;
+    padding-bottom: 30px;
+    width: 920px;
+}
+
+/* hidden */
+.initialhidden { display: none; }
+
+/* debug styles */
+/* .container { background: url(../img/blueprint.jpg); background-position: -160px 0px; } */
+

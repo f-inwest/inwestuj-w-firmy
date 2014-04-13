@@ -358,7 +358,7 @@ function AjaxClass(url, statusId, completeFunc, successFunc, loadFunc, errorFunc
     // this.loadFunc = loadFunc || function() { pl(self.statusSel).html('<span class="inprogress">Loading...</span>'); };
     this.loadFunc = loadFunc || function() { };
     this.errorFunc = errorFunc || function(errorNum, json) {
-        console.log('AJAX errorNum=' + errorNum + " json=" + json);
+        //console.log('AJAX errorNum=' + errorNum + " json=" + json);
         var errorStr = (json && json.error_msg) ? '@lang_error_from_server@: ' + json.error_msg
             : '@lang_error_from_server@ ' + errorNum;
         pl(self.statusSel).html('<span class="attention">' + errorStr + '</span>');
@@ -582,7 +582,7 @@ pl.implement(HeaderClass, {
                 },
                 errorFunc = function(errorNum, json) {
                     var msg = json && json.error_msg ? json.error_msg : '@lang_cant_change_password@';
-                    console.log('error message:' + msg);
+                    //console.log('error message:' + msg);
                     pl('#login-box-overlay, #login-box-message').hide();
                     pl('#change-password-message').get(0).innerHTML = msg;
                 },
@@ -692,7 +692,7 @@ pl.implement(HeaderClass, {
                 },
                 errorFunc = function(errorNum, json) {
                     var msg = json && json.error_msg ? json.error_msg : '@lang_cant_register@';
-                    console.log('error message:' + msg);
+                    //console.log('error message:' + msg);
                     pl('#login-box-overlay, #login-box-message').hide();
                     pl('#register-message').get(0).innerHTML = msg;
                 },
@@ -711,7 +711,7 @@ pl.implement(HeaderClass, {
                 },
                 errorFunc = function(errorNum, json) {
                     var msg = json && json.error_msg ? json.error_msg : '@lang_cant_reset_password@';
-                    console.log('error message:' + msg);
+                    //console.log('error message:' + msg);
                     pl('#login-box-overlay, #login-box-message').hide();
                     pl('#register-message').get(0).innerHTML = msg;
                 },
@@ -733,7 +733,7 @@ pl.implement(HeaderClass, {
             return false;
         });
         pl('#headernotloggedin').show();
-        //pl('.adminfooterlink').hide();
+        pl('.adminfooterlink').hide();
 
         pl('a[href=/add-listing-page.html]').bind('click', function(e) {
             pl('#light, #fade').show();

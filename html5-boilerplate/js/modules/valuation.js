@@ -279,7 +279,7 @@ pl.implement(ValuationPageClass, {
     },
 
     displayCurrencyField: function(id, val) {
-        pl('#' + id).text(val !== undefined ? CurrencyClass.prototype.format(val, this.currency) : '');
+        pl('#' + id).text(val !== undefined ? CurrencyClass.prototype.format(val, this.valuation.currency) : '');
     },
 
     displayNumberField: function(id, val) {
@@ -404,7 +404,7 @@ pl.implement(NewListingValuationClass, {
     },
 
     displayCurrencyField: function(id, val) {
-        pl('#' + id).attr('value', val !== undefined ? CurrencyClass.prototype.format(val, this.currency) : '');
+        pl('#' + id).attr('value', val !== undefined ? CurrencyClass.prototype.format(val, this.valuation.currency) : '');
     },
 
     displayNumberField: function(id, val) {

@@ -12,7 +12,7 @@ include(head.m4)
 include(header.m4)
 include(company-not-found.m4)
 include(company-banner.m4)
-companybannermacro(`', `', `', `', `companynavselected', `', `')
+companybannermacro(`', `', `', `', `', `companynavselected', `', `')
 `
 <div class="container preloader">
      <div class="preloaderfloater"></div>
@@ -95,16 +95,13 @@ include(company-order-book.m4)
                 </span>
                 <span class="newbiddesc">
                     <p>
-                    For a company, how much fully diluted post-money common equity you are requiring from the owner for
-                    your investment, from 1% to 100%.
-                    For product investments, the tenancy in common ownership interest in the application including all
-                    copyrights, patents, trademarks, and trade secrets developed as part of the application.
+                        @lang_newbid_equity_desc@
                     </p>
                 </span>
             </div>
     
             <div class="formitem clear">
-                <span class="inputlabel newbidvallabel">VALUATION</span>
+                <span class="inputlabel newbidvallabel">@lang_valuation@</span>
                 <span class="inputfield newbidvaluationfield">
                     <div class="financialsvaluationtext" id="new_bid_val"></div>
                 </span>

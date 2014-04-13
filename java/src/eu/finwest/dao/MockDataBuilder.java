@@ -1274,7 +1274,10 @@ public class MockDataBuilder {
 
 		bp = prepareListing(PL, JOHN, "Bombolandia", Listing.State.ACTIVE, "Manufacturing", 250000, 40,
 				"Bombki z metką \"hand made in Poland\"", "Bombki z metką „hand made in Poland” to marka doceniana i kupowana na całym świecie. Wbrew pozorom produkcja naszego przeboju eksportowego to nie działalność sezonowa. Małe i większe manufaktury pracują praktycznie przez cały rok, by w grudniu zbierać owoce swojej pracy. Szklane, wykonywane i dekorowane ręcznie bombki znad Wisły ozdabiają reprezentacyjne choinki stojące na Kremlu, w Białym Domu czy w posiadłościach hollywoodzkich gwiazd.",
-				true, false);
+				true, false,
+                "{\"application\":{\"is_app_released\":true,\"cost_of_app\":0,\"months_live\":0,\"best_month\":0,\"target_users\":0,\"monthly_arpu\":0},\"company\":{\"market_size\":200000000,\"revenue_per\":2,\"current_revenue\":0,\"cost_to_duplicate\":150000,\"development_stage\":\"concept\",\"analyze_company_potential\":true},\"valuation_type\":\"company\"}",
+                "{\"company\":{\"initial_investment\":15000,\"development_cost\":6000,\"initial_sales\":300,\"fixed_expenses\":500,\"time_to_market\":3,\"gross_margin\":40,\"growth_rate\":20}}"
+                );
 		listings.add(bp); // 27
 
 		bp = prepareListing(PL, "test", JOHN, "Karnawalec", Listing.State.ACTIVE, "Manufacturing", 95000, 15,
@@ -1833,20 +1836,32 @@ public class MockDataBuilder {
 
     private Listing prepareListing(LangVersion lang, UserVO owner, String name, Listing.State state, String category, int amount, int percentage,
             String mantra, String summary, boolean hasBMC, boolean hasIP) {
-    	return prepareListing(lang, null, owner, name, state, category, amount, percentage, mantra, summary, hasBMC, hasIP);
+    	return prepareListing(lang, null, owner, name, state, category, amount, percentage, mantra, summary, hasBMC, hasIP, null, null);
+    }
+    private Listing prepareListing(LangVersion lang, UserVO owner, String name, Listing.State state, String category, int amount, int percentage,
+            String mantra, String summary, boolean hasBMC, boolean hasIP, String valuation, String cashflow) {
+    	return prepareListing(lang, null, owner, name, state, category, amount, percentage, mantra, summary, hasBMC, hasIP, valuation, cashflow);
     }
     private Listing prepareListing(LangVersion lang, String campaign, UserVO owner, String name, Listing.State state, String category, int amount, int percentage,
             String mantra, String summary, boolean hasBMC, boolean hasIP) {
-        return prepareListing(lang, campaign, owner, name, state, category, amount, percentage, mantra, summary, null, null, null, null, null, hasBMC, hasIP);
+        return prepareListing(lang, campaign, owner, name, state, category, amount, percentage, mantra, summary, null, null, null, null, null, hasBMC, hasIP, null, null);
     }
-    
+    private Listing prepareListing(LangVersion lang, String campaign, UserVO owner, String name, Listing.State state, String category, int amount, int percentage,
+            String mantra, String summary, boolean hasBMC, boolean hasIP, String valuation, String cashflow) {
+        return prepareListing(lang, campaign, owner, name, state, category, amount, percentage, mantra, summary, null, null, null, null, null, hasBMC, hasIP, valuation, cashflow);
+    }
+
     private Listing prepareListing(LangVersion lang, UserVO owner, String name, Listing.State state, String category, int amount, int percentage,
             String mantra, String summary, String companyUrl, DateTime createdAt, DateTime modifiedAt, String logo_url, String address, boolean hasBMC, boolean hasIP) {
-    	return prepareListing(lang, null, owner, name, state, category, amount, percentage, mantra, summary, companyUrl, createdAt, modifiedAt, logo_url, address, hasBMC, hasIP);	
+    	return prepareListing(lang, null, owner, name, state, category, amount, percentage, mantra, summary, companyUrl, createdAt, modifiedAt, logo_url, address, hasBMC, hasIP, null, null);
+    }
+    private Listing prepareListing(LangVersion lang, UserVO owner, String name, Listing.State state, String category, int amount, int percentage,
+            String mantra, String summary, String companyUrl, DateTime createdAt, DateTime modifiedAt, String logo_url, String address, boolean hasBMC, boolean hasIP, String valuation, String cashflow) {
+    	return prepareListing(lang, null, owner, name, state, category, amount, percentage, mantra, summary, companyUrl, createdAt, modifiedAt, logo_url, address, hasBMC, hasIP, valuation, cashflow);
     }
 
     private Listing prepareListing(LangVersion lang, String campaign, UserVO owner, String name, Listing.State state, String category, int amount, int percentage,
-            String mantra, String summary, String companyUrl, DateTime createdAt, DateTime modifiedAt, String logo_url, String address, boolean hasBMC, boolean hasIP) {
+            String mantra, String summary, String companyUrl, DateTime createdAt, DateTime modifiedAt, String logo_url, String address, boolean hasBMC, boolean hasIP, String valuation, String cashflow) {
 		Listing bp = new Listing();
 		bp.id = id();
 		bp.lang = lang;
@@ -1955,6 +1970,9 @@ public class MockDataBuilder {
 		
 		bp.hasBmc = hasBMC;
 		bp.hasIp = hasIP;
+
+        bp.valuationData = valuation;
+        bp.cashflowData = cashflow;
 
         if (!StringUtils.isEmpty(logo_url)) {
             logo_url = logo_url.replaceAll("^https://", "http://");
