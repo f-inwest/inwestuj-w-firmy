@@ -1,11 +1,11 @@
 `
     <div class="initialhidden" id="askingpricewrapper">
-        <div class="header-content header-boxpanel-initial header-boxpanel-full">@lang_asking@</div>
+        <div class="header-content header-boxpanel-initial header-boxpanel-full">@lang_order_book_asking@</div>
         <div class="sidebox uneditabletext askingbox-full">
                 <span class="sideboxtitlecompact sideboxnum stan-osoby" id="askingamt"></span>
                 <span class="sideboxdesc stan-projektu"> @lang_for_equity@
-                    <span class="sideboxnum" id="askingpct"></span><span class="sideboxnum">%</span> @lang_equity@ </span>
-                <span class="sideboxdesc stan-projektu">@lang_valuation_is@ <span class="sideboxnum" id="askingval"></span></span>
+                    <span class="sideboxnum" id="askingpct"></span><span class="sideboxnum">%</span> @lang_equity@</span>
+                <span class="sideboxdesc stan-projektu">@lang_bids_valuation_is@ <span class="sideboxnum" id="askingval"></span></span>
         </div>
     </div>
 

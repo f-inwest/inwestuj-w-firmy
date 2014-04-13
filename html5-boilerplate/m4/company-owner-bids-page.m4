@@ -23,7 +23,7 @@ companybannermacro(`', `', `', `', `', `companynavselected', `', `')
 '
 include(company-order-book.m4)
 `
-<div class="boxtitlegap smokegrey clear">INVESTORS FOR YOUR LISTING
+<div class="boxtitlegap smokegrey clear">@lang_bids_investors_for_listing@
     <span class="newlistingtitlemsg" id="bidstitlemsg"></span>
 </div>
 <div class="initialhidden clear" id="bidsownergroup">
