@@ -151,8 +151,18 @@ public class ObjectifyDatastoreDAO {
     	user = new SBUser();
         user.email = userEmail;
     	user.name = name;
-        generateNickname(user, nickname);
-	    user.modified = user.lastLoggedIn = user.joined = new Date();
+
+        if (nickname != null) {
+            generateNickname(user, nickname);
+        }
+        else if (userEmail != null) {
+            generateNickname(user, userEmail);
+        }
+        else {
+            generateRandomNickname(user);
+        }
+
+        user.modified = user.lastLoggedIn = user.joined = new Date();
 		user.status = SBUser.Status.ACTIVE;
 		user.notifyEnabled = true;
 		getOfy().put(user);
@@ -171,7 +181,12 @@ public class ObjectifyDatastoreDAO {
     	user.twitterId = twitterId;
     	user.twitterScreenName = twitterScreenName;
         user.email = "<twitter_login>";
-        generateNickname(user, twitterScreenName);
+        if (twitterScreenName != null && !twitterScreenName.isEmpty()) {
+            generateNickname(user, twitterScreenName);
+        }
+        else {
+            generateRandomNickname(user);
+        }
         
 	    user.modified = user.lastLoggedIn = user.joined = new Date();
 		user.status = SBUser.Status.CREATED;
@@ -183,6 +198,16 @@ public class ObjectifyDatastoreDAO {
 	
 	public void generateNickname(SBUser user, String proposal) {
 		String baseNickname = proposal.contains("@") ? proposal.substring(0, proposal.indexOf("@")) : proposal;
+		String nickname = baseNickname;
+        while(getUserByNickname(nickname) != null) {
+        	nickname = baseNickname + String.valueOf(new Random().nextInt(1000));
+        }
+        user.nickname = nickname;
+        user.nicknameLower = nickname.toLowerCase();
+	}
+
+	public void generateRandomNickname(SBUser user) {
+		String baseNickname = "inwest";
 		String nickname = baseNickname;
         while(getUserByNickname(nickname) != null) {
         	nickname = baseNickname + String.valueOf(new Random().nextInt(1000));

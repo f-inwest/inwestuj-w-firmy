@@ -539,11 +539,11 @@ pl.implement(HeaderClass, {
         else {
             this.setLoggedOut(login_url, twitter_login_url, fb_login_url);
         }
-        pl('#login').bind('click', function() {
-            pl('#login').attr({'value': ''});
+        pl('#register-email').bind('click', function() {
+            pl('#register-email').get(0).value = '';
         });
-        pl('#passw').bind('click', function() {
-            pl('#passw').attr({'value': ''});
+        pl('#register-password').bind('click', function() {
+            pl('#register-password').get(0).value = '';
         });
         pl('#headerloginlink').bind('click', function() {
             pl('#light, #fade').show();
@@ -678,6 +678,7 @@ pl.implement(HeaderClass, {
                 },
                 ajax = new AjaxClass('/user/authenticate', 'register-message', null, successFunc, null, errorFunc);
             pl('#login-box-overlay, #login-box-message').show();
+            pl('#register-password').get(0).value = '';
             ajax.setPostData(data);
             ajax.call();
         });
@@ -698,6 +699,7 @@ pl.implement(HeaderClass, {
                 },
                 ajax = new AjaxClass('/user/register', 'register-message', null, successFunc, null, errorFunc);
             pl('#login-box-overlay, #login-box-message').show();
+            pl('#register-password').get(0).value = '';
             ajax.setPostData(data);
             ajax.call();
         });
@@ -717,6 +719,7 @@ pl.implement(HeaderClass, {
                 },
                 ajax = new AjaxClass('/user/request_reset_password.json', 'register-message', null, successFunc, null, errorFunc);
             pl('#login-box-overlay, #login-box-message').show();
+            pl('#register-password').get(0).value = '';
             ajax.setPostData(data);
             ajax.call();
         });
