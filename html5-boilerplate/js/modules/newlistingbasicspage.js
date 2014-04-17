@@ -399,6 +399,71 @@ pl.implement(NewListingBasicsClass, {
         };
     },
 
+    /*
+     var map = new google.maps.Map(pl('#map').get(0), {
+     center: center,
+     zoom: zoom,
+     mapTypeId: google.maps.MapTypeId.ROADMAP,
+     styles: [
+     {
+     featureType: 'landscape',
+     elementType: 'all',
+     stylers: [
+     { "color": "#ffffff" },
+     { saturation: -100 },
+     { lightness: 4 },
+     { visibility: 'on' }
+     ]
+     },{
+     featureType: 'road.highway',
+     elementType: 'all',
+     stylers: [
+     { "color": "#4cc7df"},
+     { saturation: 100 },
+     { lightness: -7 },
+     { visibility: 'on' }
+     ]
+     },{
+     featureType: 'road.arterial',
+     elementType: 'all',
+     stylers: [
+     { "color": "#4cc7df" },
+     { saturation: -30 },
+     { lightness: -3 },
+     { visibility: 'on' }
+     ]
+     },{
+     featureType: 'road.local',
+     elementType: 'all',
+     stylers: [
+     { "color": "#ffffff" },
+     { saturation: -30 },
+     { lightness: -3 },
+     { visibility: 'on' }
+     ]
+     },{
+     featureType: 'landscape.natural',
+     elementType: 'all',
+     stylers: [
+     { "color": "#ffffff" },
+     { saturation: -30 },
+     { lightness: -3 },
+     { visibility: 'on' }
+     ]
+     },{
+     featureType: 'poi.park',
+     elementType: 'all',
+     stylers: [
+     { "color": "#ffffff" },
+     { saturation: -30 },
+     { lightness: -3 },
+     { visibility: 'on' }
+     ]
+     }
+     ]
+     }),
+     */
+
     addMap: function(placeUpdater) {
         var self = this,
             lat = this.base.listing.latitude !== null ? this.base.listing.latitude : 51.4791,
@@ -412,11 +477,78 @@ pl.implement(NewListingBasicsClass, {
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
                 draggable: false,
                 scrollwheel: false,
-                disableDoubleClickZoom: true
-            }, 
+                disableDoubleClickZoom: true,
+                disableDefaultUI: true,
+                styles: [
+                    {
+                        featureType: 'landscape',
+                        elementType: 'all',
+                        stylers: [
+                            { "color": "#ffffff" },
+                            { saturation: -100 },
+                            { lightness: 4 },
+                            { visibility: 'on' }
+                        ]
+                    },{
+                        featureType: 'road.highway',
+                        elementType: 'all',
+                        stylers: [
+                            { "color": "#4cc7df"},
+                            { saturation: 100 },
+                            { lightness: -7 },
+                            { visibility: 'on' }
+                        ]
+                    },{
+                        featureType: 'road.arterial',
+                        elementType: 'all',
+                        stylers: [
+                            { "color": "#4cc7df" },
+                            { saturation: -30 },
+                            { lightness: -3 },
+                            { visibility: 'on' }
+                        ]
+                    },{
+                        featureType: 'road.local',
+                        elementType: 'all',
+                        stylers: [
+                            { "color": "#ffffff" },
+                            { saturation: -30 },
+                            { lightness: -3 },
+                            { visibility: 'on' }
+                        ]
+                    },{
+                        featureType: 'landscape.natural',
+                        elementType: 'all',
+                        stylers: [
+                            { "color": "#ffffff" },
+                            { saturation: -30 },
+                            { lightness: -3 },
+                            { visibility: 'on' }
+                        ]
+                    },{
+                        featureType: 'poi.park',
+                        elementType: 'all',
+                        stylers: [
+                            { "color": "#ffffff" },
+                            { saturation: -30 },
+                            { lightness: -3 },
+                            { visibility: 'on' }
+                        ]
+                    }
+                ]
+            },
             addressAuto = new google.maps.places.Autocomplete(autoField, autoOptions),
             addressMap = new google.maps.Map(mapField, mapOptions),
-            marker = new google.maps.Marker({map: this.addressMap});
+            latLng = new google.maps.LatLng(lat, lng),
+            marker = new google.maps.Marker({
+                cursor: 'pointer',
+                position: latLng,
+                raiseOnDrag: false,
+                icon: {
+                    anchor: new google.maps.Point(25,15), // wspolzedne poczatku na ikonie tu center statku
+                    url: 'img/statek-ico.png',
+                    map: this.addressMap
+                }});
         addressAuto.bindTo('bounds', addressMap);
         google.maps.event.addListener(addressAuto, 'place_changed', function() {
             var place = addressAuto.getPlace(),
