@@ -126,13 +126,14 @@ pl.implement(NewListingBasicsClass, {
     },
 
     bindEvents: function() {
-        var textFields = ['title', 'type', 'platform', 'category', 'stage', 'address', 'mantra', 'summary'],
+        var textFields = ['title', 'type', 'platform', 'category', 'stage', 'currency', 'address', 'mantra', 'summary'],
             validators = {
                 title: ValidatorClass.prototype.isNotEmpty,
                 type: ValidatorClass.prototype.isSelected,
                 platform: ValidatorClass.prototype.isSelected,
                 category: ValidatorClass.prototype.isSelected,
                 stage: ValidatorClass.prototype.isSelected,
+                currency: ValidatorClass.prototype.isSelected,
                 mantra: ValidatorClass.prototype.makeLengthChecker(5, 140),
                 summary: ValidatorClass.prototype.makeLengthChecker(50, 2000),
                 address: ValidatorClass.prototype.isNotEmpty
@@ -143,12 +144,14 @@ pl.implement(NewListingBasicsClass, {
                 platform: SelectFieldClass,
                 category: SelectFieldClass,
                 stage: SelectFieldClass,
+                currency: SelectFieldClass,
                 mantra: TextFieldClass,
                 summary: TextFieldClass,
                 address: TextFieldClass
             },
             typeOptions = [ ['application', '@lang_application@'], ['company', '@lang_company@'] ],
             stageOptions = [ ['concept', '@lang_concept@'], ['startup', '@lang_startup@'], ['established', '@lang_established@' ] ],
+            currencyOptions = [ ['pln', '@lang_currency_pln@'], ['usd', '@lang_currency_usd@'] ],
             platforms = [ 'ios', 'android', 'windows_phone', 'website', 'desktop', 'other' ],
             platformOptions = [],
             platform,
@@ -181,6 +184,7 @@ pl.implement(NewListingBasicsClass, {
         this.base.fieldMap['type'].setOptionsWithValues(typeOptions);
         this.base.fieldMap['platform'].setOptionsWithValues(platformOptions);
         this.base.fieldMap['stage'].setOptionsWithValues(stageOptions);
+        this.base.fieldMap['currency'].setOptionsWithValues(currencyOptions);
         this.bindLogo();
         this.bindImages();
         this.setUploadUrls();
@@ -398,71 +402,6 @@ pl.implement(NewListingBasicsClass, {
             ajax.call();
         };
     },
-
-    /*
-     var map = new google.maps.Map(pl('#map').get(0), {
-     center: center,
-     zoom: zoom,
-     mapTypeId: google.maps.MapTypeId.ROADMAP,
-     styles: [
-     {
-     featureType: 'landscape',
-     elementType: 'all',
-     stylers: [
-     { "color": "#ffffff" },
-     { saturation: -100 },
-     { lightness: 4 },
-     { visibility: 'on' }
-     ]
-     },{
-     featureType: 'road.highway',
-     elementType: 'all',
-     stylers: [
-     { "color": "#4cc7df"},
-     { saturation: 100 },
-     { lightness: -7 },
-     { visibility: 'on' }
-     ]
-     },{
-     featureType: 'road.arterial',
-     elementType: 'all',
-     stylers: [
-     { "color": "#4cc7df" },
-     { saturation: -30 },
-     { lightness: -3 },
-     { visibility: 'on' }
-     ]
-     },{
-     featureType: 'road.local',
-     elementType: 'all',
-     stylers: [
-     { "color": "#ffffff" },
-     { saturation: -30 },
-     { lightness: -3 },
-     { visibility: 'on' }
-     ]
-     },{
-     featureType: 'landscape.natural',
-     elementType: 'all',
-     stylers: [
-     { "color": "#ffffff" },
-     { saturation: -30 },
-     { lightness: -3 },
-     { visibility: 'on' }
-     ]
-     },{
-     featureType: 'poi.park',
-     elementType: 'all',
-     stylers: [
-     { "color": "#ffffff" },
-     { saturation: -30 },
-     { lightness: -3 },
-     { visibility: 'on' }
-     ]
-     }
-     ]
-     }),
-     */
 
     addMap: function(placeUpdater) {
         var self = this,

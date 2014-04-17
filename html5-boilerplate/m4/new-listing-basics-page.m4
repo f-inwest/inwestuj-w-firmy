@@ -135,6 +135,25 @@ include(company-not-found.m4)
                 <div id="stageicon"></div>
             </span>
         </div>
+
+        <div class="formitem sideinfoitem clear">
+            <label class="inputlabel" for="currency">@lang_currency@</label>
+            <span class="inputfield">
+                <select id="currency" class="text inputwidetext categoryselect">
+                    <option value="pln" selected="selected">@lang_currency_pln@</option>
+                    <option value="usd">@lang_currency_usd@</option>
+                </select>
+            </span>
+            <p class="sideinfo">
+                <label class="sideinfoheader">@lang_project_currency@</label>
+                <br />
+                @lang_project_currency_desc@
+            </p>
+            <span class="inputicon">
+                <div id="currencyicon"></div>
+            </span>
+        </div>
+
 <!--
         <div class="formitem sideinfoitem clear">
             <label class="inputlabel" for="contact_email">EMAIL</label>
