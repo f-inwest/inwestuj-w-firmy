@@ -2963,6 +2963,7 @@ color: #fff;
     z-index: 2000;
 }
 .campaign-dropdown-visible {
+    transition: height 0.5s;
     overflow: visible;
 }
 .campaign-textbox {
@@ -3194,6 +3195,16 @@ color: #fff;
     font-size: 14px;
     padding-bottom: 30px;
     width: 920px;
+}
+.campaign-dropdown-help {
+    position: absolute;
+    right: 200px;
+    width: 200px;
+    padding: 3px 15px 3px 15px;
+    border: 1px solid #4dc6e1;
+    color: #4dc6e1;
+    background: #fefefe;
+    top: 0;
 }
 
 /* hidden */
