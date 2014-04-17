@@ -819,12 +819,4 @@ public class ListingVO extends ListingTileVO implements Serializable {
 		this.paidCode = paidCode;
 	}
 
-	public String getCashflowData() {
-		return cashflowData;
-	}
-
-	public void setCashflowData(String cashflowData) {
-		this.cashflowData = cashflowData;
-	}
-	
 }
