@@ -656,13 +656,14 @@ a:focus, a:hover { cursor: pointer; }
     font-weight: 300;
     color: #5b6773;
     text-align: right;
-    bottom: 8px;
+    bottom: 12px;
 }
 .companybannerfollow {
     position: absolute;
-    top: 47px;
+    top: 42px;
     right: 15px;
-    width: 280px;
+    width: 380px;
+    line-height: 20px;
 }
 .companybannerfollowbtn {
     margin-left: 0;
@@ -1356,8 +1357,9 @@ transition: height 300ms;
     margin-bottom: 15px;
 }
 .financialsvaluationtext {
-    font-size: 30px;
+    font-size: 16px;
     font-weight: bold;
+    padding-top: 3px;
 }
 .valuation-offer-desc {
     padding-top: 14px;
@@ -1540,7 +1542,7 @@ transition: height 300ms;
 .bidactionline { clear: both; padding-top: 5px; overflow: auto; }
 .newbidactionline { clear: both; overflow: auto; }
 .bidactionbutton { float: right; margin-right: 10px; margin-top: 10px; text-align: center; }
-.bidconfirmmessage { padding-top: 25px; padding-right: 10px; text-align: right; font-weight: bold; color: #49515a; float: right; }
+.bidconfirmmessage { padding-top: 15px; padding-right: 10px; text-align: right; fcolor: #49515a; float: right; }
 .messagereplytextarea { position: absolute; left: 10px; top: 5px; width: 736px !important; height: 75px !important; }
 .messagereplybutton { position: absolute; right: 10px !important; bottom: 12px !important; }
 .messagereplymsg { position: absolute; bottom: 0; left: 10px; }
@@ -2715,12 +2717,12 @@ color: #fff;
     padding-top: 5px;
 }
 .newbidvallabel {
-    padding-top: 18px;
+    padding-top: 10px;
     padding-right: 10px;
     width: 96px;
 }
 .newbidnotelabel {
-    padding-top: 30px;
+    padding-top: 20px;
     padding-right: 10px;
     width: 96px;
 }

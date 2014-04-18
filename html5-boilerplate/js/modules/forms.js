@@ -197,16 +197,16 @@ pl.implement(ValidatorClass, {
     },
     isCurrency: function(str) {
         var match = str ? str.match(/^[$]?[0-9]{1,3}(,?[0-9]{3})*$/) : false;
-        return (match ? 0 : 'Please enter a currency value');
+        return (match ? 0 : '@lang_please_enter_currency@');
     },
     isPercent: function(str) {
         var match = str ? str.match(/^[1-9]?[0-9][%]?$/) : false;
-        return (match ? 0 : 'Please enter a percent value');
+        return (match ? 0 : '@lang_please_enter_percent@');
     },
     genIsNumberBetween: function(min, max) {
         return function(n) {
             if (!ValidatorClass.prototype.isNumber(n)) {
-                return 'Please enter a number';
+                return '@lang_please_enter_a_number@';
             }
             if (n < min) {
                 return '@lang_number_at_least@ ' + min;

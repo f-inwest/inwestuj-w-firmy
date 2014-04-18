@@ -92,7 +92,7 @@ include(company-not-found.m4)
         <div class="formitem sideinfoitem clear">
             <span class="inputlabel">&nbsp;</span>
             <span class="inputfield">
-                <input class="text askinginputtext" type="text" name="suggested_amt" id="suggested_amt" maxlength="8"></input>
+                <input class="text askinginputtext" type="text" name="suggested_amt" id="suggested_amt" maxlength="20"></input>
             </span>
             <p class="sideinfo">
                 <label class="sideinfoheader">@lang_instructions@</label>
@@ -117,7 +117,7 @@ include(company-not-found.m4)
         <div class="formitem sideinfoitem clear">
             <span class="inputlabel">&nbsp;</span>
             <span class="inputfield">
-                <input class="text askinginputtext" type="text" name="suggested_pct" id="suggested_pct" maxlength="3"></input>
+                <input class="text askinginputtext" type="text" name="suggested_pct" id="suggested_pct" maxlength="4"></input>
             </span>
             <p class="sideinfo">
                 <label class="sideinfoheader">@lang_instructions@</label>

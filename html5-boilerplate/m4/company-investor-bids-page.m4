@@ -53,7 +53,7 @@ include(company-order-book.m4)
             <div class="formitem sideinfoitem clear">
                 <span class="inputlabel biglabel">@lang_amount@</span>
                 <span class="inputfield">
-                    <input class="text askinginputtext" type="text" name="new_bid_amt" id="new_bid_amt" maxlength="8"></input>
+                    <input class="text askinginputtext" type="text" name="new_bid_amt" id="new_bid_amt" maxlength="20"></input>
                 </span>
                 <span class="inputicon newbidicon amountbidicon">
                     <div id="new_bid_amticon"></div>
@@ -78,7 +78,7 @@ include(company-order-book.m4)
             <div class="formitem sideinfoitem clear">
                 <span class="inputlabel biglabel">@lang_for_equity@</span>
                 <span class="inputfield inputpctfield">
-                    <input class="text askinginputtext" type="text" name="new_bid_pct" id="new_bid_pct" maxlength="8"></input>
+                    <input class="text askinginputtext" type="text" name="new_bid_pct" id="new_bid_pct" maxlength="4"></input>
                 </span>
                 <span class="inputpcttext">%
                 </span>
