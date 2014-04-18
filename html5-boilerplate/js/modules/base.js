@@ -531,7 +531,8 @@ pl.implement(HeaderClass, {
         dropdown.bindEvents(json);
     },
     setHeader: function(profile, login_url, logout_url, twitter_login_url, fb_login_url) {
-        var params = this.getSearchParameters(),
+        var self = this,
+            params = this.getSearchParameters(),
             code = params['code'];
         if (profile) {
             this.setLoggedIn(profile, logout_url);
@@ -546,7 +547,7 @@ pl.implement(HeaderClass, {
             pl('#register-password').get(0).value = '';
         });
         pl('#headerloginlink').bind('click', function() {
-            pl('#light, #fade').show();
+            self.showLoginPopup();
         });
         pl('#login-close-box, #fade, #register-login-close-box, #register-close-link')
             .bind('click', function() {
@@ -558,6 +559,9 @@ pl.implement(HeaderClass, {
         if (code) {
             this.showChangePassword(code);
         }
+    },
+    showLoginPopup: function() {
+        pl('#light, #fade').show();
     },
     showChangePassword: function(code) {
         pl('#social-login, #login-panel-left').hide();
