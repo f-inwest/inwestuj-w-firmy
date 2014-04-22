@@ -348,6 +348,13 @@ function BidClass(bidslist) {
         owner_counter: 'inprogress',
         owner_withdraw: 'errorcolor'
     };
+    this.typetextmap = {
+        post: '@lang_bid_text_post@',
+        counter: '@lang_bid_text_counter@',
+        accept: '@lang_bid_text_accept@',
+        reject: '@lang_bid_text_reject@',
+        withdraw: '@lang_bid_text_withdraw@'
+    };
 }
 
 pl.implement(BidClass, {
@@ -359,13 +366,14 @@ pl.implement(BidClass, {
         this.amttext = this.amt ? CurrencyClass.prototype.format(this.amt, this.bidslist.listing.currency) : '';
         this.pcttext = this.pct ? PercentClass.prototype.format(this.pct) + '%' : '';
         this.valtext = this.val ? CurrencyClass.prototype.format(this.val, this.bidslist.listing.currency) : '';
-        this.typetext = this.type ? this.type.replace(/(investor_|owner_)/, '') : '';
+        var text = this.type ? this.type.replace(/(investor_|owner_)/, '') : '';
+        this.typetext = this.typetextmap[text] || '';
         this.bidtext = this.text ? SafeStringClass.prototype.htmlEntities(this.text) : '@lang_none@';
         this.datetext = this.create_date ? DateClass.prototype.format(this.create_date) : '';
-        this.whoami = this.bidslist.loggedin_profile.profile_id === this.bidslist.listing.profile_id ? 'owner' : 'investor';
-        this.whoisother = this.whoami === 'investor' ? 'owner' : 'investor';
-        this.bidtype = this.type && this.type.match(/investor/) ? 'investor' : 'owner';
-        this.usertext = this.bidtype === this.whoami ? 'You' : SafeStringClass.prototype.ucfirst(this.whoisother);
+        this.whoami = this.bidslist.loggedin_profile.profile_id === this.bidslist.listing.profile_id ? '@lang_bid_owner@' : '@lang_bid_investor@';
+        this.whoisother = this.whoami === '@lang_bid_investor@' ? '@lang_bid_owner@' : '@lang_bid_investor@';
+        this.bidtype = this.type && this.type.match(/investor/) ? '@lang_bid_investor@' : '@lang_bid_owner@';
+        this.usertext = this.bidtype === this.whoami ? '@lang_bid_you@' : SafeStringClass.prototype.ucfirst(this.whoisother);
         this.typeclass = '';
         //this.typeclass = this.typeclassmap[this.type] || '';
         return this;
@@ -972,6 +980,13 @@ function InvestorBidGroupClass(bidslist) {
         owner_counter: 'inprogress',
         owner_withdraw: 'errorcolor'
     };
+    this.typetextmap = {
+        post: '@lang_bid_text_post@',
+        counter: '@lang_bid_text_counter@',
+        accept: '@lang_bid_text_accept@',
+        reject: '@lang_bid_text_reject@',
+        withdraw: '@lang_bid_text_withdraw@'
+    };
 }
 
 pl.implement(InvestorBidGroupClass, {
@@ -989,7 +1004,8 @@ pl.implement(InvestorBidGroupClass, {
         this.amttext = amt ? CurrencyClass.prototype.format(amt, this.bidslist.listing.currency) : '';
         this.pcttext = pct ? PercentClass.prototype.format(pct) + '%' : '';
         this.valtext = val ? CurrencyClass.prototype.format(val, this.bidslist.listing.currency) : '';
-        this.typetext = type ? type.replace(/(investor_|owner_)/, '') : '';
+        var text = type ? type.replace(/(investor_|owner_)/, '') : '';
+        this.typetext = this.typetextmap[text] || '';
         this.bidtext = this.last_text ? SafeStringClass.prototype.htmlEntities(this.last_text) : '@lang_bids_none@';
         this.datetext = this.last_date ? DateClass.prototype.format(this.last_date) : '';
         this.usertext = this.investor_nickname + countertext;
