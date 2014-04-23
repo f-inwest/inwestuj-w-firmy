@@ -534,8 +534,8 @@ a:focus, a:hover { cursor: pointer; }
     background: url(../img/slide_bubbles.png) no-repeat;
 }
 .bannerbackground {
-    left: 50%;
-    width: 2214px;
+    right: 0;
+    width: 714px;
     height: 500px;
     top: -80px;
     position: absolute;
@@ -545,7 +545,7 @@ a:focus, a:hover { cursor: pointer; }
 .bannership {
     position: absolute;
     top: 127px;
-    left: 50%;
+    right: 270px;
     margin-left: 200px;
     width: 242px;
     height: 144px;
@@ -656,13 +656,14 @@ a:focus, a:hover { cursor: pointer; }
     font-weight: 300;
     color: #5b6773;
     text-align: right;
-    bottom: 8px;
+    bottom: 12px;
 }
 .companybannerfollow {
     position: absolute;
-    top: 47px;
+    top: 42px;
     right: 15px;
-    width: 280px;
+    width: 380px;
+    line-height: 20px;
 }
 .companybannerfollowbtn {
     margin-left: 0;
@@ -693,7 +694,8 @@ a:focus, a:hover { cursor: pointer; }
     z-index: 1000;
     position: absolute;
     right: 0px;
-    top: 35px;
+    top: 40px;
+    font-size: 14px;
 }
 .companybannerstatusmsg {
     padding-top: 45px;
@@ -959,24 +961,29 @@ background-repeat: no-repeat;
 background-image: url(data:image/png;base64,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);
 }
 
-.checkboxgreenicon, .checkboxcheckedicon /* { width: 32px; height: 32px; background: url(../img/icons/check-32.png); } */
-{
-width: 24px;
-height: 24px;
-background-repeat: no-repeat;
-background-image: url(../img/success_24.png);
+.checkboxcheckedicon {
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-image: url(../img/checked-24.png);
+}
+.checkboxuncheckedicon {
+    width: 24px;
+    height: 24px;
+}
+.checkboxgreenicon {
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-image: url(../img/checked-24.png);
     margin-top: 5px;
     margin-left: 10px;
 }
-
-.checkboxredicon, .checkboxuncheckedicon /* { width: 32px; height: 32px; background: url(../img/icons/flag-32.png); } */
-{
-width: 24px;
-height: 24px;
-background-repeat: no-repeat;
-background-image: url(../img/warn_icon_24.png);
-    margin-top: 5px;
-    margin-left: 10px;
+.checkboxredicon {
+    width: 24px;
+    height: 24px;
+    background-repeat: no-repeat;
+    background-image: url(../img/warn_icon_24.png);
 }
 
 .linkicon { margin-left: 3px; }
@@ -1061,7 +1068,9 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMA
     width: 24px;
     height: 24px;
     border: 1px solid #013420;
+    /*
     background-position-x: 3px;
+    */
 }
 .valuation-allow-label {
     line-height: 14px;
@@ -1171,7 +1180,7 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMA
 .inputwidewithvalidate { width: 540px !important; }
 .inputhelp { padding-top: 10px; height: 33px; }
 .inputcheckbox { margin-right: 10px; height: 36px; float: left; }
-.inputmsg { font-weight: bold; }
+.inputmsg { }
 .bidmsg { height: 20px; font-weight: bold; }
 .formlabelvalue { width: 180px; }
 .inputicon { padding-top: 6px; }
@@ -1355,8 +1364,9 @@ transition: height 300ms;
     margin-bottom: 15px;
 }
 .financialsvaluationtext {
-    font-size: 30px;
+    font-size: 16px;
     font-weight: bold;
+    padding-top: 3px;
 }
 .valuation-offer-desc {
     padding-top: 14px;
@@ -1424,7 +1434,7 @@ transition: height 300ms;
 .addcommentenabled { }
 .addcommentenabled:hover { cursor: pointer; }
 .newlistingmsg { float: left; margin-right: 10px; padding-left: 116px; width: 420px; height: 85px; font-weight: bold; overflow: auto; }
-.newlistingtitlemsg { position: absolute; margin-right: 5px; right: 0; }
+.newlistingtitlemsg { position: absolute; margin-right: 15px; right: 0; font-size: 14px; }
 .newlistingaskmsg { margin-left: 10px; }
 .newlistingmsgsmall { float: left; margin-right: 10px; padding-left: 116px; width: 420px; height: 25px; font-weight: bold; }
 .companylistingstats { position: absolute; bottom: 0; }
@@ -1539,7 +1549,7 @@ transition: height 300ms;
 .bidactionline { clear: both; padding-top: 5px; overflow: auto; }
 .newbidactionline { clear: both; overflow: auto; }
 .bidactionbutton { float: right; margin-right: 10px; margin-top: 10px; text-align: center; }
-.bidconfirmmessage { padding-top: 25px; padding-right: 10px; text-align: right; font-weight: bold; color: #49515a; float: right; }
+.bidconfirmmessage { padding-top: 15px; padding-right: 10px; text-align: right; fcolor: #49515a; float: right; }
 .messagereplytextarea { position: absolute; left: 10px; top: 5px; width: 736px !important; height: 75px !important; }
 .messagereplybutton { position: absolute; right: 10px !important; bottom: 12px !important; }
 .messagereplymsg { position: absolute; bottom: 0; left: 10px; }
@@ -2714,12 +2724,12 @@ color: #fff;
     padding-top: 5px;
 }
 .newbidvallabel {
-    padding-top: 18px;
+    padding-top: 10px;
     padding-right: 10px;
     width: 96px;
 }
 .newbidnotelabel {
-    padding-top: 30px;
+    padding-top: 20px;
     padding-right: 10px;
     width: 96px;
 }
@@ -2747,6 +2757,7 @@ color: #fff;
     background: #fefefe;
     padding: 15px;
     width: 920px;
+    font-size: 14px;
 }
 
 .valuationlabel { font-size: 14px; line-height: 14px; margin-top: 10px; font-weight: normal; }
@@ -2768,11 +2779,7 @@ color: #fff;
     margin-right: 50px;
     margin-top: 10px;
 }
-.cashflowpanel {
-    /*
-    overflow: visible !important; position: relative; margin-bottom: 40px;
-    */
-}
+
 .cashflowtypepanel {
     width: 950px;
 }
@@ -2780,12 +2787,13 @@ color: #fff;
     background: #fefefe;
     padding: 15px;
     width: 920px;
+    font-size: 14px;
 }
-.cashflowlabel { font-size: 14px; line-height: 14px; margin-top: 10px; font-weight: normal; }
+.cashflowlabel { font-size: 14px; line-height: 16px; margin-top: 10px; font-weight: normal; }
 .cashflowhelptext { font-size: 14px; line-height: 14px; position: relative; top: 17px; }
 .cashflowtext {
     position: relative;
-    top: 11px;
+    top: 14px;
     font-family: 'Ubuntu',sans-serif;
     font-size: 25px !important;
     font-weight: 500;
@@ -2853,12 +2861,6 @@ color: #fff;
     padding-right: 0px !important;
 }
 .isappreleased { height: 80px; }
-
-/* hidden */
-.initialhidden { display: none; }
-
-/* debug styles */
-/* .container { background: url(../img/blueprint.jpg); background-position: -160px 0px; } */
 
 /* new styles from design resources */
 .button-content:hover {
@@ -2971,6 +2973,7 @@ color: #fff;
     z-index: 2000;
 }
 .campaign-dropdown-visible {
+    transition: height 0.5s;
     overflow: visible;
 }
 .campaign-textbox {
@@ -3170,3 +3173,53 @@ color: #fff;
     color: #00c700;
     line-height: 50px;
 }
+.cashflow-percent {
+    position: relative;
+    left: -40px;
+    top: -14px;
+    display: block;
+}
+.cashflow-table {
+    position: relative;
+    margin-left: 15px;
+    margin-right: 15px;
+    overflow: auto;
+}
+.cashflow-chart {
+    position: relative;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 30px;
+    overflow: visible;
+}
+.valuation-wrapper {
+    padding: 15px;
+    background: #fefefe;
+    font-size: 14px;
+    padding-bottom: 30px;
+    width: 920px;
+}
+.cashflow-wrapper {
+    padding: 15px;
+    background: #fefefe;
+    font-size: 14px;
+    padding-bottom: 30px;
+    width: 920px;
+}
+.campaign-dropdown-help {
+    position: absolute;
+    right: 200px;
+    width: 200px;
+    padding: 3px 15px 3px 15px;
+    border: 1px solid #4dc6e1;
+    color: #4dc6e1;
+    background: #fefefe;
+    top: 0;
+}
+
+/* hidden */
+.initialhidden { display: none; }
+
+/* debug styles */
+/* .container { background: url(../img/blueprint.jpg); background-position: -160px 0px; } */
+

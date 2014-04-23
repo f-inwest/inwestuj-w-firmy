@@ -358,7 +358,7 @@ function AjaxClass(url, statusId, completeFunc, successFunc, loadFunc, errorFunc
     // this.loadFunc = loadFunc || function() { pl(self.statusSel).html('<span class="inprogress">Loading...</span>'); };
     this.loadFunc = loadFunc || function() { };
     this.errorFunc = errorFunc || function(errorNum, json) {
-        console.log('AJAX errorNum=' + errorNum + " json=" + json);
+        //console.log('AJAX errorNum=' + errorNum + " json=" + json);
         var errorStr = (json && json.error_msg) ? '@lang_error_from_server@: ' + json.error_msg
             : '@lang_error_from_server@ ' + errorNum;
         pl(self.statusSel).html('<span class="attention">' + errorStr + '</span>');
@@ -531,7 +531,8 @@ pl.implement(HeaderClass, {
         dropdown.bindEvents(json);
     },
     setHeader: function(profile, login_url, logout_url, twitter_login_url, fb_login_url) {
-        var params = this.getSearchParameters(),
+        var self = this,
+            params = this.getSearchParameters(),
             code = params['code'];
         if (profile) {
             this.setLoggedIn(profile, logout_url);
@@ -539,14 +540,14 @@ pl.implement(HeaderClass, {
         else {
             this.setLoggedOut(login_url, twitter_login_url, fb_login_url);
         }
-        pl('#login').bind('click', function() {
-            pl('#login').attr({'value': ''});
+        pl('#register-email').bind('click', function() {
+            pl('#register-email').get(0).value = '';
         });
-        pl('#passw').bind('click', function() {
-            pl('#passw').attr({'value': ''});
+        pl('#register-password').bind('click', function() {
+            pl('#register-password').get(0).value = '';
         });
         pl('#headerloginlink').bind('click', function() {
-            pl('#light, #fade').show();
+            self.showLoginPopup();
         });
         pl('#login-close-box, #fade, #register-login-close-box, #register-close-link')
             .bind('click', function() {
@@ -558,6 +559,9 @@ pl.implement(HeaderClass, {
         if (code) {
             this.showChangePassword(code);
         }
+    },
+    showLoginPopup: function() {
+        pl('#light, #fade').show();
     },
     showChangePassword: function(code) {
         pl('#social-login, #login-panel-left').hide();
@@ -582,7 +586,7 @@ pl.implement(HeaderClass, {
                 },
                 errorFunc = function(errorNum, json) {
                     var msg = json && json.error_msg ? json.error_msg : '@lang_cant_change_password@';
-                    console.log('error message:' + msg);
+                    //console.log('error message:' + msg);
                     pl('#login-box-overlay, #login-box-message').hide();
                     pl('#change-password-message').get(0).innerHTML = msg;
                 },
@@ -678,6 +682,7 @@ pl.implement(HeaderClass, {
                 },
                 ajax = new AjaxClass('/user/authenticate', 'register-message', null, successFunc, null, errorFunc);
             pl('#login-box-overlay, #login-box-message').show();
+            pl('#register-password').get(0).value = '';
             ajax.setPostData(data);
             ajax.call();
         });
@@ -692,12 +697,13 @@ pl.implement(HeaderClass, {
                 },
                 errorFunc = function(errorNum, json) {
                     var msg = json && json.error_msg ? json.error_msg : '@lang_cant_register@';
-                    console.log('error message:' + msg);
+                    //console.log('error message:' + msg);
                     pl('#login-box-overlay, #login-box-message').hide();
                     pl('#register-message').get(0).innerHTML = msg;
                 },
                 ajax = new AjaxClass('/user/register', 'register-message', null, successFunc, null, errorFunc);
             pl('#login-box-overlay, #login-box-message').show();
+            pl('#register-password').get(0).value = '';
             ajax.setPostData(data);
             ajax.call();
         });
@@ -711,12 +717,13 @@ pl.implement(HeaderClass, {
                 },
                 errorFunc = function(errorNum, json) {
                     var msg = json && json.error_msg ? json.error_msg : '@lang_cant_reset_password@';
-                    console.log('error message:' + msg);
+                    //console.log('error message:' + msg);
                     pl('#login-box-overlay, #login-box-message').hide();
                     pl('#register-message').get(0).innerHTML = msg;
                 },
                 ajax = new AjaxClass('/user/request_reset_password.json', 'register-message', null, successFunc, null, errorFunc);
             pl('#login-box-overlay, #login-box-message').show();
+            pl('#register-password').get(0).value = '';
             ajax.setPostData(data);
             ajax.call();
         });
@@ -733,7 +740,7 @@ pl.implement(HeaderClass, {
             return false;
         });
         pl('#headernotloggedin').show();
-        //pl('.adminfooterlink').hide();
+        pl('.adminfooterlink').hide();
 
         pl('a[href=/add-listing-page.html]').bind('click', function(e) {
             pl('#light, #fade').show();

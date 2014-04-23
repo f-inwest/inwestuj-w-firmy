@@ -503,8 +503,16 @@ public class UserMgmtFacade {
     		user.status = SBUser.Status.CREATED;
     		user.investor = false;
         }
-		getDAO().generateNickname(user, name);
-		
+        if (name != null) {
+            getDAO().generateNickname(user, name);
+        }
+        else if (email != null) {
+            getDAO().generateNickname(user, email);
+        }
+        else {
+            getDAO().generateRandomNickname(user);
+        }
+
 		user.password = encryptedPassword;
 		user.authCookie = authCookie;
 		user.location = location;

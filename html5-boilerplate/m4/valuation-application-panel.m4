@@ -53,7 +53,7 @@
                 <span class="valuationtext" id="projected_peak"></span>
             </span>
             <span class="valuationhelptext">
-            @lang_projected_peak_help@
+                @lang_projected_peak_help@
             </span>
         </div>
     
@@ -63,7 +63,7 @@
                 <span class="valuationtext" id="future_earnings"></span>
             </span>
             <span class="valuationhelptext">
-            @lang_future_earnings_help@
+                @lang_future_earnings_help@
             </span>
         </div>
     
@@ -92,12 +92,12 @@
         </div>
      
         <div class="formitem clear">
-            <span class="inputlabel valuationlabel"></span>
+            <span class="inputlabel valuationlabel">@lang_monthly_target@</span>
             <span class="inputfield valuationfield">
                 <span class="valuationtext" id="monthly_target">@lang_monthly_target@</span>
             </span>
             <span class="valuationhelptext">
-            @lang_monthly_target_help@
+                @lang_monthly_target_help@
             </span>
         </div>
     
@@ -107,19 +107,19 @@
                 <span class="valuationtext" id="target_valuation"></span>
             </span>
             <span class="valuationhelptext">
-            @lang_target_valuation_help@
+                @lang_target_valuation_help@
             </span>
         </div>
 
     </div>
     
     <div class="formitem clear">
-        <span class="inputlabel valuationlabel">@lang_final_valuation_app@</span>
+        <span class="inputlabel valuationlabel">@lang_final_valuation@</span>
         <span class="inputfield valuationfield">
             <span class="valuationtext" id="application_valuation"></span>
         </span>
         <span class="valuationhelptext">
-        @lang_final_valuation_app_help@
+            @lang_final_valuation_app_help@
         </span>
     </div>
     

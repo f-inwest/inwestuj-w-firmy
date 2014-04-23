@@ -226,20 +226,29 @@ function NotificationPageClass() {
 };
 pl.implement(NotificationPageClass,{
     loadPage: function() {
-        var completeFunc = function(json) {
+        var successFunc = function(json) {
                 var header = new HeaderClass(),
                     notifyList = new NotifyListClass();
                 header.setLogin(json);
-                if (!json.loggedin_profile) { // must be logged in for this page
-                    window.location = '/';
+                if (!json || !json.loggedin_profile) { // must be logged in for this page
+                    header.showLoginPopup();
                 }
-                notifyList.display(json);
+                else {
+                    notifyList.display(json);
+                }
                 pl('.preloader').hide();
                 pl('.wrapper').show();
-             },
-            ajax = new AjaxClass('/notification/user', 'notificationsmsg', completeFunc);
-            ajax.setGetData({ max_results: 10 });
-            ajax.call();
+            },
+            errorFunc = function(statusCode, json) {
+                var header = new HeaderClass();
+                header.setLogin(json);
+                header.showLoginPopup();
+                pl('.preloader').hide();
+                pl('.wrapper').show();
+            };
+        ajax = new AjaxClass('/notification/user', 'notificationsmsg', null, successFunc, null, errorFunc);
+        ajax.setGetData({ max_results: 10 });
+        ajax.call();
     }
 });
 

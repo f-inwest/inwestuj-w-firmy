@@ -19,7 +19,7 @@ pl.implement(ListingClass, {
         this.listing_url = 'https://inwestujwfirmy.pl/company-page.html?id=' + this.listing_id;
         this.listing_public_title = 'Inwestuj w Firmy: ' + this.title;
         this.pricepoints = json.pricepoints;
-        console.log('pricepoints:', this.pricepoints);
+        //console.log('pricepoints:', this.pricepoints);
         if (this.preview) {
             pl('#header').hide();
             pl('#footer').hide();
@@ -857,7 +857,7 @@ pl.implement(ListingClass, {
         var self = this,
             pricepoints = new PricepointsClass(self.pricepoints),
             buttonsHTML = pricepoints.buttonsHTML(self.pricepoints, 'pricepoint-description-company', 'purchase-button-company');
-        console.log('displayPricepoints ', self.pricepoints);
+        //console.log('displayPricepoints ', self.pricepoints);
         if (buttonsHTML) {
             pl('#pricepoints-wrapper').show();
             if (pl('#pricepoints-wrapper-inner').get(0)) {

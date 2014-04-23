@@ -12,7 +12,7 @@ include(head.m4)
 include(header.m4)
 include(company-not-found.m4)
 include(company-banner.m4)
-companybannermacro(`', `', `', `', `companynavselected', `', `')
+companybannermacro(`', `', `', `', `', `companynavselected', `', `')
 `
 <div class="container preloader">
      <div class="preloaderfloater"></div>
@@ -61,7 +61,7 @@ include(company-order-book.m4)
             <div class="formitem sideinfoitem clear">
                 <span class="inputlabel biglabel">@lang_bids_amount@</span>
                 <span class="inputfield">
-                    <input class="text askinginputtext" type="text" name="new_bid_amt" id="new_bid_amt" maxlength="8"></input>
+                    <input class="text askinginputtext" type="text" name="new_bid_amt" id="new_bid_amt" maxlength="20"></input>
                 </span>
                 <span class="inputicon newbidicon amountbidicon">
                     <div id="new_bid_amticon"></div>
@@ -86,7 +86,7 @@ include(company-order-book.m4)
             <div class="formitem sideinfoitem clear">
                 <span class="inputlabel biglabel">@lang_bids_for@</span>
                 <span class="inputfield inputpctfield">
-                    <input class="text askinginputtext" type="text" name="new_bid_pct" id="new_bid_pct" maxlength="8"></input>
+                    <input class="text askinginputtext" type="text" name="new_bid_pct" id="new_bid_pct" maxlength="4"></input>
                 </span>
                 <span class="inputpcttext">%
                 </span>
@@ -95,10 +95,7 @@ include(company-order-book.m4)
                 </span>
                 <span class="newbiddesc">
                     <p>
-                    For a company, how much fully diluted post-money common equity you are requiring from the owner for
-                    your investment, from 1% to 100%.
-                    For product investments, the tenancy in common ownership interest in the application including all
-                    copyrights, patents, trademarks, and trade secrets developed as part of the application.
+                        @lang_newbid_equity_desc@
                     </p>
                 </span>
             </div>

@@ -63,7 +63,7 @@
                 <span class="valuationtext" id="exit_value"></span>
             </span>
             <span class="valuationhelptext">
-            @lang_exit_value_help@
+                @lang_exit_value_help@
             </span>
         </div>
 
@@ -75,7 +75,7 @@
             <span class="valuationtext" id="company_valuation"></span>
         </span>
         <span class="valuationhelptext">
-        @lang_final_valuation_help@
+            @lang_final_valuation_help@
         </span>
     </div>
     

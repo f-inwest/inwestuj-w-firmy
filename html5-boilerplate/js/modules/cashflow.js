@@ -1,212 +1,215 @@
 function CashFlowClass() {
-
-    this.cashflow_data = { application: { is_app_released: true }, company: {}};
-    this.selectFields = {
-        cashflow_type: 1,
-        is_app_released: 1,
-        analyze_app_potential: 1,
-        analyze_company_potential: 1
-    };
-    this.yesNoFields = {
-        is_app_released: 1,
-        analyze_app_potential: 1,
-        analyze_company_potential: 1
-    };
+    this.cashflow_data = { company: {}};
     this.currencyFields = {
-        cost_to_duplicate: 1,
-        current_revenue: 1,
-        revenue_per: 1,
-        cost_of_app: 1,
-        best_month: 1,
-        monthly_arpu: 1
+        initial_investment: 1,
+        development_cost: 1,
+        initial_sales: 1,
+        fixed_expenses: 1
     };
     this.numberFields = {
-        market_size: 1,
-        months_live: 1,
-        target_users: 1
+        time_to_market: 1
     };
-    this.previousCashFlowType = null;
+    this.percentFields = {
+        gross_margin: 1,
+        growth_rate: 1
+    }
 }
 
 pl.implement(CashFlowClass, {
 
     store: function(listing) {
         var vdata = listing.cashflow_data ? JSON.parse(listing.cashflow_data) : {},
-            type = vdata.cashflow_type !== undefined ? vdata.cashflow_type : (listing.type || 'company'),
             k, v;
         this.currency = listing.currency;
-        this.cashflow_data.cashflow_type = type;
+        this.groupingSymbol = this.currency === 'pln' ? ' ' : ',';
         if (vdata) {
             for (k in vdata) {
                 v = vdata[k];
                 this.cashflow_data[k] = v;
             }
         }
+        if (this.cashflow_data['company'] === undefined) {
+            this.cashflow_data['company'] = {};
+        }
     },
 
-    displayActivePanel: function() {
-        var activeCashFlowWrapperSel = '#cashflow_' + this.cashflow_data.cashflow_type + '_wrapper';
-        //if (this.previousCashFlowType !== this.cashflow_data.vaulation_type) {
-            pl('.cashflowpanel').hide();
-        //}
-        switch (this.cashflow_data.cashflow_type) {
-            case 'company':
-                this.valueCompany();
-                break;
-            case 'application':
-                this.valueApplication();
-                break;
-            default:
-                this.valueCompany();
+    removeNodeChildren: function(selector) {
+        var node = pl(selector).get(0);
+        while(node.firstChild) {
+            node.removeChild(node.firstChild);
         }
-        //if (this.previousCashFlowType !== this.cashflow_data.vaulation_type) {
-            this.previousCashFlowType = this.cashflow_data.cashflow_type;
-            pl(activeCashFlowWrapperSel).show();
-        //}
+    },
+
+    generateData: function() {
+        var self = this,
+
+            company = self.cashflow_data.company,
+            currencyFormatter = new google.visualization.NumberFormat({
+                groupingSymbol: self.groupingSymbol,
+                negativeColor: 'red',
+                negativeParens: true,
+                fractionDigits: 0
+            }),
+
+            initial_investment = company.initial_investment || 0,
+            development_cost = company.development_cost || 0,
+            time_to_market = company.time_to_market || 0,
+            initial_sales = company.initial_sales || 0,
+            gross_margin = company.gross_margin || 0,
+            growth_rate = company.growth_rate || 0,
+            fixed_expenses = company.fixed_expenses || 0,
+
+            tableData = new google.visualization.DataTable(),
+            chartData = new google.visualization.DataTable(),
+
+            fmt = function(s) {
+                var t = '' + s;
+                return t.replace(/ /g, '&nbsp;');
+            },
+            months_to_market_row = [fmt('@lang_months_to_market@')],
+            time_to_market_left,
+            sales_row = ['@lang_sales@'],
+            sales,
+            investment_row = ['@lang_investment@'],
+            investment,
+            cash_in_row = [fmt('<b>@lang_cash_in@</b>')],
+            cash_in,
+
+            cost_of_goods_sold_row = [fmt('@lang_cost_of_goods_sold@')],
+            cost_of_goods_sold,
+            dev_cost_row = [fmt('@lang_dev_cost@')],
+            dev_cost,
+            fixed_exp_row = [fmt('@lang_fixed_exp@')],
+            fixed_exp,
+            cash_out_row = [fmt('<b>@lang_cash_out@</b>')],
+            cash_out,
+
+            net_cash_row = [fmt('<b>@lang_net_cash@</b>')],
+            net_cash,
+            balance_row = ['<b>@lang_balance@</b>'],
+            balance,
+
+            tableRows = [],
+            chartRows = [],
+            month,
+            shortMonth,
+            monthTitle,
+            numMonths = 24;
+
+        tableData.addColumn('string', '@lang_month@');
+
+        chartData.addColumn('string', '@lang_month@');
+        chartData.addColumn('number', '@lang_net_cash@');
+        chartData.addColumn('number', '@lang_balance@');
+
+        balance = 0;
+
+        for (month = 1; month <= numMonths; month++) {
+            monthTitle = '@lang_month@' + '&nbsp;' + month;
+            tableData.addColumn('number', monthTitle);
+
+            time_to_market_left = time_to_market < month ? 0 : time_to_market - month + 1;
+            months_to_market_row.push(time_to_market_left);
+
+            sales = time_to_market_left > 0 ? 0 : initial_sales * Math.pow(1 + growth_rate / 100, month - time_to_market - 1);
+            sales_row.push(sales);
+
+            investment = month > 1 ? 0 : initial_investment;
+            investment_row.push(investment);
+
+            cash_in = sales + investment;
+            cash_in_row.push(cash_in);
+
+            cost_of_goods_sold = sales * (1 - gross_margin / 100);
+            cost_of_goods_sold_row.push(cost_of_goods_sold);
+
+            dev_cost = time_to_market_left == 0 ? 0 : development_cost / time_to_market;
+            dev_cost_row.push(dev_cost);
+
+            fixed_exp = fixed_expenses;
+            fixed_exp_row.push(fixed_exp);
+
+            cash_out = cost_of_goods_sold + dev_cost + fixed_exp;
+            cash_out_row.push(cash_out);
+
+            net_cash = cash_in - cash_out;
+            net_cash_row.push(net_cash);
+
+            balance = balance + net_cash;
+            balance_row.push(balance);
+
+            shortMonth = '' + month;
+            chartData.addRow([ shortMonth, net_cash, balance ]);
+        }
+
+        tableRows.push(months_to_market_row);
+        //tableRows.push(blank_row);
+        tableRows.push(sales_row);
+        tableRows.push(investment_row);
+        tableRows.push(cash_in_row);
+        //tableRows.push(blank_row);
+        tableRows.push(cost_of_goods_sold_row);
+        tableRows.push(dev_cost_row);
+        tableRows.push(fixed_exp_row);
+        tableRows.push(cash_out_row);
+        //tableRows.push(blank_row);
+        tableRows.push(net_cash_row);
+        tableRows.push(balance_row);
+        tableData.addRows(tableRows);
+
+        for (month = 1; month <= numMonths; month++) {
+            currencyFormatter.format(tableData, month);
+        }
+        currencyFormatter.format(chartData, 1);
+        currencyFormatter.format(chartData, 2);
+
+        self.tableData = tableData;
+        self.chartData = chartData;
+    },
+
+    drawTable: function() {
+        var self = this,
+            dummy = self.removeNodeChildren('#table_div'),
+            table = new google.visualization.Table(document.getElementById('table_div')),
+            options = {
+                title: '@lang_cashflow_table_title@',
+                allowHtml: true
+            };
+        table.draw(self.tableData, options);
+    },
+
+    drawChart: function() {
+        var self = this,
+            dummy = self.removeNodeChildren('#chart_div'),
+            chart = new google.visualization.ComboChart(document.getElementById('chart_div')),
+            currency = self.currency.toUpperCase(),
+            options = {
+                title: '@lang_cashflow_chart_title@',
+                vAxis: { title: 'Balance (' + currency + ')' },
+                hAxis: { title: 'Month' },
+                series: {
+                    0: { color: 'green', type: 'bars' },
+                    1: { color: 'black', type: 'line' }
+                }
+            };
+        chart.draw(self.chartData, options);
     },
 
     valueCompany: function() {
-        var val = this.cashflow_data.company,
-            discount_rate = 0.1,
-            penetration_rate = 1, // domination
-            profit_margin = 0.3,
-            exit_probability = 0.1,
-            exit_year = 7,
-            ps_ratio = 7,
-            development_stage_map = {
-                concept: 250000,
-                team: 500000,
-                product: 1000000,
-                customers: 2000000,
-                profitability: 5000000
+        var self = this,
+            callback = function() {
+                self.generateData();
+                self.drawTable();
+                self.drawChart();
             },
-            current_value,
-            development_stage_value,
-            target_market,
-            exit_value,
-            npv_exit_value,
-            npv_exit_value_risk_adjusted,
-            company_cashflow,
-            num_cashflows;
-
-        development_stage_value = development_stage_map[val.development_stage];
-        current_value = val.current_revenue * ps_ratio;
-        target_market = val.market_size * penetration_rate;
-        exit_value = target_market * val.revenue_per * profit_margin * ps_ratio;
-        npv_exit_value = exit_value * Math.pow((1 - discount_rate), exit_year);
-        npv_exit_value_risk_adjusted = npv_exit_value * exit_probability;
-        pl('#exit_value').text(CurrencyClass.prototype.format(Math.floor(exit_value), this.currency));
-
-        company_cashflow = current_value || 0;
-        num_cashflows = 1;
-        if (development_stage_value) {
-            company_cashflow += development_stage_value;
-            num_cashflows++;
-        }
-        if (val.cost_to_duplicate) {
-            company_cashflow += val.cost_to_duplicate;
-            num_cashflows++;
-        }
-        if (val.analyze_company_potential && npv_exit_value_risk_adjusted) {
-            company_cashflow += npv_exit_value_risk_adjusted;
-            num_cashflows++;
-        }
-        if (num_cashflows) {
-            company_cashflow /= num_cashflows;
-        }
-        company_cashflow = Math.max(company_cashflow, val.current_revenue); // prevent less than current 
-        pl('#company_cashflow').text(CurrencyClass.prototype.format(Math.floor(company_cashflow), this.currency));
-    },
-
-    valueApplication: function() {
-        var val = this.cashflow_data.application,
-            monthly_growth_rate = 0.35,
-            monthly_decline_rate = 0.07,
-            discount_rate = 0.1,
-            exit_probability = 0.1,
-            months_to_best, n, r, growth_ratio,
-            future_peak, projected_peak,
-            growth_sum_ratio, earnings_to_peak,
-            decline_sum_ratio, earnings_after_peak,
-            future_earnings,
-            monthly_target,
-            target_cashflow,
-            npv,
-            npv_risk_adjusted,
-            application_cashflow,
-            num_cashflows;
-
-        months_to_best = Math.max(Math.floor(6 - val.months_live), 0);
-        n = months_to_best;
-        r = 1 + monthly_growth_rate;
-        growth_ratio = Math.pow(r, n);
-        future_peak = val.best_month * growth_ratio;
-        projected_peak = months_to_best > 0 ? future_peak : val.best_month;
-        pl('#projected_peak').text(CurrencyClass.prototype.format(Math.floor(projected_peak), this.currency));
-
-        if (months_to_best > 0) {
-            growth_sum_ratio = (1 - Math.pow(r, (n+1))) / (1 - r);
-            earnings_to_peak = projected_peak * growth_sum_ratio;
-        }
-        else {
-            earnings_to_peak = projected_peak;
-        }
-        r = 1 - monthly_decline_rate;
-        decline_sum_ratio = 1 / (1 - r);
-        earnings_after_peak = projected_peak * decline_sum_ratio;
-        future_earnings = earnings_to_peak + earnings_after_peak - projected_peak; // don't double count
-        pl('#future_earnings').text(CurrencyClass.prototype.format(Math.floor(future_earnings), this.currency));
-
-        monthly_target = val.target_users * val.monthly_arpu;
-        pl('#monthly_target').text(CurrencyClass.prototype.format(Math.floor(monthly_target), this.currency));
-
-        target_cashflow = (monthly_target * 12) / discount_rate;
-        pl('#target_cashflow').text(CurrencyClass.prototype.format(Math.floor(target_cashflow), this.currency));
-        npv = target_cashflow * Math.pow((1 - discount_rate), 2);
-        npv_risk_adjusted = npv * exit_probability;
-
-        application_cashflow = future_earnings || 0;
-        num_cashflows = 1;
-        if (val.cost_of_app) {
-            application_cashflow += val.cost_of_app;
-            num_cashflows++;
-        }
-        if (val.analyze_app_potential && npv_risk_adjusted) {
-            application_cashflow += npv_risk_adjusted;
-            num_cashflows++;
-        }
-        if (num_cashflows) {
-            application_cashflow /= num_cashflows;
-        }
-        application_cashflow = Math.max(application_cashflow, future_earnings); // prevent less than future earnings
-        pl('#application_cashflow').text(CurrencyClass.prototype.format(Math.floor(application_cashflow), this.currency));
-    },
-
-    displayIsAppReleased: function() {
-        if (this.cashflow_data.application.is_app_released) {
-            pl('#is_app_released_wrapper').show();
-        }
-        else {
-            pl('#is_app_released_wrapper').hide();
-        }
-    },
-
-    displayAnalyzeAppPotential: function() {
-        if (this.cashflow_data.application.analyze_app_potential) {
-            pl('#analyze_app_potential_wrapper').show();
-        }
-        else {
-            pl('#analyze_app_potential_wrapper').hide();
-        }
-    },
-
-    displayAnalyzeCompanyPotential: function() {
-        if (this.cashflow_data.company.analyze_company_potential) {
-            pl('#analyze_company_potential_wrapper').show();
-        }
-        else {
-            pl('#analyze_company_potential_wrapper').hide();
-        }
+            options = {
+                'callback': callback,
+                'packages': [ 'table', 'corechart' ]
+            };
+        setTimeout(function(){
+                google.load('visualization', '1', options);
+            },
+            250);
     }
 
 });
@@ -239,16 +242,11 @@ pl.implement(CashFlowPageClass, {
     display: function(listing) {
         this.cashflow.store(listing);
         this.displayCashFlowData();
-        this.cashflow.displayIsAppReleased();
-        this.cashflow.displayAnalyzeAppPotential();
-        this.cashflow.displayAnalyzeCompanyPotential();
-        this.cashflow.displayActivePanel();
+        this.cashflow.valueCompany();
     },
 
     displayCashFlowData: function() {
         var vdata = this.cashflow.cashflow_data;
-        this.displaySelectField('cashflow_type', vdata.cashflow_type);
-        this.displayFieldMap(vdata.application);
         this.displayFieldMap(vdata.company);
     },
 
@@ -256,14 +254,14 @@ pl.implement(CashFlowPageClass, {
         var k, v;
         for (k in map) {
             v = map[k];
-            if (k in this.cashflow.selectFields) {
-                this.displaySelectField(k, v);
-            }
-            else if (k in this.cashflow.currencyFields) {
+            if (k in this.cashflow.currencyFields) {
                 this.displayCurrencyField(k, v);
             }
             else if (k in this.cashflow.numberFields) {
                 this.displayNumberField(k, v);
+            }
+            else if (k in this.cashflow.percentFields) {
+                this.displayPercentField(k, v);
             }
             else {
                 this.displayTextField(k, v);
@@ -271,19 +269,16 @@ pl.implement(CashFlowPageClass, {
         }
     },
 
-    displaySelectField: function(id, val) {
-        var yesnoval = val ? 'yes' : 'no',
-            useval = this.cashflow.yesNoFields[id] ? yesnoval : val,
-            displayVal = useval ? SafeStringClass.prototype.ucfirst(useval.toString()) : '';
-        pl('#' + id).text(displayVal);
-    },
-
     displayCurrencyField: function(id, val) {
-        pl('#' + id).text(val !== undefined ? CurrencyClass.prototype.format(val, this.currency) : '');
+        pl('#' + id).text(val !== undefined ? CurrencyClass.prototype.format(val, this.cashflow.currency) : '');
     },
 
     displayNumberField: function(id, val) {
         pl('#' + id).text(val !== undefined ? NumberClass.prototype.formatText(val) : '');
+    },
+
+    displayPercentField: function(id, val) {
+        pl('#' + id).text(val !== undefined ? NumberClass.prototype.formatText(val) + '%' : '');
     },
 
     displayTextField: function(id, val) {
@@ -331,42 +326,33 @@ pl.implement(NewListingCashFlowClass, {
     },
 
     display: function() {
+        var self = this;
         pl('#listingtype').text(this.base.listing.type.toUpperCase());
         this.displayCashFlowData();
-        this.cashflow.displayIsAppReleased();
-        this.cashflow.displayAnalyzeAppPotential();
-        this.cashflow.displayAnalyzeCompanyPotential();
         this.loadValuesFromInput();
-        this.cashflow.displayActivePanel();
         this.base.bindBackButton();
         this.base.bindPreviewButton();
         this.bindSaveButton();
-        this.bindCashFlowTypeSelect();
-        this.bindIsAppReleasedSelect();
-        this.bindAnalyzeAppPotentialSelect();
-        this.bindAnalyzeCompanyPotentialSelect();
-        this.bindPanels();
+        this.bindInput();
+        this.cashflow.valueCompany();
     },
 
     displayCashFlowData: function() {
-        var vdata = this.cashflow.cashflow_data;
-        this.displaySelectField('cashflow_type', vdata.cashflow_type);
-        this.displayFieldMap(vdata.application);
-        this.displayFieldMap(vdata.company);
+        this.displayFieldMap(this.cashflow.cashflow_data.company);
     },
 
     displayFieldMap: function(map) {
         var k, v;
         for (k in map) {
             v = map[k];
-            if (k in this.cashflow.selectFields) {
-                this.displaySelectField(k, v);
-            }
-            else if (k in this.cashflow.currencyFields) {
+            if (k in this.cashflow.currencyFields) {
                 this.displayCurrencyField(k, v);
             }
             else if (k in this.cashflow.numberFields) {
                 this.displayNumberField(k, v);
+            }
+            else if (k in this.cashflow.percentFields) {
+                this.displayPercentField(k, v);
             }
             else {
                 this.displayTextField(k, v);
@@ -374,41 +360,17 @@ pl.implement(NewListingCashFlowClass, {
         }
     },
 
-    displaySelectField: function(id, val) {
-        return this.cashflow.yesNoFields[id] ? this.displayBooleanSelectField(id, val) : this.displayRegularSelectField(id, val);
-    },
-
-    displayRegularSelectField: function(id, val) {
-        var field = pl('#' + id).get(0),
-            options = field.options,
-            option,
-            i;
-        for (i = 0; i < options.length; i++) {
-            option = options[i];
-            if (option.value == val) {
-                field.selectedIndex = i;
-                break;
-            }
-        }
-    },
-
-    displayBooleanSelectField: function(id, val) {
-        var isselected = val !== undefined && (val === true || val === 'true') ? true : false,
-            field = pl('#' + id).get(0);
-        if (isselected) {
-            field.selectedIndex = 0;
-        }
-        else {
-            field.selectedIndex = 1;
-        }
-    },
-
     displayCurrencyField: function(id, val) {
-        pl('#' + id).attr('value', val !== undefined ? CurrencyClass.prototype.format(val, this.currency) : '');
+        pl('#' + id).attr('value', val !== undefined ? CurrencyClass.prototype.format(val, this.cashflow.currency) : '');
     },
 
     displayNumberField: function(id, val) {
         pl('#' + id).attr('value', val !== undefined ? NumberClass.prototype.formatText(val) : '');
+    },
+
+    displayPercentField: function(id, val) {
+        //console.log('displayPercentField id,val', id, val);
+        pl('#' + id).attr('value', val !== undefined ? NumberClass.prototype.formatText(val) + '%' : '');
     },
 
     displayTextField: function(id, val) {
@@ -424,7 +386,7 @@ pl.implement(NewListingCashFlowClass, {
                         cashflow_data: JSON.stringify(self.cashflow.cashflow_data)
                     }
                 },
-                complete = function(json) {
+                complete = function() {
                     pl('#savebuttonspinner').hide();
                     pl('#savebutton').text('@lang_saved_changes@').show();
                     setTimeout(function() {
@@ -440,94 +402,43 @@ pl.implement(NewListingCashFlowClass, {
         });
     },
 
-    getSelectedCashFlowType: function() {
-        var selectfield = pl('#cashflow_type').get(0),
-            options = selectfield.options,
-            selectedindex = selectfield.selectedIndex,
-            option = selectedindex >= 0 ? options[selectedindex] : null,
-            value = option ? option.value : 'company';
-        return value;
-    },
-
-    isAppReleasedSelected: function() {
-        return this.isBooleanSelectSelected('#is_app_released');
-    },
-
-    isAnalyzeAppPotentialSelected: function() {
-        return this.isBooleanSelectSelected('#analyze_app_potential');
-    },
-
-    isAnalyzeCompanyPotentialSelected: function() {
-        return this.isBooleanSelectSelected('#analyze_company_potential');
-    },
-
-    isBooleanSelectSelected: function(sel) {
-        var selectfield = pl(sel).get(0),
-            options = selectfield.options,
-            selectedindex = selectfield.selectedIndex,
-            option = selectedindex >= 0 ? options[selectedindex] : null,
-            value = option && option.value && option.value === 'true' ? true : false;
-        return value;
-    },
-
     loadValuesFromInput: function() {
-        var companyval = this.cashflow.cashflow_data.company,
-            appval = this.cashflow.cashflow_data.application;
+        var cf = this.cashflow,
+            c = {},
+            k;
 
-        companyval.market_size = Math.max(NumberClass.prototype.clean(pl('#market_size').attr('value')), 0);
-        companyval.revenue_per = Math.max(CurrencyClass.prototype.clean(pl('#revenue_per').attr('value')), 0);
-        companyval.current_revenue = Math.max(CurrencyClass.prototype.clean(pl('#current_revenue').attr('value')), 0);
-        companyval.cost_to_duplicate = Math.max(Math.floor(NumberClass.prototype.clean(pl('#cost_to_duplicate').attr('value'))), 0);
-        companyval.development_stage = pl('#development_stage').get(0)[pl('#development_stage').get(0).selectedIndex || 0].value;
+        cf.cashflow_data = { company: c };
 
-        appval.cost_of_app = Math.max(NumberClass.prototype.clean(pl('#cost_of_app').attr('value')), 0);
-        appval.months_live = Math.max(NumberClass.prototype.clean(pl('#months_live').attr('value')), 0);
-        appval.best_month = Math.max(NumberClass.prototype.clean(pl('#best_month').attr('value')), 0);
-        appval.target_users = Math.max(NumberClass.prototype.clean(pl('#target_users').attr('value')), 0);
-        appval.monthly_arpu = Math.max(NumberClass.prototype.clean(pl('#monthly_arpu').attr('value')), 0);
+        cf.currencyFields = {
+            initial_investment: 1,
+            development_cost: 1,
+            initial_sales: 1,
+            fixed_expenses: 1
+        };
+        cf.numberFields = {
+            time_to_market: 1
+        };
+        cf.percentFields = {
+            gross_margin: 1,
+            growth_rate: 1
+        };
+
+        for (k in cf.currencyFields) {
+            c[k] = Math.max(CurrencyClass.prototype.clean(pl('#' + k).attr('value')), 0);
+        }
+        for (k in cf.numberFields) {
+            c[k] = Math.max(NumberClass.prototype.clean(pl('#' + k).attr('value')), 0);
+        }
+        for (k in cf.percentFields) {
+            c[k] = Math.max(NumberClass.prototype.clean(pl('#' + k).attr('value')), 0);
+        }
     },
 
-    bindIsAppReleasedSelect: function() {
-        var self = this;
-        pl('#is_app_released').bind('change', function() {
-            self.cashflow.cashflow_data.application.is_app_released = self.isAppReleasedSelected();
-            self.cashflow.displayIsAppReleased();
-            return false;
-        });
-    },
-
-    bindAnalyzeAppPotentialSelect: function() {
-        var self = this;
-        pl('#analyze_app_potential').bind('change', function() {
-            self.cashflow.cashflow_data.application.analyze_app_potential = self.isAnalyzeAppPotentialSelected();
-            self.cashflow.displayAnalyzeAppPotential();
-            return false;
-        });
-    },
-
-    bindAnalyzeCompanyPotentialSelect: function() {
-        var self = this;
-        pl('#analyze_company_potential').bind('change', function() {
-            self.cashflow.cashflow_data.company.analyze_company_potential = self.isAnalyzeCompanyPotentialSelected();
-            self.cashflow.displayAnalyzeCompanyPotential();
-            return false;
-        });
-    },
-
-    bindCashFlowTypeSelect: function() {
-        var self = this;
-        pl('#cashflow_type').bind('change', function() {
-            self.cashflow.cashflow_data.cashflow_type = self.getSelectedCashFlowType();
-            self.cashflow.displayActivePanel();
-            return false;
-        });
-    },
-
-    bindPanels: function() {
+    bindInput: function() {
         var self = this,
             evaluate = function() {
                 self.loadValuesFromInput();
-                self.cashflow.displayActivePanel();
+                self.cashflow.valueCompany();
                 return false;
             };
         pl('.cashflowinput').bind({

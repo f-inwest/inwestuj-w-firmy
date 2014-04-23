@@ -60,20 +60,23 @@ define(`companybannermacro', `
                 <a class="hoverlink companynavlink" href="#" id="valuationtab">
                     <div class="company-menu-link hoverlink $2">@lang_valuation@</div>
                 </a>
+                <a class="hoverlink companynavlink" href="#" id="cashflowtab">
+                    <div class="company-menu-link hoverlink $3">@lang_cashflow@</div>
+                </a>
                 <a class="hoverlink companynavlink" href="#" id="modeltab">
-                    <div class="company-menu-link hoverlink $3">@lang_model@</div>
+                    <div class="company-menu-link hoverlink $4">@lang_model@</div>
                 </a>
                 <a class="hoverlink companynavlink" href="#" id="presentationtab">
-                    <div class="company-menu-link hoverlink $4">@lang_presentation@</div>
+                    <div class="company-menu-link hoverlink $5">@lang_presentation@</div>
                 </a>
                 <a class="hoverlink companynavlink" href="#" id="bidstab">
-                    <div class="company-menu-link hoverlink $5">@lang_investments@<!-- <span id="num_bids"></span> --></div>
+                    <div class="company-menu-link hoverlink $6">@lang_investments@<!-- <span id="num_bids"></span> --></div>
                 </a>
                 <a class="hoverlink companynavlink" href="#" id="commentstab">
-                    <div class="company-menu-link hoverlink $6">@lang_comments@<!-- <span id="num_comments"></span> --></div>
+                    <div class="company-menu-link hoverlink $7">@lang_comments@<!-- <span id="num_comments"></span> --></div>
                 </a>
                 <a class="hoverlink companynavlink" href="#" id="questionstab">
-                    <div class="company-menu-link hoverlink $7">@lang_questions@<!-- <span id="num_qandas"></span> --></div>
+                    <div class="company-menu-link hoverlink $8">@lang_questions@<!-- <span id="num_qandas"></span> --></div>
                 </a>
             </div>
         </div>
