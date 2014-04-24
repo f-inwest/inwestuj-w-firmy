@@ -80,7 +80,7 @@ public class FrontController extends HttpServlet {
 			response.sendRedirect(redirectUrl);
 			return;
 		}
-				
+		
 		try {
 			setLanguageAndCampaign(request, response);
 	

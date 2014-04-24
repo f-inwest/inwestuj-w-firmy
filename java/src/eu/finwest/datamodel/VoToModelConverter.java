@@ -12,6 +12,7 @@ import com.googlecode.objectify.Key;
 
 import eu.finwest.vo.CampaignVO;
 import eu.finwest.vo.CommentVO;
+import eu.finwest.vo.ContributionVO;
 import eu.finwest.vo.ListingDocumentVO;
 import eu.finwest.vo.ListingPropertyVO;
 import eu.finwest.vo.ListingVO;
@@ -269,6 +270,19 @@ public class VoToModelConverter {
 		comment.user = new Key<SBUser>(commentVO.getUser());
 		comment.userNickName = commentVO.getUserName();
 		return comment;
+	}
+
+	public static Contribution convert(ContributionVO contribVO) {
+		Contribution contrib = new Contribution();
+		if (!StringUtils.isEmpty(contribVO.getId())) {
+			contrib.id = contribVO.toKeyId();
+		}
+		contrib.description = contribVO.getDescription();
+		contrib.listing = new Key<Listing>(contribVO.getListing());
+		contrib.date = contribVO.getDate();
+		contrib.money = Double.valueOf(contribVO.getMoney()).intValue();
+		contrib.minutes = (int)(Double.valueOf(contribVO.getMoney()) * 60);
+		return contrib;
 	}
 	
 	public static Vote convert(VoteVO ratingVO) {

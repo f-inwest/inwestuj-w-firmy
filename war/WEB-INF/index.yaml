@@ -441,3 +441,18 @@ indexes:
     - name: owner
     - name: created
       direction: desc
+
+- kind: Contribution
+  ancestor: no
+  properties:
+    - name: listing
+    - name: date
+      direction: desc
+
+- kind: Contribution
+  ancestor: no
+  properties:
+    - name: listing
+    - name: approved
+    - name: date
+      direction: desc

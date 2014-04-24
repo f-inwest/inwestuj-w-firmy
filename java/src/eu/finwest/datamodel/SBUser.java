@@ -96,6 +96,9 @@ public class SBUser extends BaseObject<SBUser> implements Serializable {
 	public Date lastLoggedIn;
 	
 	public String paidCode;
+	
+	/* Space separated list of contributed projects */
+	public String contributedProjects;
 
 	public String getWebKey() {
 		return new Key<SBUser>(SBUser.class, id).getString();

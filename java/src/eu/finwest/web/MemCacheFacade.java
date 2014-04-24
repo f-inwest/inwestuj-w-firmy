@@ -18,21 +18,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
 
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.googlecode.objectify.Key;
 
 import eu.finwest.dao.MockDataBuilder;
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Category;
+import eu.finwest.datamodel.Contribution;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingLocation;
 import eu.finwest.datamodel.Location;
 import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.vo.CampaignVO;
+import eu.finwest.vo.ContributionVO;
 import eu.finwest.vo.DtoToVoConverter;
+import eu.finwest.vo.ListPropertiesVO;
+import eu.finwest.vo.ListingContributionsVO;
+import eu.finwest.vo.UserContributionVO;
 import eu.finwest.vo.UserVO;
 
 /**
@@ -59,6 +67,7 @@ public class MemCacheFacade {
 	private static final String MEMCACHE_PRICEPOINTS_GROUPED = "PricePointsGrouped";
 	private static final String MEMCACHE_SYSTEM_PROPERTY_LIST = "ListOfSystemProperties";
 	private static final String MEMCACHE_SYSTEM_PROPERTY_MAP = "MapOfSystemProperties";
+	private static final String MEMCACHE_CONTRIBUTION_MAP = "MapOfListingContributions";
 	
 	private MemCacheFacade() {
 	}
@@ -421,5 +430,66 @@ public class MemCacheFacade {
 			return defaultValue;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	private Map<String, UserContributionVO> loadListingContributions(Listing listing) {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Map<String, Map<String, UserContributionVO>> allContribs =
+				(Map<String, Map<String, UserContributionVO>>)mem.get(MEMCACHE_CONTRIBUTION_MAP);
+		
+		Map<String, UserContributionVO> contribs = new HashMap<String, UserContributionVO>();
+		contribs.put(listing.owner.getString(), new UserContributionVO(getDAO().getUser(listing.owner.getString())));
+		for (String contributorId : StringUtils.split(listing.contributors, " ")) {
+			contribs.put(contributorId, new UserContributionVO(getDAO().getUser(contributorId)));
+		}
+		
+		ListPropertiesVO listProperties = new ListPropertiesVO();
+		listProperties.setMaxResults(1000);
+		List<Contribution> approved = getDAO().getContributions(new Key<Listing>(listing.getWebKey()).getId(), true, listProperties);
+		for (Contribution c : approved) {
+			UserContributionVO uc = contribs.get(c.contributor.getString());
+			uc.addContribution(c);
+		}
+		
+		for (Map.Entry<String, UserContributionVO> entry : contribs.entrySet()) {
+			entry.getValue().updateTextValues();
+		}
+		allContribs.put(listing.getWebKey(), contribs);
+		return contribs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void updateListingContributions(Contribution contribution) {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Map<String, Map<String, UserContributionVO>> allContribs =
+				(Map<String, Map<String, UserContributionVO>>)mem.get(MEMCACHE_CONTRIBUTION_MAP);
+		if (allContribs == null) {
+			allContribs = new HashMap<String, Map<String, UserContributionVO>>();
+			mem.put(MEMCACHE_CONTRIBUTION_MAP, allContribs);
+		}
+		allContribs.remove(contribution.listing.getString());
+	}
 
+	@SuppressWarnings("unchecked")
+	public List<UserContributionVO> getListingContributions(Listing listing) {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Map<String, Map<String, UserContributionVO>> allContribs =
+				(Map<String, Map<String, UserContributionVO>>)mem.get(MEMCACHE_CONTRIBUTION_MAP);
+		if (allContribs == null) {
+			allContribs = new HashMap<String, Map<String, UserContributionVO>>();
+			mem.put(MEMCACHE_CONTRIBUTION_MAP, allContribs);
+		}
+		
+		if (allContribs.containsKey(listing.getWebKey())) {
+			Map<String, UserContributionVO> contribs = allContribs.get(listing.getWebKey());
+			UserContributionVO uc = contribs.values().iterator().next();
+			if (uc != null && new DateTime().toDateMidnight().isBefore(uc.getDate().getTime())) {
+				return new ArrayList<UserContributionVO>(loadListingContributions(listing).values());
+			} else {
+				return new ArrayList<UserContributionVO>(contribs.values());
+			}
+		} else {
+			return new ArrayList<UserContributionVO>(loadListingContributions(listing).values());
+		}
+	}
 }

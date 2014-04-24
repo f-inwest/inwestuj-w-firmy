@@ -33,6 +33,7 @@ import eu.finwest.datamodel.Bid;
 import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Category;
 import eu.finwest.datamodel.Comment;
+import eu.finwest.datamodel.Contribution;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingDoc;
 import eu.finwest.datamodel.ListingLocation;
@@ -510,17 +511,17 @@ public class ObjectifyDatastoreDAO {
 		return listings;
 	}
 
-	public List<SBUser> getListers(ListPropertiesVO listingProperties) {
+	public List<SBUser> getListers(ListPropertiesVO userProperties) {
 		Query<SBUser> query = getOfy().query(SBUser.class)
 				.filter("lister =", true)
                 .order("nicknameLower")
-       			.chunkSize(listingProperties.getMaxResults())
-       			.prefetchSize(listingProperties.getMaxResults());
-		List<Key<SBUser>> keyList = new CursorHandler<SBUser>().handleQuery(listingProperties, query);
+       			.chunkSize(userProperties.getMaxResults())
+       			.prefetchSize(userProperties.getMaxResults());
+		List<Key<SBUser>> keyList = new CursorHandler<SBUser>().handleQuery(userProperties, query);
 		List<SBUser> listings = new ArrayList<SBUser>(getOfy().get(keyList).values());
 		return listings;
 	}
-
+	
 /*
 	public SBUser getTopInvestor() {
 		UserStats topUserStat = getOfy().query(UserStats.class)
@@ -1518,5 +1519,59 @@ public class ObjectifyDatastoreDAO {
 		}
 		getOfy().put(pp);
 		return pp;
+	}
+
+	public Contribution createContribution(Contribution comment) {
+		getOfy().put(comment);
+		return comment;
+	}
+
+	public Contribution getContribution(long contributionId) {
+		try {
+			return getOfy().get(new Key<Contribution>(Contribution.class, contributionId));
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Contribution entity '" + contributionId + "' not found", e);
+			return null;
+		}
+	}
+
+	public Contribution approveContribution(long contributionId) {
+		try {
+			Contribution contribution = getOfy().get(Contribution.class, contributionId);
+			contribution.approved = true;
+			contribution.approvedOn = new Date();
+			getOfy().put(contribution);
+			return contribution;
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Contribution with id '" + contributionId + "' not found!");
+			return null;
+		}
+	}
+
+	public void deleteContribution(long contributionId) {
+		try {
+			getOfy().delete(Comment.class, contributionId);
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Contribution with id '" + contributionId + "' not found!");
+		}
+	}
+	
+	public List<Contribution> getContributions(long listingId, boolean approved, ListPropertiesVO listProperties) {
+		Query<Contribution> query = getOfy().query(Contribution.class)
+				.filter("listing =", new Key<Listing>(Listing.class, listingId))
+				.filter("approved =", approved)
+				.order("-date");
+		List<Key<Contribution>> keyList = new CursorHandler<Contribution>().handleQuery(listProperties, query);
+		List<Contribution> contributions = new ArrayList<Contribution>(getOfy().get(keyList).values());
+		return contributions;
+	}
+
+	public List<Contribution> getAllContributions(long listingId, ListPropertiesVO listProperties) {
+		Query<Contribution> query = getOfy().query(Contribution.class)
+				.filter("listing =", new Key<Listing>(Listing.class, listingId))
+				.order("-date");
+		List<Key<Contribution>> keyList = new CursorHandler<Contribution>().handleQuery(listProperties, query);
+		List<Contribution> contributions = new ArrayList<Contribution>(getOfy().get(keyList).values());
+		return contributions;
 	}
 }

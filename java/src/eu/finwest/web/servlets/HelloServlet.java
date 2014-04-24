@@ -141,69 +141,29 @@ public class HelloServlet extends HttpServlet {
 			out.println("<a href=\"/payment/\">Payments configuration</a><br/>");
 			out.println("<a href=\"/setup/\">Setup page</a></p>");
 
-			/*
-			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Payment system:</p>");
-			out.println("<form action=\"https://secure.transferuj.pl\" method=\"post\" accept-charset=\"utf-8\">"); 
-			out.println("<input type=\"hidden\" name=\"id\" value=\"12330\">");
-			out.println("<label for=\"kwota\">Value: </label>");
-			out.println("<input autocomplete=\"off\" type=\"text\" name=\"kwota\" value=\"10.00\"><br/>");
-			out.println("<label for=\"opis\">Transaction description: </label>");
-			out.println("<input autocomplete=\"off\" type=\"text\" name=\"opis\" value=\"Aktywacja projektu\"><br/>");
-			out.println("<label for=\"crc\">Additional text: </label>");
-			out.println("<input autocomplete=\"off\" type=\"text\" name=\"crc\" value=\"project [id will go here]\"><br/>");
-			out.println("<label for=\"opis_sprzed\">Transaction description for seller (optional): </label>");
-			out.println("<input autocomplete=\"off\" type=\"text\" name=\"opis_sprzed\" value=\"Test transaction\"><br/>");
-			out.println("<label for=\"pow_url\">Return url for success: </label>");
-			out.println("<input autocomplete=\"off\" type=\"text\" name=\"pow_url\" value=\"http://www.inwestujwfirmy.pl\"><br/>");
-			out.println("<label for=\"pow_url_blad\">Return url for failure: </label>");
-			out.println("<input autocomplete=\"off\" type=\"text\" name=\"pow_url_blad\" value=\"http://www.inwestujwfirmy.pl\"><br/>");
-			out.println("<label for=\"email\">Customer email address (optional): </label>");
-			out.println("<input autocomplete=\"off\" type=\"text\" name=\"email\" value=\"grzegorz.nittner@gmail.com\"><br/>");
-			out.println("<label for=\"nazwisko\">Name of the customer (optional): </label>");
-			out.println("<input autocomplete=\"off\" type=\"text\" name=\"nazwisko\" value=\"Grzegorz Nittner\"><br/>");
-			out.println("<label for=\"telefon\">Customer phone number (optional): </label>");
-			out.println("<input autocomplete=\"off\" type=\"text\" name=\"telefon\" value=\"515261xxx\"><br/>");
-			out.println("<label for=\"jezyk\">Language for payment system (pl, end or de): </label>");
-			out.println("<input autocomplete=\"off\" type=\"text\" name=\"jezyk\" value=\"pl\"><br/>");
-			out.println("<input type=\"hidden\" name=\"md5sum\" value=\"default_md5\">");
-			out.println("<input type=\"submit\" name=\"submit\" value=\"Submit payment\""
-					+ " onclick=\"var txt=this.form.elements['id'].value"
-					+ "+this.form.elements['kwota'].value"
-					+ "+this.form.elements['crc'].value+'718N3Xa1b9qk1QG4';"
-					+ "this.form.elements['md5sum'].value=CryptoJS.MD5(txt);\">");
-			out.println("</form>");
+			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Contribution API:</p>");
+			out.println("<form method=\"GET\" action=\"/user/find.json\">"
+					+ "<input name=\"query\" autocomplete=\"off\" type=\"text\" value=\"test1@inwestujwfirmy.pl\"/>"
+					+ "<input type=\"submit\" value=\"Find user\"/></form><br/>");
+			out.println("<form method=\"POST\" action=\"/listing/add_contributor.json\">"
+					+ "<input name=\"id\" autocomplete=\"off\" type=\"text\" value=\"listing id here ...\"/>"
+					+ "<input name=\"user_id\" autocomplete=\"off\" type=\"text\" value=\"user id here ...\"/>"
+					+ "<input type=\"submit\" value=\"Add contributor\"/></form><br/>");
 			
-			out.println("Action below is called by payment system, in development environment we'll have to emulate that call "
-					+ "to confirm the payment. Use the same 'Additional data' value as for payment since we'll identify "
-					+ "transaction by this field.<br/>");
-			out.println("<form action=\"/system/transferuj_pl_notification.txt\" method=\"post\" accept-charset=\"utf-8\">");
-			out.println("<input type=\"hidden\" name=\"id\" value=\"12330\">");
-			out.println("<label for=\"kwota\">Transaction status, TRUE or FALSE (failure): </label>");
-			out.println("<input type=\"text\" name=\"tr_status\" value=\"TRUE\"><br/>");
-			out.println("<label for=\"tr_id\">Transaction id, it's given by payment system: </label>");
-			out.println("<input type=\"text\" name=\"tr_id\" value=\"Opis transakcji\"><br/>");
-			out.println("<label for=\"tr_amount\">Transaction amount: </label>");
-			out.println("<input type=\"text\" name=\"tr_amount\" value=\"10.00\"><br/>");
-			out.println("<label for=\"tr_paid\">Amount charged (might be different): </label>");
-			out.println("<input type=\"text\" name=\"tr_paid\" value=\"10.00\"><br/>"); 
-			out.println("<label for=\"tr_error\">Error message ('none' if no error): </label>");
-			out.println("<input type=\"text\" name=\"tr_error\" value=\"none\"><br/>");
-			out.println("<label for=\"tr_date\">Transaction date: </label>");
-			out.println("<input type=\"text\" name=\"tr_date\" value=\"2014-02-24\"><br/>");
-			out.println("<label for=\"tr_desc\">Transaction description: </label>");
-			out.println("<input type=\"text\" name=\"email\" value=\"Description of transaction\"><br/>");
-			out.println("<label for=\"tr_crc\">Additional data: </label>");
-			out.println("<input type=\"text\" name=\"tr_crc\" value=\"project [id will go here]\"><br/>");
-			out.println("<label for=\"tr_email\">Customer email: </label>");
-			out.println("<input type=\"text\" name=\"tr_email\" value=\"grzegorz.nittner@gmail.com\"><br/>");
-			out.println("<input type=\"hidden\" name=\"md5sum\" value=\"1234567890\">");
-			out.println("<input type=\"submit\" name=\"submit\" value=\"Submit transaction confirmation\""
-					+ " onclick=\"var txt=this.form.elements['id'].value"
-					+ "+this.form.elements['tr_id'].value+this.form.elements['tr_amount'].value"
-					+ "+this.form.elements['tr_crc'].value+'718N3Xa1b9qk1QG4';"
-					+ "this.form.elements['md5sum'].value=CryptoJS.MD5(txt);\">");
-			out.println("</form>");
-			*/
+			out.println("<form method=\"GET\" action=\"/listing/contributions.json\">"
+					+ "<input name=\"id\" autocomplete=\"off\" type=\"text\" value=\"listing id here ...\"/>"
+					+ "<input type=\"submit\" value=\"Get contributions for project\"/></form><br/>");
+			out.println("<form method=\"POST\" action=\"/listing/add_contribution/.json\"><textarea autocomplete=\"off\" name=\"contribution\" rows=\"5\" cols=\"120\">"
+					+ "{\"listing_id\":\"[listing_id]\", \"contribution_date\":\"[date yyyyMMdd]\", \"description\":\"[description]\", "
+					+ "\"money\":\"[money value]\", \"hours\":\"[hours value]\"}"
+					+ "</textarea><input type=\"submit\" value=\"Add contribution\"/></form>");
+			out.println("<form method=\"POST\" action=\"/listing/delete_contribution.json\">"
+					+ "<input name=\"contribution_id\" autocomplete=\"off\" type=\"text\" value=\"contribution id\"/>"
+					+ "<input type=\"submit\" value=\"Delete contribution\"/></form><br/>");
+			out.println("<form method=\"POST\" action=\"/listing/approve_contribution.json\">"
+					+ "<input name=\"contribution_id\" autocomplete=\"off\" type=\"text\" value=\"contribution id\"/>"
+					+ "<input type=\"submit\" value=\"Approve contribution\"/></form><br/>");
+			
 			
 			ListPropertiesVO listProperties = new ListPropertiesVO(1);
 			List<Listing> listings = datastore.getAllListings();

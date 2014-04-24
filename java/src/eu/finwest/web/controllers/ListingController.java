@@ -33,6 +33,7 @@ import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.BidListVO;
 import eu.finwest.vo.BidUserListVO;
 import eu.finwest.vo.CommentVO;
+import eu.finwest.vo.ContributionVO;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.ListingAndUserVO;
 import eu.finwest.vo.ListingPropertyVO;
@@ -128,7 +129,9 @@ public class ListingController extends ModelDrivenController {
 				return importTypes(request);
 			} else if ("presentation".equalsIgnoreCase(getCommand(1))) {
 				return presentation(request);
-			} 
+			} else if("contributions".equalsIgnoreCase(getCommand(1))) {
+				return getContributions(request);
+			}
 		} else if ("POST".equalsIgnoreCase(request.getMethod())) {
 			if ("create".equalsIgnoreCase(getCommand(1))) {
 				return startEditing(request);
@@ -166,12 +169,70 @@ public class ListingController extends ModelDrivenController {
                 return makeBid(request);
 			} else if("swap_pictures".equalsIgnoreCase(getCommand(1))) {
                 return swapPictures(request);
+			} else if("add_contributor".equalsIgnoreCase(getCommand(1))) {
+				return addContributor(request);
+			} else if("remove_contributor".equalsIgnoreCase(getCommand(1))) {
+				return removeContributor(request);
+			} else if("add_contribution".equalsIgnoreCase(getCommand(1))) {
+				return addContribution(request);
+			} else if("delete_contribution".equalsIgnoreCase(getCommand(1))) {
+				return deleteContribution(request);
+			} else if("approve_contribution".equalsIgnoreCase(getCommand(1))) {
+				return approveContribution(request);
 			}
 		}
 
 		return null;
 	}
 	
+	private HttpHeaders getContributions(HttpServletRequest request) {
+    	String listingId = getCommandOrParameter(request, 2, "id");
+    	model = ListingFacade.instance().getContributions(getLoggedInUser(), listingId);
+        return new HttpHeadersImpl("contributions").disableCaching();
+	}
+
+	private HttpHeaders approveContribution(HttpServletRequest request) {
+    	String contributionId = getCommandOrParameter(request, 2, "contribution_id");
+    	model = ListingFacade.instance().approveContribution(getLoggedInUser(), contributionId);
+        return new HttpHeadersImpl("approve_contribution").disableCaching();
+	}
+
+	private HttpHeaders deleteContribution(HttpServletRequest request) {
+    	String contributionId = getCommandOrParameter(request, 2, "contribution_id");
+    	model = ListingFacade.instance().deleteContribution(getLoggedInUser(), contributionId);
+        return new HttpHeadersImpl("delete_contribution").disableCaching();
+	}
+
+	private HttpHeaders addContribution(HttpServletRequest request) throws JsonParseException, JsonMappingException, IOException {
+		HttpHeaders headers = new HttpHeadersImpl("add_contribution");
+		
+		log.log(Level.INFO, "Parameters: " + request.getParameterMap());
+		
+		ObjectMapper mapper = new ObjectMapper();
+		String contribString = request.getParameter("contribution");
+		if (!StringUtils.isEmpty(contribString)) {
+			ContributionVO contrib = mapper.readValue(contribString, ContributionVO.class);
+			model = ListingFacade.instance().createContribution(getLoggedInUser(), contrib);
+		} else {
+			headers.setStatus(500);
+		}
+		return headers;
+	}
+
+	private HttpHeaders removeContributor(HttpServletRequest request) {
+    	String listingId = getCommandOrParameter(request, 2, "id");
+    	String userId = getCommandOrParameter(request, 2, "user_id");
+    	model = ListingFacade.instance().removeContributor(getLoggedInUser(), listingId, userId);
+        return new HttpHeadersImpl("remove_contributor").disableCaching();
+	}
+
+	private HttpHeaders addContributor(HttpServletRequest request) {
+    	String listingId = getCommandOrParameter(request, 2, "id");
+    	String userId = getCommandOrParameter(request, 2, "user_id");
+    	model = ListingFacade.instance().addContributor(getLoggedInUser(), listingId, userId);
+        return new HttpHeadersImpl("add_contributor").disableCaching();
+	}
+
 	// POST /listing/delete
     private HttpHeaders delete(HttpServletRequest request) {
     	HttpHeaders headers = new HttpHeadersImpl("delete");

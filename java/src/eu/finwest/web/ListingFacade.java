@@ -61,6 +61,7 @@ import eu.finwest.dao.MockDataBuilder;
 import eu.finwest.dao.NotificationObjectifyDatastoreDAO;
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Category;
+import eu.finwest.datamodel.Contribution;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingDoc;
 import eu.finwest.datamodel.ListingDoc.Type;
@@ -76,11 +77,13 @@ import eu.finwest.util.OfficeHelper;
 import eu.finwest.util.OfficeHelper.Template;
 import eu.finwest.util.Translations;
 import eu.finwest.vo.BaseVO;
+import eu.finwest.vo.ContributionVO;
 import eu.finwest.vo.DiscoverListingsVO;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ErrorCodes;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.ListingAndUserVO;
+import eu.finwest.vo.ListingContributionsVO;
 import eu.finwest.vo.ListingDocumentVO;
 import eu.finwest.vo.ListingListVO;
 import eu.finwest.vo.ListingLocationsVO;
@@ -89,6 +92,7 @@ import eu.finwest.vo.ListingTileVO;
 import eu.finwest.vo.ListingVO;
 import eu.finwest.vo.NotificationVO;
 import eu.finwest.vo.UserBasicVO;
+import eu.finwest.vo.UserContributionVO;
 import eu.finwest.vo.UserListingsVO;
 import eu.finwest.vo.UserVO;
 
@@ -2509,4 +2513,231 @@ public class ListingFacade {
 		
 		return null;
 	}
+
+	public ListingContributionsVO createContribution(UserVO loggedInUser, ContributionVO contrib) {
+		ListingContributionsVO result = new ListingContributionsVO();
+		if (loggedInUser == null) {
+			log.log(Level.INFO, "User is not logged in!");
+			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
+			return result;
+		}
+		Listing dbListing = getDAO().getListing(BaseVO.toKeyId(contrib.getListing()));
+		if (dbListing == null || dbListing.state != Listing.State.ACTIVE) {
+			log.log(Level.INFO, "Only active listings can get contributions. " + dbListing);
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			result.setErrorMessage(Translations.getText("lang_error_listing_doesnt_exist"));
+			return result;
+		}
+		if (!StringUtils.contains(dbListing.contributors, loggedInUser.getId()) && dbListing.owner.getId() != loggedInUser.toKeyId()) {
+			log.log(Level.INFO, "User " + loggedInUser.getNickname() + " is not contributor of listing " + dbListing);
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			result.setErrorMessage(Translations.getText("lang_error_user_not_contributor"));
+			return result;
+		}
+		
+		if (contrib.getDate() == null) {
+			log.log(Level.INFO, "Contribution date must be provided");
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			result.setErrorMessage(Translations.getText("lang_error_contr_no_date"));
+			return result;
+		}
+		if (contrib.getDate().getTime() > new Date().getTime() + 12 * 60 * 60 * 1000) {
+			log.log(Level.INFO, "Future contributions are not allowed");
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			result.setErrorMessage(Translations.getText("lang_error_contr_future_date"));
+			return result;
+		}
+		
+		Contribution contribution = new Contribution();
+		contribution.approver = dbListing.owner;
+		contribution.approved = dbListing.owner.getId() == loggedInUser.toKeyId();
+		contribution.approvedOn = contribution.approved ? new Date() : null;
+		contribution.contributor = new Key<SBUser>(loggedInUser.getId());
+		contribution.contributorNickname = loggedInUser.getNickname();
+		contribution.listing = new Key<Listing>(Listing.class, dbListing.id);
+		contribution.listingName = dbListing.name;
+		contribution.date = contrib.getDate();
+		contribution.money = NumberUtils.createInteger(contrib.getMoney().replace(",", "."));
+		contribution.daysSinceZero = contribution.date.getTime() / (24 * 60 * 60 * 1000);
+		Double hours = NumberUtils.createDouble(contrib.getHours().replace(",", "."));
+		contribution.minutes = (int)(hours * 60.0);
+		contribution.interestPerDay = dbListing.contributionInterestDaily;
+		contribution.perHour = dbListing.contributionPerHour;
+		
+		if (contribution.money == 0 && contribution.minutes == 0) {
+			log.log(Level.INFO, "Contribution needs to have money or hours set, money=" + contribution.money + ", minutes=" + contribution.minutes);
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			result.setErrorMessage(Translations.getText("lang_error_contr_no_money_no_hours"));
+			return result;
+		}
+		getDAO().createContribution(contribution);
+		MemCacheFacade.instance().updateListingContributions(contribution);
+		prepareContributionsData(loggedInUser, dbListing, result);
+		
+		return result;
+	}
+	
+	public ListingContributionsVO approveContribution(UserVO loggedInUser, String contributionId) {
+		ListingContributionsVO result = new ListingContributionsVO();
+		if (loggedInUser == null) {
+			log.log(Level.INFO, "User is not logged in!");
+			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
+			return result;
+		}
+		
+		Contribution contrib = getDAO().getContribution(new Key<Contribution>(contributionId).getId());
+		if (contrib == null) {
+			log.log(Level.INFO, "Contribution doesn't exist");
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			result.setErrorMessage(Translations.getText("lang_error_contr_doesnt_exist"));
+			return result;
+		}
+		
+		Listing dbListing = getDAO().getListing(contrib.listing.getString());
+		if (!StringUtils.equals(loggedInUser.getId(), dbListing.owner.getString())) {
+			log.log(Level.INFO, "User '" + loggedInUser + "' is not an owner of listing " + dbListing);
+			result.setErrorMessage(Translations.getText("lang_error_user_not_project_owner"));
+			result.setErrorCode(ErrorCodes.NOT_AN_OWNER);
+			return result;
+		}
+		
+		getDAO().approveContribution(contrib.id);
+		MemCacheFacade.instance().updateListingContributions(contrib);
+		prepareContributionsData(loggedInUser, dbListing, result);
+		
+		return result;
+	}
+
+	public ListingContributionsVO deleteContribution(UserVO loggedInUser, String contributionId) {
+		ListingContributionsVO result = new ListingContributionsVO();
+		if (loggedInUser == null) {
+			log.log(Level.INFO, "User is not logged in!");
+			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
+			return result;
+		}
+		
+		Contribution contrib = getDAO().getContribution(new Key<Contribution>(contributionId).getId());
+		if (contrib == null) {
+			log.log(Level.INFO, "Contribution doesn't exist");
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			result.setErrorMessage(Translations.getText("lang_error_contr_doesnt_exist"));
+			return result;
+		}
+		if (contrib.approved) {
+			log.log(Level.INFO, "Contribution already approved, cannot delete");
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			result.setErrorMessage(Translations.getText("lang_error_contr_already_approved"));
+			return result;
+		}
+		
+		Listing dbListing = getDAO().getListing(contrib.listing.getString());
+		if (!StringUtils.equals(loggedInUser.getId(), dbListing.owner.getString())) {
+			log.log(Level.INFO, "User '" + loggedInUser + "' is not an owner of listing " + dbListing);
+			result.setErrorMessage(Translations.getText("lang_error_user_not_project_owner"));
+			result.setErrorCode(ErrorCodes.NOT_AN_OWNER);
+			return result;
+		}
+		
+		getDAO().deleteContribution(contrib.id);
+		MemCacheFacade.instance().updateListingContributions(contrib);
+		prepareContributionsData(loggedInUser, dbListing, result);
+		
+		return result;
+	}
+
+	public ListingContributionsVO removeContributor(UserVO loggedInUser, String listingId, String userId) {
+		ListingContributionsVO result = new ListingContributionsVO();
+		result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
+		
+		//prepareContributionsData(loggedInUser, dbListing, result);
+		
+		return result;
+	}
+
+	public ListingContributionsVO addContributor(UserVO loggedInUser, String listingId, String userId) {
+		ListingContributionsVO result = new ListingContributionsVO();
+		if (loggedInUser == null) {
+			log.log(Level.INFO, "User is not logged in!");
+			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
+			return result;
+		}
+		Listing dbListing = getDAO().getListing(listingId);
+		if (dbListing == null || dbListing.state != Listing.State.ACTIVE) {
+			log.log(Level.INFO, "Only active listings can get contributions. " + dbListing);
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			result.setErrorMessage(Translations.getText("lang_error_listing_doesnt_exist"));
+			return result;
+		}
+		if (!StringUtils.equals(loggedInUser.getId(), dbListing.owner.getString())) {
+			log.log(Level.INFO, "User '" + loggedInUser + "' is not an owner of listing " + dbListing);
+			result.setErrorMessage(Translations.getText("lang_error_user_not_project_owner"));
+			result.setErrorCode(ErrorCodes.NOT_AN_OWNER);
+			return result;
+		}
+		
+		if (getDAO().getUser(userId) == null) {
+			log.log(Level.INFO, "User with id '" + userId + "' doesn't exist!");
+			result.setErrorMessage(Translations.getText("lang_error_contr_user_doesnt_exist"));
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			return result;
+		}
+		
+		if (!StringUtils.contains(dbListing.contributors, userId)) {
+			if (StringUtils.isEmpty(dbListing.contributors)) {
+				dbListing.contributors = userId;
+			} else {
+				dbListing.contributors += " " + userId;
+			}
+			getDAO().storeListing(dbListing);
+		}
+		
+		prepareContributionsData(loggedInUser, dbListing, result);
+		
+		return result;
+	}
+
+	public ListingContributionsVO getContributions(UserVO loggedInUser, String listingId) {
+		ListingContributionsVO result = new ListingContributionsVO();
+		if (loggedInUser == null) {
+			log.log(Level.INFO, "User is not logged in!");
+			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
+			return result;
+		}
+		
+		Listing dbListing = getDAO().getListing(listingId);
+		if (!loggedInUser.isAdmin() && !StringUtils.contains(dbListing.contributors, loggedInUser.getId()) && dbListing.owner.getId() != loggedInUser.toKeyId()) {
+			log.log(Level.INFO, "User " + loggedInUser.getNickname() + " is not contributor of listing " + dbListing);
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			result.setErrorMessage(Translations.getText("lang_error_user_not_contributor"));
+			return result;
+		}
+
+		prepareContributionsData(loggedInUser, dbListing, result);
+		
+		return result;
+	}
+
+	private void prepareContributionsData(UserVO loggedInUser, Listing dbListing, ListingContributionsVO result) {
+		result.setTotalContributions(MemCacheFacade.instance().getListingContributions(dbListing));
+		
+		ListPropertiesVO listProperties = new ListPropertiesVO();
+		listProperties.setMaxResults(1000);
+		List<Contribution> notApprovedContribs = getDAO().getContributions(dbListing.id, false, listProperties);
+		if (!loggedInUser.isAdmin() && dbListing.owner.getId() != loggedInUser.toKeyId()) {
+			List<ContributionVO> list = new ArrayList<ContributionVO>();
+			for (Contribution contrib : notApprovedContribs) {
+				if (contrib.contributor.getId() == loggedInUser.toKeyId()) {
+					list.add(DtoToVoConverter.convert(contrib));
+				}
+			}
+		} else {
+			result.setSubmittedContributions(DtoToVoConverter.convertContributions(notApprovedContribs));			
+		}
+	}
+
 }

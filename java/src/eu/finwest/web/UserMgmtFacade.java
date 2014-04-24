@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +16,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -25,7 +26,6 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.appengine.repackaged.org.joda.time.DateMidnight;
 import com.googlecode.objectify.Key;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
@@ -324,7 +324,7 @@ public class UserMgmtFacade {
 		}
 		if (StringUtils.isNotEmpty(user.googleId)) {
 			if (StringUtils.isEmpty(user.avatarUrl) || user.avatarUpdateDate == null
-					|| user.avatarUpdateDate.getTime() < DateMidnight.now().minusDays(7).getMillis()) {
+					|| user.avatarUpdateDate.getTime() < new DateTime().toDateMidnight().minusDays(7).getMillis()) {
 				user.avatarUrl = ImageHelper.getGooglePlusAvatarUrl(googleUser);
 				user.avatarUpdateDate = new Date();
 				needsUpdate =  true;
@@ -778,6 +778,38 @@ public class UserMgmtFacade {
 		List<UserShortVO> users = DtoToVoConverter.convertShortUsers(getDAO().getListers(userProperties));
 		userList.setUsers(users);
 		userList.setUsersProperties(userProperties);
+		if (loggedInUser != null) {
+			userList.setUser(loggedInUser);
+		}
+		return userList;
+	}
+	
+	public Object findUser(UserVO loggedInUser, String query) {
+		UserShortListVO userList = new UserShortListVO();
+		if (loggedInUser == null) {
+			log.warning("Only logged in user can search for users");
+			userList.setUsers(new ArrayList<UserShortVO>());
+			return userList;
+		}
+		
+		List<SBUser> users = new ArrayList<SBUser>();
+		List<SBUser> allUsers = getDAO().getAllUsers();
+		int index = 1;
+		for (SBUser user : allUsers) {
+			if (StringUtils.startsWithIgnoreCase(user.nicknameLower, query)) {
+				users.add(user);
+			} else if (StringUtils.startsWithIgnoreCase(user.email, query)) {
+				users.add(user);
+			} else if (StringUtils.startsWithIgnoreCase(user.googleEmail, query)) {
+				users.add(user);
+			}
+			if (index > 7) {
+				break;
+			}
+		}
+				
+		userList.setUsers(DtoToVoConverter.convertShortUsers(users));
+		userList.setUsersProperties(null);
 		if (loggedInUser != null) {
 			userList.setUser(loggedInUser);
 		}

@@ -160,6 +160,12 @@ public class Listing extends BaseObject<Listing> {
 	public String cashflowData;
 	public String paidCode;
 	
+	/* Space separated list of contributor's ids */
+	public String contributors;
+	public int contributionPerHour = 25;
+	/* value represents 1/10000, by default it is 0.08% daily */
+	public int contributionInterestDaily = 8;
+	
 	public String getWebKey() {
 		return new Key<Listing>(Listing.class, id).getString();
 	}

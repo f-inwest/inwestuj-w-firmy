@@ -65,6 +65,8 @@ public class UserController extends ModelDrivenController {
 				return loggedin(request);
 			} else if("check_user_name".equalsIgnoreCase(getCommand(1))) {
 				return checkUserName(request);
+			} else if("find".equalsIgnoreCase(getCommand(1))) {
+				return find(request);
 			} else if("confirm_update_email".equalsIgnoreCase(getCommand(1))) {
 				return confirmEmailUpdate(request);
 			} else if("request_email_access".equalsIgnoreCase(getCommand(1))) {
@@ -527,6 +529,15 @@ public class UserController extends ModelDrivenController {
 		return headers;
 	}
 
+	private HttpHeaders find(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("find");
+		String query = getCommandOrParameter(request, 2, "query");
+		
+		model = UserMgmtFacade.instance().findUser(getLoggedInUser(), query);
+		
+		return headers;
+	}
+	
 	@Override
 	public Object getModel() {
 		return model;

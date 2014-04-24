@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -17,6 +18,7 @@ import eu.finwest.datamodel.Bid;
 import eu.finwest.datamodel.BidUser;
 import eu.finwest.datamodel.Campaign;
 import eu.finwest.datamodel.Comment;
+import eu.finwest.datamodel.Contribution;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingDoc;
 import eu.finwest.datamodel.Monitor;
@@ -254,6 +256,7 @@ public class DtoToVoConverter {
 		listing.setPaidCode(listingDTO.paidCode);
 		listing.setValuationData(listingDTO.valuationData);
 		listing.setCashflowData(listingDTO.cashflowData);
+		listing.setContributors(listingDTO.contributors);
 		return listing;
 	}
 
@@ -844,4 +847,38 @@ public class DtoToVoConverter {
 		return campaignVoList;
 	}
 
+	public static ContributionVO convert(Contribution contribDTO) {
+		if (contribDTO == null) {
+			return null;
+		}
+		ContributionVO contrib = new ContributionVO();
+		contrib.setId(new Key<Comment>(Comment.class, contribDTO.id).getString());
+		contrib.setDescription(contribDTO.description);
+		contrib.setDate(contribDTO.date);
+		contrib.setApproved(contribDTO.approved);
+		contrib.setApprovedOn(contribDTO.approvedOn);
+		contrib.setListing(keyToString(contribDTO.listing));
+		contrib.setListingName(contribDTO.listingName);
+		contrib.setContributor(keyToString(contribDTO.contributor));
+		contrib.setContributorName(contribDTO.contributorNickname);
+		String hours = String.format("%.1f", (float)contribDTO.minutes / 60);
+		contrib.setHours(hours);
+		contrib.setPerHour("" + contribDTO.perHour);
+		contrib.setMoney("" + contribDTO.money);
+		String interest = String.format("%.2f", (float)contribDTO.interestPerDay / 100);
+		contrib.setInterestPerDay(interest);
+		return contrib;
+	}
+
+	public static List<ContributionVO> convertContributions(List<Contribution> contributionsDto) {
+		if (contributionsDto == null) {
+			return null;
+		}
+		List<ContributionVO> campaignVoList = new ArrayList<ContributionVO>();
+		for (Contribution contribDTO : contributionsDto) {
+			ContributionVO contribVO = convert(contribDTO);
+			campaignVoList.add(contribVO);
+		}
+		return campaignVoList;
+	}	
 }
