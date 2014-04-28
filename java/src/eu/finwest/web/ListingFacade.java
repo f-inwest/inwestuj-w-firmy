@@ -1815,6 +1815,11 @@ public class ListingFacade {
 
 		listing.setContributor(StringUtils.contains(listing.getContributors(), loggedInUser.getId())
 				|| StringUtils.equals(listing.getOwner(), loggedInUser.getId()));
+		int numContrib = 0;
+		if (listing.isHasContributions()) {
+			numContrib = 1 + (StringUtils.isNotBlank(listing.getContributors()) ? StringUtils.split(listing.getContributors(), " ").length : 0);
+		}
+		listing.setNumContributors(numContrib);
 		
 		// calculate daysAgo and daysLeft
 

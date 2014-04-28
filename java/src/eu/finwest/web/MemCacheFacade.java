@@ -439,8 +439,10 @@ public class MemCacheFacade {
 		
 		Map<String, UserContributionVO> contribs = new HashMap<String, UserContributionVO>();
 		contribs.put(listing.owner.getString(), new UserContributionVO(getDAO().getUser(listing.owner.getString())));
-		for (String contributorId : StringUtils.split(listing.contributors, " ")) {
-			contribs.put(contributorId, new UserContributionVO(getDAO().getUser(contributorId)));
+		if (StringUtils.isNotBlank(listing.contributors)) {
+			for (String contributorId : StringUtils.split(listing.contributors, " ")) {
+				contribs.put(contributorId, new UserContributionVO(getDAO().getUser(contributorId)));
+			}
 		}
 		
 		ListPropertiesVO listProperties = new ListPropertiesVO();

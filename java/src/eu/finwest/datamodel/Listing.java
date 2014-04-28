@@ -160,6 +160,7 @@ public class Listing extends BaseObject<Listing> {
 	public String cashflowData;
 	public String paidCode;
 	
+	public boolean hasContributions = false;
 	/* Space separated list of contributor's ids */
 	public String contributors;
 	public int contributionPerHour = 25;

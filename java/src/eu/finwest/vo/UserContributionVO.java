@@ -7,11 +7,15 @@ import java.util.logging.Logger;
 import org.codehaus.jackson.annotate.JsonAutoDetect;
 import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import eu.finwest.datamodel.Contribution;
 import eu.finwest.datamodel.SBUser;
+import eu.finwest.util.DateDeserializer;
+import eu.finwest.util.ShortDateSerializer;
 
 /**
  * 
@@ -33,7 +37,8 @@ public class UserContributionVO implements Serializable {
 	@JsonProperty("total_hours") private String hours;
 	private double financialValueDouble;
 	@JsonProperty("financial_value") private String financialValue;
-	@JsonProperty("calculation_date") private Date date;
+	@JsonProperty("calculation_date") @JsonSerialize(using=ShortDateSerializer.class)  @JsonDeserialize(using=DateDeserializer.class)
+	private Date date;
 	private long daysSinceZero;
 	
 	public UserContributionVO() {

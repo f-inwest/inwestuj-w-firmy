@@ -256,6 +256,8 @@ public class VoToModelConverter {
 			listing.valuationData = property.getPropertyValue();
 		} else if (name.equalsIgnoreCase("cashflow_data")) {
 			listing.cashflowData = property.getPropertyValue();
+		} else if (name.equalsIgnoreCase("has_contributions")) {
+			listing.hasContributions = BooleanUtils.toBoolean(property.getPropertyValue());
 		}
 	}
 
