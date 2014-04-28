@@ -125,6 +125,8 @@ public class FrontController extends HttpServlet {
 							controller.generateHtml(response);
 						} else if (request.getRequestURI().endsWith(".txt")) {
 							controller.generateText(response);
+						} if (request.getRequestURI().endsWith(".csv")) {
+							controller.generateCSV(response);
 						} else {
 							// default is JSON
 							response.setContentType("application/json");

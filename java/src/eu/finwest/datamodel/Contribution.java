@@ -8,6 +8,8 @@ import java.util.Date;
 
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
+import javax.persistence.PostLoad;
+import javax.persistence.Transient;
 
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.annotation.Cached;
@@ -43,7 +45,10 @@ public class Contribution extends BaseObject<Contribution> {
 	@Indexed public boolean approved;
 	
 	/* number of days from 1970.01.01, used to quickly calculate days held value */
-	public long daysSinceZero;
+	@PostLoad void updateDaysSinceZero() {
+		this.daysSinceZero = date != null ? date.getTime() / (24 * 60 * 60 * 1000) : 0;
+	}
+	@Transient public long daysSinceZero;
 	public String contributorNickName;
 	public int minutes;
 	public int perHour;

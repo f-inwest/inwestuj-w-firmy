@@ -37,14 +37,15 @@ public class UserContributionVO implements Serializable {
 	private long daysSinceZero;
 	
 	public UserContributionVO() {
+		this.date = new Date();
+		daysSinceZero = this.date.getTime() / (24 * 60 * 60 * 1000);
 	}
 	
 	public UserContributionVO(SBUser user) {
+		this();
 		this.contributor = user.getWebKey();
 		this.contributorAvatar = user.avatarUrl;
 		this.contributorName = user.nickname;
-		this.date = new Date();
-		daysSinceZero = this.date.getTime() / (24 * 60 * 60 * 1000);
 	}
 	
 	public void addContribution(Contribution c) {
