@@ -2700,6 +2700,60 @@ public class ListingFacade {
 		return result;
 	}
 
+	public String downloadContributions(UserVO loggedInUser, String listingId) {
+		if (loggedInUser == null) {
+			log.log(Level.INFO, "User is not logged in!");
+			return Translations.getText("lang_error_user_not_logged_in");
+		}
+		
+		Listing dbListing = getDAO().getListing(listingId);
+		if (!loggedInUser.isAdmin() && !StringUtils.contains(dbListing.contributors, loggedInUser.getId()) && dbListing.owner.getId() != loggedInUser.toKeyId()) {
+			log.log(Level.INFO, "User " + loggedInUser.getNickname() + " is not contributor of listing " + dbListing);
+			log.log(Level.INFO, "User is not logged in!");
+			return Translations.getText("lang_error_user_not_contributor");
+		}
+		
+		ListPropertiesVO listProperties = new ListPropertiesVO();
+		listProperties.setMaxResults(1000);
+		List<Contribution> contribs = getDAO().getContributions(dbListing.id, true, listProperties);
+
+		StringBuffer buf = new StringBuffer();
+		DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+		
+		buf.append("Project; ").append(StringUtils.replace("Project " + dbListing.name + " Contributions", ";", " ")).append(";\n\n");
+		buf.append("Project; ").append(StringUtils.replace(dbListing.name, ";", " ")).append(";\n");
+		buf.append("Currency; ").append(dbListing.currency).append(";\n");
+		buf.append("Rate/hr; ").append(dbListing.contributionPerHour).append(";\n");
+		buf.append("Interest; ").append(String.format("%.2f", dbListing.contributionInterestDaily * 365.0 / 100.0) + "%").append(";\n\n");
+		
+		buf.append("date; member; hours; cash; per hour; net; ongoing; description; days held; daily%; owing; \n");
+		double ongoingNet = 0.0;
+		double net = 0.0;
+		UserContributionVO userContrib = null;
+		for (Contribution contrib : contribs) {
+			userContrib = new UserContributionVO();
+			userContrib.addContribution(contrib);
+			userContrib.updateTextValues();
+			
+			buf.append(dateFormatter.print(contrib.date.getTime())).append(";");
+			buf.append(contrib.contributorNickname).append(";");
+			buf.append(userContrib.getHours()).append(";");
+			buf.append(userContrib.getMoney()).append(";");
+			buf.append(contrib.perHour).append(";");
+			net = contrib.money + contrib.minutes / 60.0 * contrib.perHour;
+			ongoingNet += net;
+			buf.append(String.format("%.2f", net)).append(";");
+			buf.append(String.format("%.2f", ongoingNet)).append(";");
+			buf.append(StringUtils.replace(contrib.description, ";", " ")).append(";");
+			buf.append(contrib.daysSinceZero).append(";");
+			buf.append(String.format("%.2f", 0.01 * contrib.interestPerDay) + "%").append(";");
+			buf.append(userContrib.getFinancialValue()).append(";");
+			buf.append(";\n");
+		}
+
+		return buf.toString();
+	}
+
 	public ListingContributionsVO getContributions(UserVO loggedInUser, String listingId) {
 		ListingContributionsVO result = new ListingContributionsVO();
 		if (loggedInUser == null) {

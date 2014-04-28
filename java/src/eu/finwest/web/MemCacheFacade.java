@@ -479,6 +479,9 @@ public class MemCacheFacade {
 			allContribs = new HashMap<String, Map<String, UserContributionVO>>();
 			mem.put(MEMCACHE_CONTRIBUTION_MAP, allContribs);
 		}
+		if (listing == null) {
+			return new ArrayList<UserContributionVO>();
+		}
 		
 		if (allContribs.containsKey(listing.getWebKey())) {
 			Map<String, UserContributionVO> contribs = allContribs.get(listing.getWebKey());

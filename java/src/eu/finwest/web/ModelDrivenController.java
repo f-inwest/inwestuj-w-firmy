@@ -209,6 +209,18 @@ public abstract class ModelDrivenController {
 		}
 	}
 
+	public void generateCSV(HttpServletResponse response) {
+		PrintWriter writer;
+		try {
+			response.setContentType("text/csv;charset=UTF-8");
+			writer = response.getWriter();
+			String modelText = getModel() != null ? getModel().toString() : "Result is empty.";
+			writer.println(modelText);
+		} catch (IOException e) {
+			log.log(Level.SEVERE, "Error generating response csv", e);
+		}
+	}
+
 	/**
 	 * Returns command encoded in the path info.
 	 * eg. for request uri: /listings/top.json?maxItems=5&cursor=qerqsdfgsdfgh43t6dsfhg

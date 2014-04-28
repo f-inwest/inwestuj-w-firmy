@@ -131,6 +131,8 @@ public class ListingController extends ModelDrivenController {
 				return presentation(request);
 			} else if("contributions".equalsIgnoreCase(getCommand(1))) {
 				return getContributions(request);
+			} else if("download_contributions".equalsIgnoreCase(getCommand(1))) {
+				return downloadContributions(request);
 			}
 		} else if ("POST".equalsIgnoreCase(request.getMethod())) {
 			if ("create".equalsIgnoreCase(getCommand(1))) {
@@ -185,6 +187,12 @@ public class ListingController extends ModelDrivenController {
 		return null;
 	}
 	
+	private HttpHeaders downloadContributions(HttpServletRequest request) {
+    	String listingId = getCommandOrParameter(request, 2, "id");
+    	model = ListingFacade.instance().downloadContributions(getLoggedInUser(), listingId);
+        return new HttpHeadersImpl("contributions").disableCaching();
+	}
+
 	private HttpHeaders getContributions(HttpServletRequest request) {
     	String listingId = getCommandOrParameter(request, 2, "id");
     	model = ListingFacade.instance().getContributions(getLoggedInUser(), listingId);
