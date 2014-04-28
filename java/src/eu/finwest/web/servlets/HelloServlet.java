@@ -153,7 +153,7 @@ public class HelloServlet extends HttpServlet {
 			out.println("<form method=\"GET\" action=\"/listing/contributions.json\">"
 					+ "<input name=\"id\" autocomplete=\"off\" type=\"text\" value=\"listing id here ...\"/>"
 					+ "<input type=\"submit\" value=\"Get contributions for project\"/></form><br/>");
-			out.println("<form method=\"GET\" action=\"/listing/download_contributions.json\">"
+			out.println("<form method=\"GET\" action=\"/listing/download_contributions.csv\">"
 					+ "<input name=\"id\" autocomplete=\"off\" type=\"text\" value=\"listing id here ...\"/>"
 					+ "<input type=\"submit\" value=\"Download contributions for project\"/></form><br/><br/>");
 			
