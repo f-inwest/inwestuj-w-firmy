@@ -1813,6 +1813,9 @@ public class ListingFacade {
 		listing.setPreviousValuation((int)listingStats.previousValuation);
 		listing.setScore((int)listingStats.score);
 
+		listing.setContributor(StringUtils.contains(listing.getContributors(), loggedInUser.getId())
+				|| StringUtils.equals(listing.getOwner(), loggedInUser.getId()));
+		
 		// calculate daysAgo and daysLeft
 
 		listing.setMonitored(monitor != null && monitor.active);
@@ -2779,6 +2782,11 @@ public class ListingFacade {
 	private void prepareContributionsData(UserVO loggedInUser, Listing dbListing, ListingContributionsVO result) {
 		result.setTotalContributions(MemCacheFacade.instance().getListingContributions(dbListing));
 		
+		ListingVO listing = DtoToVoConverter.convert(dbListing);
+		Monitor monitor = loggedInUser != null ? getDAO().getListingMonitor(loggedInUser.toKeyId(), listing.toKeyId()) : null;
+		applyListingData(loggedInUser, listing, monitor);
+		result.setListing(listing);
+		
 		ListPropertiesVO listProperties = new ListPropertiesVO();
 		listProperties.setMaxResults(1000);
 		List<Contribution> notApprovedContribs = getDAO().getContributions(dbListing.id, false, listProperties);
@@ -2789,9 +2797,11 @@ public class ListingFacade {
 					list.add(DtoToVoConverter.convert(contrib));
 				}
 			}
+			result.setSubmittedContributions(list);
 		} else {
 			result.setSubmittedContributions(DtoToVoConverter.convertContributions(notApprovedContribs));			
 		}
+		result.setLastContributions(new ArrayList<ContributionVO>());
 	}
 
 }

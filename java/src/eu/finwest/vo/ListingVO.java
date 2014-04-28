@@ -97,6 +97,7 @@ public class ListingVO extends ListingTileVO implements Serializable {
 	private String paidCode;
 	@JsonProperty("notes") private String notes;
 	private String contributors;
+	@JsonProperty("is_contributor") private boolean contributor;
 	
 	public ListingVO() {
 	}
@@ -826,6 +827,14 @@ public class ListingVO extends ListingTileVO implements Serializable {
 
 	public void setContributors(String contributors) {
 		this.contributors = contributors;
+	}
+
+	public boolean isContributor() {
+		return contributor;
+	}
+
+	public void setContributor(boolean contributor) {
+		this.contributor = contributor;
 	}
 
 }
