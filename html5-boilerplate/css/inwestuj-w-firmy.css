@@ -310,8 +310,6 @@ a:focus, a:hover { cursor: pointer; }
 .lightgrey { color: #dcd8db; }
 .lightblue { color: #32aff6; }
 .pastelgrey { color: #999999; }
-.darkgrey { color: #49515a; }
-.darkgreybg { background: #49515a; }
 .aquamarine { color: #49a389; }
 .white { color: #f8f8f8; }
 
@@ -518,7 +516,6 @@ a:focus, a:hover { cursor: pointer; }
     margin-right: 5px;
 }
 .videolink:hover, .videolink:active {
-    color: #7edaef;
     text-decoration: none;
 }
 .about-videolink {
@@ -1172,7 +1169,7 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMA
 { font-size: 16px !important; }
 .inputwidetext { width: 420px !important; }
 .categoryselect { padding: 5px; width: 432px !important; height: 29px; }
-.inputmedtext { font-weight: bold; color: #f8f8f8 !important; background: #49515a !important; font-size: 14px !important; width: 230px !important; }
+.inputmedtext { font-weight: bold; color: #49515a !important; background: #fefefe !important; font-size: 14px !important; width: 230px !important; }
 .medtext { font-weight: bold; font-size: 14px; width: 230px; height: 21px; padding-top: 10px; margin-right: 10px; }
 .inputmedselect { width: 242px !important; }
 .inputfullwidetextshort, .inputwidewithvalidate { margin: 0px 5px 5px 5px; height: 60px; }
@@ -1219,10 +1216,10 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMA
 .sideinputtext { width: 270px !important; }
 .new_bid_boxlabel { float: left; padding-top: 11px; width: 35px; }
 .inputselect, .inputmedselect { height: 29px; padding: 5px; top: 1px; position: relative;  }
-.bidinputselect { margin: 0 0 0 0 !important; height: 38px !important; color: #f8f8f8 !important; background: #49515a !important; font-size: 22px !important; padding-top: 5px !important;}
-.bidinputtextpct  { color: #f8f8f8 !important; background: #49515a !important; font-size: 22px !important; width: 45px !important; margin: 0 0 0 0 !important; }
-.mediainputlink  { margin-left: 0px !important; color: #f8f8f8 !important; background: #49515a !important; font-size: 14px !important; width: 383px !important; }
-.picinputlink  { margin-left: 0px !important; margin-right: 0 !important; color: #f8f8f8 !important; background: #49515a !important; font-size: 14px !important; width: 220px !important; }
+.bidinputselect { margin: 0 0 0 0 !important; height: 38px !important; color: #49515a !important; background: #fefefe !important; font-size: 22px !important; padding-top: 5px !important;}
+.bidinputtextpct  { color: #49515a !important; background: #fefefe !important; font-size: 22px !important; width: 45px !important; margin: 0 0 0 0 !important; }
+.mediainputlink  { margin-left: 0px !important; color: #49515a !important; background: #fefefe !important; font-size: 14px !important; width: 383px !important; }
+.picinputlink  { margin-left: 0px !important; margin-right: 0 !important; color: #49515a !important; background: #fefefe !important; font-size: 14px !important; width: 220px !important; }
 .pctwide { width: 49px !important; }
 .inputtextareatwoline { height: 37px; overflow: hidden; overflow-x: hidden; overflow-y: auto; }
 .aboutlabel { float: left; margin-right: 10px; text-align: right; width: 106px; font-weight: bold; }
@@ -1231,8 +1228,8 @@ background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMA
 .bidvallabel { float: left; margin-right: 10px; width: 120px; padding-top: 3px; margin-left: 10px; font-weight: bold; }
 .bidformitem { float: left; }
 .bidspacer { border: 2px solid #49515A; height: 20px; right: 5px; background: #efefef; font-weight: bold; clear: both; text-align: center; }
-.messagetextarea { color: #f8f8f8 !important; background: #49515a !important; font-size: 14px !important; height: 60px; width: 540px !important; }
-.new_bid_textarea { color: #f8f8f8 !important; background: #49515a !important; font-size: 14px !important; height: 60px; width: 627px !important; }
+.messagetextarea { color: #49515a !important; background: #fefefe !important; font-size: 14px !important; height: 60px; width: 540px !important; }
+.new_bid_textarea { color: #49515a !important; background: #fefefe !important; font-size: 14px !important; height: 60px; width: 627px !important; }
 .qatextarea {
 background: none;
 border: none;
@@ -1663,9 +1660,9 @@ width: 302px;
 .bidnote { text-align: left !important; font-weight: normal !important; }
 .biddateheader { float: left; width: 140px; }
 .biddate { float: left; width: 140px; text-align: right; font-size: 10px; padding-top: 2px; color: #666666 !important; }
-.investorbidheader { background: #49515a !important; min-height: 0; padding-bottom: 5px; }
+.investorbidheader { background: #fefefe !important; min-height: 0; padding-bottom: 5px; }
 .investorbidheader { min-height: 0; padding-bottom: 5px; }
-.investorbidheader p { color: #f8f8f8; font-weight: bold !important; text-align: center; }
+.investorbidheader p { color: #49515a; font-weight: bold !important; text-align: center; }
 .investorbidline p { font-weight: normal; text-align: center; }
 .investorbidnote { text-align: left !important; font-weight: normal !important; }
 .investorbiddateheader { float: left; width: 140px; }
@@ -1729,7 +1726,7 @@ transition: height 300ms;
 }
 .uploadinfo { margin-left: 0px; }
 .uploadurlbutton { margin-left: 4px; }
-.uploadinputbutton { font-weight: bold; color: #f8f8f8 !important; background: #49515a !important; font-size: 14px !important; margin-left: 0px !important; width: 383px !important; }
+.uploadinputbutton { font-weight: bold; color: #49515a !important; background: #fefefe !important; font-size: 14px !important; margin-left: 0px !important; width: 383px !important; }
 .uploadinputbuttonshort { width: 300px !important; }
 .uploaddelete {
     position: absolute;
@@ -2493,7 +2490,8 @@ color: #fff;
 .investbutton:hover, .investbutton:active,
 .investbuttonsmall:hover, .investbuttonsmall:active,
 .inputbutton:hover, .inputbutton:active,
-.smallinputbutton:hover, .smallinputbutton:active
+.smallinputbutton:hover, .smallinputbutton:active,
+.videolink:hover, .videolink:active
 {
     transition: background 0.25s, color 0.25s;
     background: #7EDAEF !important;
@@ -2543,8 +2541,8 @@ color: #fff;
     margin-right: 10px !important;
     font-size: 16px !important;
     font-weight: normal !important;
-    color: #f8f8f8 !important;
-    background: #49515a !important;
+    color: #49515a !important;
+    background: #fefefe !important;
     width: 550px !important;
 }
 .addlistingsearchbutton {
@@ -2598,8 +2596,8 @@ color: #fff;
     margin-top: 10px;
 }
 .askinginputtext {
-    color: #f8f8f8 !important;
-    background: #49515a !important;
+    color: #49515a !important;
+    background: #fefefe !important;
     font-size: 16px !important;
     width: 140px !important;
     text-align: right;
@@ -2643,20 +2641,14 @@ color: #fff;
     background-size: 35px 35px;
 }
 .commenttextarea {
-    color: #f8f8f8 !important;
-    background: #49515a !important;
+    color: #49515a !important;
+    background: #fefefe !important;
     font-size: 14px !important;
     height: 90px;
     width: 735px !important;
     position: absolute;
     top: 5px;
     left: 10px;
-}
-.commentreplybutton {
-    position: absolute;
-    right: 10px !important;
-    bottom: 12px !important;
-    text-align: center;
 }
 .commentdeleteicon {
     position: absolute;
@@ -2674,9 +2666,83 @@ color: #fff;
     right: 50px;
 }
 
+.commentreplybutton {
+    position: absolute;
+    right: 10px !important;
+    bottom: 12px !important;
+    text-align: center;
+}
+.contributiontextarea {
+    color: #49515a;
+    background: #fefefe;
+    font-size: 14px!important;
+    height: 110px;
+    width: 460px!important;
+    position: absolute;
+    bottom: 0px !important;
+    left: 0px;
+    margin: 0;
+}
+.contributionaddbutton {
+    position: absolute;
+    right: 0px!important;
+    bottom: 0px!important;
+    text-align: center;
+    margin-right: 0;
+}
+.contributionaddline {
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+    min-height: 122px;
+}
+.addcontributionhoursinput {
+    color: #49515a !important;
+    font-size: 14px !important;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-top: 0 !important;
+    width: 100px !important;
+}
+.addcontributionamountinput {
+    color: #49515a !important;
+    font-size: 14px !important;
+    position: absolute;
+    right: 0;
+    top: 45px;
+    margin-top: 0 !important;
+    width: 100px !important;
+}
+.addcontributionmsg {
+    position: absolute;
+    top: -20px;
+    right: 5px;
+    color: #49515a;
+}
+.addcontributionspinner {
+    position: absolute;
+    bottom: 0;
+    right: 37px;
+}
+.addmemberinput {
+    width: 268px !important;
+    color: #49515a !important;
+    font-size: 14px !important;
+    margin-bottom: 15px;
+}
+.addmemberbox {
+    position: relative;
+}
+.addmemberspinner {
+    position: absolute;
+    bottom: 0;
+    right: 120px;
+}
+
 /* bids */
-.investorgroupheader { background: #49515a !important; min-height: 0; padding-bottom: 5px; }
-.investorgroupheader p { color: #f8f8f8; font-weight: bold !important; text-align: center; }
+.investorgroupheader { background: #fefefe !important; min-height: 0; padding-bottom: 5px; }
+.investorgroupheader p { color: #49515a; font-weight: bold !important; text-align: center; }
 .investorgroupline p { font-weight: normal; text-align: center; padding-left: 0; }
 .investorgroupnote { text-align: left !important; font-weight: normal !important; }
 .investorgroupdateheader { float: left; width: 140px; }
@@ -2938,6 +3004,9 @@ color: #fff;
     padding-left: 20px;
     width: 290px;
     margin-bottom: 0;
+}
+.header-title-sidebox-buttonbox {
+    margin-bottom: 10px;
 }
 .header-sidebox {
     width: 272px;

@@ -98,10 +98,15 @@ pl.implement(ListingClass, {
     },
 
     displayEdit: function() {
+        console.log('displayEdit');
         var self = this,
             editUrl = 'new-listing-basics-page.html';
         if (self.loggedin_profile && self.loggedin_profile.profile_id === self.profile_id && self.status === 'new') { // owner
-            pl('#editbutton').attr('href', editUrl).show();
+            pl('#editbutton').attr('href', editUrl);
+            pl('#editbutton').show();
+        }
+        else {
+            pl('#editbutton').hide();
         }
     },
 

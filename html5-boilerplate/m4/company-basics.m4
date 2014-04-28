@@ -19,7 +19,7 @@ include(images-panel.m4)
         <div class="initialhidden" id="videowrapper">
             <div class="header-content header-boxpanel-initial header-video">
                 @lang_video@
-                <a class="videolink videolink-top" href="#" id="videolink">(@lang_view_on_youtube@)</a>
+                <a class="videolink videolink-top" href="#" id="videolink">@lang_view_on_youtube@</a>
             </div>
             <div class="boxpanel videopanel">
         	    <div class="videocontainer">
@@ -33,7 +33,7 @@ include(images-panel.m4)
     <div class="company-side-menu-container span-8 last">
 
         <div class="company-side-menu-inner company-side-menu-inner">
-        	<div class="header-content header-title-sidebox">@lang_project_data@</div>
+        	<div class="header-content header-title-sidebox header-title-sidebox-buttonbox">@lang_project_data@</div>
         	<a class="sidebox company-menu-sidebox investbutton initialhidden" style="display: block;" href="#" id="editbutton">@lang_revise_info@</a>
             <a class="sidebox company-menu-sidebox investbutton initialhidden blueboxbutton firstsidebutton" style="display: block;" href="#" id="investbutton">@lang_invest@</a>
             <div class="sidebox company-menu-sidebox investbutton" id="valuationbutton">@lang_valuation@</div>
@@ -99,7 +99,7 @@ include(images-panel.m4)
         <div class="company-side-menu-inner">
             <div class="header-content header-title-sidebox">@lang_location@</div>
             <div class="sidebox company-menu-sidebox ">
-                <div class="addresstext darkgrey" id="fulladdress"></div>
+                <div class="addresstext" id="fulladdress"></div>
                 <div class="sideboxmap">
                     <a href="#" class="formlink hoverlink" target="_blank" id="addresslink">
                         <img src="#" id="mapimg"></img>

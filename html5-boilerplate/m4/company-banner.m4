@@ -78,6 +78,9 @@ define(`companybannermacro', `
                 <a class="hoverlink companynavlink" href="#" id="questionstab">
                     <div class="company-menu-link hoverlink $8">@lang_questions@<!-- <span id="num_qandas"></span> --></div>
                 </a>
+                <a class="hoverlink companynavlink" href="#" id="memberstab">
+                    <div class="company-menu-link hoverlink $9">@lang_members@</div>
+                </a>
             </div>
         </div>
     </div>
