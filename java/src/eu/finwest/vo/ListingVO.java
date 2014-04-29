@@ -28,6 +28,7 @@ public class ListingVO extends ListingTileVO implements Serializable {
             "answer24", "answer25", "answer26", "answer27", "valuation_data", "cashflow_data", "has_contributions"
     });
 	public static final List<String> ACTIVE_UPDATABLE_PROPERTIES = Arrays.asList(new String[] {
+			"title", "mantra", "summary", "contact_email", "founders", "website", "category", "type", "platform", 
 			"stage", "website", "has_bmc", "has_ip", "asked_fund", "suggested_amt", "suggested_pct", "video", "answer1", "answer2", "answer3",
 			"answer4", "answer5", "answer6", "answer7", "answer8", "answer9", "answer10", "answer11", "answer12", "answer13",
 			"answer14", "answer15", "answer16", "answer17", "answer18", "answer19", "answer20", "answer21", "answer22", "answer23",
