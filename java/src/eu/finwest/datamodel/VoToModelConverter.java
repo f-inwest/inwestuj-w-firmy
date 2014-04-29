@@ -282,7 +282,7 @@ public class VoToModelConverter {
 		contrib.description = contribVO.getDescription();
 		contrib.listing = new Key<Listing>(contribVO.getListing());
 		contrib.date = contribVO.getDate();
-		contrib.money = Double.valueOf(contribVO.getMoney()).intValue();
+		contrib.money = Double.valueOf(contribVO.getMoney());
 		contrib.minutes = (int)(Double.valueOf(contribVO.getMoney()) * 60);
 		return contrib;
 	}

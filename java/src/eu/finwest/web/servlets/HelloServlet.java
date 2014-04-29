@@ -141,20 +141,33 @@ public class HelloServlet extends HttpServlet {
 			out.println("<a href=\"/payment/\">Payments configuration</a><br/>");
 			out.println("<a href=\"/setup/\">Setup page</a></p>");
 
+			StringBuffer userCombo = new StringBuffer();
+			for (SBUser u : datastore.getAllUsers()) {
+				userCombo.append("<option value=\"" + u.getWebKey() + "\">" + u.nickname + "</option>");
+			}
+			StringBuffer listingCombo = new StringBuffer();
+			for (Listing l : datastore.getAllListings()) {
+				listingCombo.append("<option value=\"" + l.getWebKey() + "\">" + l.name + "</option>");
+			}
+			
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Contribution API:</p>");
 			out.println("<form method=\"GET\" action=\"/user/find.json\">"
 					+ "<input name=\"query\" autocomplete=\"off\" type=\"text\" value=\"test1@inwestujwfirmy.pl\"/>"
 					+ "<input type=\"submit\" value=\"Find user\"/></form><br/>");
 			out.println("<form method=\"POST\" action=\"/listing/add_contributor.json\">"
-					+ "<input name=\"id\" autocomplete=\"off\" type=\"text\" value=\"listing id here ...\"/>"
-					+ "<input name=\"user_id\" autocomplete=\"off\" type=\"text\" value=\"user id here ...\"/>"
+					+ "<select name=\"id\"/>" + listingCombo + "</select>"
+					+ "<select name=\"user_id\"/>" + userCombo + "</select>"
 					+ "<input type=\"submit\" value=\"Add contributor\"/></form><br/>");
+			out.println("<form method=\"POST\" action=\"/listing/remove_contributor.json\">"
+					+ "<select name=\"id\"/>" + listingCombo + "</select>"
+					+ "<select name=\"user_id\"/>" + userCombo + "</select>"
+					+ "<input type=\"submit\" value=\"Remove contributor\"/></form><br/>");
 			
 			out.println("<form method=\"GET\" action=\"/listing/contributions.json\">"
-					+ "<input name=\"id\" autocomplete=\"off\" type=\"text\" value=\"listing id here ...\"/>"
+					+ "<select name=\"id\"/>" + listingCombo + "</select>"
 					+ "<input type=\"submit\" value=\"Get contributions for project\"/></form><br/>");
 			out.println("<form method=\"GET\" action=\"/listing/download_contributions.csv\">"
-					+ "<input name=\"id\" autocomplete=\"off\" type=\"text\" value=\"listing id here ...\"/>"
+					+ "<select name=\"id\"/>" + listingCombo + "</select>"
 					+ "<input type=\"submit\" value=\"Download contributions for project\"/></form><br/><br/>");
 			
 			out.println("<form method=\"POST\" action=\"/listing/add_contribution/.json\"><textarea autocomplete=\"off\" name=\"contribution\" rows=\"5\" cols=\"120\">"

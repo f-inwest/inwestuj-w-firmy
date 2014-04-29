@@ -1550,7 +1550,7 @@ public class ObjectifyDatastoreDAO {
 
 	public void deleteContribution(long contributionId) {
 		try {
-			getOfy().delete(Comment.class, contributionId);
+			getOfy().delete(Contribution.class, contributionId);
 		} catch (Exception e) {
 			log.log(Level.WARNING, "Contribution with id '" + contributionId + "' not found!");
 		}

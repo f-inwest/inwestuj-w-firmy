@@ -55,7 +55,7 @@ public class UserContributionVO implements Serializable {
 	
 	public void addContribution(Contribution c) {
 		DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
-		if (c.money > 0) {
+		if (c.money - 0.01 > 0.0) {
 			moneyValue += c.money;
 			log.info("Contribution money: " + c.money + ", "
 					+ dateFormatter.print(c.date.getTime()) + " " + dateFormatter.print(date.getTime())
@@ -77,6 +77,10 @@ public class UserContributionVO implements Serializable {
 		this.hours = String.format("%.1f", ((float)this.minutes) / 60.0);
 		this.money = "" + moneyValue;
 		this.financialValue = String.format("%.2f", this.financialValueDouble);
+	}
+	
+	public boolean isZero() {
+		return moneyValue == 0.0 && minutes == 0;
 	}
 
 	public String getContributor() {

@@ -865,7 +865,7 @@ public class DtoToVoConverter {
 		String hours = String.format("%.1f", (float)contribDTO.minutes / 60);
 		contrib.setHours(hours);
 		contrib.setPerHour("" + contribDTO.perHour);
-		contrib.setMoney("" + contribDTO.money);
+		contrib.setMoney(String.format("%.2f", contribDTO.money));
 		String interest = String.format("%.2f", (float)contribDTO.interestPerDay / 100);
 		contrib.setInterestPerDay(interest);
 		return contrib;

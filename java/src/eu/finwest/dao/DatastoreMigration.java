@@ -26,8 +26,10 @@ import eu.finwest.datamodel.Notification;
 import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.vo.ListPropertiesVO;
+import eu.finwest.vo.UserVO;
 import eu.finwest.web.ListingFacade;
 import eu.finwest.web.MemCacheFacade;
+import eu.finwest.web.UserMgmtFacade;
 
 /**
  * @author "Grzegorz Nittner" <grzegorz.nittner@gmail.com>

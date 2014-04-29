@@ -471,6 +471,18 @@ public class MemCacheFacade {
 		}
 		allContribs.remove(contribution.listing.getString());
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void updateListingContributors(String listingId) {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		Map<String, Map<String, UserContributionVO>> allContribs =
+				(Map<String, Map<String, UserContributionVO>>)mem.get(MEMCACHE_CONTRIBUTION_MAP);
+		if (allContribs == null) {
+			allContribs = new HashMap<String, Map<String, UserContributionVO>>();
+			mem.put(MEMCACHE_CONTRIBUTION_MAP, allContribs);
+		}
+		allContribs.remove(listingId);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<UserContributionVO> getListingContributions(Listing listing) {

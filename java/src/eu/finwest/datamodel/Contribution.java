@@ -52,7 +52,7 @@ public class Contribution extends BaseObject<Contribution> {
 	public String contributorNickName;
 	public int minutes;
 	public int perHour;
-	public int money;
+	public double money;
 	/* value represents 1/10000 */
 	public int interestPerDay;
 	public String description;
