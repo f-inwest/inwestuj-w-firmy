@@ -2665,19 +2665,22 @@ color: #fff;
     bottom: 20px;
     right: 50px;
 }
-
 .commentreplybutton {
     position: absolute;
     right: 10px !important;
     bottom: 12px !important;
     text-align: center;
 }
+
+
+/* contributions */
+
 .contributiontextarea {
     color: #49515a;
     background: #fefefe;
     font-size: 14px!important;
-    height: 110px;
-    width: 460px!important;
+    height: 155px;
+    width: 455px!important;
     position: absolute;
     bottom: 0px !important;
     left: 0px;
@@ -2690,13 +2693,45 @@ color: #fff;
     text-align: center;
     margin-right: 0;
 }
+.contributiondisablebutton {
+    position: absolute;
+    right: 0px!important;
+    top: 0px!important;
+    text-align: center;
+    margin-right: 0;
+}
 .contributionaddline {
     margin: 0px;
     padding: 0px;
     position: relative;
-    min-height: 122px;
+    min-height: 167px;
 }
-.addcontributionhoursinput {
+.contributionenablepanel {
+    padding-bottom: 0;
+    padding-top: 10px;
+    height: 43px;
+}
+.contributiondownloadpanel {
+    padding-bottom: 0;
+    padding-top: 10px;
+    height: 96px;
+}
+.contributionenableline {
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+    min-height: 27px;
+}
+.contributiondownloadline {
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+    min-height: 79px;
+}
+.contributioninnerp {
+    width: 470px;
+}
+.addcontributiondateinput {
     color: #49515a !important;
     font-size: 14px !important;
     position: absolute;
@@ -2705,12 +2740,21 @@ color: #fff;
     margin-top: 0 !important;
     width: 100px !important;
 }
-.addcontributionamountinput {
+.addcontributionhoursinput {
     color: #49515a !important;
     font-size: 14px !important;
     position: absolute;
     right: 0;
     top: 45px;
+    margin-top: 0 !important;
+    width: 100px !important;
+}
+.addcontributionamountinput {
+    color: #49515a !important;
+    font-size: 14px !important;
+    position: absolute;
+    right: 0;
+    top: 90px;
     margin-top: 0 !important;
     width: 100px !important;
 }
@@ -2724,6 +2768,12 @@ color: #fff;
     position: absolute;
     bottom: 0;
     right: 37px;
+}
+.disablecontributionspinner {
+    position: absolute;
+    top: 0;
+    right: 37px;
+    margin-top: 0;
 }
 .addmemberinput {
     width: 268px !important;
@@ -2739,8 +2789,49 @@ color: #fff;
     bottom: 0;
     right: 120px;
 }
+.delete-cell {
+    padding: 0;
+    margin: 0;
+    width: 31px;
+    height: 16px;
+}
+.approve-cell {
+    padding: 0;
+    margin: 0;
+    width: 47px;
+    height: 16px;
+}
+.delete-button {
+    background:url(../img/delete_16.png);
+    width: 16px;
+    height: 16px;
+}
+.delete-button:hover {
+    cursor: pointer;
+}
+.approve-button {
+    background:url(../img/add_16.png);
+    float: left;
+    width: 16px;
+    height: 16px;
+}
+.approve-button:hover {
+    cursor: pointer;
+}
+.reject-button {
+    background:url(../img/delete_16.png);
+    margin-left: 15px;
+    float: left;
+    width: 16px;
+    height: 16px;
+}
+.reject-button:hover {
+    cursor: pointer;
+}
+
 
 /* bids */
+
 .investorgroupheader { background: #fefefe !important; min-height: 0; padding-bottom: 5px; }
 .investorgroupheader p { color: #49515a; font-weight: bold !important; text-align: center; }
 .investorgroupline p { font-weight: normal; text-align: center; padding-left: 0; }

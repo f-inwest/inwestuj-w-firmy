@@ -21,7 +21,37 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
 
 <div class="container wrapper">  <!-- initialhidden -->
 
+    <div class="span-24 basicsleft">
+        <div class="header-content header-boxpanel-initial header-boxpanel-full">@lang_members_contributions@</div>
+        <div class="boxpanel boxpanelfull contributionenablepanel">
+            <div class="contributionenableline" id="addcontributionbox">
+                <p class="">@lang_contributions_invite@</p>
+                <p class="addcontributionmsg" id="contributionmsg"></p>
+                <span class="span-3 inputbutton messagebutton contributionaddbutton" id="enablecontributionbtn">@lang_enable@</span>
+                <div class="addcontributionspinner preloadericon initialhidden" id="enablecontributionspinner"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="span-16 basicsleft">
+
+        <div class="header-content header-boxpanel-initial">@lang_contributions_summary@</div>
+        <div class="boxpanel contributiondownloadpanel">
+            <div class="contributiondownloadline" id="addcontributionbox">
+                <p class="contributioninnerp">@lang_contributions_notice@</p>
+                <p class="addcontributionmsg contributioninnerp" id="contributionmsg"></p>
+                <span class="span-3 inputbutton messagebutton contributiondisablebutton" id="disablecontributionbtn">@lang_disable@</span>
+                <span class="span-3 inputbutton messagebutton contributionaddbutton" id="downloadcontributionbtn">@lang_download@</span>
+                <div class="disablecontributionspinner preloadericon initialhidden" id="disablecontributionspinner"></div>
+                <div class="addcontributionspinner preloadericon initialhidden" id="downloadcontributionspinner"></div>
+            </div>
+            <table>
+                <tbody>
+                    <tr><th>Date</th><th>Hours</th><th>Amount</th><th>Notes</th></tr>
+                    <tr><td>4/12/2014</td><td>3.5</td><td>$0.00</td><td>Implemented contribution lists tshaeus stahoeu sat sssttesat u aesotuhast s aoe</td></tr>
+                </tbody>
+            </table>
+        </div>
 
         <div class="header-content header-boxpanel-initial">@lang_add_contribution@</div>
         <div class="boxpanel" id="contributionlistparent">
@@ -29,6 +59,7 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
                 <textarea class="textarea contributiontextarea"
                     id="addcontributionnotes" name="addcontributionnotes" cols="20" rows="5">@lang_bid_notes@</textarea>
                 <p class="addcontributionmsg" id="contributionmsg"></p>
+                <input id="addcontributiondate" name="addcontributiondate" value="date" class="text addcontributiondateinput"></input>
                 <input id="addcontributionhours" name="addcontributionhours" value="hours" class="text addcontributionhoursinput"></input>
                 <input id="addcontributionamount" name="addcontributionamount" value="amount" class="text addcontributionamountinput"></input>
                 <span class="span-3 inputbutton messagebutton contributionaddbutton" id="addcontributionbtn">@lang_add@</span>
@@ -36,11 +67,23 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
             </div>
         </div>
 
-        <div class="header-content header-boxpanel-initial">@lang_contributions@</div>
+        <div class="header-content header-boxpanel-initial">@lang_contributions_pending@</div>
         <div class="boxpanel" id="contributionlistparent">
             <div class="" id="contributionslistparent">
-                CONTRIBUTIONS
+                @lang_pending_contributions_notice@
             </div>
+            <table>
+                <tbody>
+                    <tr><th>Date</th><th>Hours</th><th>Amount</th><th>Notes</th><th>Action</th></tr>
+                    <tr>
+                        <td>4/12/2014</td><td>3.5</td><td>$0.00</td><td>Implemented contribution lists tshaeus stahoeu sat sssttesat u aesotuhast s aoe</td>
+                        <td class="approve-cell">
+                            <div class="approve-button"></div>
+                            <div class="reject-button"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
     </div>
@@ -59,9 +102,13 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
 
         <div class="company-side-menu-inner">
             <div class="header-content header-title-sidebox">@lang_members@</div>
-            <div class="" id="memberslistparent">
-                MEMBERS
-            </div>
+            <table>
+                <tbody>
+                <tr><th></th><th></th></tr>
+                <tr><td>ackmed42</td><td class="delete-cell"><div class="delete-button"></div>
+                </td></tr>
+                </tbody>
+            </table>
         </div>
 
     </div>
