@@ -1,4 +1,4 @@
-function ValuationClass() {
+function MembersClass() {
 
     this.valuation_data = { application: { is_app_released: true }, company: {}};
     this.selectFields = {
@@ -28,7 +28,7 @@ function ValuationClass() {
     this.previousValuationType = null;
 }
 
-pl.implement(ValuationClass, {
+pl.implement(MembersClass, {
 
     store: function(listing) {
         var vdata = listing.valuation_data ? JSON.parse(listing.valuation_data) : {},
@@ -211,94 +211,13 @@ pl.implement(ValuationClass, {
 
 });
 
-function ValuationPageClass() {
-    this.listing_id = (new QueryStringClass()).vars.id;
-    this.valuation = new ValuationClass();
-}
-pl.implement(ValuationPageClass, {
-    load: function() {
-        var self = this,
-            complete = function(json) {
-                var header = new HeaderClass(),
-                    companybanner = new CompanyBannerClass('model');
-                header.setLogin(json);
-                companybanner.display(json);
-                self.display(json.listing);
-                pl('.preloader').hide();
-                pl('.wrapper').show();
-            },
-            error = function(errornum, json) {
-                (new HeaderClass()).setLogin(json);
-                pl('.preloader, .companyheader').hide();
-                pl('.errorwrapper').show();
-            },
-            ajax = new AjaxClass('/listing/get/' + this.listing_id, 'valuationmsg', complete, null, null, error);
-        ajax.call();
-    },
-
-    display: function(listing) {
-        this.valuation.store(listing);
-        this.displayValuationData();
-        this.valuation.displayIsAppReleased();
-        this.valuation.displayAnalyzeAppPotential();
-        this.valuation.displayAnalyzeCompanyPotential();
-        this.valuation.displayActivePanel();
-    },
-
-    displayValuationData: function() {
-        var vdata = this.valuation.valuation_data;
-        this.displaySelectField('valuation_type', vdata.valuation_type);
-        this.displayFieldMap(vdata.application);
-        this.displayFieldMap(vdata.company);
-    },
-
-    displayFieldMap: function(map) {
-        var k, v;
-        for (k in map) {
-            v = map[k];
-            if (k in this.valuation.selectFields) {
-                this.displaySelectField(k, v);
-            }
-            else if (k in this.valuation.currencyFields) {
-                this.displayCurrencyField(k, v);
-            }
-            else if (k in this.valuation.numberFields) {
-                this.displayNumberField(k, v);
-            }
-            else {
-                this.displayTextField(k, v);
-            }
-        }
-    },
-
-    displaySelectField: function(id, val) {
-        var yesnoval = val ? 'yes' : 'no',
-            useval = this.valuation.yesNoFields[id] ? yesnoval : val,
-            displayVal = useval ? SafeStringClass.prototype.ucfirst(useval.toString()) : '';
-        pl('#' + id).text(displayVal);
-    },
-
-    displayCurrencyField: function(id, val) {
-        pl('#' + id).text(val !== undefined ? CurrencyClass.prototype.format(val, this.valuation.currency) : '');
-    },
-
-    displayNumberField: function(id, val) {
-        pl('#' + id).text(val !== undefined ? NumberClass.prototype.formatText(val) : '');
-    },
-
-    displayTextField: function(id, val) {
-        pl('#' + id).text(SafeStringClass.prototype.htmlEntities(val.toString()));
-    }
-
-});
-
-function NewListingValuationClass() {
+function ListingMembersClass() {
     this.listing_id = (new QueryStringClass()).vars.id;
     this.base = new NewListingBaseClass();
     this.bound = {};
-    this.valuation = new ValuationClass();
+    this.valuation = new MembersClass();
 }
-pl.implement(NewListingValuationClass, {
+pl.implement(ListingMembersClass, {
     load: function() {
         var self = this,
             url = this.listing_id
@@ -540,4 +459,203 @@ pl.implement(NewListingValuationClass, {
 
 });
 
+
+function MemberPageClass() {
+    this.listing_id = (new QueryStringClass()).vars.id;
+    this.members = new MembersClass();
+}
+pl.implement(MemberPageClass, {
+    load: function() {
+        var self = this,
+            complete = function(json) {
+                var header = new HeaderClass(),
+                    companybanner = new CompanyBannerClass('model');
+                pl('.preloader').hide();
+                header.setLogin(json);
+                companybanner.display(json);
+                self.store(json);
+                self.display();
+            },
+            error = function(errornum, json) {
+                pl('.preloader, .companyheader').hide();
+                pl('.errorwrapper').show();
+                (new HeaderClass()).setLogin(json);
+            },
+            ajax = new AjaxClass('/listing/get/' + this.listing_id, 'memberspagemsg', complete, null, null, error);
+        ajax.call();
+    },
+
+    store: function(json) {
+        this.listing = json.listing;
+        this.profile = json.loggedin_profile;
+    },
+
+    display: function() {
+        var self = this;
+        if (!self.listing) {
+            document.location = "/error-page.html";
+        }
+        else if (!self.profile) {
+            self.displayDisabledMember();
+        }
+        else if (self.profile.profile_id === self.listing.profile_id && !self.listing['has_contributions']) {
+            self.displayDisabledOwner(self.listing, self.profile);
+        }
+        else if (self.profile.profile_id === self.listing.profile_id && self.listing['has_contributions']) {
+            self.displayOwner(self.listing, self.profile);
+        }
+        else if (self.listing['has_contributions'] && self.listing['is_contributor']) {
+            self.displayMember(self.listing, self.profile);
+        }
+        else if (!self.listing['has_contributions']) {
+            self.displayDisabledMember();
+        }
+        else if (!self.listing['is_contributor']) {
+            self.displayDisabledMember();
+        }
+        else {
+            document.location = "/error-page.html";
+        }
+    },
+
+    displayDisabledMember: function() {
+        pl('#no_contributions_member').show();
+    },
+
+    displayDisabledOwner: function() {
+        var self = this;
+        self.bindEnableButton();
+        self.showDisabledOwnerSections();
+    },
+
+    showDisabledOwnerSections: function() {
+        pl('#no_contributions_owner').show();
+    },
+
+    hideDisabledOwnerSections: function() {
+        pl('#no_contributions_owner').hide();
+    },
+
+    displayOwner: function() {
+        var self = this;
+        //this.members.store(listing, profile);
+        //this.displayValuationData();
+        //this.members.displayActivePanel();
+        self.bindDisableButton();
+        self.showOwnerSections();
+    },
+
+    showOwnerSections: function() {
+        pl('#contributions_wrapper').show();
+        pl('#add_member_wrapper').show();
+        pl('#members_wrapper').show();
+    },
+
+    hideOwnerSections: function() {
+        pl('#contributions_wrapper').hide();
+        pl('#add_member_wrapper').hide();
+        pl('#members_wrapper').hide();
+    },
+
+    displayMember: function() {
+        pl('#contributions_wrapper').show();
+        pl('#members_wrapper').show();
+    },
+
+    bindEnableButton: function() {
+        var self = this;
+        pl('#enablecontributionbtn').bind('click', function() {
+            var data = {
+                    listing: {
+                        id: self.listing.listing_id,
+                        has_contributions: true
+                    }
+                },
+                completeFunc = function(json) {
+                    pl('#enablecontributionspinner').hide();
+                    self.hideDisabledOwnerSections();
+                    self.listing['has_contributions'] = true;
+                    self.displayOwner();
+                },
+                errorFunc = function(errornum, json) {
+                    pl('#enablecontributionspinner').hide();
+                },
+                ajax = new AjaxClass('/listing/update_field', 'enablecontributionmsg', null, completeFunc, null, errorFunc);
+            pl('#enablecontributionspinner').show();
+            ajax.setPostData(data);
+            ajax.call();
+        });
+    },
+
+    bindDisableButton: function() {
+        var self = this;
+        pl('#disablecontributionbtn').bind('click', function() {
+            var data = {
+                    listing: {
+                        id: self.listing.listing_id,
+                        has_contributions: false
+                    }
+                },
+                completeFunc = function(json) {
+                    pl('#disablecontributionspinner').hide();
+                    self.hideOwnerSections();
+                    self.listing['has_contributions'] = false;
+                    self.displayDisabledOwner();
+                },
+                errorFunc = function(errornum, json) {
+                    pl('#disablecontributionspinner').hide();
+                },
+                ajax = new AjaxClass('/listing/update_field', 'disablecontributionmsg', null, completeFunc, null, errorFunc);
+            pl('#disablecontributionspinner').show();
+            ajax.setPostData(data);
+            ajax.call();
+        });
+    },
+
+    displayValuationData: function() {
+        var vdata = this.members.valuation_data;
+        this.displaySelectField('valuation_type', vdata.valuation_type);
+        this.displayFieldMap(vdata.application);
+        this.displayFieldMap(vdata.company);
+    },
+
+    displayFieldMap: function(map) {
+        var k, v;
+        for (k in map) {
+            v = map[k];
+            if (k in this.members.selectFields) {
+                this.displaySelectField(k, v);
+            }
+            else if (k in this.members.currencyFields) {
+                this.displayCurrencyField(k, v);
+            }
+            else if (k in this.members.numberFields) {
+                this.displayNumberField(k, v);
+            }
+            else {
+                this.displayTextField(k, v);
+            }
+        }
+    },
+
+    displaySelectField: function(id, val) {
+        var yesnoval = val ? 'yes' : 'no',
+            useval = this.members.yesNoFields[id] ? yesnoval : val,
+            displayVal = useval ? SafeStringClass.prototype.ucfirst(useval.toString()) : '';
+        pl('#' + id).text(displayVal);
+    },
+
+    displayCurrencyField: function(id, val) {
+        pl('#' + id).text(val !== undefined ? CurrencyClass.prototype.format(val, this.members.currency) : '');
+    },
+
+    displayNumberField: function(id, val) {
+        pl('#' + id).text(val !== undefined ? NumberClass.prototype.formatText(val) : '');
+    },
+
+    displayTextField: function(id, val) {
+        pl('#' + id).text(SafeStringClass.prototype.htmlEntities(val.toString()));
+    }
+
+});
 

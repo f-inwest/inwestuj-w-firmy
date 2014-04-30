@@ -19,27 +19,36 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
      <div class="preloadericon"></div>
 </div>
 
-<div class="container wrapper">  <!-- initialhidden -->
+<div class="container">
 
-    <div class="span-24 basicsleft">
+    <div class="span-24 basicsleft initialhidden" id="no_contributions_owner">
         <div class="header-content header-boxpanel-initial header-boxpanel-full">@lang_members_contributions@</div>
         <div class="boxpanel boxpanelfull contributionenablepanel">
-            <div class="contributionenableline" id="addcontributionbox">
+            <div class="contributionenableline">
                 <p class="">@lang_contributions_invite@</p>
-                <p class="addcontributionmsg" id="contributionmsg"></p>
+                <p class="addcontributionmsg" id="enablecontributionmsg"></p>
                 <span class="span-3 inputbutton messagebutton contributionaddbutton" id="enablecontributionbtn">@lang_enable@</span>
                 <div class="addcontributionspinner preloadericon initialhidden" id="enablecontributionspinner"></div>
             </div>
         </div>
     </div>
 
-    <div class="span-16 basicsleft">
+    <div class="span-24 basicsleft initialhidden" id="no_contributions_member">
+        <div class="header-content header-boxpanel-initial header-boxpanel-full">@lang_members_contributions@</div>
+        <div class="boxpanel boxpanelfull contributionenablepanel">
+            <div class="contributionenableline">
+                <p class="">@lang_contributions_nonowner_invite@</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="span-16 basicsleft initialhidden" id="contributions_wrapper">
 
         <div class="header-content header-boxpanel-initial">@lang_contributions_summary@</div>
         <div class="boxpanel contributiondownloadpanel">
             <div class="contributiondownloadline" id="addcontributionbox">
                 <p class="contributioninnerp">@lang_contributions_notice@</p>
-                <p class="addcontributionmsg contributioninnerp" id="contributionmsg"></p>
+                <p class="addcontributionmsg contributioninnerp" id="disablecontributionmsg"></p>
                 <span class="span-3 inputbutton messagebutton contributiondisablebutton" id="disablecontributionbtn">@lang_disable@</span>
                 <span class="span-3 inputbutton messagebutton contributionaddbutton" id="downloadcontributionbtn">@lang_download@</span>
                 <div class="disablecontributionspinner preloadericon initialhidden" id="disablecontributionspinner"></div>
@@ -88,9 +97,9 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
 
     </div>
 
-    <div class="company-side-menu-container span-8 last">
+    <div class="company-side-menu-container span-8 last initialhidden" id="members_wrapper">
 
-        <div class="company-side-menu-inner">
+        <div class="company-side-menu-inner initialhidden" id="add_member_wrapper">
             <div class="header-content header-title-sidebox">@lang_add_member@</div>
             <div id="addmemberbox" class="addmemberbox">
                 <input class="text addmemberinput" id="addmembertext" name="addmembertext" value="@lang_member_username@"></input>
@@ -122,7 +131,7 @@ include(footer.m4)
 <script src="js/modules/base.js"></script>
 <script src="js/modules/projectmembers.js"></script>
 <script>
-(new ValuationPageClass()).load();
+(new MemberPageClass()).load();
 </script>
 '
 include(promptie.m4)
