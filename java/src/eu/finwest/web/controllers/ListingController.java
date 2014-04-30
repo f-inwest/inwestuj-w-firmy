@@ -190,25 +190,29 @@ public class ListingController extends ModelDrivenController {
 	}
 	
 	private HttpHeaders downloadContributions(HttpServletRequest request) {
-    	String listingId = getCommandOrParameter(request, 2, "id");
+		ObjectMapper mapper = new ObjectMapper();
+    	String listingId = getJsonString(mapper, request, "id");
     	model = ListingFacade.instance().downloadContributions(getLoggedInUser(), listingId);
         return new HttpHeadersImpl("contributions").disableCaching();
 	}
 
 	private HttpHeaders getContributions(HttpServletRequest request) {
-    	String listingId = getCommandOrParameter(request, 2, "id");
+		ObjectMapper mapper = new ObjectMapper();
+    	String listingId = getJsonString(mapper, request, "id");
     	model = ListingFacade.instance().getContributions(getLoggedInUser(), listingId);
         return new HttpHeadersImpl("contributions").disableCaching();
 	}
 
 	private HttpHeaders approveContribution(HttpServletRequest request) {
-    	String contributionId = getCommandOrParameter(request, 2, "contribution_id");
+		ObjectMapper mapper = new ObjectMapper();
+    	String contributionId = getJsonString(mapper, request, "contribution_id");
     	model = ListingFacade.instance().approveContribution(getLoggedInUser(), contributionId);
         return new HttpHeadersImpl("approve_contribution").disableCaching();
 	}
 
 	private HttpHeaders deleteContribution(HttpServletRequest request) {
-    	String contributionId = getCommandOrParameter(request, 2, "contribution_id");
+		ObjectMapper mapper = new ObjectMapper();
+    	String contributionId = getJsonString(mapper, request, "contribution_id");
     	model = ListingFacade.instance().deleteContribution(getLoggedInUser(), contributionId);
         return new HttpHeadersImpl("delete_contribution").disableCaching();
 	}
@@ -237,15 +241,17 @@ public class ListingController extends ModelDrivenController {
 	}
 	
 	private HttpHeaders removeContributor(HttpServletRequest request) {
-    	String listingId = getCommandOrParameter(request, 2, "id");
-    	String userId = getCommandOrParameter(request, 2, "user_id");
+		ObjectMapper mapper = new ObjectMapper();
+    	String listingId = getJsonString(mapper, request, "id");
+    	String userId = getJsonString(mapper, request, "user_id");
     	model = ListingFacade.instance().removeContributor(getLoggedInUser(), listingId, userId);
         return new HttpHeadersImpl("remove_contributor").disableCaching();
 	}
 
 	private HttpHeaders addContributor(HttpServletRequest request) {
-    	String listingId = getCommandOrParameter(request, 2, "id");
-    	String userId = getCommandOrParameter(request, 2, "user_id");
+		ObjectMapper mapper = new ObjectMapper();
+    	String listingId = getJsonString(mapper, request, "id");
+    	String userId = getJsonString(mapper, request, "user_id");
     	model = ListingFacade.instance().addContributor(getLoggedInUser(), listingId, userId);
         return new HttpHeadersImpl("add_contributor").disableCaching();
 	}

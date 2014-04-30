@@ -114,18 +114,6 @@ public class UserController extends ModelDrivenController {
 		return null;
 	}
 	
-	private String getJsonString(ObjectMapper mapper, HttpServletRequest request, String paramName) {
-		String paramValue = request.getParameter(paramName);
-		if (paramValue != null) {
-			try {
-				return mapper.readValue(paramValue, String.class);
-			} catch (Exception e) {
-				return null;
-			}
-		}
-		return null;
-	}
-	
 	private HttpHeaders register(HttpServletRequest request) {
 		HttpHeaders headers = new HttpHeadersImpl("register");
 		

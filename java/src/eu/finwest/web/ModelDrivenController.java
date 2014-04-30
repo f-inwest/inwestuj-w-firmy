@@ -288,6 +288,18 @@ public abstract class ModelDrivenController {
 		}
 	}
 
+	protected String getJsonString(ObjectMapper mapper, HttpServletRequest request, String paramName) {
+		String paramValue = request.getParameter(paramName);
+		if (paramValue != null) {
+			try {
+				return mapper.readValue(paramValue, String.class);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+		return null;
+	}
+	
 	protected UserVO getLoggedInUser() {
 		return loggedInUser;
 	}
