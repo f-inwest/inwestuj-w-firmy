@@ -258,6 +258,8 @@ public class DtoToVoConverter {
 		listing.setCashflowData(listingDTO.cashflowData);
 		listing.setHasContributions(listingDTO.hasContributions);
 		listing.setContributors(listingDTO.contributors);
+		listing.setContributionPerHour(listingDTO.contributionPerHour);
+		listing.setContributionInterestDaily(listingDTO.contributionInterestDaily);
 		return listing;
 	}
 

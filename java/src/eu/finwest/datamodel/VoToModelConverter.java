@@ -258,6 +258,10 @@ public class VoToModelConverter {
 			listing.cashflowData = property.getPropertyValue();
 		} else if (name.equalsIgnoreCase("has_contributions")) {
 			listing.hasContributions = BooleanUtils.toBoolean(property.getPropertyValue());
+		} else if (name.equalsIgnoreCase("contribution_per_hour")) {
+			listing.contributionPerHour = NumberUtils.toInt(property.getPropertyValue(), 0);
+		} else if (name.equalsIgnoreCase("contribution_interest_daily")) {
+			listing.contributionInterestDaily = NumberUtils.toInt(property.getPropertyValue(), 0);
 		}
 	}
 

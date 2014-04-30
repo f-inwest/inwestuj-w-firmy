@@ -54,7 +54,6 @@ import com.google.appengine.api.images.Transform;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
-import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.Key;
 
 import eu.finwest.dao.MockDataBuilder;
@@ -2587,7 +2586,103 @@ public class ListingFacade {
 		
 		return result;
 	}
+
+	public ListingContributionsVO importContributions(UserVO loggedInUser, String listingId, String data) {
+		ListingContributionsVO result = new ListingContributionsVO();
+		if (loggedInUser == null) {
+			log.log(Level.INFO, "User is not logged in!");
+			result.setErrorCode(ErrorCodes.NOT_LOGGED_IN);
+			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in"));
+			return result;
+		}
+		Listing dbListing = getDAO().getListing(BaseVO.toKeyId(listingId));
+		if (dbListing == null || dbListing.state != Listing.State.ACTIVE) {
+			log.log(Level.INFO, "Only active listings can get contributions. " + dbListing);
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			result.setErrorMessage(Translations.getText("lang_error_listing_doesnt_exist"));
+			return result;
+		}
+		if (!loggedInUser.isAdmin() && dbListing.owner.getId() != loggedInUser.toKeyId()) {
+			log.log(Level.INFO, "User " + loggedInUser.getNickname() + " is not contributor of listing " + dbListing);
+			result.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
+			result.setErrorMessage(Translations.getText("lang_error_user_not_contributor"));
+			return result;
+		}
+		
+		List<SBUser> allUsers = getDAO().getAllUsers();
+		String contribs[] = StringUtils.split(data, "\n");
+		for (String contrib : contribs) {
+			try {
+				storeContribution(dbListing, allUsers, contrib);
+			} catch (Exception e) {
+				log.log(Level.INFO, "Import failed for line: " + contrib, e);
+			}
+		}
+
+		prepareContributionsData(loggedInUser, dbListing, result);		
+		return result;
+	}
 	
+	private void storeContribution (Listing dbListing, List<SBUser> allUsers, String contrib) {
+		String fields[] = StringUtils.splitPreserveAllTokens(contrib, ";");
+		
+		DateTimeFormatter fmt = DateTimeFormat.forPattern("MM.dd.yyyy");
+		Date date = fmt.parseDateTime(fields[0]).toDate();
+		String userNickname = fields[1];
+		SBUser contributor = getUserByNick(allUsers, userNickname);
+		String daysString = fields[2];
+		String cashString = fields[3];
+		String description = fields[4];
+		
+		if (contributor == null || date == null || (StringUtils.isBlank(cashString) && StringUtils.isBlank(daysString))) {
+			log.log(Level.INFO, "Contribution not valid: " + contrib);
+			return;
+		}
+		
+		if (!StringUtils.contains(dbListing.contributors, contributor.getWebKey())) {
+			// it's not contributor yet, we need to add it
+			if (StringUtils.isBlank(dbListing.contributors)) {
+				dbListing.contributors = contributor.getWebKey();
+			} else {
+				dbListing.contributors += " " + contributor.getWebKey();
+			}
+			getDAO().storeListing(dbListing);
+		}
+		
+		Contribution contribution = new Contribution();
+		contribution.approver = dbListing.owner;
+		contribution.approved = true;
+		contribution.approvedOn = date;
+		contribution.contributor = new Key<SBUser>(contributor.getWebKey());
+		contribution.contributorNickname = contributor.nickname;
+		contribution.listing = new Key<Listing>(Listing.class, dbListing.id);
+		contribution.listingName = dbListing.name;
+		contribution.date = date;
+		contribution.money = StringUtils.isBlank(cashString) ? 0.0 : NumberUtils.createDouble(cashString.replace(",", ".").replace("$", ""));
+		contribution.daysSinceZero = contribution.date.getTime() / (24 * 60 * 60 * 1000);
+		Double hours = StringUtils.isBlank(daysString) ? 0.0 : NumberUtils.createDouble(daysString.replace(",", "."));
+		contribution.minutes = (int)(hours * 60.0);
+		contribution.interestPerDay = dbListing.contributionInterestDaily;
+		contribution.perHour = dbListing.contributionPerHour;
+		contribution.description = description.trim();
+		
+		if (contribution.money == 0 && contribution.minutes == 0) {
+			log.log(Level.INFO, "Contribution needs to have money or hours set, money=" + contribution.money + ", minutes=" + contribution.minutes);
+			return;
+		}
+		getDAO().createContribution(contribution);
+		MemCacheFacade.instance().updateListingContributions(contribution);
+	}
+
+	private SBUser getUserByNick(List<SBUser> allUsers, String userNickname) {
+		for (SBUser user : allUsers) {
+			if (StringUtils.equalsIgnoreCase(user.nickname, userNickname)) {
+				return user;
+			}
+		}
+		return null;
+	}
+
 	public ListingContributionsVO approveContribution(UserVO loggedInUser, String contributionId) {
 		ListingContributionsVO result = new ListingContributionsVO();
 		if (loggedInUser == null) {

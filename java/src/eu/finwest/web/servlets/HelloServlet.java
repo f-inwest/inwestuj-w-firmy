@@ -155,25 +155,29 @@ public class HelloServlet extends HttpServlet {
 					+ "<input name=\"query\" autocomplete=\"off\" type=\"text\" value=\"test1@inwestujwfirmy.pl\"/>"
 					+ "<input type=\"submit\" value=\"Find user\"/></form><br/>");
 			out.println("<form method=\"POST\" action=\"/listing/add_contributor.json\">"
-					+ "<select name=\"id\"/>" + listingCombo + "</select>"
-					+ "<select name=\"user_id\"/>" + userCombo + "</select>"
+					+ "Listing: <select name=\"id\"/>" + listingCombo + "</select>"
+					+ "User: <select name=\"user_id\"/>" + userCombo + "</select>"
 					+ "<input type=\"submit\" value=\"Add contributor\"/></form><br/>");
 			out.println("<form method=\"POST\" action=\"/listing/remove_contributor.json\">"
-					+ "<select name=\"id\"/>" + listingCombo + "</select>"
-					+ "<select name=\"user_id\"/>" + userCombo + "</select>"
+					+ "Listing: <select name=\"id\"/>" + listingCombo + "</select>"
+					+ "User: <select name=\"user_id\"/>" + userCombo + "</select>"
 					+ "<input type=\"submit\" value=\"Remove contributor\"/></form><br/>");
 			
 			out.println("<form method=\"GET\" action=\"/listing/contributions.json\">"
-					+ "<select name=\"id\"/>" + listingCombo + "</select>"
+					+ "Listing: <select name=\"id\"/>" + listingCombo + "</select>"
 					+ "<input type=\"submit\" value=\"Get contributions for project\"/></form><br/>");
 			out.println("<form method=\"GET\" action=\"/listing/download_contributions.csv\">"
-					+ "<select name=\"id\"/>" + listingCombo + "</select>"
+					+ "Listing: <select name=\"id\"/>" + listingCombo + "</select>"
 					+ "<input type=\"submit\" value=\"Download contributions for project\"/></form><br/><br/>");
 			
 			out.println("<form method=\"POST\" action=\"/listing/add_contribution/.json\"><textarea autocomplete=\"off\" name=\"contribution\" rows=\"5\" cols=\"120\">"
 					+ "{\"listing_id\":\"[listing_id]\", \"contribution_date\":\"[date yyyyMMdd]\", \"description\":\"[description]\", "
 					+ "\"money\":\"[money value]\", \"hours\":\"[hours value]\"}"
 					+ "</textarea><input type=\"submit\" value=\"Add contribution\"/></form>");
+			out.println("<form method=\"POST\" action=\"/listing/import_contributions.json\">"
+					+ "Listing: <select name=\"id\"/>" + listingCombo + "</select>"
+					+ "<textarea autocomplete=\"off\" name=\"data\" rows=\"5\" cols=\"120\"></textarea>"
+					+ "<input type=\"submit\" value=\"Import contributions to project\"/></form><br/>");
 			out.println("<form method=\"POST\" action=\"/listing/delete_contribution.json\">"
 					+ "<input name=\"contribution_id\" autocomplete=\"off\" type=\"text\" value=\"contribution id\"/>"
 					+ "<input type=\"submit\" value=\"Delete contribution\"/></form><br/>");

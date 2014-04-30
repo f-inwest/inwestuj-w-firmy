@@ -25,14 +25,16 @@ public class ListingVO extends ListingTileVO implements Serializable {
 			"currency", "has_bmc", "has_ip", "asked_fund", "suggested_amt", "suggested_pct", "video", "answer1", "answer2", "answer3",
 			"answer4", "answer5", "answer6", "answer7", "answer8", "answer9", "answer10", "answer11", "answer12", "answer13",
 			"answer14", "answer15", "answer16", "answer17", "answer18", "answer19", "answer20", "answer21", "answer22", "answer23",
-            "answer24", "answer25", "answer26", "answer27", "valuation_data", "cashflow_data", "has_contributions"
+            "answer24", "answer25", "answer26", "answer27", "valuation_data", "cashflow_data", "has_contributions",
+            "contribution_per_hour", "contribution_interest_daily"
     });
 	public static final List<String> ACTIVE_UPDATABLE_PROPERTIES = Arrays.asList(new String[] {
 			"title", "mantra", "summary", "contact_email", "founders", "website", "category", "type", "platform", 
 			"stage", "website", "has_bmc", "has_ip", "asked_fund", "suggested_amt", "suggested_pct", "video", "answer1", "answer2", "answer3",
 			"answer4", "answer5", "answer6", "answer7", "answer8", "answer9", "answer10", "answer11", "answer12", "answer13",
 			"answer14", "answer15", "answer16", "answer17", "answer18", "answer19", "answer20", "answer21", "answer22", "answer23",
-            "answer24", "answer25", "answer26", "answer27", "valuation_data", "cashflow_data", "has_contributions"
+            "answer24", "answer25", "answer26", "answer27", "valuation_data", "cashflow_data", "has_contributions",
+            "contribution_per_hour", "contribution_interest_daily"
     });
 	public static final List<String> FETCHED_PROPERTIES = Arrays.asList(new String[] {"business_plan_url", 
 			"presentation_url", "financials_url", "logo_url", "pic1_url", "pic2_url", "pic3_url", "pic4_url", "pic5_url"});
@@ -101,6 +103,8 @@ public class ListingVO extends ListingTileVO implements Serializable {
 	@JsonProperty("has_contributions") private boolean hasContributions;
 	@JsonProperty("is_contributor") private boolean contributor;
 	@JsonProperty("num_contributors") private int numContributors;
+	@JsonProperty("contribution_per_hour") private int contributionPerHour;
+	@JsonProperty("contribution_interest_daily") private int contributionInterestDaily;
 	
 	public ListingVO() {
 	}
@@ -854,6 +858,22 @@ public class ListingVO extends ListingTileVO implements Serializable {
 
 	public void setNumContributors(int numContributors) {
 		this.numContributors = numContributors;
+	}
+
+	public int getContributionPerHour() {
+		return contributionPerHour;
+	}
+
+	public void setContributionPerHour(int contributionPerHour) {
+		this.contributionPerHour = contributionPerHour;
+	}
+
+	public int getContributionInterestDaily() {
+		return contributionInterestDaily;
+	}
+
+	public void setContributionInterestDaily(int contributionInterestDaily) {
+		this.contributionInterestDaily = contributionInterestDaily;
 	}
 
 }

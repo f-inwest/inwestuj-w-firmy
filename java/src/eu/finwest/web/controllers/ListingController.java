@@ -181,6 +181,8 @@ public class ListingController extends ModelDrivenController {
 				return deleteContribution(request);
 			} else if("approve_contribution".equalsIgnoreCase(getCommand(1))) {
 				return approveContribution(request);
+			} else if("import_contributions".equalsIgnoreCase(getCommand(1))) {
+				return importContributions(request);
 			}
 		}
 
@@ -227,6 +229,13 @@ public class ListingController extends ModelDrivenController {
 		return headers;
 	}
 
+	private HttpHeaders importContributions(HttpServletRequest request) {
+    	String listingId = getCommandOrParameter(request, 2, "id");
+    	String data = getCommandOrParameter(request, 2, "data");
+    	model = ListingFacade.instance().importContributions(getLoggedInUser(), listingId, data);
+        return new HttpHeadersImpl("import_contributions").disableCaching();
+	}
+	
 	private HttpHeaders removeContributor(HttpServletRequest request) {
     	String listingId = getCommandOrParameter(request, 2, "id");
     	String userId = getCommandOrParameter(request, 2, "user_id");
