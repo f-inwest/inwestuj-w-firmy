@@ -190,15 +190,13 @@ public class ListingController extends ModelDrivenController {
 	}
 	
 	private HttpHeaders downloadContributions(HttpServletRequest request) {
-		ObjectMapper mapper = new ObjectMapper();
-    	String listingId = getJsonString(mapper, request, "id");
+    	String listingId = getCommandOrParameter(request, 2, "id");
     	model = ListingFacade.instance().downloadContributions(getLoggedInUser(), listingId);
-        return new HttpHeadersImpl("contributions").disableCaching();
+        return new HttpHeadersImpl("download_contributions").disableCaching();
 	}
 
 	private HttpHeaders getContributions(HttpServletRequest request) {
-		ObjectMapper mapper = new ObjectMapper();
-    	String listingId = getJsonString(mapper, request, "id");
+    	String listingId = getCommandOrParameter(request, 2, "id");
     	model = ListingFacade.instance().getContributions(getLoggedInUser(), listingId);
         return new HttpHeadersImpl("contributions").disableCaching();
 	}
