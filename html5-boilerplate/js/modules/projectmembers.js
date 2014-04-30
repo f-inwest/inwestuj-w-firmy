@@ -481,13 +481,15 @@ pl.implement(MemberPageClass, {
                 pl('.errorwrapper').show();
                 (new HeaderClass()).setLogin(json);
             },
-            ajax = new AjaxClass('/listing/get/' + this.listing_id, 'memberspagemsg', complete, null, null, error);
+            ajax = new AjaxClass('/listing/contributions/' + this.listing_id, 'memberspagemsg', complete, null, null, error);
         ajax.call();
     },
 
     store: function(json) {
-        this.listing = json.listing;
-        this.profile = json.loggedin_profile;
+        var self = this;
+        self.listing = json.listing;
+        self.profile = json.loggedin_profile;
+        self.setContributions(json);
     },
 
     display: function() {
@@ -519,6 +521,7 @@ pl.implement(MemberPageClass, {
     },
 
     displayDisabledMember: function() {
+        var self = this;
         pl('#no_contributions_member').show();
     },
 
@@ -529,10 +532,12 @@ pl.implement(MemberPageClass, {
     },
 
     showDisabledOwnerSections: function() {
+        var self = this;
         pl('#no_contributions_owner').show();
     },
 
     hideDisabledOwnerSections: function() {
+        var self = this;
         pl('#no_contributions_owner').hide();
     },
 
@@ -546,18 +551,25 @@ pl.implement(MemberPageClass, {
     },
 
     showOwnerSections: function() {
+        var self = this;
+        self.displayMembers();
+        self.bindMemberAutocomplete();
+        self.bindAddMemberButton();
         pl('#contributions_wrapper').show();
         pl('#add_member_wrapper').show();
         pl('#members_wrapper').show();
     },
 
     hideOwnerSections: function() {
+        var self = this;
         pl('#contributions_wrapper').hide();
         pl('#add_member_wrapper').hide();
         pl('#members_wrapper').hide();
     },
 
     displayMember: function() {
+        var self = this;
+        self.displayMembers();
         pl('#contributions_wrapper').show();
         pl('#members_wrapper').show();
     },
@@ -610,6 +622,174 @@ pl.implement(MemberPageClass, {
             ajax.setPostData(data);
             ajax.call();
         });
+    },
+
+    bindMemberAutocomplete: function() {
+        var self = this,
+            eid = '#addmembertext',
+            displayOptions = {
+                fontSize : '14px',
+                fontFamily : 'Lucida Grande, sans-serif',
+                color:'#49515a'
+            };
+        self.auto = completely(pl('#addmemberauto').get(0), displayOptions);
+        self.auto.onChange = function(txt) {
+            if (txt === null || txt.length < 1) {
+                self.auto.options = [];
+                self.auto.repaint();
+            }
+            else {
+                self.fillAutocomplete(txt);
+            }
+        };
+        self.auto.repaint();
+    },
+
+    fillAutocomplete: function(txt) {
+        var self = this,
+            success = function(json) {
+                var users = json ? json.users : null,
+                    count = users ? users.length : 0,
+                    options = [],
+                    user, username, i;
+                if (count == 0) {
+                    self.auto.options = [''];
+                }
+                else {
+                    self.automap = {};
+                    for (i = 0; i < users.length; i++) {
+                        user = users[i];
+                        if (!user || !user.profile_id || !user.username
+                            || user.profile_id === self.listing.profile_id) {
+                            continue;
+                        }
+                        username = user.username.toLowerCase();
+                        options.push(username);
+                        self.automap[username] = user.profile_id;
+                    }
+                    self.auto.options = options;
+                }
+                console.log('set options', options);
+                self.auto.repaint();
+            };
+        ajax = new AjaxClass('/user/find.json?query=' + txt, '', null, success, null, null);
+        ajax.call();
+    },
+
+    bindAddMemberButton: function() {
+        var self = this;
+        pl('#addmemberbtn').bind('click', function(e) {
+            var username = self.auto.getText(),
+                user_id = self.automap[username],
+                data = {
+                    id: self.listing.listing_id,
+                    user_id: user_id
+                },
+                success = function(json) {
+                    pl('#addmemberspinner').hide();
+                    pl('#addmembermsg').get(0).innerText = '';
+                    self.auto.setText('');
+                    self.setContributions(json);
+                    self.displayMembers();
+                    self.displayContributions();
+                },
+                error = function(errornum, json) {
+                    pl('#addmembermsg').get(0).innerText = '@lang_username_not_found@';
+                    pl('#addmemberspinner').hide();
+                },
+                ajax = new AjaxClass('/listing/add_contributor', 'addmembermsg', null, success, null, error);
+            if (user_id) {
+                pl('#addmembermsg').get(0).innerText = '';
+                pl('#addmemberspinner').show();
+                ajax.setPostData(data);
+                ajax.call();
+            }
+            else {
+                pl('#addmembermsg').get(0).innerText = '@lang_username_not_found@';
+            }
+            e.preventDefault();
+        });
+    },
+
+    displayMembers: function() {
+        var self = this,
+            html = '',
+            members = [],
+            membermap = {},
+            member,
+            i;
+        console.log('displayMembers() total=', self.total_contributions);
+        html += '<table>\n<tbody>\n';
+        html += '<tr><th></th><th></th></tr>\n';
+        for (i = 0; i < self.total_contributions.length; i++) {
+            member = self.total_contributions[i];
+            console.log('displayMembers() member=', member);
+            if (member == null || !member.contributor_id || !member.contributor_username) {
+                continue;
+            }
+            members.push(member.contributor_username);
+            membermap[member.contributor_username] = member.contributor_id;
+            html += '<tr>\n';
+            if (member.contributor_id === self.listing.profile_id) {
+                html += '<td>' + member.contributor_username + ' <b>@lang_you@</b></td>\n';
+                html += '<td></td>';
+            }
+            else if (member.contributor_id === self.listing.profile_id) {
+                html += '<td>' + member.contributor_username + ' <b>@lang_project_owner@</b></td>\n';
+                html += '<td></td>';
+            }
+            else if (self.listing.profile_id !== self.profile.profile_id) {
+                html += '<td>' + member.contributor_username + '</td>\n';
+                html += '<td></td>';
+            }
+            else {
+                html += '<td>' + member.contributor_username + '</td>\n';
+                html += '<td class="delete-cell">'
+                    + '<div class="delete-button">'
+                    + '<span class="delete-id">'
+                    + member.contributor_id
+                    + '</span>'
+                    + '</div>'
+                    + '</td>\n';
+            }
+            html += '</tr>\n';
+        }
+        html += '</tbody>\n<table>\n';
+        pl('#memberslist').get(0).innerHTML = html;
+        self.bindMemberDelete();
+    },
+
+    bindMemberDelete: function() {
+        var self = this;
+        pl('.delete-button').bind('click', function() {
+            console.log('pl(this)', pl(this));
+            var contributor_id = pl(this).get(0).firstChild.innerText,
+                data = {
+                    id: self.listing.listing_id,
+                    user_id: contributor_id
+                },
+                success = function(json) {
+                    self.setContributions(json);
+                    self.displayMembers();
+                    self.displayContributions();
+                },
+                ajax = new AjaxClass('/listing/remove_contributor', 'deletemembermsg', null, success, null, null);
+            if (contributor_id) {
+                ajax.setPostData(data);
+                ajax.call();
+            }
+        });
+    },
+
+    displayContributions: function()  {
+        console.log('displayContributions()');
+    },
+
+    setContributions: function(json) {
+        var self = this;
+        self.submitted_contributions = json.submitted_contributions || [];
+        self.last_contributions = json.last_contributions || [];
+        self.total_contributions = json.total_contributions || [];
     },
 
     displayValuationData: function() {

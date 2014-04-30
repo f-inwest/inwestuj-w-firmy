@@ -102,15 +102,18 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
         <div class="company-side-menu-inner initialhidden" id="add_member_wrapper">
             <div class="header-content header-title-sidebox">@lang_add_member@</div>
             <div id="addmemberbox" class="addmemberbox">
-                <input class="text addmemberinput" id="addmembertext" name="addmembertext" value="@lang_member_username@"></input>
-                <p class="commenttext" id="membermsg"></p>
+                <div id="addmemberauto" class="addmemberauto"></div>
                 <div class="addmemberspinner preloadericon initialhidden" id="addmemberspinner"></div>
+                <p class="commenttext errorcolor" id="addmembermsg"></p>
                 <a class="sidebox company-menu-sidebox investbutton" style="display: block;" href="#" id="addmemberbtn">@lang_add@</a>
             </div>
         </div>
 
         <div class="company-side-menu-inner">
             <div class="header-content header-title-sidebox">@lang_members@</div>
+            <p class="commenttext errorcolor" id="deletemembermsg"></p>
+            <div id="memberslist"></div>
+            <!--
             <table>
                 <tbody>
                 <tr><th></th><th></th></tr>
@@ -118,6 +121,7 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
                 </td></tr>
                 </tbody>
             </table>
+            -->
         </div>
 
     </div>
@@ -129,6 +133,7 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
 include(footer.m4)
 `
 <script src="js/modules/base.js"></script>
+<script src="js/modules/complete.ly.1.0.1.min.js"></script>
 <script src="js/modules/projectmembers.js"></script>
 <script>
 (new MemberPageClass()).load();
