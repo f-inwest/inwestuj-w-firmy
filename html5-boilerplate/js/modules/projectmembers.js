@@ -782,9 +782,10 @@ pl.implement(MemberPageClass, {
     displayContributions: function()  {
         console.log('displayContributions()');
         var self = this;
-        self.displayTotalContributions();        
-        self.displaySubmittedContributions();        
-        self.displayLastContributions();        
+        self.displayTotalContributions();
+        self.displaySubmittedContributions();
+        self.displayLastContributions();
+        self.bindAddContribution();
     },
 
     displayTotalContributions: function()  {
@@ -846,6 +847,47 @@ pl.implement(MemberPageClass, {
 
         html += '</tbody>\n<table>\n';
         pl('#totalcontributionslist').get(0).innerHTML = html;
+    },
+
+    bindAddContribution: function() {
+        console.log('displayAddContribution()');
+        var self = this;
+        pl('#addcontributiondate').bind('focus', function() {
+            var val = pl(this).get(0).value,
+                today = DateClass.prototype.formatDate(new Date(), '/');
+            if (val === '@lang_date@') {
+                pl(this).get(0).value = today;
+            }
+        });
+        pl('#addcontributionhours').bind('focus', function() {
+            var val = pl(this).get(0).value.trim();
+            if (val === '@lang_hours@') {
+                pl(this).get(0).value = '';
+            }
+        });
+        pl('#addcontributionamount').bind('focus', function() {
+            var val = pl(this).get(0).value.trim();
+            if (val === '@lang_amount@') {
+                pl(this).get(0).value = '';
+            }
+        });
+        pl('#addcontributionnotes').bind('focus', function() {
+            var val = pl(this).get(0).value.trim();
+            if (val === '@lang_bid_notes@') {
+                pl(this).get(0).value = '';
+            }
+        });
+  /*
+   <textarea class="textarea contributiontextarea"
+   id="addcontributionnotes" name="addcontributionnotes" cols="20" rows="5">@lang_bid_notes@</textarea>
+   <p class="addcontributionmsg" id="contributionmsg"></p>
+   <input id="addcontributiondate" name="addcontributiondate" value="date" class="text addcontributiondateinput"></input>
+   <input id="addcontributionhours" name="addcontributionhours" value="hours" class="text addcontributionhoursinput"></input>
+   <input id="addcontributionamount" name="addcontributionamount" value="amount" class="text addcontributionamountinput"></input>
+   <span class="span-3 inputbutton messagebutton contributionaddbutton" id="addcontributionbtn">@lang_add@</span>
+   <div class="addcontributionspinner preloadericon initialhidden" id="addcommentspinner"></div>
+
+   */
     },
 
     displaySubmittedContributions: function()  {

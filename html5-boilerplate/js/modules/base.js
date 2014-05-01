@@ -102,11 +102,12 @@ pl.implement(DateClass, {
         return yyyymmddhh24mmss ? yyyymmddhh24mmss.substr(0,4) + '-' + yyyymmddhh24mmss.substr(4,2) + '-' + yyyymmddhh24mmss.substr(6,2)
             + ' ' + yyyymmddhh24mmss.substr(8,2) + ':' + yyyymmddhh24mmss.substr(10,2) + ':' + yyyymmddhh24mmss.substr(12,2) : '';
     },
-    formatDate: function(dateObj) {
-        var year = dateObj.getUTCFullYear(),
+    formatDate: function(dateObj, _datesep) {
+        var datesep = _datesep || '',
+            year = dateObj.getUTCFullYear(),
             month = dateObj.getUTCMonth()+1,
             date = dateObj.getUTCDate();
-        return '' + year + (month < 10 ? 0 : '') + month + (date < 10 ? 0 : '') + date;
+        return '' + year + datesep + (month < 10 ? 0 : '') + month + datesep + (date < 10 ? 0 : '') + date;
     },
     zeroPad: function(num, length) {
         var str = '' + num,

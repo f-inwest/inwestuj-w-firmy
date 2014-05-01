@@ -63,9 +63,9 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
                 <textarea class="textarea contributiontextarea"
                     id="addcontributionnotes" name="addcontributionnotes" cols="20" rows="5">@lang_bid_notes@</textarea>
                 <p class="addcontributionmsg" id="contributionmsg"></p>
-                <input id="addcontributiondate" name="addcontributiondate" value="date" class="text addcontributiondateinput"></input>
-                <input id="addcontributionhours" name="addcontributionhours" value="hours" class="text addcontributionhoursinput"></input>
-                <input id="addcontributionamount" name="addcontributionamount" value="amount" class="text addcontributionamountinput"></input>
+                <input id="addcontributiondate" name="addcontributiondate" value="@lang_date@" class="text addcontributiondateinput"></input>
+                <input id="addcontributionhours" name="addcontributionhours" value="@lang_hours@" class="text addcontributionhoursinput"></input>
+                <input id="addcontributionamount" name="addcontributionamount" value="@lang_amount@" class="text addcontributionamountinput"></input>
                 <span class="span-3 inputbutton messagebutton contributionaddbutton" id="addcontributionbtn">@lang_add@</span>
                 <div class="addcontributionspinner preloadericon initialhidden" id="addcommentspinner"></div>
             </div>
