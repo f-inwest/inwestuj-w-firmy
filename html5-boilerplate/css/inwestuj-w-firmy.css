@@ -2714,7 +2714,7 @@ color: #fff;
 .contributiondownloadpanel {
     padding-bottom: 0;
     padding-top: 10px;
-    height: 96px;
+    /* height: 96px; */
 }
 .contributionenableline {
     margin: 0px;
@@ -2730,6 +2730,15 @@ color: #fff;
 }
 .contributioninnerp {
     width: 470px;
+}
+.contribution-member-cell {
+    width: 200px;
+}
+.contribution-cell {
+    text-align: right;
+}
+.contribution-table {
+    margin-bottom: 0;
 }
 .addcontributiondateinput {
     color: #49515a !important;

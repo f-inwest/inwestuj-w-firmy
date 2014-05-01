@@ -553,6 +553,7 @@ pl.implement(MemberPageClass, {
     showOwnerSections: function() {
         var self = this;
         self.displayMembers();
+        self.displayContributions();
         self.bindMemberAutocomplete();
         self.bindAddMemberButton();
         pl('#contributions_wrapper').show();
@@ -570,6 +571,7 @@ pl.implement(MemberPageClass, {
     displayMember: function() {
         var self = this;
         self.displayMembers();
+        self.displayContributions();
         pl('#contributions_wrapper').show();
         pl('#members_wrapper').show();
     },
@@ -714,8 +716,6 @@ pl.implement(MemberPageClass, {
     displayMembers: function() {
         var self = this,
             html = '',
-            members = [],
-            membermap = {},
             member,
             i;
         console.log('displayMembers() total=', self.total_contributions);
@@ -727,8 +727,6 @@ pl.implement(MemberPageClass, {
             if (member == null || !member.contributor_id || !member.contributor_username) {
                 continue;
             }
-            members.push(member.contributor_username);
-            membermap[member.contributor_username] = member.contributor_id;
             html += '<tr>\n';
             if (member.contributor_id === self.listing.profile_id) {
                 html += '<td>' + member.contributor_username + ' <b>@lang_you@</b></td>\n';
@@ -783,6 +781,79 @@ pl.implement(MemberPageClass, {
 
     displayContributions: function()  {
         console.log('displayContributions()');
+        var self = this;
+        self.displayTotalContributions();        
+        self.displaySubmittedContributions();        
+        self.displayLastContributions();        
+    },
+
+    displayTotalContributions: function()  {
+        console.log('displayTotalContributions()');
+        var self = this,
+            html = '',
+            hours = 0,
+            money = 0,
+            financial = 0,
+            member,
+            thousandsSep = self.listing.currency === 'pln' ? ' ' : ',',
+            i;
+        console.log('displayTotalContributions() total=', self.total_contributions);
+        html += '<table class="contribution-table">\n<tbody>\n';
+
+        html += '<tr>\n';
+        html += '<th class="contribution-member-cell">@lang_member_title@</th>\n';
+        html += '<th class="contribution-cell">@lang_total_hours@</th>\n';
+        html += '<th class="contribution-cell">@lang_total_money@</th>\n';
+        html += '<th class="contribution-cell">@lang_financial_value@</th>\n';
+        html += '</tr>\n';
+
+        for (i = 0; i < self.total_contributions.length; i++) {
+            member = self.total_contributions[i];
+            console.log('displayTotalContributions() member=', member);
+            if (member == null || !member.contributor_id || !member.contributor_username) {
+                continue;
+            }
+            html += '<tr>\n';
+
+            html += '<td class="contribution-member-cell">' + member.contributor_username;
+            if (member.contributor_id === self.listing.profile_id) {
+                html += ' <b>@lang_you@</b>';
+            }
+            else if (member.contributor_id === self.listing.profile_id) {
+                html += ' <b>@lang_project_owner@</b>';
+            }
+            html += '</td>\n';
+
+            html += '<td class="contribution-cell">' + member.total_hours + '</td>\n';
+            hours += 1 * member.total_hours;
+
+            html += '<td class="contribution-cell">' + CurrencyClass.prototype.format(member.total_money, self.listing.currency) + '</td>\n';
+            money += 1 * member.total_money;
+
+            html += '<td class="contribution-cell">' + CurrencyClass.prototype.format(member.financial_value, self.listing.currency) + '</td>\n';
+            financial += 1 * member.financial_value;
+
+            html += '</tr>\n';
+        }
+
+        html += '<tr>\n';
+        html += '<td class="contribution-member-cell"><b>@lang_grand_total@</b></td>\n';
+
+        html += '<td class="contribution-cell">' + NumberClass.prototype.formatText(hours, '', '', thousandsSep, '.', 1) + '</td>\n';
+        html += '<td class="contribution-cell">' + CurrencyClass.prototype.format(money, self.listing.currency) + '</td>\n';
+        html += '<td class="contribution-cell">' + CurrencyClass.prototype.format(financial, self.listing.currency) + '</td>\n';
+        html += '</tr>\n';
+
+        html += '</tbody>\n<table>\n';
+        pl('#totalcontributionslist').get(0).innerHTML = html;
+    },
+
+    displaySubmittedContributions: function()  {
+        console.log('displaySubmittedContributions()');
+    },
+
+    displayLastContributions: function()  {
+        console.log('displayLastContributions()');
     },
 
     setContributions: function(json) {

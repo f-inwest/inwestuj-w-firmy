@@ -54,12 +54,7 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
                 <div class="disablecontributionspinner preloadericon initialhidden" id="disablecontributionspinner"></div>
                 <div class="addcontributionspinner preloadericon initialhidden" id="downloadcontributionspinner"></div>
             </div>
-            <table>
-                <tbody>
-                    <tr><th>Date</th><th>Hours</th><th>Amount</th><th>Notes</th></tr>
-                    <tr><td>4/12/2014</td><td>3.5</td><td>$0.00</td><td>Implemented contribution lists tshaeus stahoeu sat sssttesat u aesotuhast s aoe</td></tr>
-                </tbody>
-            </table>
+            <div id="totalcontributionslist"></div>
         </div>
 
         <div class="header-content header-boxpanel-initial">@lang_add_contribution@</div>
