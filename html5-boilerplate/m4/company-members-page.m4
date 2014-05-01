@@ -50,9 +50,15 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
                 <p class="contributioninnerp">@lang_contributions_notice@</p>
                 <p class="addcontributionmsg contributioninnerp" id="disablecontributionmsg"></p>
                 <span class="span-3 inputbutton messagebutton contributiondisablebutton" id="disablecontributionbtn">@lang_disable@</span>
-                <span class="span-3 inputbutton messagebutton contributionaddbutton" id="downloadcontributionbtn">@lang_download@</span>
+                <span class="span-3 inputbutton messagebutton contributiondownloadbutton" id="downloadcontributionbtn">@lang_download@</span>
+                <span class="span-3 inputbutton messagebutton contributionaddbutton" id="savecontributionbtn">@lang_save@</span>
+                <div class="hourly-rate-label">@lang_hourly_rate_title@</div>
+                <input class="text hourly-rate-input" name="hourlyrate" id="hourlyrate"></input>
+                <div class="interest-rate-label">@lang_interest_rate_title@</div>
+                <input class="text interest-rate-input" name="interestrate" id="interestrate"></input>
                 <div class="disablecontributionspinner preloadericon initialhidden" id="disablecontributionspinner"></div>
-                <div class="addcontributionspinner preloadericon initialhidden" id="downloadcontributionspinner"></div>
+                <div class="downloadcontributionspinner preloadericon initialhidden" id="downloadcontributionspinner"></div>
+                <div class="addcontributionspinner preloadericon initialhidden" id="savecontributionspinner"></div>
             </div>
             <div id="totalcontributionslist"></div>
         </div>
@@ -62,32 +68,20 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
             <div class="contributionaddline" id="addcontributionbox">
                 <textarea class="textarea contributiontextarea"
                     id="addcontributionnotes" name="addcontributionnotes" cols="20" rows="5">@lang_bid_notes@</textarea>
-                <p class="addcontributionmsg" id="contributionmsg"></p>
+                <p class="addcontributionmsg successful" id="addcontributionmsg"></p>
                 <input id="addcontributiondate" name="addcontributiondate" value="@lang_date@" class="text addcontributiondateinput"></input>
                 <input id="addcontributionhours" name="addcontributionhours" value="@lang_hours@" class="text addcontributionhoursinput"></input>
                 <input id="addcontributionamount" name="addcontributionamount" value="@lang_amount@" class="text addcontributionamountinput"></input>
                 <span class="span-3 inputbutton messagebutton contributionaddbutton" id="addcontributionbtn">@lang_add@</span>
-                <div class="addcontributionspinner preloadericon initialhidden" id="addcommentspinner"></div>
+                <div class="addcontributionspinner preloadericon initialhidden" id="addcontributionspinner"></div>
             </div>
         </div>
 
-        <div class="header-content header-boxpanel-initial">@lang_contributions_pending@</div>
-        <div class="boxpanel" id="contributionlistparent">
-            <div class="" id="contributionslistparent">
-                @lang_pending_contributions_notice@
-            </div>
-            <table>
-                <tbody>
-                    <tr><th>Date</th><th>Hours</th><th>Amount</th><th>Notes</th><th>Action</th></tr>
-                    <tr>
-                        <td>4/12/2014</td><td>3.5</td><td>$0.00</td><td>Implemented contribution lists tshaeus stahoeu sat sssttesat u aesotuhast s aoe</td>
-                        <td class="approve-cell">
-                            <div class="approve-button"></div>
-                            <div class="reject-button"></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="header-content header-boxpanel-initial initialhidden" id="submittedcontributionstitle">@lang_contributions_pending@</div>
+        <div class="boxpanel" id="submittedcontributionswrapper">
+            <div id="submittedcontributionsnotice"></div>
+            <p class="addcontributionmsg successful" id="approvecontributionmsg"></p>
+            <div id="submittedcontributionslist"></div>
         </div>
 
     </div>
@@ -108,15 +102,6 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
             <div class="header-content header-title-sidebox">@lang_members@</div>
             <p class="commenttext errorcolor" id="deletemembermsg"></p>
             <div id="memberslist"></div>
-            <!--
-            <table>
-                <tbody>
-                <tr><th></th><th></th></tr>
-                <tr><td>ackmed42</td><td class="delete-cell"><div class="delete-button"></div>
-                </td></tr>
-                </tbody>
-            </table>
-            -->
         </div>
 
     </div>

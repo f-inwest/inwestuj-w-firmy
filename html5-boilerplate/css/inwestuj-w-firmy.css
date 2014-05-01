@@ -2695,8 +2695,15 @@ color: #fff;
 }
 .contributiondisablebutton {
     position: absolute;
-    right: 0px!important;
+    right: 0!important;
     top: 0px!important;
+    text-align: center;
+    margin-right: 0;
+}
+.contributiondownloadbutton {
+    position: absolute;
+    right: 0!important;
+    top: 47px!important;
     text-align: center;
     margin-right: 0;
 }
@@ -2726,7 +2733,7 @@ color: #fff;
     margin: 0px;
     padding: 0px;
     position: relative;
-    min-height: 79px;
+    min-height: 125px;
 }
 .contributioninnerp {
     width: 470px;
@@ -2781,6 +2788,12 @@ color: #fff;
 .disablecontributionspinner {
     position: absolute;
     top: 0;
+    right: 37px;
+    margin-top: 0;
+}
+.downloadcontributionspinner {
+    position: absolute;
+    top: 47px;
     right: 37px;
     margin-top: 0;
 }
@@ -2849,7 +2862,40 @@ color: #fff;
 .reject-button:hover {
     cursor: pointer;
 }
-
+.hourly-rate-label {
+    position: absolute;
+    bottom: 50px;
+    font-weight: bold;
+    left: 5px;
+}
+.hourly-rate-input {
+    left: 130px;
+    bottom: 47px;
+    color: #49515a!important;
+    font-size: 14px!important;
+    position: absolute;
+    margin-top: 0!important;
+    width: 100px!important;
+    margin-bottom: 0!important;
+    text-align: right;
+}
+.interest-rate-label {
+    position: absolute;
+    left: 5px;
+    bottom: 5px;
+    font-weight: bold;
+}
+.interest-rate-input {
+    left: 130px;
+    bottom: 1px;
+    color: #49515a!important;
+    font-size: 14px!important;
+    position: absolute;
+    margin-top: 0!important;
+    width: 100px!important;
+    margin-bottom: 0!important;
+    text-align: right;
+}
 
 /* bids */
 

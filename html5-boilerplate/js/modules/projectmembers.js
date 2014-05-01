@@ -1,468 +1,6 @@
-function MembersClass() {
-
-    this.valuation_data = { application: { is_app_released: true }, company: {}};
-    this.selectFields = {
-        valuation_type: 1,
-        is_app_released: 1,
-        analyze_app_potential: 1,
-        analyze_company_potential: 1
-    };
-    this.yesNoFields = {
-        is_app_released: 1,
-        analyze_app_potential: 1,
-        analyze_company_potential: 1
-    };
-    this.currencyFields = {
-        cost_to_duplicate: 1,
-        current_revenue: 1,
-        revenue_per: 1,
-        cost_of_app: 1,
-        best_month: 1,
-        monthly_arpu: 1
-    };
-    this.numberFields = {
-        market_size: 1,
-        months_live: 1,
-        target_users: 1
-    };
-    this.previousValuationType = null;
-}
-
-pl.implement(MembersClass, {
-
-    store: function(listing) {
-        var vdata = listing.valuation_data ? JSON.parse(listing.valuation_data) : {},
-            type = vdata.valuation_type !== undefined ? vdata.valuation_type : (listing.type || 'company'),
-            k, v;
-        this.currency = listing.currency;
-        this.valuation_data.valuation_type = type;
-        if (vdata) {
-            for (k in vdata) {
-                v = vdata[k];
-                this.valuation_data[k] = v;
-            }
-        }
-    },
-
-    displayActivePanel: function() {
-        var activeValuationWrapperSel = '#valuation_' + this.valuation_data.valuation_type + '_wrapper';
-        //if (this.previousValuationType !== this.valuation_data.vaulation_type) {
-        pl('.valuationpanel').hide();
-        //}
-        switch (this.valuation_data.valuation_type) {
-            case 'company':
-                this.valueCompany();
-                break;
-            case 'application':
-                this.valueApplication();
-                break;
-            default:
-                this.valueCompany();
-        }
-        //if (this.previousValuationType !== this.valuation_data.vaulation_type) {
-        this.previousValuationType = this.valuation_data.valuation_type;
-        pl(activeValuationWrapperSel).show();
-        //}
-    },
-
-    valueCompany: function() {
-        var val = this.valuation_data.company,
-            discount_rate = 0.1,
-            penetration_rate = 1, // domination
-            profit_margin = 0.3,
-            exit_probability = 0.1,
-            exit_year = 7,
-            ps_ratio = 7,
-            development_stage_map = {
-                concept: 250000,
-                team: 500000,
-                product: 1000000,
-                customers: 2000000,
-                profitability: 5000000
-            },
-            current_value,
-            development_stage_value,
-            target_market,
-            exit_value,
-            npv_exit_value,
-            npv_exit_value_risk_adjusted,
-            company_valuation,
-            num_valuations;
-
-        development_stage_value = development_stage_map[val.development_stage];
-        current_value = val.current_revenue * ps_ratio;
-        target_market = val.market_size * penetration_rate;
-        exit_value = target_market * val.revenue_per * profit_margin * ps_ratio;
-        npv_exit_value = exit_value * Math.pow((1 - discount_rate), exit_year);
-        npv_exit_value_risk_adjusted = npv_exit_value * exit_probability;
-        pl('#exit_value').text(CurrencyClass.prototype.format(Math.floor(exit_value), this.currency));
-
-        company_valuation = current_value || 0;
-        num_valuations = 1;
-        if (development_stage_value) {
-            company_valuation += development_stage_value;
-            num_valuations++;
-        }
-        if (val.cost_to_duplicate) {
-            company_valuation += val.cost_to_duplicate;
-            num_valuations++;
-        }
-        if (val.analyze_company_potential && npv_exit_value_risk_adjusted) {
-            company_valuation += npv_exit_value_risk_adjusted;
-            num_valuations++;
-        }
-        if (num_valuations) {
-            company_valuation /= num_valuations;
-        }
-        company_valuation = Math.max(company_valuation, val.current_revenue); // prevent less than current 
-        pl('#company_valuation').text(CurrencyClass.prototype.format(Math.floor(company_valuation), this.currency));
-    },
-
-    valueApplication: function() {
-        var val = this.valuation_data.application,
-            monthly_growth_rate = 0.35,
-            monthly_decline_rate = 0.07,
-            discount_rate = 0.1,
-            exit_probability = 0.1,
-            months_to_best, n, r, growth_ratio,
-            future_peak, projected_peak,
-            growth_sum_ratio, earnings_to_peak,
-            decline_sum_ratio, earnings_after_peak,
-            future_earnings,
-            monthly_target,
-            target_valuation,
-            npv,
-            npv_risk_adjusted,
-            application_valuation,
-            num_valuations;
-
-        months_to_best = Math.max(Math.floor(6 - val.months_live), 0);
-        n = months_to_best;
-        r = 1 + monthly_growth_rate;
-        growth_ratio = Math.pow(r, n);
-        future_peak = val.best_month * growth_ratio;
-        projected_peak = months_to_best > 0 ? future_peak : val.best_month;
-        pl('#projected_peak').text(CurrencyClass.prototype.format(Math.floor(projected_peak), this.currency));
-
-        if (months_to_best > 0) {
-            growth_sum_ratio = (1 - Math.pow(r, (n+1))) / (1 - r);
-            earnings_to_peak = projected_peak * growth_sum_ratio;
-        }
-        else {
-            earnings_to_peak = projected_peak;
-        }
-        r = 1 - monthly_decline_rate;
-        decline_sum_ratio = 1 / (1 - r);
-        earnings_after_peak = projected_peak * decline_sum_ratio;
-        future_earnings = earnings_to_peak + earnings_after_peak - projected_peak; // don't double count
-        pl('#future_earnings').text(CurrencyClass.prototype.format(Math.floor(future_earnings), this.currency));
-
-        monthly_target = val.target_users * val.monthly_arpu;
-        pl('#monthly_target').text(CurrencyClass.prototype.format(Math.floor(monthly_target), this.currency));
-
-        target_valuation = (monthly_target * 12) / discount_rate;
-        pl('#target_valuation').text(CurrencyClass.prototype.format(Math.floor(target_valuation), this.currency));
-        npv = target_valuation * Math.pow((1 - discount_rate), 2);
-        npv_risk_adjusted = npv * exit_probability;
-
-        application_valuation = future_earnings || 0;
-        num_valuations = 1;
-        if (val.cost_of_app) {
-            application_valuation += val.cost_of_app;
-            num_valuations++;
-        }
-        if (val.analyze_app_potential && npv_risk_adjusted) {
-            application_valuation += npv_risk_adjusted;
-            num_valuations++;
-        }
-        if (num_valuations) {
-            application_valuation /= num_valuations;
-        }
-        application_valuation = Math.max(application_valuation, future_earnings); // prevent less than future earnings
-        pl('#application_valuation').text(CurrencyClass.prototype.format(Math.floor(application_valuation), this.currency));
-    },
-
-    displayIsAppReleased: function() {
-        if (this.valuation_data.application.is_app_released) {
-            pl('#is_app_released_wrapper').show();
-        }
-        else {
-            pl('#is_app_released_wrapper').hide();
-        }
-    },
-
-    displayAnalyzeAppPotential: function() {
-        if (this.valuation_data.application.analyze_app_potential) {
-            pl('#analyze_app_potential_wrapper').show();
-        }
-        else {
-            pl('#analyze_app_potential_wrapper').hide();
-        }
-    },
-
-    displayAnalyzeCompanyPotential: function() {
-        if (this.valuation_data.company.analyze_company_potential) {
-            pl('#analyze_company_potential_wrapper').show();
-        }
-        else {
-            pl('#analyze_company_potential_wrapper').hide();
-        }
-    }
-
-});
-
-function ListingMembersClass() {
-    this.listing_id = (new QueryStringClass()).vars.id;
-    this.base = new NewListingBaseClass();
-    this.bound = {};
-    this.valuation = new MembersClass();
-}
-pl.implement(ListingMembersClass, {
-    load: function() {
-        var self = this,
-            url = this.listing_id
-                ? '/listing/get/' + this.listing_id
-                : '/listings/create',
-
-            complete = function(json) {
-                var listing = json && json.listing ? json.listing : {},
-                    header = new HeaderClass();
-                header.setLogin(json);
-                self.base.store(listing);
-                self.valuation.store(listing);
-                self.display();
-                pl('.preloader').hide();
-                pl('.wrapper').show();
-            },
-
-            error = function(errornum, json) {
-                (new HeaderClass()).setLogin(json);
-                pl('.preloader, .companyheader').hide();
-                pl('.errorwrapper').show();
-            },
-
-            ajax = new AjaxClass(url, 'newlistingmsg', complete, null, null, error);
-
-        if (url === '/listings/create') {
-            ajax.setPost();
-        }
-        ajax.call();
-    },
-
-    display: function() {
-        pl('#listingtype').text(this.base.listing.type.toUpperCase());
-        this.displayValuationData();
-        this.valuation.displayIsAppReleased();
-        this.valuation.displayAnalyzeAppPotential();
-        this.valuation.displayAnalyzeCompanyPotential();
-        this.loadValuesFromInput();
-        this.valuation.displayActivePanel();
-        this.base.bindBackButton();
-        this.base.bindPreviewButton();
-        this.bindSaveButton();
-        this.bindValuationTypeSelect();
-        this.bindIsAppReleasedSelect();
-        this.bindAnalyzeAppPotentialSelect();
-        this.bindAnalyzeCompanyPotentialSelect();
-        this.bindPanels();
-    },
-
-    displayValuationData: function() {
-        var vdata = this.valuation.valuation_data;
-        this.displaySelectField('valuation_type', vdata.valuation_type);
-        this.displayFieldMap(vdata.application);
-        this.displayFieldMap(vdata.company);
-    },
-
-    displayFieldMap: function(map) {
-        var k, v;
-        for (k in map) {
-            v = map[k];
-            if (k in this.valuation.selectFields) {
-                this.displaySelectField(k, v);
-            }
-            else if (k in this.valuation.currencyFields) {
-                this.displayCurrencyField(k, v);
-            }
-            else if (k in this.valuation.numberFields) {
-                this.displayNumberField(k, v);
-            }
-            else {
-                this.displayTextField(k, v);
-            }
-        }
-    },
-
-    displaySelectField: function(id, val) {
-        return this.valuation.yesNoFields[id] ? this.displayBooleanSelectField(id, val) : this.displayRegularSelectField(id, val);
-    },
-
-    displayRegularSelectField: function(id, val) {
-        var field = pl('#' + id).get(0),
-            options = field.options,
-            option,
-            i;
-        for (i = 0; i < options.length; i++) {
-            option = options[i];
-            if (option.value == val) {
-                field.selectedIndex = i;
-                break;
-            }
-        }
-    },
-
-    displayBooleanSelectField: function(id, val) {
-        var isselected = val !== undefined && (val === true || val === 'true') ? true : false,
-            field = pl('#' + id).get(0);
-        if (isselected) {
-            field.selectedIndex = 0;
-        }
-        else {
-            field.selectedIndex = 1;
-        }
-    },
-
-    displayCurrencyField: function(id, val) {
-        pl('#' + id).attr('value', val !== undefined ? CurrencyClass.prototype.format(val, this.valuation.currency) : '');
-    },
-
-    displayNumberField: function(id, val) {
-        pl('#' + id).attr('value', val !== undefined ? NumberClass.prototype.formatText(val) : '');
-    },
-
-    displayTextField: function(id, val) {
-        pl('#' + id).attr('value', SafeStringClass.prototype.htmlEntities(val.toString()));
-    },
-
-    bindSaveButton: function() {
-        var self = this;
-        this.base.bindSaveButton(function() {
-            var data = {
-                    listing: {
-                        id: self.listing_id,
-                        valuation_data: JSON.stringify(self.valuation.valuation_data)
-                    }
-                },
-                complete = function(json) {
-                    pl('#savebuttonspinner').hide();
-                    pl('#savebutton').text('@lang_saved_changes@').show();
-                    setTimeout(function() {
-                        pl('#savebutton').text('@lang_save@').show();
-                    }, 1000);
-                },
-                ajax = new AjaxClass('/listing/update_field/.json', 'newlistingmsg', complete);
-            pl('#savebutton').hide();
-            pl('#savebuttonspinner').show();
-            ajax.setPostData(data);
-            ajax.call();
-            return false;
-        });
-    },
-
-    getSelectedValuationType: function() {
-        var selectfield = pl('#valuation_type').get(0),
-            options = selectfield.options,
-            selectedindex = selectfield.selectedIndex,
-            option = selectedindex >= 0 ? options[selectedindex] : null,
-            value = option ? option.value : 'company';
-        return value;
-    },
-
-    isAppReleasedSelected: function() {
-        return this.isBooleanSelectSelected('#is_app_released');
-    },
-
-    isAnalyzeAppPotentialSelected: function() {
-        return this.isBooleanSelectSelected('#analyze_app_potential');
-    },
-
-    isAnalyzeCompanyPotentialSelected: function() {
-        return this.isBooleanSelectSelected('#analyze_company_potential');
-    },
-
-    isBooleanSelectSelected: function(sel) {
-        var selectfield = pl(sel).get(0),
-            options = selectfield.options,
-            selectedindex = selectfield.selectedIndex,
-            option = selectedindex >= 0 ? options[selectedindex] : null,
-            value = option && option.value && option.value === 'true' ? true : false;
-        return value;
-    },
-
-    loadValuesFromInput: function() {
-        var companyval = this.valuation.valuation_data.company,
-            appval = this.valuation.valuation_data.application;
-
-        companyval.market_size = Math.max(NumberClass.prototype.clean(pl('#market_size').attr('value')), 0);
-        companyval.revenue_per = Math.max(CurrencyClass.prototype.clean(pl('#revenue_per').attr('value')), 0);
-        companyval.current_revenue = Math.max(CurrencyClass.prototype.clean(pl('#current_revenue').attr('value')), 0);
-        companyval.cost_to_duplicate = Math.max(Math.floor(NumberClass.prototype.clean(pl('#cost_to_duplicate').attr('value'))), 0);
-        companyval.development_stage = pl('#development_stage').get(0)[pl('#development_stage').get(0).selectedIndex || 0].value;
-
-        appval.cost_of_app = Math.max(NumberClass.prototype.clean(pl('#cost_of_app').attr('value')), 0);
-        appval.months_live = Math.max(NumberClass.prototype.clean(pl('#months_live').attr('value')), 0);
-        appval.best_month = Math.max(NumberClass.prototype.clean(pl('#best_month').attr('value')), 0);
-        appval.target_users = Math.max(NumberClass.prototype.clean(pl('#target_users').attr('value')), 0);
-        appval.monthly_arpu = Math.max(NumberClass.prototype.clean(pl('#monthly_arpu').attr('value')), 0);
-    },
-
-    bindIsAppReleasedSelect: function() {
-        var self = this;
-        pl('#is_app_released').bind('change', function() {
-            self.valuation.valuation_data.application.is_app_released = self.isAppReleasedSelected();
-            self.valuation.displayIsAppReleased();
-            return false;
-        });
-    },
-
-    bindAnalyzeAppPotentialSelect: function() {
-        var self = this;
-        pl('#analyze_app_potential').bind('change', function() {
-            self.valuation.valuation_data.application.analyze_app_potential = self.isAnalyzeAppPotentialSelected();
-            self.valuation.displayAnalyzeAppPotential();
-            return false;
-        });
-    },
-
-    bindAnalyzeCompanyPotentialSelect: function() {
-        var self = this;
-        pl('#analyze_company_potential').bind('change', function() {
-            self.valuation.valuation_data.company.analyze_company_potential = self.isAnalyzeCompanyPotentialSelected();
-            self.valuation.displayAnalyzeCompanyPotential();
-            return false;
-        });
-    },
-
-    bindValuationTypeSelect: function() {
-        var self = this;
-        pl('#valuation_type').bind('change', function() {
-            self.valuation.valuation_data.valuation_type = self.getSelectedValuationType();
-            self.valuation.displayActivePanel();
-            return false;
-        });
-    },
-
-    bindPanels: function() {
-        var self = this,
-            evaluate = function() {
-                self.loadValuesFromInput();
-                self.valuation.displayActivePanel();
-                return false;
-            };
-        pl('.valuationinput').bind({
-            focus: evaluate,
-            blur: evaluate,
-            keyup: evaluate,
-            change: evaluate
-        });
-    }
-
-});
-
 
 function MemberPageClass() {
     this.listing_id = (new QueryStringClass()).vars.id;
-    this.members = new MembersClass();
 }
 pl.implement(MemberPageClass, {
     load: function() {
@@ -547,6 +85,7 @@ pl.implement(MemberPageClass, {
         //this.displayValuationData();
         //this.members.displayActivePanel();
         self.bindDisableButton();
+        self.bindSaveButton();
         self.showOwnerSections();
     },
 
@@ -559,6 +98,8 @@ pl.implement(MemberPageClass, {
         pl('#contributions_wrapper').show();
         pl('#add_member_wrapper').show();
         pl('#members_wrapper').show();
+        pl('#disablecontributionbtn').show();
+        pl('#savecontributionbtn').show();
     },
 
     hideOwnerSections: function() {
@@ -566,6 +107,8 @@ pl.implement(MemberPageClass, {
         pl('#contributions_wrapper').hide();
         pl('#add_member_wrapper').hide();
         pl('#members_wrapper').hide();
+        pl('#disablecontributionbtn').hide();
+        pl('#savecontributionbtn').hide();
     },
 
     displayMember: function() {
@@ -574,11 +117,14 @@ pl.implement(MemberPageClass, {
         self.displayContributions();
         pl('#contributions_wrapper').show();
         pl('#members_wrapper').show();
+        pl('#add_member_wrapper').hide();
+        pl('#disablecontributionbtn').hide();
+        pl('#savecontributionbtn').hide();
     },
 
     bindEnableButton: function() {
         var self = this;
-        pl('#enablecontributionbtn').bind('click', function() {
+        pl('#enablecontributionbtn').unbind('click').bind('click', function() {
             var data = {
                     listing: {
                         id: self.listing.listing_id,
@@ -603,7 +149,7 @@ pl.implement(MemberPageClass, {
 
     bindDisableButton: function() {
         var self = this;
-        pl('#disablecontributionbtn').bind('click', function() {
+        pl('#disablecontributionbtn').unbind('click').bind('click', function() {
             var data = {
                     listing: {
                         id: self.listing.listing_id,
@@ -621,6 +167,36 @@ pl.implement(MemberPageClass, {
                 },
                 ajax = new AjaxClass('/listing/update_field', 'disablecontributionmsg', null, completeFunc, null, errorFunc);
             pl('#disablecontributionspinner').show();
+            ajax.setPostData(data);
+            ajax.call();
+        });
+    },
+
+
+    bindSaveButton: function() {
+        var self = this;
+        pl('#savecontributionbtn').unbind('click').bind('click', function() {
+            var hourly_rate = NumberClass.prototype.clean(pl('#hourlyrate').get(0).value),
+                interest_rate = NumberClass.prototype.clean(pl('#interestrate').get(0).value),
+                data = {
+                    listing: {
+                        id: self.listing.listing_id,
+                        contribution_per_hour: hourly_rate,
+                        contribution_interest_daily: interest_rate
+                    }
+                },
+                success = function(json) {
+                    pl('#savecontributionspinner').hide();
+                    self.listing['contribution_per_hour'] = hourly_rate;
+                    self.listing['contribution_interest_daily'] = interest_rate;
+                    self.displayRateFields();
+                    self.load();
+                },
+                errorFunc = function(errornum, json) {
+                    pl('#savecontributionspinner').hide();
+                },
+                ajax = new AjaxClass('/listing/update_field', 'disablecontributionmsg', null, success, null, errorFunc);
+            pl('#savecontributionspinner').show();
             ajax.setPostData(data);
             ajax.call();
         });
@@ -680,7 +256,7 @@ pl.implement(MemberPageClass, {
 
     bindAddMemberButton: function() {
         var self = this;
-        pl('#addmemberbtn').bind('click', function(e) {
+        pl('#addmemberbtn').unbind('click').bind('click', function(e) {
             var username = self.auto.getText(),
                 user_id = self.automap[username],
                 data = {
@@ -759,7 +335,7 @@ pl.implement(MemberPageClass, {
 
     bindMemberDelete: function() {
         var self = this;
-        pl('.delete-button').bind('click', function() {
+        pl('.delete-button').unbind('click').bind('click', function() {
             console.log('pl(this)', pl(this));
             var contributor_id = pl(this).get(0).firstChild.innerText,
                 data = {
@@ -782,10 +358,32 @@ pl.implement(MemberPageClass, {
     displayContributions: function()  {
         console.log('displayContributions()');
         var self = this;
+        self.displayRateFields();
         self.displayTotalContributions();
         self.displaySubmittedContributions();
         self.displayLastContributions();
         self.bindAddContribution();
+        self.bindDownloadContributions();
+    },
+
+    displayRateFields: function() {
+        var self = this,
+            hourly_rate = CurrencyClass.prototype.format(self.listing.contribution_per_hour, self.listing.currency),
+            interest_rate = NumberClass.prototype.clean(self.listing.contribution_interest_daily) + '%';
+        pl('#hourlyrate').get(0).value = hourly_rate;
+        pl('#interestrate').get(0).value = interest_rate;
+        if (self.profile.profile_id === self.listing.profile_id) {
+            if (pl('#hourlyrate').attr('disabled')) {
+                pl('#hourlyrate').removeAttr('disabled');
+            }
+            if (pl('#interestrate').attr('disabled')) {
+                pl('#interestrate').removeAttr('disabled');
+            }
+        }
+        else {
+            pl('#hourlyrate').attr('disabled', 'disabled');
+            pl('#interestrate').attr('disabled', 'disabled');
+        }
     },
 
     displayTotalContributions: function()  {
@@ -849,53 +447,231 @@ pl.implement(MemberPageClass, {
         pl('#totalcontributionslist').get(0).innerHTML = html;
     },
 
+
+    displaySubmittedContributions: function()  {
+        console.log('displaySubmittedContributions()');
+        var self = this,
+            html = '',
+            member,
+            i;
+        console.log('displaySubmittedContributions() total=', self.submitted_contributions);
+
+        if (self.submitted_contributions.length == 0) {
+            pl('#submittedcontributionsnotice').get(0).innerHTML = '@lang_pending_contributions_none_notice@';
+            pl('#submittedcontributionslist').get(0).innerHTML = '';
+            pl('#submittedcontributionstitle').show();
+            pl('#submittedcontributionswrapper').show();
+            return;
+        }
+        else if (self.profile.profile_id === self.listing.profile_id) { // listing owner
+            pl('#submittedcontributionsnotice').get(0).innerText = '@lang_pending_contributions_owner_notice@';
+        }
+        else {
+            pl('#submittedcontributionsnotice').get(0).innerText = '@lang_pending_contributions_member_notice@';
+        }
+
+        html += '<table class="contribution-table">\n<tbody>\n';
+
+        html += '<tr>\n';
+        html += '<th class="">@lang_date_title@</th>\n';
+        html += '<th class="">@lang_member_short_title@</th>\n';
+        html += '<th class="contribution-cell">@lang_hours_title@</th>\n';
+        html += '<th class="contribution-cell">@lang_amount_title@</th>\n';
+        html += '<th class="">@lang_notes_title@</th>\n';
+        html += '<th class="contribution-cell">@lang_action_title@</th>\n';
+        html += '</tr>\n';
+
+        for (i = 0; i < self.submitted_contributions.length; i++) {
+            member = self.submitted_contributions[i];
+            console.log('displayTotalContributions() member=', member);
+            if (member == null || !member.contributor_id || !member.contributor_username) {
+                continue;
+            }
+            html += '<tr>\n';
+
+            html += '<td class="">' + DateClass.prototype.formatDateStr(member.contribution_date) + '</td>\n';
+
+            html += '<td class="">' + member.contributor_username;
+            if (member.contributor_id === self.listing.profile_id) {
+                html += ' <b>@lang_you@</b>';
+            }
+            else if (member.contributor_id === self.listing.profile_id) {
+                html += ' <b>@lang_project_owner@</b>';
+            }
+            html += '</td>\n';
+
+            html += '<td class="contribution-cell">' + member.hours + '</td>\n';
+
+            html += '<td class="contribution-cell">' + CurrencyClass.prototype.format(member.money, self.listing.currency) + '</td>\n';
+
+            html += '<td class="">' + (member.description || '') + '</td>\n';
+
+            html += '<td class="approve-cell">';
+            if (self.profile.profile_id === self.listing.profile_id) { // listing owner
+                html += '<div class="approve-button"><span class="initialhidden">' + member.contribution_id + '</span></div>';
+                html += '<div class="reject-button"><span class="initialhidden">' + member.contribution_id + '</span></div>';
+            }
+            else if (self.profile.profile_id === member.contributor_id) { // my own contribution
+                html += '<div class="reject-button"><span class="initialhidden">' + member.contribution_id + '</span></div>';
+            }
+            html += '</td>';
+
+            html += '</tr>\n';
+        }
+
+        html += '</tbody>\n<table>\n';
+
+        pl('#submittedcontributionslist').get(0).innerHTML = html;
+
+        self.bindApproveContribution();
+        self.bindRejectContribution();
+
+        pl('#submittedcontributionstitle').show();
+        pl('#submittedcontributionswrapper').show();
+    },
+
+    bindApproveContribution: function() {
+        var self = this;
+        pl('.approve-button').unbind('click').bind('click', function() {
+            console.log('pl(this)', pl(this));
+            var contribution_id = pl(this).get(0).firstChild.innerText,
+                data = {
+                    contribution_id: contribution_id
+                },
+                success = function(json) {
+                    self.setContributions(json);
+                    self.displayMembers();
+                    self.displayContributions();
+                },
+                ajax = new AjaxClass('/listing/approve_contribution', 'approvecontributionmsg', null, success, null, null);
+            if (contribution_id) {
+                ajax.setPostData(data);
+                ajax.call();
+            }
+        });
+    },
+
+    bindRejectContribution: function() {
+        var self = this;
+        pl('.reject-button').unbind('click').bind('click', function() {
+            console.log('pl(this)', pl(this));
+            var contribution_id = pl(this).get(0).firstChild.innerText,
+                data = {
+                    contribution_id: contribution_id
+                },
+                success = function(json) {
+                    self.setContributions(json);
+                    self.displayMembers();
+                    self.displayContributions();
+                },
+                ajax = new AjaxClass('/listing/delete_contribution', 'approvecontributionmsg', null, success, null, null);
+            if (contribution_id) {
+                ajax.setPostData(data);
+                ajax.call();
+            }
+        });
+    },
+
+    displayLastContributions: function()  {
+        console.log('displayLastContributions()');
+    },
+
     bindAddContribution: function() {
         console.log('displayAddContribution()');
         var self = this;
-        pl('#addcontributiondate').bind('focus', function() {
+        pl('#addcontributiondate').unbind('focus').bind('focus', function() {
             var val = pl(this).get(0).value,
-                today = DateClass.prototype.formatDate(new Date(), '/');
+                today = DateClass.prototype.formatDate(new Date(), '-');
             if (val === '@lang_date@') {
                 pl(this).get(0).value = today;
             }
         });
-        pl('#addcontributionhours').bind('focus', function() {
+        pl('#addcontributionhours').unbind('focus').bind('focus', function() {
             var val = pl(this).get(0).value.trim();
             if (val === '@lang_hours@') {
                 pl(this).get(0).value = '';
             }
         });
-        pl('#addcontributionamount').bind('focus', function() {
+        pl('#addcontributionamount').unbind('focus').bind('focus', function() {
             var val = pl(this).get(0).value.trim();
             if (val === '@lang_amount@') {
                 pl(this).get(0).value = '';
             }
         });
-        pl('#addcontributionnotes').bind('focus', function() {
+        pl('#addcontributionnotes').unbind('focus').bind('focus', function() {
             var val = pl(this).get(0).value.trim();
             if (val === '@lang_bid_notes@') {
                 pl(this).get(0).value = '';
             }
         });
-  /*
-   <textarea class="textarea contributiontextarea"
-   id="addcontributionnotes" name="addcontributionnotes" cols="20" rows="5">@lang_bid_notes@</textarea>
-   <p class="addcontributionmsg" id="contributionmsg"></p>
-   <input id="addcontributiondate" name="addcontributiondate" value="date" class="text addcontributiondateinput"></input>
-   <input id="addcontributionhours" name="addcontributionhours" value="hours" class="text addcontributionhoursinput"></input>
-   <input id="addcontributionamount" name="addcontributionamount" value="amount" class="text addcontributionamountinput"></input>
-   <span class="span-3 inputbutton messagebutton contributionaddbutton" id="addcontributionbtn">@lang_add@</span>
-   <div class="addcontributionspinner preloadericon initialhidden" id="addcommentspinner"></div>
-
-   */
+        self.bindAddContributionButton();
     },
 
-    displaySubmittedContributions: function()  {
-        console.log('displaySubmittedContributions()');
+    bindAddContributionButton: function() {
+        var self = this;
+        pl('#addcontributionbtn').unbind('click').bind('click', function(e) {
+            /*
+             {"listing_id":"ahBpbndlc3R1ai13LWZpcm15cg4LEgdMaXN0aW5nGPcPDA",
+             "contribution_date":"20140428", "description":"test contrib", "money":"2.48", "hours":"3.0"}
+             */
+            var contribution_date = DateClass.prototype.clean(pl('#addcontributiondate').get(0).value),
+                description = pl('#addcontributionnotes').get(0).value.trim(),
+                hours = NumberClass.prototype.clean(pl('#addcontributionhours').get(0).value) || 0,
+                money = NumberClass.prototype.clean(pl('#addcontributionamount').get(0).value) || 0,
+                data = {
+                    contribution: {
+                        listing_id: self.listing.listing_id,
+                        contribution_date: contribution_date,
+                        description: description,
+                        hours: hours,
+                        money: money
+                    }
+                },
+                success = function(json) {
+                    pl('#addcontributionspinner').hide();
+                    pl('#addcontributionmsg').removeClass('errorcolor');
+                    pl('#addcontributionmsg').get(0).innerText = '@lang_contribution_added@';
+                    pl('#addcontributionnotes').get(0).value = '@lang_bid_notes@';
+                    //pl('#addcontributiondate').get(0).value = '@lang_date@';
+                    pl('#addcontributionhours').get(0).value = '@lang_hours@';
+                    pl('#addcontributionamount').get(0).value = '@lang_amount@';
+                    self.setContributions(json);
+                    self.displayMembers();
+                    self.displayContributions();
+                },
+                error = function(errornum, json) {
+                    var errorStr = (json && json.error_msg) ? '@lang_error_from_server@: ' + json.error_msg
+                        : '@lang_error_from_server@ ' + errorNum;
+                    pl('#addcontributionspinner').hide();
+                    pl('#addcontributionmsg').html('<span class="attention">' + errorStr + '</span>');
+                },
+                ajax = new AjaxClass('/listing/add_contribution', 'addcontributionmsg', null, success, null, error);
+            console.log('contribution_date', contribution_date);
+            console.log('hours', hours);
+            console.log('money', money);
+            if (contribution_date.match(/^\d{8}$/)) {
+                pl('#addcontributionmsg').get(0).innerText = '';
+                pl('#addcontributionspinner').show();
+                ajax.setPostData(data);
+                console.log('ajax', ajax.ajaxOpts.data);
+                ajax.call();
+            }
+            else {
+                pl('#addcontributionspinner').hide();
+                pl('#addcontributionmsg').addClass('errorcolor');
+                pl('#addcontributionmsg').get(0).innerText = '@lang_invalid_yyyymmdd_date@';
+            }
+            e.preventDefault();
+        });
     },
 
-    displayLastContributions: function()  {
-        console.log('displayLastContributions()');
+    bindDownloadContributions: function() {
+        var self = this;
+        pl('#downloadcontributionbtn').unbind('click').bind('click', function(e) {
+            var url = '/listing/download_contributions.csv?id=' + self.listing.listing_id;
+            window.open(url);
+            e.preventDefault();
+        });
     },
 
     setContributions: function(json) {
@@ -903,51 +679,6 @@ pl.implement(MemberPageClass, {
         self.submitted_contributions = json.submitted_contributions || [];
         self.last_contributions = json.last_contributions || [];
         self.total_contributions = json.total_contributions || [];
-    },
-
-    displayValuationData: function() {
-        var vdata = this.members.valuation_data;
-        this.displaySelectField('valuation_type', vdata.valuation_type);
-        this.displayFieldMap(vdata.application);
-        this.displayFieldMap(vdata.company);
-    },
-
-    displayFieldMap: function(map) {
-        var k, v;
-        for (k in map) {
-            v = map[k];
-            if (k in this.members.selectFields) {
-                this.displaySelectField(k, v);
-            }
-            else if (k in this.members.currencyFields) {
-                this.displayCurrencyField(k, v);
-            }
-            else if (k in this.members.numberFields) {
-                this.displayNumberField(k, v);
-            }
-            else {
-                this.displayTextField(k, v);
-            }
-        }
-    },
-
-    displaySelectField: function(id, val) {
-        var yesnoval = val ? 'yes' : 'no',
-            useval = this.members.yesNoFields[id] ? yesnoval : val,
-            displayVal = useval ? SafeStringClass.prototype.ucfirst(useval.toString()) : '';
-        pl('#' + id).text(displayVal);
-    },
-
-    displayCurrencyField: function(id, val) {
-        pl('#' + id).text(val !== undefined ? CurrencyClass.prototype.format(val, this.members.currency) : '');
-    },
-
-    displayNumberField: function(id, val) {
-        pl('#' + id).text(val !== undefined ? NumberClass.prototype.formatText(val) : '');
-    },
-
-    displayTextField: function(id, val) {
-        pl('#' + id).text(SafeStringClass.prototype.htmlEntities(val.toString()));
     }
 
 });

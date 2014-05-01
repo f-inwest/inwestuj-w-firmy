@@ -81,6 +81,9 @@ pl.implement(EventClass, {
 
 function DateClass() {}
 pl.implement(DateClass, {
+    clean: function(datestr) {
+        return NumberClass.prototype.clean(datestr);
+    },
     format: function(datestr) {
         if (!datestr) {
             return '';
@@ -95,8 +98,9 @@ pl.implement(DateClass, {
             return '';
         }
     },
-    formatDateStr: function(yyyymmdd) {
-        return yyyymmdd ? yyyymmdd.substr(0,4) + '-' + yyyymmdd.substr(4,2) + '-' + yyyymmdd.substr(6,2) : '';
+    formatDateStr: function(yyyymmdd, _separator) {
+        var sep = _separator || '-';
+        return yyyymmdd ? yyyymmdd.substr(0,4) + sep + yyyymmdd.substr(4,2) + sep + yyyymmdd.substr(6,2) : '';
     },
     formatDatetimeStr: function(yyyymmddhh24mmss) {
         return yyyymmddhh24mmss ? yyyymmddhh24mmss.substr(0,4) + '-' + yyyymmddhh24mmss.substr(4,2) + '-' + yyyymmddhh24mmss.substr(6,2)
