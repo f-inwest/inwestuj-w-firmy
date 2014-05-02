@@ -24,6 +24,7 @@ import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.Transaction.Status;
+import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.SystemPropertyVO;
 import eu.finwest.vo.UserVO;
 import eu.finwest.web.HttpHeaders;
@@ -79,9 +80,27 @@ public class SystemController extends ModelDrivenController {
 				return transactionConfirmation(request);
 			} else if("store_pricepoint".equalsIgnoreCase(getCommand(1))) {
 				return storePricepoint(request);
+			} else if("validate_sms_code".equalsIgnoreCase(getCommand(1))) {
+				return validateSmsCode(request);
 			}
 		}
 		return null;
+	}
+
+	private HttpHeaders validateSmsCode(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("transferuj_pl_notification");
+		
+		String sellerId = getCommandOrParameter(request, 2, "p24_id_sprzedawcy");
+		String value = getCommandOrParameter(request, 2, "p24_kwota");
+		String code = getCommandOrParameter(request, 2, "p24_kod");
+		int returnCode = ServiceFacade.instance().validateSmsCode(getLoggedInUser(), sellerId, value, code);
+		if (returnCode == 0) {
+			headers.setRedirectUrl(BaseVO.getServiceLocation() + "/sms-page.html?success=true");
+		} else {
+			headers.setRedirectUrl(BaseVO.getServiceLocation() + "/sms-page.html?error=" + returnCode);
+		}
+		
+		return headers;
 	}
 
 	@SuppressWarnings("unchecked")

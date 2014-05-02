@@ -56,7 +56,6 @@ public class FrontController extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		String pathInfo = request.getPathInfo();
-		log.log(Level.INFO, ">>>>>>> Path info: " + pathInfo);
 //		if ("GET".equals(request.getMethod()) && !"true".equalsIgnoreCase(request.getHeader("X-AppEngine-Cron"))
 //				&& "inwestuj-w-firmy.appspot.com".equals(request.getServerName())) {
 //			String redirectUrl = request.getScheme() + "://www.inwestujwfirmy.pl" + request.getServletPath();
@@ -69,20 +68,21 @@ public class FrontController extends HttpServlet {
 //			return;
 //		}
 		
-		boolean develEnv = SystemProperty.environment.value() == SystemProperty.Environment.Value.Development;
-		if (!develEnv && !request.isSecure() && "GET".equals(request.getMethod()) && StringUtils.endsWith(pathInfo, ".html")) {
-			String redirectUrl = "https://" + request.getServerName() + request.getServletPath();
-			String queryString = request.getQueryString();
-			if (StringUtils.isNotEmpty(queryString)) {
-				redirectUrl += "?" + queryString;
-			}
-			log.info("Got insecure request to: " + request.getServerName() + request.getServletPath() + ", redirecting to: " + redirectUrl);
-			response.sendRedirect(redirectUrl);
-			return;
-		}
-		
 		try {
 			setLanguageAndCampaign(request, response);
+			
+			boolean develEnv = SystemProperty.environment.value() == SystemProperty.Environment.Value.Development;
+			if (!develEnv && "GET".equals(request.getMethod()) && StringUtils.endsWith(pathInfo, ".html")
+					&& (!request.isSecure() || request.getServerName().startsWith("www"))) {
+				String redirectUrl = "https://" + getCampaign().getSubdomain() + ".inwestujwfirmy.pl" + request.getServletPath();
+				String queryString = request.getQueryString();
+				if (StringUtils.isNotEmpty(queryString)) {
+					redirectUrl += "?" + queryString;
+				}
+				log.info("Got request to: " + request.getServerName() + request.getServletPath() + ", redirecting to: " + redirectUrl);
+				response.sendRedirect(redirectUrl);
+				return;
+			}
 	
 			ModelDrivenController controller = null;
 			HttpHeaders headers = null;
