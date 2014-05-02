@@ -81,6 +81,9 @@ pl.implement(EventClass, {
 
 function DateClass() {}
 pl.implement(DateClass, {
+    clean: function(datestr) {
+        return NumberClass.prototype.clean(datestr);
+    },
     format: function(datestr) {
         if (!datestr) {
             return '';
@@ -95,18 +98,20 @@ pl.implement(DateClass, {
             return '';
         }
     },
-    formatDateStr: function(yyyymmdd) {
-        return yyyymmdd ? yyyymmdd.substr(0,4) + '-' + yyyymmdd.substr(4,2) + '-' + yyyymmdd.substr(6,2) : '';
+    formatDateStr: function(yyyymmdd, _separator) {
+        var sep = _separator || '-';
+        return yyyymmdd ? yyyymmdd.substr(0,4) + sep + yyyymmdd.substr(4,2) + sep + yyyymmdd.substr(6,2) : '';
     },
     formatDatetimeStr: function(yyyymmddhh24mmss) {
         return yyyymmddhh24mmss ? yyyymmddhh24mmss.substr(0,4) + '-' + yyyymmddhh24mmss.substr(4,2) + '-' + yyyymmddhh24mmss.substr(6,2)
             + ' ' + yyyymmddhh24mmss.substr(8,2) + ':' + yyyymmddhh24mmss.substr(10,2) + ':' + yyyymmddhh24mmss.substr(12,2) : '';
     },
-    formatDate: function(dateObj) {
-        var year = dateObj.getUTCFullYear(),
+    formatDate: function(dateObj, _datesep) {
+        var datesep = _datesep || '',
+            year = dateObj.getUTCFullYear(),
             month = dateObj.getUTCMonth()+1,
             date = dateObj.getUTCDate();
-        return '' + year + (month < 10 ? 0 : '') + month + (date < 10 ? 0 : '') + date;
+        return '' + year + datesep + (month < 10 ? 0 : '') + month + datesep + (date < 10 ? 0 : '') + date;
     },
     zeroPad: function(num, length) {
         var str = '' + num,
@@ -198,19 +203,22 @@ pl.implement(DateClass, {
 
 function NumberClass() {}
 pl.implement(NumberClass, {
-    formatText: function(num, _prefix, _postfix, _thousandsep, _decimalpoint) {
+    formatText: function(num, _prefix, _postfix, _thousandsep, _decimalpoint, _numdecimals) {
         var prefix = _prefix || '',
             postfix = _postfix || '',
             thousandsep = _thousandsep || ',',
             decimalpoint = _decimalpoint || '.',
-            nStr, x, x1, x2, rgx, text;
+            numdecimals = _numdecimals || 0,
+            nStr, f, g, x, x1, x2raw, x2, rgx, text, i;
         if (!num) {
             return '';
         }
 	    nStr = NumberClass.prototype.clean(num);
-		x = nStr.split(decimalpoint);
-		x1 = x[0];
-		x2 = x.length > 1 ? decimalpoint + x[1] : '';
+        f = 1.0 * nStr;
+        g = f.toFixed(numdecimals);
+		x = g.split('.');
+        x1 = x[0];
+        x2 = numdecimals > 0 ? decimalpoint + x[1] : '';
 		rgx = /(\d+)(\d{3})/;
 		while (rgx.test(x1)) {
 			x1 = x1.replace(rgx, '$1' + thousandsep + '$2');
@@ -238,11 +246,13 @@ pl.implement(CurrencyClass, {
     format: function(num) {
         return NumberClass.prototype.formatText(num, '$');
     },
-    format: function(num, currency) {
-        var prefix;
-        var postfix;
-        var thousands;
-        var decimal;
+    format: function(num, _currency, _decimalpoints) {
+        var currency = _currency || 'usd',
+            decimalpoints = _decimalpoints !== undefined || 2,
+            prefix,
+            postfix,
+            thousands,
+            decimal;
         if (currency === 'pln') {
             prefix = '';
             postfix = 'zł';
@@ -255,7 +265,7 @@ pl.implement(CurrencyClass, {
             thousands = ',';
             decimal = '.';
         }
-        return NumberClass.prototype.formatText(num, prefix, postfix, thousands, decimal);
+        return NumberClass.prototype.formatText(num, prefix, postfix, thousands, decimal, decimalpoints);
     },
     formatNoSymbol: function(num) {
         return NumberClass.prototype.formatText(num, '');

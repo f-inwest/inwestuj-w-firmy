@@ -2695,8 +2695,15 @@ color: #fff;
 }
 .contributiondisablebutton {
     position: absolute;
-    right: 0px!important;
+    right: 0!important;
     top: 0px!important;
+    text-align: center;
+    margin-right: 0;
+}
+.contributiondownloadbutton {
+    position: absolute;
+    right: 0!important;
+    top: 47px!important;
     text-align: center;
     margin-right: 0;
 }
@@ -2714,7 +2721,7 @@ color: #fff;
 .contributiondownloadpanel {
     padding-bottom: 0;
     padding-top: 10px;
-    height: 96px;
+    /* height: 96px; */
 }
 .contributionenableline {
     margin: 0px;
@@ -2726,10 +2733,19 @@ color: #fff;
     margin: 0px;
     padding: 0px;
     position: relative;
-    min-height: 79px;
+    min-height: 125px;
 }
 .contributioninnerp {
     width: 470px;
+}
+.contribution-member-cell {
+    width: 200px;
+}
+.contribution-cell {
+    text-align: right;
+}
+.contribution-table {
+    margin-bottom: 0;
 }
 .addcontributiondateinput {
     color: #49515a !important;
@@ -2775,6 +2791,12 @@ color: #fff;
     right: 37px;
     margin-top: 0;
 }
+.downloadcontributionspinner {
+    position: absolute;
+    top: 47px;
+    right: 37px;
+    margin-top: 0;
+}
 .addmemberinput {
     width: 268px !important;
     color: #49515a !important;
@@ -2788,6 +2810,15 @@ color: #fff;
     position: absolute;
     bottom: 0;
     right: 120px;
+}
+.addmemberauto {
+    border: 1px solid #bbb;
+    color: #49515a;
+    font-size: 14px;
+    padding: 6px 5px 3px 5px;
+    margin-top: 6px;
+    margin-bottom: 5px;
+    height: 21px;
 }
 .delete-cell {
     padding: 0;
@@ -2809,6 +2840,9 @@ color: #fff;
 .delete-button:hover {
     cursor: pointer;
 }
+.delete-id {
+    display: none;
+}
 .approve-button {
     background:url(../img/add_16.png);
     float: left;
@@ -2828,7 +2862,40 @@ color: #fff;
 .reject-button:hover {
     cursor: pointer;
 }
-
+.hourly-rate-label {
+    position: absolute;
+    bottom: 50px;
+    font-weight: bold;
+    left: 5px;
+}
+.hourly-rate-input {
+    left: 130px;
+    bottom: 47px;
+    color: #49515a!important;
+    font-size: 14px!important;
+    position: absolute;
+    margin-top: 0!important;
+    width: 100px!important;
+    margin-bottom: 0!important;
+    text-align: right;
+}
+.interest-rate-label {
+    position: absolute;
+    left: 5px;
+    bottom: 5px;
+    font-weight: bold;
+}
+.interest-rate-input {
+    left: 130px;
+    bottom: 1px;
+    color: #49515a!important;
+    font-size: 14px!important;
+    position: absolute;
+    margin-top: 0!important;
+    width: 100px!important;
+    margin-bottom: 0!important;
+    text-align: right;
+}
 
 /* bids */
 
