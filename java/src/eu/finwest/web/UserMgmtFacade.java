@@ -807,7 +807,7 @@ public class UserMgmtFacade {
 				break;
 			}
 		}
-				
+		
 		userList.setUsers(DtoToVoConverter.convertShortUsers(users));
 		userList.setUsersProperties(null);
 		if (loggedInUser != null) {

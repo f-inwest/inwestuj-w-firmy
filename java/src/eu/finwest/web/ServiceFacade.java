@@ -1,11 +1,17 @@
 package eu.finwest.web;
 
+import java.io.DataOutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.appengine.api.blobstore.BlobstoreService;
@@ -444,4 +450,70 @@ public class ServiceFacade {
 		
 		return list;
 	}
+
+	public int validateSmsCode(UserVO loggedInUser, String sellerId, String value, String code) {
+		String returnValue = fetchVerificationData(sellerId, value, code);
+		if (StringUtils.equals(returnValue, "OK")) {
+			log.info("SMS validation successful");
+			return 0;
+		} else if (StringUtils.startsWith(returnValue, "ERROR")) {
+			String errorCode = StringUtils.substring(returnValue, 5).trim();
+			int error = NumberUtils.toInt(errorCode);
+			String message = "";
+			switch(error) {
+				case 4:
+					message = "invalid sms code or code has been already used";
+				break;
+				case 101:
+					message = "invalid or incomplete verification request";
+				break;
+				case 102:
+					message = "sms code expired";
+				break;
+				case 103:
+					message = "invalid value for code";
+				break;
+			}
+			log.info("SMS validation error: " + error + " " + message);
+			return error;
+		} else {
+			log.info("SMS validation error: " + returnValue);
+			return 1;
+		}
+	}
+	
+	private static String fetchVerificationData(String sellerId, String value, String code) {
+		String url = "https://secure.przelewy24.pl/smsver.php";
+		try {
+			String params = "p24_id_sprzedawcy=" + sellerId + "&p24_kwota=" + value + "&p24_sms=" +code;
+
+			HttpURLConnection connection = (HttpURLConnection)new URL(url).openConnection();
+			
+			connection.setRequestMethod("POST");
+			connection.setConnectTimeout(2000);
+			connection.setReadTimeout(5000);
+			connection.addRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.01; Windows NT 5.0)");			
+			connection.setDoOutput(true);
+			connection.setDoInput(true);
+			connection.setInstanceFollowRedirects(false); 
+			connection.setRequestMethod("POST"); 
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); 
+			connection.setRequestProperty("charset", "utf-8");
+			connection.setRequestProperty("Content-Length", "" + Integer.toString(params.getBytes().length));
+			connection.setUseCaches (false);
+
+			DataOutputStream wr = new DataOutputStream(connection.getOutputStream ());
+			wr.writeBytes(params);
+			wr.flush();
+			wr.close();
+			
+			byte[] docBytes = IOUtils.toByteArray(connection.getInputStream());
+			log.info("Fetched " + docBytes.length + " bytes from " + url);
+			return new String(docBytes, "UTF-8");
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Error fetching import source from " + url, e);
+			return null;
+		}
+	}
+
 }
