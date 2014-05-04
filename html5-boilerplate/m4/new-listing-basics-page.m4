@@ -37,7 +37,7 @@ include(company-not-found.m4)
 <div class="span-16">
 
     <div class="boxtitle basicstitle header-nobottom">
-        <span class="titletext">@lang_project_information@</span>
+        <span class="titletext">@lang_project_information_required@</span>
         <div class="titleinfobtn"></div>
         <div class="titleinfo">
             <label class="titleinfoheader">@lang_instructions@</label>
@@ -299,6 +299,10 @@ include(images-panel-editable.m4)
 
     <a href="/new-listing-documents-page.html">
         <div class="sidebox investbutton" id="documentbutton">@lang_add_document@</div>
+    </a>
+    
+    <a id="editcontributions_a" href="">
+        <div class="sidebox investbutton" id="editcontributions">@lang_add_members@</div>
     </a>
 
     <div class="boxtitle boxtitleside clear boxtitleside-logo header-nobottom">@lang_upload_logo@</span></div>

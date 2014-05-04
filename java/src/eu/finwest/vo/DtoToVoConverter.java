@@ -400,6 +400,10 @@ public class DtoToVoConverter {
 	}
 
 	public static NotificationVO convert(Notification notifDTO) {
+		return convert(notifDTO, FrontController.getLangVersion());
+	}
+	
+	public static NotificationVO convert(Notification notifDTO, LangVersion lang) {
 		if (notifDTO == null) {
 			return null;
 		}
@@ -426,106 +430,110 @@ public class DtoToVoConverter {
 		notif.setRead(notifDTO.read);
 		String listingLink = notifDTO.getTargetLink();
 		notif.setLink(listingLink);
-		// adding domain to the link
-		listingLink = notif.getLink();
-		String listingName = notifDTO.listingName;
+		
+		applyNotificationLabels(lang, notifDTO, notif);
+
+		return notif;
+	}
+
+	private static void applyNotificationLabels(LangVersion lang, Notification notifDTO, NotificationVO notif) {
 		switch(notifDTO.type) {
 		case NEW_LISTING:
-			notif.setTitle(Translations.getText("notif_new_listing_title", listingName));
+			notif.setTitle(Translations.getText(lang, "notif_new_listing_title", notifDTO.listingName));
 			String profileUrl = BaseVO.getServiceLocation() + "/profile-page.html?id=" + notifDTO.listingOwnerUser.getString();
-			notif.setText1(Translations.getText("notif_new_listing_text", profileUrl, notifDTO.listingOwner));
+			notif.setText1(Translations.getText(lang, "notif_new_listing_text", profileUrl, notifDTO.listingOwner));
 			notif.setText2(notifDTO.message);
-			notif.setText3(Translations.getText("notif_visit_listing", listingLink));
+			notif.setText3(Translations.getText(lang, "notif_visit_listing", notif.getLink()));
 			break;
 		case LISTING_ACTIVATED:
-			notif.setTitle(Translations.getText("notif_listing_activated_title", listingName));
-			notif.setText1(Translations.getText("notif_listing_activated_text", listingName));
+			notif.setTitle(Translations.getText(lang, "notif_listing_activated_title", notifDTO.listingName));
+			notif.setText1(Translations.getText(lang, "notif_listing_activated_text", notifDTO.listingName));
 			notif.setText2(notifDTO.message);
-			notif.setText3(Translations.getText("notif_visit_listing", listingLink));
+			notif.setText3(Translations.getText(lang, "notif_visit_listing", notif.getLink()));
 			break;
 		case LISTING_FROZEN:
-			notif.setTitle(Translations.getText("notif_listing_frozen_title", listingName));
-			notif.setText1(Translations.getText("notif_listing_frozen_text", listingName));
+			notif.setTitle(Translations.getText(lang, "notif_listing_frozen_title", notifDTO.listingName));
+			notif.setText1(Translations.getText(lang, "notif_listing_frozen_text", notifDTO.listingName));
             notif.setText2(notifDTO.message);
-            notif.setText3(Translations.getText("notif_visit_listing", listingLink));
+            notif.setText3(Translations.getText(lang, "notif_visit_listing", notif.getLink()));
 			break;
 		case LISTING_WITHDRAWN:
-			notif.setTitle(Translations.getText("notif_listing_withdrawn_title", listingName));
-			notif.setText1(Translations.getText("notif_listing_withdrawn_text", listingName));
+			notif.setTitle(Translations.getText(lang, "notif_listing_withdrawn_title", notifDTO.listingName));
+			notif.setText1(Translations.getText(lang, "notif_listing_withdrawn_text", notifDTO.listingName));
 			notif.setText2(notifDTO.message);
-			notif.setText3(Translations.getText("notif_visit_listing", listingLink));
+			notif.setText3(Translations.getText(lang, "notif_visit_listing", notif.getLink()));
 			break;
         case LISTING_SENT_BACK:
-            notif.setTitle(Translations.getText("notif_listing_sentback_title", listingName));
-            notif.setText1(Translations.getText("notif_listing_sentback_text", listingName));
+            notif.setTitle(Translations.getText(lang, "notif_listing_sentback_title", notifDTO.listingName));
+            notif.setText1(Translations.getText(lang, "notif_listing_sentback_text", notifDTO.listingName));
             notif.setText2(notifDTO.message);
-            notif.setText3(Translations.getText("notif_visit_listing", listingLink));
+            notif.setText3(Translations.getText(lang, "notif_visit_listing", notif.getLink()));
             break;
 		case NEW_COMMENT_FOR_MONITORED_LISTING:
-			notif.setTitle(Translations.getText("notif_comment_for_monitored_title", listingName));
-			notif.setText1(Translations.getText("notif_comment_for_monitored_text", notifDTO.userNickname));
+			notif.setTitle(Translations.getText(lang, "notif_comment_for_monitored_title", notifDTO.listingName));
+			notif.setText1(Translations.getText(lang, "notif_comment_for_monitored_text", notifDTO.fromUserNickname));
 			notif.setText2(notifDTO.message);
-			notif.setText3(Translations.getText("notif_comment_visit_listing", listingLink));
+			notif.setText3(Translations.getText(lang, "notif_comment_visit_listing", notif.getLink()));
 			break;
 		case NEW_COMMENT_FOR_YOUR_LISTING:
-			notif.setTitle(Translations.getText("notif_comment_for_your_listing_title", listingName));
-			notif.setText1(Translations.getText("notif_comment_for_your_listing_text", notifDTO.userNickname));
+			notif.setTitle(Translations.getText(lang, "notif_comment_for_your_listing_title", notifDTO.listingName));
+			notif.setText1(Translations.getText(lang, "notif_comment_for_your_listing_text", notifDTO.fromUserNickname));
 			notif.setText2(notifDTO.message);
-			notif.setText3(Translations.getText("notif_comment_visit_listing", listingLink));
+			notif.setText3(Translations.getText(lang, "notif_comment_visit_listing", notif.getLink()));
 			break;
 		case ASK_LISTING_OWNER:
-		    notif.setTitle(Translations.getText("notif_ask_owner_title", listingName));
-            notif.setText1(Translations.getText("notif_ask_owner_text", listingName));
+		    notif.setTitle(Translations.getText(lang, "notif_ask_owner_title", notifDTO.listingName));
+            notif.setText1(Translations.getText(lang, "notif_ask_owner_text", notifDTO.listingName));
 			notif.setText2(notifDTO.message);
-			notif.setText3(Translations.getText("notif_visit_listing", listingLink));
+			notif.setText3(Translations.getText(lang, "notif_visit_listing", notif.getLink()));
 			break;
 		case PRIVATE_MESSAGE:
-		    notif.setTitle(Translations.getText("notif_private_message_title"));
-            notif.setText1(Translations.getText("notif_private_message_text", notifDTO.fromUserNickname));
+		    notif.setTitle(Translations.getText(lang, "notif_private_message_title"));
+            notif.setText1(Translations.getText(lang, "notif_private_message_text", notifDTO.fromUserNickname));
 		    notif.setText2(notifDTO.message);
 		    try {
 		    	String messagePageUrl = BaseVO.getServiceLocation() + "/messages-page.html?from_user_id=" + notifDTO.listingOwnerUser.getString()
 		    		+ "&from_user_nickname=" + notifDTO.fromUserNickname;
-		    	notif.setText3(Translations.getText("notif_visit_coversation_with", messagePageUrl, notifDTO.fromUserNickname));
+		    	notif.setText3(Translations.getText(lang, "notif_visit_coversation_with", messagePageUrl, notifDTO.fromUserNickname));
 		    } catch (Exception e) {
-		    	notif.setText3(Translations.getText("notif_visit_coversations", BaseVO.getServiceLocation() + "/message-group-page.html"));
+		    	notif.setText3(Translations.getText(lang, "notif_visit_coversations", BaseVO.getServiceLocation() + "/message-group-page.html"));
 		    }
 			break;
 		case NEW_BID_FOR_YOUR_LISTING:
-			notif.setTitle(Translations.getText("notif_new_bid_title", listingName));
-			notif.setText1(Translations.getText("notif_new_bid_text", listingName, notifDTO.userNickname));
+			notif.setTitle(Translations.getText(lang, "notif_new_bid_title", notifDTO.listingName));
+			notif.setText1(Translations.getText(lang, "notif_new_bid_text", notifDTO.listingName, notifDTO.fromUserNickname));
 			notif.setText2("");
-			notif.setText3(Translations.getText("notif_visit_bids", listingLink));
+			notif.setText3(Translations.getText(lang, "notif_visit_bids", notif.getLink()));
 			break;
 		case YOUR_BID_WAS_COUNTERED:
-			notif.setTitle(Translations.getText("notif_counter_offer_title", listingName));
-			notif.setText1(Translations.getText("notif_counter_offer_text", listingName, notifDTO.userNickname));
+			notif.setTitle(Translations.getText(lang, "notif_counter_offer_title", notifDTO.listingName));
+			notif.setText1(Translations.getText(lang, "notif_counter_offer_text", notifDTO.listingName, notifDTO.fromUserNickname));
 			notif.setText2("");
-			notif.setText3(Translations.getText("notif_visit_bids", listingLink));
+			notif.setText3(Translations.getText(lang, "notif_visit_bids", notif.getLink()));
 			break;
 		case YOU_ACCEPTED_BID:
-			notif.setTitle(Translations.getText("notif_accepted_offer_title", listingName));
-			notif.setText1(Translations.getText("notif_accepted_offer_text", listingName, notifDTO.userNickname));
+			notif.setTitle(Translations.getText(lang, "notif_accepted_offer_title", notifDTO.listingName));
+			notif.setText1(Translations.getText(lang, "notif_accepted_offer_text", notifDTO.listingName, notifDTO.fromUserNickname));
 			notif.setText2("");
-			notif.setText3(Translations.getText("notif_visit_bids", listingLink));
+			notif.setText3(Translations.getText(lang, "notif_visit_bids", notif.getLink()));
 			break;
 		case YOUR_BID_WAS_ACCEPTED:
-			notif.setTitle(Translations.getText("notif_your_bid_accepted_title", listingName));
-			notif.setText1(Translations.getText("notif_your_bid_accepted_text", listingName));
+			notif.setTitle(Translations.getText(lang, "notif_your_bid_accepted_title", notifDTO.listingName));
+			notif.setText1(Translations.getText(lang, "notif_your_bid_accepted_text", notifDTO.listingName));
 			notif.setText2("");
-			notif.setText3(Translations.getText("notif_visit_bids", listingLink));
+			notif.setText3(Translations.getText(lang, "notif_visit_bids", notif.getLink()));
 			break;
 		case BID_WAS_WITHDRAWN:
-			notif.setTitle(Translations.getText("notif_bid_withdrawn_title", listingName));
-			notif.setText1(Translations.getText("notif_bid_withdrawn_text", listingName));
+			notif.setTitle(Translations.getText(lang, "notif_bid_withdrawn_title", notifDTO.listingName));
+			notif.setText1(Translations.getText(lang, "notif_bid_withdrawn_text", notifDTO.listingName));
 			notif.setText2("");
-			notif.setText3(Translations.getText("notif_visit_bids", listingLink));
+			notif.setText3(Translations.getText(lang, "notif_visit_bids", notif.getLink()));
 			break;
 		case YOUR_BID_WAS_REJECTED:
-			notif.setTitle(Translations.getText("notif_bid_rejected_title", listingName));
-			notif.setText1(Translations.getText("notif_bid_rejected_text", listingName));
+			notif.setTitle(Translations.getText(lang, "notif_bid_rejected_title", notifDTO.listingName));
+			notif.setText1(Translations.getText(lang, "notif_bid_rejected_text", notifDTO.listingName));
 			notif.setText2("");
-			notif.setText3(Translations.getText("notif_visit_bids", listingLink));
+			notif.setText3(Translations.getText(lang, "notif_visit_bids", notif.getLink()));
 			break;
 		case YOU_PAID_BID:
 		case BID_PAID_FOR_YOUR_LISTING:
@@ -533,16 +541,14 @@ public class DtoToVoConverter {
 			break;
 		case ADMIN_REQUEST_TO_BECOME_DRAGON:
 		case USER_PROMOTED_TO_INVESTOR:
-			notif.setTitle(Translations.getText("notif_user_promoted_to_investor_title", notifDTO.listingOwner));
-			notif.setText1(Translations.getText("notif_user_promoted_to_investor_text"));
+			notif.setTitle(Translations.getText(lang, "notif_user_promoted_to_investor_title", notifDTO.listingOwner));
+			notif.setText1(Translations.getText(lang, "notif_user_promoted_to_investor_text"));
 			notif.setText2("");
-			notif.setText3(Translations.getText("notif_visit_profile",
+			notif.setText3(Translations.getText(lang, "notif_visit_profile",
 					BaseVO.getServiceLocation() + "/profile-page.html?id=" + notifDTO.listingOwnerUser.getString()));
 			notif.setLink("/profile-page.html?id=" + notifDTO.listingOwnerUser.getString());
 			break;
 		}
-
-		return notif;
 	}
 
 	public static ShortNotificationVO convertShortNotification(Notification notifDTO) {

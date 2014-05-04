@@ -453,8 +453,14 @@ public class MemCacheFacade {
 			uc.addContribution(c);
 		}
 		
+		double totalValue = 0.0;
 		for (Map.Entry<String, UserContributionVO> entry : contribs.entrySet()) {
 			entry.getValue().updateTextValues();
+			totalValue += entry.getValue().getFinancialValueDouble();
+		}
+		for (Map.Entry<String, UserContributionVO> entry : contribs.entrySet()) {
+			double stake = entry.getValue().getFinancialValueDouble() / totalValue;
+			entry.getValue().setPercentStake(String.format("%.2f", stake * 100.0) + "%");
 		}
 		allContribs.put(listing.getWebKey(), contribs);
 		return contribs;

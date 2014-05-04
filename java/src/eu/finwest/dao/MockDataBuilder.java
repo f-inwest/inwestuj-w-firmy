@@ -1,6 +1,9 @@
 package eu.finwest.dao;
 
 
+import static eu.finwest.web.LangVersion.EN;
+import static eu.finwest.web.LangVersion.PL;
+
 import java.io.File;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
@@ -66,8 +69,6 @@ import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.UserStats;
 import eu.finwest.datamodel.Vote;
-import static eu.finwest.web.LangVersion.*;
-import eu.finwest.util.OfficeHelper;
 import eu.finwest.util.Translations;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ListPropertiesVO;

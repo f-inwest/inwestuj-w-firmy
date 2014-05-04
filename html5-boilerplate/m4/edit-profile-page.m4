@@ -11,13 +11,22 @@ include(head.m4)
 include(header.m4)
 include(profile-not-found.m4)
 `
+<div class="banner contactbanner">
+    <div class="container">
+        <span class="bannertext span-24">
+            <div class="welcometitle">
+                <span class="titleyour">@lang_editing_profile@</span>
+                <span class="titleuser initialhidden>@lang_projects@ <span class="titleusername"></span></span>
+            </div>
+            <div class="welcometext">
+                <span id="username"></span>
+            </div>
+        </span>
+    </div>
+</div>
 <div class="container">
-    <div class="bannersmall" style="float:left;">
-        <span class="bannertextsmall span-16">@lang_editing_profile@</span>
-    </div> <!-- end banner -->
-
-    <a href="profile-page.html" class="span-3 last backbuttonlink inputbutton backbutton">
-        &lt;&lt; @lang_back@
+    <a class="span-3 last backbuttonlink inputbutton backbutton" href="profile-page.html" style="margin-right: 8px;">
+        &lt;&lt; powrót
     </a>
 </div>
 
@@ -26,16 +35,16 @@ include(profile-not-found.m4)
     <div class="preloadericon"></div>
 </div>
 
-<div class="container">
+<div class="container initialhidden wrapper" style="display: block;">
 
+<div id="personalcolumn" class="initialhidden" style="display: block;">
 <!-- left column -->
-<div class="span-24 initialhidden" id="personalcolumn">
-    <div class="boxtitle">
-        @lang_personal_info@
-        <span class="newlistingtitlemsg" id="personalinfomsg"></span>
-    </div>
+<div class="span-16" style="margin-top: 15px;">
+    <div style="float:left;" class="bannersmall">
+        <span class="bannertextsmall span-16">dane osobiste</span>
+    </div> <!-- end banner -->
 
-    <div class="boxpanel boxpanelfull editprofilepanel">
+    <div class="boxpanel editprofilepanel">
         <div class="formitem sideinfoitem clear">
             <label class="inputlabel" for="email">@lang_email@</label>
             <span class="inputfield">
@@ -48,11 +57,11 @@ include(profile-not-found.m4)
             </p>
         </div>
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="username">@lang_nickname@</label>
+            <label class="inputlabel" for="username" style="padding-top: 0;">@lang_nickname@</label>
             <span class="inputfield">
                 <input class="text inputwidetext" type="text" name="username" id="username" value=""></input>
             </span>
-            <p class="sideinfo">
+            <p class="sideinfo" style="z-index: 10000;">
                 <label class="sideinfoheader">@lang_nickname@</label>
                 <br />
                 @lang_nickname_desc@
@@ -62,11 +71,11 @@ include(profile-not-found.m4)
             </span>
         </div>
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="name">@lang_username@</label>
+            <label class="inputlabel" for="name" style="padding-top: 0;">@lang_username@</label>
             <span class="inputfield">
                 <input class="text inputwidetext" type="text" name="name" id="name" value=""></input>
             </span>
-            <p class="sideinfo">
+            <p class="sideinfo" style="z-index: 10000;">
                 <label class="sideinfoheader">@lang_username@</label>
                 <br />
                 @lang_username_desc@
@@ -76,11 +85,11 @@ include(profile-not-found.m4)
             </span>
         </div>
         <div class="formitem sideinfoitem clear">
-            <label class="inputlabel" for="notify_enabled">@lang_notify@</label>
-            <span class="inputcheckbox">
+            <label class="inputlabel" for="notify_enabled" style="padding-top: 0;">@lang_notify@</label>
+            <span class="inputcheckbox" style="padding-top: 12px;">
                 <div id="notify_enabled"></div>
             </span>
-            <p class="sideinfo">
+            <p class="sideinfo" style="z-index: 10000;">
                 <label class="sideinfoheader">@lang_notify@</label>
                 <br />
             </p>
@@ -174,7 +183,7 @@ include(profile-not-found.m4)
     </div>
 -->
 
-    <div id="deactivatebox" class="indentedtextbox deactivateguardbox">
+    <div id="deactivatebox" class="indentedtextbox deactivateguardbox" style="margin-top: 350px;">
         <a href="#" id="deactivateguardlink" class="span-6 last backbuttonlink inputbutton backbutton">@lang_deactivate_account@</a>
         <div class="initialhidden deactivatebox" id="deactivateguard">
             <p>@lang_deactivate_warning@</p>
@@ -188,23 +197,23 @@ include(profile-not-found.m4)
 
 <!-- right column -->
 <div class="span-8 last">
-<!--
-    <div class="boxtitle">TIPS!</div>
+    <div class="boxtitle boxtitleside">@lang_help@</div>
+
     <div class="sidebox">
-        <p>NICKNAME - the publicly viewable name on this site for comments</p>
-        <p>EMAIL - your email address used for notifications, never publicly displayed</p>
-        <p>NAME - your first and last name, not public, only for private communications</p>
+        <p><b>@lang_email@</b> - @lang_email_desc@</p>
+        <p><b>@lang_nickname@</b> - @lang_nickname_desc@</p>
+        <p><b>@lang_username@</b> - @lang_username_desc@</p>
+        <p><b>@lang_notify@</b> - @lang_notify_desc@</p>
+<!--
         <p>INVESTOR - whether you are an accredited investor, professional investor, or otherwise permitted to invest in private companies</p>
         <p>TITLE - your position in the company, school or organization, private</p>
         <p>COMPANY - your current company, school, or organization, private</p>
         <p>PHONE - your phone country code and number, private</p>
         <p>LOCATION - where do you live or where is your company located, e.g. 12345 Sunset Blvd, San Andreas, CA, USA: private</p>
-        <p>NOTIFY - whether you would like to receive an email copy of your notifications, you may still receive an email for legally required notices even if disabled</p>
         <p>CHANGE PASSWORD - password must be at least 8 characters long, cannot contain your name or username, and cannot have more than two consecutive items in sequence</p>
         <p>DEACTIVATE ACCOUNT - your entire account will be deactivated, only certain legally required information will be kept on file</p>
-    </div>
 -->
-
+    </div>
 </div> <!-- end right column -->
 
 </div> <!-- end container -->

@@ -122,6 +122,7 @@ pl.implement(NewListingQAClass, {
             complete = function(json) {
                 self.base.listing.has_ip = json.listing.has_ip;
                 pl('#ip-editable-msg').html('<span class="successful">@lang_deactivated@</span>');
+                pl('#ip-activate-deactivate-btn').text('@lang_activate@');
             },
             data = {
                 listing: {
