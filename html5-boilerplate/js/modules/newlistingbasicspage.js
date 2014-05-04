@@ -2,6 +2,7 @@ function NewListingBasicsClass() {
     var qs = new QueryStringClass();
     this.importtype = qs.vars.importtype;
     this.importid = qs.vars.importid;
+    this.idparam = qs.vars['id'];
     this.base = new NewListingBaseClass();
     this.imagepanel = new ImagePanelClass({ editmode: true });
     this.displayImportType = {
@@ -16,15 +17,17 @@ pl.implement(NewListingBasicsClass, {
 
     load: function() {
         var self = this,
-            url = this.importtype && this.importid ? '/listing/import' : '/listing/create',
+            url = this.importtype && this.importid ? '/listing/import' : (this.idparam ? '/listing/get/' + this.idparam : '/listing/create'),
             data = this.importtype && this.importid ? { type: this.importtype, id: this.importid } : null,
             displayImportType = this.displayImportType[this.importtype] || this.importtype,
             complete = function(json) {
                 var listing = json && json.listing ? json.listing : {},
+                    loggedin_profile = json && json.loggedin_profile ? json.loggedin_profile : {},
                     categories = json && json.categories ? json.categories : {},
                     header = new HeaderClass();
                 header.setLogin(json);
                 self.base.store(listing);
+                self.base.loggedin_profile = loggedin_profile;
                 self.storeCategories(categories);
                 self.display();
                 pl('.preloader').hide();
@@ -40,7 +43,9 @@ pl.implement(NewListingBasicsClass, {
             pl('#newlistingbanner').text('@lang_imported_from@ ' + displayImportType.toUpperCase());
             ajax.ajaxOpts.data = data;
         }
-        ajax.setPost();
+        if (!self.idparam) {
+            ajax.setPost();
+        }
         ajax.call();
     },
 
@@ -62,11 +67,17 @@ pl.implement(NewListingBasicsClass, {
     },
 
     display: function() {
-        var status = this.base.listing.status;
-        if (status !== 'new') {
+        var loggedin_profile_id = this.base.loggedin_profile ? this.base.loggedin_profile.profile_id : null,
+            listing_profile_id = this.base.listing ? this.base.listing.profile_id : null,
+            listing_id = this.base.listing ? this.base.listing.listing_id : null,
+            editable = loggedin_profile_id && listing_profile_id && loggedin_profile_id === listing_profile_id;
+        if (!listing_id) {
+            document.location = '/';
+        }
+        else if (!editable) {
             document.location = '/company-page.html?id=' + this.base.listing.listing_id;
         }
-        if (!this.bound) {
+        else if (!this.bound) {
             this.displayButtons();
             this.bindEvents();
             this.bound = true;
@@ -362,6 +373,9 @@ pl.implement(NewListingBasicsClass, {
     },
 
     bindAddressEnterSubmit: function() {
+        if (!window['google']) {
+            return;
+        }
         var self = this;
         pl('#address').bind({
             keyup: function(e) {
@@ -370,15 +384,17 @@ pl.implement(NewListingBasicsClass, {
                     geocoder;
                 if (evt.keyCode() === 13) {
                     address = pl('#address').attr('value'),
-                    geocoder = new google.maps.Geocoder();
-                    geocoder.geocode({address: address}, function(results, status) {
-                        if (status == google.maps.GeocoderStatus.OK) {
-                            self.genPlaceUpdater()(results[0]);
-                        }
-                        else {
-                            pl('#newlistingbasicsmsg').html('<span class="attention">@lang_geocode_error@: ' + status + '</span>');
-                        }
-                    });
+                    geocoder = google ? new google.maps.Geocoder() : null;
+                    if (geocoder) {
+                        geocoder.geocode({address: address}, function(results, status) {
+                            if (status == google.maps.GeocoderStatus.OK) {
+                                self.genPlaceUpdater()(results[0]);
+                            }
+                            else {
+                                pl('#newlistingbasicsmsg').html('<span class="attention">@lang_geocode_error@: ' + status + '</span>');
+                            }
+                        });
+                    }
                     return false;
                 }
                 else {
@@ -412,6 +428,9 @@ pl.implement(NewListingBasicsClass, {
     },
 
     addMap: function(placeUpdater) {
+        if (!window['google']) {
+            return;
+        }
         var self = this,
             lat = this.base.listing.latitude !== null ? this.base.listing.latitude : 51.4791,
             lng = this.base.listing.longitude !== null ? this.base.listing.longitude : 0,
@@ -419,9 +438,9 @@ pl.implement(NewListingBasicsClass, {
             autoOptions = {},
             mapField = pl('#addressmap').get(0),
             mapOptions = {
-                center: new google.maps.LatLng(lat, lng),
+                center: (google ? new google.maps.LatLng(lat, lng) : null),
                 zoom: this.base.listing.address ? 13 : 7,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                mapTypeId: (google ? google.maps.MapTypeId.ROADMAP : null),
                 draggable: false,
                 scrollwheel: false,
                 disableDoubleClickZoom: true,
@@ -484,41 +503,45 @@ pl.implement(NewListingBasicsClass, {
                     }
                 ]
             },
-            addressAuto = new google.maps.places.Autocomplete(autoField, autoOptions),
-            addressMap = new google.maps.Map(mapField, mapOptions),
-            latLng = new google.maps.LatLng(lat, lng),
-            marker = new google.maps.Marker({
+            addressAuto = google ? new google.maps.places.Autocomplete(autoField, autoOptions) : null,
+            addressMap = google ? new google.maps.Map(mapField, mapOptions) : null,
+            latLng = google ? new google.maps.LatLng(lat, lng) : null,
+            marker = google ? new google.maps.Marker({
                 cursor: 'pointer',
                 position: latLng,
                 raiseOnDrag: false,
                 icon: {
-                    anchor: new google.maps.Point(25,15), // wspolzedne poczatku na ikonie tu center statku
+                    anchor: (google ? new google.maps.Point(25,15) : null), // wspolzedne poczatku na ikonie tu center statku
                     url: 'img/statek-ico.png',
                     map: this.addressMap
-                }});
-        addressAuto.bindTo('bounds', addressMap);
-        google.maps.event.addListener(addressAuto, 'place_changed', function() {
-            var place = addressAuto.getPlace(),
-                image;
-            if (place && place.geometry && place.geometry.location) {
-                placeUpdater(place);
-                if (place.geometry.viewport) {
-                    addressMap.fitBounds(place.geometry.viewport);
-                    image = new google.maps.MarkerImage(
-                        place.icon,
-                        new google.maps.Size(71, 71),
-                        new google.maps.Point(0, 0),
-                        new google.maps.Point(17, 34),
-                        new google.maps.Size(35, 35));
-                    marker.setIcon(image);
-                    marker.setPosition(place.geometry.location);
+                }}) : null;
+        if (addressAuto) {
+            addressAuto.bindTo('bounds', addressMap);
+        }
+        if (google) {
+            google.maps.event.addListener(addressAuto, 'place_changed', function() {
+                var place = addressAuto.getPlace(),
+                    image;
+                if (place && place.geometry && place.geometry.location) {
+                    placeUpdater(place);
+                    if (place.geometry.viewport) {
+                        addressMap.fitBounds(place.geometry.viewport);
+                        image = new google.maps.MarkerImage(
+                            place.icon,
+                            new google.maps.Size(71, 71),
+                            new google.maps.Point(0, 0),
+                            new google.maps.Point(17, 34),
+                            new google.maps.Size(35, 35));
+                        marker.setIcon(image);
+                        marker.setPosition(place.geometry.location);
+                    }
+                    else {
+                        addressMap.setCenter(place.geometry.location);
+                        addressMap.setZoom(17);
+                    }
                 }
-                else {
-                    addressMap.setCenter(place.geometry.location);
-                    addressMap.setZoom(17);
-                }
-            }
-        });
+            });
+        }
     }
 
 });

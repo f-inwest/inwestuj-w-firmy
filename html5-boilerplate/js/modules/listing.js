@@ -57,7 +57,6 @@ pl.implement(ListingClass, {
             this.store(json);
         }
         this.displayBasics();
-        this.displayEdit();
         this.displayInvest();
         this.displayGoto();
         this.displayMap();
@@ -97,19 +96,6 @@ pl.implement(ListingClass, {
         }
     },
 
-    displayEdit: function() {
-        console.log('displayEdit');
-        var self = this,
-            editUrl = 'new-listing-basics-page.html';
-        if (self.loggedin_profile && self.loggedin_profile.profile_id === self.profile_id && self.status === 'new') { // owner
-            pl('#editbutton').attr('href', editUrl);
-            pl('#editbutton').show();
-        }
-        else {
-            pl('#editbutton').hide();
-        }
-    },
-
     displayInvest: function() {
         var page = this.loggedin_profile
                 ? (this.loggedin_profile.profile_id === this.profile_id
@@ -126,6 +112,7 @@ pl.implement(ListingClass, {
     },
 
     displayGoto: function() {
+        this.displayBasicsButton();
         this.displayValuationButton();
         this.displayCashFlowButton();
         this.displayModelButton();
@@ -133,6 +120,30 @@ pl.implement(ListingClass, {
         this.displayAddDocumentButton();
         this.displayRequestDocumentButtons();
         this.displayContributionsButton();
+    },
+
+    displayBasicsButton: function() {
+        var self = this,
+            text,
+            ajax,
+            url;
+        if (this.status === 'new') {
+            text = '@lang_basics@';
+            url = '/new-listing-basics-page.html';
+        }
+        else if ((this.status === 'posted' || this.status === 'active')
+                && this.loggedin_profile && this.loggedin_profile.profile_id === this.profile_id) {
+            text = '@lang_revise_info@';
+            url = '/active-listing-basics-page.html?id=' + this.listing_id;
+        }
+        if (url) {
+            pl('#basicsbutton').text(text);
+            pl('#basicsbutton').unbind('click').bind('click', function(e) {
+                document.location = url;
+                e.preventDefault();
+            });
+            pl('#basicsbutton').show();
+        }
     },
 
     displayValuationButton: function() {

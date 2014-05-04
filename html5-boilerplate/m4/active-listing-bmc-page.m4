@@ -17,16 +17,6 @@ include(company-not-found.m4)
 </div>
 <div class="container initialhidden wrapper">
 
-    <div class="bannertextsmall">BUSINESS MODEL CANVAS</div>
-
-    <div class="span-16">
-        <a href="#" class="backbuttonlink">
-            <span class="push-1 span-3 inputbutton backbutton">
-                &lt;&lt; BACK
-            </span>
-        </a>
-    </div>
-
 <div class="span-16">
     <div class="formitem clear">
         <span class="inputmsg" id="newlistingmsg"></span>
