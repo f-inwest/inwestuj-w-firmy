@@ -138,7 +138,7 @@ pl.implement(NewListingBasicsClass, {
     },
 
     displayContributionsButton: function() {
-    	pl('#editcontributions_a').href('/company-members-page.html?id=' + this.base.listing.listing_id);
+    	pl('#editcontributions_a').href = '/company-members-page.html?id=' + this.base.listing.listing_id;
         if (MicroListingClass.prototype.getHasContributions(this.base.listing)) {
             pl('#documentbutton').text('@lang_members@');
         }

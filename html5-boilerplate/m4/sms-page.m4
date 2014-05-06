@@ -4,7 +4,7 @@
 '
 include(head.m4)
 `
-<body class="about-page">
+<body class="sms-page">
 <div id="wrap">
 <div id="main">
 '
@@ -13,8 +13,8 @@ include(header.m4)
 <div class="banner aboutbanner">
     <div class="container">
         <span class="bannertext span-24">
-            <div class="welcometitle">@lang_about_title@</div>
-            <div class="welcometext">@lang_about_desc@</div>
+            <div class="welcometitle">@lang_smspage_title@</div>
+            <div class="welcometext">@lang_smspage_desc@</div>
         </span>
     </div>
 </div>
@@ -24,26 +24,64 @@ include(header.m4)
 <!-- left column -->
 <div class="span-16">
 
-    <div class="boxtitle">@lang_what_we_do@</div>
+    <div class="boxtitle">@lang_sms_reg_intro@</div>
     <div class="boxpanel">
-        <p>@lang_what_we_do_1@</p>
-        <p>@lang_what_we_do_2@</p>
-        <p>@lang_what_we_do_3@</p>
+        @lang_sms_reg_intro_text@
+    </div>
+    
+    <div class="boxtitle">@lang_sms_reg_1@</div>
+    <div class="boxpanel">
+        @lang_sms_reg_1_text@
     </div>
 
-    <div class="boxtitle">@lang_how_to_post@</div>
+    <div class="boxtitle">@lang_sms_reg_2@</div>
     <div class="boxpanel">
-        <p>@lang_how_to_post_1@</p>
-        <p>@lang_how_to_post_2@</p>
-        <p>@lang_how_to_post_3@</p>
+        @lang_sms_reg_2_text@
     </div>
 
-    <div class="boxtitle">@lang_how_to_bid@</div>
+    <div class="boxtitle">@lang_sms_reg_3@</div>
     <div class="boxpanel">
-        <p>@lang_how_to_bid_1@</p>
-        <p>@lang_how_to_bid_2@</p>
-        <p>@lang_how_to_bid_3@</p>
-        <p>@lang_how_to_bid_4@</p>
+        @lang_sms_reg_3_text@
+    </div>
+
+    <div class="boxtitle">@lang_sms_reg_4@</div>
+    <div class="boxpanel">
+        @lang_sms_reg_4_text@
+    </div>
+
+    <div class="boxtitle">@lang_sms_reg_5@</div>
+    <div class="boxpanel">
+        @lang_sms_reg_5_text@
+    </div>
+
+    <div class="boxtitle">@lang_sms_reg_6@</div>
+    <div class="boxpanel">
+        @lang_sms_reg_6_text@
+    </div>
+
+    <div class="boxtitle">@lang_sms_reg_7@</div>
+    <div class="boxpanel">
+        @lang_sms_reg_7_text@
+    </div>
+
+    <div class="boxtitle">@lang_sms_reg_8@</div>
+    <div class="boxpanel">
+        @lang_sms_reg_8_text@
+    </div>
+
+    <div class="boxtitle">@lang_sms_reg_9@</div>
+    <div class="boxpanel">
+        @lang_sms_reg_9_text@
+    </div>
+
+    <div class="boxtitle">@lang_sms_reg_10@</div>
+    <div class="boxpanel">
+        @lang_sms_reg_10_text@
+    </div>
+
+    <div class="boxtitle">@lang_sms_reg_11@</div>
+    <div class="boxpanel">
+        @lang_sms_reg_11_text@
     </div>
 
 </div> <!-- end left column -->

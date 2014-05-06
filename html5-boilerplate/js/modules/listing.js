@@ -113,7 +113,7 @@ pl.implement(ListingClass, {
 
     displayGoto: function() {
         this.displayBasicsButton();
-        this.displayValuationButton();
+        //this.displayValuationButton();
         this.displayCashFlowButton();
         this.displayModelButton();
         this.displayPresentationButton();
