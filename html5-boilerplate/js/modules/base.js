@@ -1513,6 +1513,7 @@ pl.implement(CompanyBannerClass, {
         }
         this.loggedin_profile = json.loggedin_profile;
         this.loggedin_profile_id = this.loggedin_profile && this.loggedin_profile.profile_id;
+        this.pricepoints = new PricepointsClass(json.pricepoints);
     },
 
     displayMinimal: function(json) {
@@ -1644,7 +1645,14 @@ pl.implement(CompanyBannerClass, {
     },
 
     shouldDisplaySubmit: function() {
-        return this.loggedin_profile && this.loggedin_profile.profile_id === this.profile_id && this.status === 'new';
+        //public enum State {NEW, POSTED, ACTIVE, CLOSED, WITHDRAWN, FROZEN};
+        var self = this,
+            activationPricepoints = (self.pricepoints && self.pricepoints.pricepointsForType('PRJ_ACT')) || [],
+            isActivationPaid = activationPricepoints.length == 0;
+        console.log('shouldDisplaySubmit() pricepoints=' + self.pricepoints + ' activationPricepoints=' + activationPricepoints);
+        return this.loggedin_profile && this.loggedin_profile.profile_id === this.profile_id
+            && this.status === 'new'
+            && isActivationPaid;
     },
 
     displaySubmit: function() {

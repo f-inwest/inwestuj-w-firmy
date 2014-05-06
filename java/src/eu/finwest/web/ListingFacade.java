@@ -195,7 +195,7 @@ public class ListingFacade {
 			result.setListing(newListing);
 			result.setCategories(getCategories());
 
-    		String[] url = ServiceFacade.instance().createUploadUrls(loggedInUser, "/file/upload/" + newListing.getId() + "/", 1);
+    		String[] url = ServiceFacade.instance().createUploadUrls(loggedInUser, "/file/upload/" + newListing.getId() + "/", newListing.getCampaign(), 1);
     		newListing.setUploadUrl(url[0]);
 		}
 		return result;
@@ -300,7 +300,7 @@ public class ListingFacade {
 					listing.setNotes(listingDTO.notes);
 				}
 		    	if (loggedInUser != null && StringUtils.equals(loggedInUser.getId(), listingDTO.owner.getString())) {
-		    		String[] url = ServiceFacade.instance().createUploadUrls(loggedInUser, "/file/upload/" + listing.getId() + "/", 1);
+		    		String[] url = ServiceFacade.instance().createUploadUrls(loggedInUser, "/file/upload/" + listing.getId() + "/", listing.getCampaign(), 1);
 		    		listing.setUploadUrl(url[0]);
 		    		// listing owner would be able to pay for listing services
 		    		listingAndUser.setPricePoints(UserMgmtFacade.instance().getPricePoints(loggedInUser, listing));

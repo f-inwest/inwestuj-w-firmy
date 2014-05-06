@@ -81,7 +81,7 @@ include(header.m4)
         <div class="formitem clear">
 	        <span class="inputlabel"></span>
             <span class="span-9 inputmsg" id="submitmsg">&nbsp;</span>
-            <span class="span-3 inputbutton" id="submitbutton">@lang_submit@</span>
+            <span class="span-3 inputbutton" id="submitcontactbutton">@lang_submit@</span>
             <span class="span-6 inprogress inputmsg initialhidden" id="confirmmsg">@lang_send_confirm@</span>
             <a href="#" id="sendbuttonlink">
                 <span class="span-3 inputbutton initialhidden" id="sendbutton">@lang_send@</span>

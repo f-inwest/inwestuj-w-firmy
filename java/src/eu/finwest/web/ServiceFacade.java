@@ -278,7 +278,20 @@ public class ServiceFacade {
 		while (numberOfUrls > 0) {
 			String discreteUploadUrl = uploadUrl + (uploadUrl.endsWith("/") ? "" : "/") ;
 			discreteUploadUrl += "" + new Date().getTime() + numberOfUrls + loggedInUser.hashCode();
-			urls[--numberOfUrls] = blobstoreService.createUploadUrl(discreteUploadUrl);
+            urls[--numberOfUrls] = blobstoreService.createUploadUrl(discreteUploadUrl);
+		}
+		return urls;
+	}
+
+	public String[] createUploadUrls(UserVO loggedInUser, String uploadUrl, String campaignId, int numberOfUrls) {
+		BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+		String[] urls = new String[numberOfUrls];
+		while (numberOfUrls > 0) {
+			String discreteUploadUrl = uploadUrl + (uploadUrl.endsWith("/") ? "" : "/") ;
+			discreteUploadUrl += "" + new Date().getTime() + numberOfUrls + loggedInUser.hashCode();
+			String nonCampaignUploadUrl = blobstoreService.createUploadUrl(discreteUploadUrl);
+            String campaignSensitiveUploadUrl = nonCampaignUploadUrl.replaceFirst("(https?://)", "$1" + campaignId + ".");
+            urls[--numberOfUrls] = campaignSensitiveUploadUrl;
 		}
 		return urls;
 	}
