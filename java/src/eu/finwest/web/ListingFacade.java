@@ -313,7 +313,7 @@ public class ListingFacade {
 				listingAndUser.setErrorMessage(Translations.getText("lang_error_listing_not_found"));
 			}
 		} catch (Exception e) {
-			log.warning("Invalid key passed '" + listingId + "'");
+			log.log(Level.WARNING, "Error loading listing '" + listingId + "'", e);
 			listingAndUser.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
 			listingAndUser.setErrorMessage(Translations.getText("lang_error_listing_not_found"));
 		}
@@ -1812,8 +1812,8 @@ public class ListingFacade {
 		listing.setPreviousValuation((int)listingStats.previousValuation);
 		listing.setScore((int)listingStats.score);
 
-		listing.setContributor(StringUtils.contains(listing.getContributors(), loggedInUser.getId())
-				|| StringUtils.equals(listing.getOwner(), loggedInUser.getId()));
+		listing.setContributor(loggedInUser != null && (StringUtils.contains(listing.getContributors(), loggedInUser.getId())
+				|| StringUtils.equals(listing.getOwner(), loggedInUser.getId())));
 		int numContrib = 0;
 		if (listing.isHasContributions()) {
 			numContrib = 1 + (StringUtils.isNotBlank(listing.getContributors()) ? StringUtils.split(listing.getContributors(), " ").length : 0);
@@ -2571,6 +2571,7 @@ public class ListingFacade {
 		contribution.minutes = (int)(hours * 60.0);
 		contribution.interestPerDay = dbListing.contributionInterestDaily;
 		contribution.perHour = dbListing.contributionPerHour;
+		contribution.description = contrib.getDescription();
 		
 		if (contribution.money == 0 && contribution.minutes == 0) {
 			log.log(Level.INFO, "Contribution needs to have money or hours set, money=" + contribution.money + ", minutes=" + contribution.minutes);

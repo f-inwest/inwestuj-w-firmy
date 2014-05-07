@@ -161,6 +161,12 @@ public class MemCacheFacade {
 	}
 	
 	public List<Object[]> getListingLocationsFromCache() {
+		Map<String, List<Object[]>> allData = getAllListingLocations();
+		List<Object[]> list = allData.get(FrontController.getCampaign().getSubdomain());
+		return list != null ? list : new ArrayList<Object[]>();
+	}
+
+	private Map<String, List<Object[]>> getAllListingLocations() {
 		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
 		@SuppressWarnings("unchecked")
 		Map<String, List<Object[]>> allData = (Map<String, List<Object[]>>)mem.get(MemCacheFacade.MEMCACHE_ALL_LISTING_LOCATIONS);
@@ -170,8 +176,7 @@ public class MemCacheFacade {
 			allData = convertListingLocations(locations);
 			mem.put(MemCacheFacade.MEMCACHE_ALL_LISTING_LOCATIONS, allData);
 		}
-		List<Object[]> list = allData.get(FrontController.getCampaign().getSubdomain());
-		return list != null ? list : new ArrayList<Object[]>();
+		return allData;
 	}
 
 	public void updateLocations(List<Location> allLocations, List<ListingLocation> allListingLocations) {
@@ -218,8 +223,7 @@ public class MemCacheFacade {
 
 	public void updateCacheForListing(Listing listing, Listing.State oldState) {
 		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
-		@SuppressWarnings("unchecked")
-		Map<String, List<Object[]>> allData = (Map<String, List<Object[]>>)mem.get(MemCacheFacade.MEMCACHE_ALL_LISTING_LOCATIONS);
+		Map<String, List<Object[]>> allData = getAllListingLocations();
 		
 		List<Object[]> result = allData.get(listing.campaign == null ? listing.lang.name().toLowerCase() : listing.campaign);
 		if (result == null) {
@@ -453,8 +457,14 @@ public class MemCacheFacade {
 			uc.addContribution(c);
 		}
 		
+		double totalValue = 0.0;
 		for (Map.Entry<String, UserContributionVO> entry : contribs.entrySet()) {
 			entry.getValue().updateTextValues();
+			totalValue += entry.getValue().getFinancialValueDouble();
+		}
+		for (Map.Entry<String, UserContributionVO> entry : contribs.entrySet()) {
+			double stake = entry.getValue().getFinancialValueDouble() / totalValue;
+			entry.getValue().setPercentStake(String.format("%.2f", stake * 100.0) + "%");
 		}
 		allContribs.put(listing.getWebKey(), contribs);
 		return contribs;

@@ -312,6 +312,7 @@ public class NotificationFacade {
 			ownerNotif.user = listingOwner.getKey();
 			ownerNotif.userEmail = listingOwner.email;
 			ownerNotif.userNickname = listingOwner.nickname;
+			ownerNotif.fromUserNickname = commenter.nickname;
 			log.info("Creating notification: " + ownerNotif);
 			skipEmails.add(listingOwner.email);
 			toStore.add(ownerNotif);
@@ -328,6 +329,7 @@ public class NotificationFacade {
 				monitoredNotif.user = monitor.user;
 				monitoredNotif.userEmail = monitor.userEmail;
 				monitoredNotif.userNickname = monitor.userNickname;
+				monitoredNotif.fromUserNickname = commenter.nickname;
 				log.info("Creating notification: " + monitoredNotif);
 				toStore.add(monitoredNotif);
 			}
@@ -353,6 +355,7 @@ public class NotificationFacade {
 		notification.user = toUser.getKey();
 		notification.userEmail = toUser.email;
 		notification.userNickname = toUser.nickname;
+		notification.fromUserNickname = investor.nickname;
 		notification.investor = investor.getKey();
 		switch (bid.type) {
 		case INVESTOR_POST:

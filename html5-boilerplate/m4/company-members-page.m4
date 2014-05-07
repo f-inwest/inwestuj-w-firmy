@@ -51,15 +51,16 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
                 <p class="addcontributionmsg contributioninnerp" id="disablecontributionmsg"></p>
                 <span class="span-3 inputbutton messagebutton contributiondisablebutton" id="disablecontributionbtn">@lang_disable@</span>
                 <span class="span-3 inputbutton messagebutton contributiondownloadbutton" id="downloadcontributionbtn">@lang_download@</span>
-                <span class="span-3 inputbutton messagebutton contributionaddbutton" id="savecontributionbtn">@lang_save@</span>
-                <div class="hourly-rate-label">@lang_hourly_rate_title@</div>
-                <input class="text hourly-rate-input" name="hourlyrate" id="hourlyrate"></input>
-                <div class="interest-rate-label">@lang_interest_rate_title@</div>
-                <input class="text interest-rate-input" name="interestrate" id="interestrate"></input>
+                <span class="span-3 inputbutton messagebutton contributionaddbutton initialhidden" id="savecontributionbtn">@lang_save@</span>
+                <div class="hourly-rate-label initialhidden">@lang_hourly_rate_title@</div>
+                <input class="text hourly-rate-input initialhidden" name="hourlyrate" id="hourlyrate"></input>
+                <div class="interest-rate-label initialhidden">@lang_interest_rate_title@</div>
+                <input class="text interest-rate-input initialhidden" name="interestrate" id="interestrate"></input>
                 <div class="disablecontributionspinner preloadericon initialhidden" id="disablecontributionspinner"></div>
                 <div class="downloadcontributionspinner preloadericon initialhidden" id="downloadcontributionspinner"></div>
                 <div class="addcontributionspinner preloadericon initialhidden" id="savecontributionspinner"></div>
             </div>
+            <div class="initialhidden"><small>@lang_contributions_money_interest_note@</small></div>
             <div id="totalcontributionslist"></div>
         </div>
 
@@ -67,7 +68,7 @@ companybannermacro(`', `', `', `', `', `', `', `', `companynavselected')
         <div class="boxpanel" id="contributionlistparent">
             <div class="contributionaddline" id="addcontributionbox">
                 <textarea class="textarea contributiontextarea"
-                    id="addcontributionnotes" name="addcontributionnotes" cols="20" rows="5">@lang_bid_notes@</textarea>
+                    id="addcontributionnotes" name="addcontributionnotes" cols="20" rows="5">@lang_contrib_notes@</textarea>
                 <p class="addcontributionmsg successful" id="addcontributionmsg"></p>
                 <input id="addcontributiondate" name="addcontributiondate" value="@lang_date@" class="text addcontributiondateinput"></input>
                 <input id="addcontributionhours" name="addcontributionhours" value="@lang_hours@" class="text addcontributionhoursinput"></input>

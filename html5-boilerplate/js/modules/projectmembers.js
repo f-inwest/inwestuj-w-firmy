@@ -337,7 +337,7 @@ pl.implement(MemberPageClass, {
         var self = this;
         pl('.delete-button').unbind('click').bind('click', function() {
             console.log('pl(this)', pl(this));
-            var contributor_id = pl(this).get(0).firstChild.innerText,
+            var contributor_id = pl(this).get(0).firstChild.textContent,
                 data = {
                     id: self.listing.listing_id,
                     user_id: contributor_id
@@ -404,6 +404,7 @@ pl.implement(MemberPageClass, {
         html += '<th class="contribution-cell">@lang_total_hours@</th>\n';
         html += '<th class="contribution-cell">@lang_total_money@</th>\n';
         html += '<th class="contribution-cell">@lang_financial_value@</th>\n';
+        html += '<th class="contribution-cell">@lang_stake@</th>\n';
         html += '</tr>\n';
 
         for (i = 0; i < self.total_contributions.length; i++) {
@@ -432,6 +433,8 @@ pl.implement(MemberPageClass, {
             html += '<td class="contribution-cell">' + CurrencyClass.prototype.format(member.financial_value, self.listing.currency) + '</td>\n';
             financial += 1 * member.financial_value;
 
+            html += '<td class="contribution-cell">' + member.stake + '</td>\n';
+            
             html += '</tr>\n';
         }
 
@@ -534,7 +537,7 @@ pl.implement(MemberPageClass, {
         var self = this;
         pl('.approve-button').unbind('click').bind('click', function() {
             console.log('pl(this)', pl(this));
-            var contribution_id = pl(this).get(0).firstChild.innerText,
+            var contribution_id = pl(this).get(0).firstChild.textContent,
                 data = {
                     contribution_id: contribution_id
                 },
@@ -544,6 +547,7 @@ pl.implement(MemberPageClass, {
                     self.displayContributions();
                 },
                 ajax = new AjaxClass('/listing/approve_contribution', 'approvecontributionmsg', null, success, null, null);
+            console.log('contribution_id=', contribution_id);
             if (contribution_id) {
                 ajax.setPostData(data);
                 ajax.call();
@@ -555,7 +559,7 @@ pl.implement(MemberPageClass, {
         var self = this;
         pl('.reject-button').unbind('click').bind('click', function() {
             console.log('pl(this)', pl(this));
-            var contribution_id = pl(this).get(0).firstChild.innerText,
+            var contribution_id = pl(this).get(0).firstChild.textContent,
                 data = {
                     contribution_id: contribution_id
                 },
@@ -565,6 +569,7 @@ pl.implement(MemberPageClass, {
                     self.displayContributions();
                 },
                 ajax = new AjaxClass('/listing/delete_contribution', 'approvecontributionmsg', null, success, null, null);
+            console.log('contribution_id=', contribution_id);
             if (contribution_id) {
                 ajax.setPostData(data);
                 ajax.call();

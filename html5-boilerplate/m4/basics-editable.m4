@@ -266,6 +266,10 @@ include(images-panel-editable.m4)
     <a href="/new-listing-documents-page.html">
         <div class="sidebox investbutton" id="documentbutton">@lang_add_document@</div>
     </a>
+    
+    <a id="editcontributions_a" href="">
+        <div class="sidebox investbutton" id="editcontributions">@lang_add_members@</div>
+    </a>
 
     <div class="boxtitle boxtitleside clear boxtitleside-logo header-nobottom">@lang_upload_logo@</span></div>
     <div class="uploadbox uploadbox-logo">

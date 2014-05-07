@@ -40,6 +40,7 @@ include(images-panel.m4)
             <div class="sidebox company-menu-sidebox investbutton" id="cashflowbutton">@lang_cashflow@</div>
             <div class="sidebox company-menu-sidebox investbutton" id="modelbutton">@lang_model@</div>
             <div class="sidebox company-menu-sidebox investbutton" id="presentationbutton">@lang_presentation@</div>
+            <div class="sidebox company-menu-sidebox investbutton" id="contributionsbutton">@lang_members@</div>
         </div>
 
         <div class="initialhidden company-side-menu-inner company-side-menu-inner-pricepoints" id="pricepoints-wrapper">
@@ -135,7 +136,7 @@ include(images-panel.m4)
 
             <div id="approvebox" class="approvebox">
             <div class="approvemsg attention" id="approvemsg">@lang_are_you_sure@</div>
-            <a href="#" id="approvebtn"><div class="sideboxbutton company-menu-sidebox hoverlink">@lang_activate@</div></a>
+            <a href="#" id="approvebtn"><div class="sideboxbutton company-menu-sidebox hoverlink">@lang_activate_project@</div></a>
             <a href="#" class="approvecancelbtn" id="approvecancelbtn"><div class="sideboxbutton company-menu-sidebox hoverlink">@lang_cancel@</div></a>
             </div>
 

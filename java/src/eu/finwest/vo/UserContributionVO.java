@@ -40,6 +40,7 @@ public class UserContributionVO implements Serializable {
 	@JsonProperty("calculation_date") @JsonSerialize(using=ShortDateSerializer.class)  @JsonDeserialize(using=DateDeserializer.class)
 	private Date date;
 	private long daysSinceZero;
+	@JsonProperty("stake") private String percentStake;
 	
 	public UserContributionVO() {
 		this.date = new Date();
@@ -139,8 +140,20 @@ public class UserContributionVO implements Serializable {
 		this.date = date;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public double getFinancialValueDouble() {
+		return financialValueDouble;
+	}
+
+	public void setFinancialValueDouble(double financialValueDouble) {
+		this.financialValueDouble = financialValueDouble;
+	}
+
+	public String getPercentStake() {
+		return percentStake;
+	}
+
+	public void setPercentStake(String percentStake) {
+		this.percentStake = percentStake;
 	}
 
 }

@@ -25,8 +25,10 @@ import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.Notification;
 import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.SBUser;
+import eu.finwest.util.Translations;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.UserVO;
+import eu.finwest.web.LangVersion;
 import eu.finwest.web.ListingFacade;
 import eu.finwest.web.MemCacheFacade;
 import eu.finwest.web.UserMgmtFacade;
@@ -84,18 +86,16 @@ public class DatastoreMigration {
 			}
 			if (StringUtils.equals(campaign.subdomain, "test")) {
 				report.append("<li> changing description for campaign: " + campaign.subdomain);
-				campaign.name = "Kampania testowa";
-				campaign.description = "Kampanie umożliwiają ograniczenie widoczności wysyłanych projektów. "
-		    			+ "Właściciel kampanii jest jedynym użytkownikiem który może przeglądać takie projekty";
-				campaign.comment = "Kampania przeznaczona dla celów testowych";
+				campaign.name = Translations.getText(LangVersion.PL, "lang_test_campaign_name");
+				campaign.description = Translations.getText(LangVersion.PL, "lang_test_campaign_desc");
+				campaign.comment = Translations.getText(LangVersion.PL, "lang_test_campaign_comment");
 				toMigrate.add(campaign);
 			}
 			if (StringUtils.equals(campaign.subdomain, "test2")) {
 				report.append("<li> changing description for campaign: " + campaign.subdomain);
-				campaign.name = "Second Test Campaign";
-				campaign.description = "Campaigns allow investors to run their own investing campaigns. "
-		    			+ "Campaign owner can only browse submited listings.";
-				campaign.comment = "This campaign was created for test purposes";
+				campaign.name = Translations.getText(LangVersion.EN, "lang_test_campaign_name");
+				campaign.description = Translations.getText(LangVersion.EN, "lang_test_campaign_desc");
+				campaign.comment = Translations.getText(LangVersion.EN, "lang_test_campaign_desc");
 				toMigrate.add(campaign);
 			}
 		}

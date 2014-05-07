@@ -32,7 +32,6 @@ include(company-not-found.m4)
     </div>
 </div>
 
-
 '
 include(basics-editable.m4)
 `

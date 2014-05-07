@@ -28,8 +28,8 @@
             <div class="span-4 footercol">
                 <div class="footerlinkheader">@lang_admin@</div>
                 <a href="contact-page.html"><span class="footerlink hoverlink">@lang_contact@</span></a>
+                <a href="sms-page.html" class="initialhidden loggedinfooterlink"><span class="footerlink hoverlink">@lang_sms_payments@</span></a>
                 <div class="initialhidden adminfooterlink">
-                    <a href="api-page.html" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_api@</span></a>
                     <a href="/setup" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_setup@</span></a>
                     <a href="/hello" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_hello@</span></a>
                     <a href="profile-list-page.html?type=all" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_users@</span></a>

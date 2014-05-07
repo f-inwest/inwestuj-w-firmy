@@ -12,7 +12,7 @@ pl.implement(ContactPageClass,{
             var question = pl('#question').attr('value'),
                 msg = '';
             if (!question) {
-                msg += 'Please fill in QUESTION. ';
+                msg += '@lang_please_fill_in_question@ ';
                 self.checkRed('#questioncheckboxicon');
             }
             else {
@@ -24,7 +24,7 @@ pl.implement(ContactPageClass,{
             var details = pl('#details').attr('value'),
                 msg = '';
             if (!details) {
-                msg += 'Please fill in DETAILS. ';
+                msg += '@lang_please_fill_in_details@ ';
                 self.checkRed('#detailscheckboxicon');
             }
             else {
@@ -39,14 +39,14 @@ pl.implement(ContactPageClass,{
                 mailto = 'mailto:' + adminemail + '?subject=' + encodeURIComponent(question) + '&body=' + encodeURIComponent(details),
                 msg = '';
             if (!question) {
-                msg += 'Please fill in QUESTION. ';
+                msg += '@lang_please_fill_in_question@ ';
                 self.checkRed('#questioncheckboxicon');
             }
             else {
                 self.checkGreen('#questioncheckboxicon');
             }
             if (!details) {
-                msg += 'Please fill in DETAILS. ';
+                msg += '@lang_please_fill_in_details@ ';
                 self.checkRed('#detailscheckboxicon');
             }
             else {
@@ -65,7 +65,7 @@ pl.implement(ContactPageClass,{
         pl('#cancelbutton').bind('click', function() {
             pl('#questioncheckboxicon, #detailscheckboxicon').removeAttr('class');
             pl('#question, #details').removeAttr('disabled');
-            pl('#submitmsg').removeClass('errorcolor').addClass('successful').text('Message canceled');
+            pl('#submitmsg').removeClass('errorcolor').addClass('successful').text('@lang_message_cancelled@');
             pl('#confirmmsg, #sendbutton, #cancelbutton').hide();
             pl('#submitmsg, #submitcontactbutton').show();
         });

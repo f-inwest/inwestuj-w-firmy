@@ -404,7 +404,7 @@ public class EmailService {
 		props.put(NOTIFICATION_TEXT_2, "&nbsp;");
 		log.info("escaped access url: " + escape(accessUrl));
 		log.info("NOTIFICATION_TEXT_3 = " + getText(user, "email_account_activation_info") + " " + escape(accessUrl));
-		props.put(NOTIFICATION_TEXT_3, getText(user, "email_account_activation_info", escape(accessUrl)));
+		props.put(NOTIFICATION_TEXT_3, getText(user, "email_account_activation_info") + " " + escape(accessUrl));
 		props.put(COPYRIGHT_TEXT, getText(user, "email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
 		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, getText(user, "email_mailing_address_text"));
 		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, getText(user, "email_mailing_address"));

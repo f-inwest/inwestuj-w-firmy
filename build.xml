@@ -290,9 +290,10 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
 			<include name="**/*.html"/>
 		</replace>
 		
-	  	<copy todir="war" filtering="false" outputencoding="UTF-8" encoding="UTF-8">
+	  	<copy todir="war" filtering="false" outputencoding="UTF-8" encoding="UTF-8" overwrite="true">
 	  	  <fileset dir="html5-boilerplate/publish">
 	  	      <include name="*.txt"/>
+	  	  	  <include name="error-page.html"/>
 	  	  </fileset>
 	  	</copy>
 	</target>

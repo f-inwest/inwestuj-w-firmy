@@ -154,13 +154,13 @@ public class TaskController extends ModelDrivenController {
 		String notifId = getCommandOrParameter(request, 2, "id");
 		
 		Notification notification = NotificationObjectifyDatastoreDAO.getInstance().getNotification(BaseVO.toKeyId(notifId));
-		model = DtoToVoConverter.convert(notification);
 
 		if (!notification.read) {
 			SBUser receiver = ObjectifyDatastoreDAO.getInstance().getUserByEmail(notification.userEmail);
 			if (receiver.notifyEnabled && receiver.email != null) {
 				log.info("Sending notification: " + notification);
-				NotificationVO notifVO = DtoToVoConverter.convert(notification);
+				NotificationVO notifVO = DtoToVoConverter.convert(notification, receiver.recentLang);
+				model = notifVO;
 				notifVO.setUserRecentDomain(receiver.recentDomain);
 				notifVO.setUserRecentLang(receiver.recentLang);
 				if (EmailService.instance().sendNotificationEmail(notifVO)) {

@@ -766,6 +766,7 @@
         <echo message=" - maintaining whitespace"/>
         <echo message=" - removing html comments"/>
         <echo message=" - compressing inline style/script tag contents"/>
+    	<echo message="including: ${page-files}"/>
         <apply executable="java" parallel="false">
             <fileset dir="${dir.intermediate}/" includes="${page-files}"/>
             <arg value="-jar"/>

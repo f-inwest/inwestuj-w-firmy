@@ -640,6 +640,7 @@ pl.implement(HeaderClass, {
         else {
             pl('#headernumnotifications').text('').removeClass('headernumdisplay');
         }
+        pl('.loggedinfooterlink').show();
         if (profile.admin) {
             pl('.adminfooterlink').show();
         }
@@ -750,6 +751,7 @@ pl.implement(HeaderClass, {
             return false;
         });
         pl('#headernotloggedin').show();
+        pl('.loggedinfooterlink').hide();
         pl('.adminfooterlink').hide();
 
         pl('a[href=/add-listing-page.html]').bind('click', function(e) {
@@ -823,6 +825,10 @@ ScriptClass.prototype.load = function(url, callback) {
 
 function MicroListingClass() {}
 pl.implement(MicroListingClass, {
+    getHasContributions: function(listing) {
+        return listing.has_contributions ? true : false;
+    },
+    
     getHasValuation: function(listing) {
         return listing.valuation_data ? true : false;
     },
@@ -1751,6 +1757,9 @@ pl.implement(CompanyBannerClass, {
         });
         if (!this.asked_fund) {
             pl('#bidstab').hide();
+        }
+        if (!self.loggedin_profile_id || !MicroListingClass.prototype.getHasContributions(this)) {
+        	pl('#memberstab').hide();
         }
         if (!MicroListingClass.prototype.getHasValuation(this)) {
             pl('#valuationtab').hide();

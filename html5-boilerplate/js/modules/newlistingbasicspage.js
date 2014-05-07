@@ -92,6 +92,7 @@ pl.implement(NewListingBasicsClass, {
         this.displayModelButton();
         this.displayPresentationButton();
         this.displayDocumentButton();
+        this.displayContributionsButton();
     },
 
     displayAskFundingButton: function() {
@@ -133,6 +134,13 @@ pl.implement(NewListingBasicsClass, {
     displayDocumentButton: function() {
         if (MicroListingClass.prototype.getHasDoc(this.base.listing)) {
             pl('#documentbutton').text('@lang_edit_documents@');
+        }
+    },
+
+    displayContributionsButton: function() {
+    	pl('#editcontributions_a').href = '/company-members-page.html?id=' + this.base.listing.listing_id;
+        if (MicroListingClass.prototype.getHasContributions(this.base.listing)) {
+            pl('#documentbutton').text('@lang_members@');
         }
     },
 
