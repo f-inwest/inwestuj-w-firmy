@@ -32,7 +32,7 @@ pl.implement(ContactPageClass,{
             }
             pl('#submitmsg').addClass('errorcolor').html(msg || '&nbsp;');
         });
-        pl('#submitbutton').bind('click', function() {
+        pl('#submitcontactbutton').bind('click', function() {
             var question = pl('#question').attr('value'),
                 details = pl('#details').attr('value'),
                 adminemail = 'admin@inwestujwfirmy.pl',
@@ -58,7 +58,7 @@ pl.implement(ContactPageClass,{
             else {
                 pl('#question, #details').attr({disabled: 'disabled'});
                 pl('#sendbuttonlink').attr({href: mailto});
-                pl('#submitmsg, #submitbutton').hide();
+                pl('#submitmsg, #submitcontactbutton').hide();
                 pl('#confirmmsg, #sendbutton, #cancelbutton').show();
             }
         });
@@ -67,14 +67,14 @@ pl.implement(ContactPageClass,{
             pl('#question, #details').removeAttr('disabled');
             pl('#submitmsg').removeClass('errorcolor').addClass('successful').text('@lang_message_cancelled@');
             pl('#confirmmsg, #sendbutton, #cancelbutton').hide();
-            pl('#submitmsg, #submitbutton').show();
+            pl('#submitmsg, #submitcontactbutton').show();
         });
         pl('#sendbutton').bind('click', function() {
             pl('#questioncheckboxicon, #detailscheckboxicon').removeAttr('class');
             pl('#question, #details').attr({value: ''}).removeAttr('disabled');
             pl('#submitmsg').html('&nbsp;');
             pl('#confirmmsg, #sendbutton, #cancelbutton').hide();
-            pl('#submitmsg, #submitbutton').show();
+            pl('#submitmsg, #submitcontactbutton').show();
             document.location = pl('#sendbuttonlink').attr('href');
             return true;
         });
