@@ -213,6 +213,14 @@ public class PaymentsServlet extends HttpServlet {
 		out.println("<textarea name=\"descriptionPl\" autocomplete=\"off\" rows=\"4\" cols=\"40\">" + pp.descriptionPl + "</textarea>");
 		out.println("<label for=\"descriptionEn\">EN: </label>");
 		out.println("<textarea name=\"descriptionEn\" autocomplete=\"off\" rows=\"4\" cols=\"40\">" + pp.descriptionEn + "</textarea>");
+		out.println("<label for=\"buttonPl\">button PL: </label>");
+		out.println("<textarea name=\"buttonPl\" autocomplete=\"off\" rows=\"2\" cols=\"40\">" + pp.buttonPl + "</textarea>");
+		out.println("<label for=\"buttonEn\">button EN: </label>");
+		out.println("<textarea name=\"buttonEn\" autocomplete=\"off\" rows=\"2\" cols=\"40\">" + pp.buttonEn + "</textarea>");
+		out.println("<label for=\"freeButtonPl\">free button PL: </label>");
+		out.println("<textarea name=\"freeButtonPl\" autocomplete=\"off\" rows=\"2\" cols=\"40\">" + pp.freeButtonPl + "</textarea>");
+		out.println("<label for=\"freeButtonEn\">free button EN: </label>");
+		out.println("<textarea name=\"freeButtonEn\" autocomplete=\"off\" rows=\"2\" cols=\"40\">" + pp.freeButtonEn + "</textarea>");
 		out.println("<label for=\"amount\">Success url: </label>");
 		out.println("<input type=\"text\" autocomplete=\"off\" name=\"successUrl\" value=\"" + pp.successUrl + "\">");
 		out.println("<input type=\"submit\" name=\"submit\" value=\"Update " + pp.name + "\"/>");

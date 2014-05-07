@@ -1071,39 +1071,29 @@ public class UserMgmtFacade {
 				&& !StringUtils.equalsIgnoreCase(Listing.State.ACTIVE.toString(), listing.getState())) {
 			log.info("Only listings in NEW, POSTED and ACTIVE state will return pricepoints, returning empty pricepoints.");
 		} else {
+			boolean paymentFreeUsage = MemCacheFacade.instance().getSystemProperty(true, SystemProperty.PAYMENT_FREE_USAGE);
+			
 			LangVersion portalLang = FrontController.getLangVersion();
 			List<PricePoint> pricePoints = MemCacheFacade.instance().getPricePoints(Group.LISTING);
-			if (StringUtils.equals(State.ACTIVE.name(), listing.getState())) {
-				for (PricePoint pp : pricePoints) {
-					if (pp.name.equals(Codes.PRJ_BP.toString()) || pp.name.equals(Codes.PRJ_PPT.toString())) {
-						list.add(preparePricePointData(pp, loggedInUser, listing, portalLang));
-					}
-				}
-			} else if (StringUtils.contains(listing.getPaidCode(), Codes.PRJ_ALL.toString())) {
-				// listing has all options already purchased
-			} else if (StringUtils.contains(listing.getPaidCode(), Codes.PRJ_BP.toString())) {
-				for (PricePoint pp : pricePoints) {
-					if (pp.name.equals(Codes.PRJ_PPT.toString())) {
-						list.add(preparePricePointData(pp, loggedInUser, listing, portalLang));
-					}
-				}
-			} else if (StringUtils.contains(listing.getPaidCode(), Codes.PRJ_PPT.toString())) {
-				for (PricePoint pp : pricePoints) {
-					if (pp.name.equals(Codes.PRJ_BP.toString())) {
-						list.add(preparePricePointData(pp, loggedInUser, listing, portalLang));
-					}
-				}
-			} else if (StringUtils.contains(listing.getPaidCode(), Codes.PRJ_ACT.toString())) {
-				for (PricePoint pp : pricePoints) {
-					if (pp.name.equals(Codes.PRJ_BP.toString()) || pp.name.equals(Codes.PRJ_PPT.toString())) {
-						list.add(preparePricePointData(pp, loggedInUser, listing, portalLang));
-					}
-				}
+			Set<Codes> allowedCodes = new HashSet<Codes>();
+			
+			if (paymentFreeUsage || StringUtils.equals(State.NEW.name(), listing.getState()) && StringUtils.isBlank(listing.getPaidCode())) {
+				allowedCodes.add(Codes.PRJ_ALL);
 			} else {
-				for (PricePoint pp : pricePoints) {
-					if (pp.name.equals(Codes.PRJ_ACT.toString()) || pp.name.equals(Codes.PRJ_ALL.toString())) {
-						list.add(preparePricePointData(pp, loggedInUser, listing, portalLang));
-					}
+				if (!StringUtils.contains(listing.getPaidCode(), Codes.PRJ_ACT.toString())) {
+					allowedCodes.add(Codes.PRJ_ACT);
+				}
+				if (!StringUtils.contains(listing.getPaidCode(), Codes.PRJ_BP.toString())) {
+					allowedCodes.add(Codes.PRJ_BP);
+				}
+				if (!StringUtils.contains(listing.getPaidCode(), Codes.PRJ_PPT.toString())) {
+					allowedCodes.add(Codes.PRJ_PPT);
+				}
+			}
+			
+			for (PricePoint pp : pricePoints) {
+				if (allowedCodes.contains(Codes.valueOf(pp.name))) {
+					list.add(preparePricePointData(pp, loggedInUser, listing, portalLang));
 				}
 			}
 		}
@@ -1159,7 +1149,11 @@ public class UserMgmtFacade {
 		}
 		
 		pp.setDescription(portalLang == LangVersion.PL ? pricePoint.descriptionPl : pricePoint.descriptionEn);
-		pp.setButtonText(Translations.getText(portalLang, freeUsage ? "lang_payment_free_usage_button" : "lang_payment_pay_button"));		
+		if (freeUsage) {
+			pp.setButtonText(portalLang == LangVersion.PL ? pricePoint.freeButtonPl : pricePoint.freeButtonEn);
+		} else {
+			pp.setButtonText(portalLang == LangVersion.PL ? pricePoint.buttonPl : pricePoint.buttonEn);
+		}		
 		pp.setPaymentLanguage(portalLang.name().toLowerCase());
 
 		pp.setSellerId(MemCacheFacade.instance().getSystemProperty(SystemProperty.PAYMENT_CUSTOMER_ID));

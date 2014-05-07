@@ -1513,6 +1513,10 @@ public class ObjectifyDatastoreDAO {
 			pp.amount = pricePoint.amount;
 			pp.descriptionEn = pricePoint.descriptionEn;
 			pp.descriptionPl = pricePoint.descriptionPl;
+			pp.buttonEn = pricePoint.buttonEn;
+			pp.buttonPl = pricePoint.buttonPl;
+			pp.freeButtonEn = pricePoint.freeButtonEn;
+			pp.freeButtonPl = pricePoint.freeButtonPl;
 		} else {
 			pp = pricePoint;
 			pp.name = pp.name.toUpperCase();

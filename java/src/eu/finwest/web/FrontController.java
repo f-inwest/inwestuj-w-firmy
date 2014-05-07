@@ -74,7 +74,7 @@ public class FrontController extends HttpServlet {
 			boolean develEnv = SystemProperty.environment.value() == SystemProperty.Environment.Value.Development;
 			if (!develEnv && "GET".equals(request.getMethod()) && StringUtils.endsWith(pathInfo, ".html")
 					&& (!request.isSecure() || request.getServerName().startsWith("www"))) {
-				String redirectUrl = "https://" + getCampaign().getSubdomain() + ".inwestujwfirmy.pl" + request.getServletPath();
+				String redirectUrl = "https://" + getCampaign().getSubdomain() + ".inwestujwfirmy.pl" + request.getPathInfo();
 				String queryString = request.getQueryString();
 				if (StringUtils.isNotEmpty(queryString)) {
 					redirectUrl += "?" + queryString;

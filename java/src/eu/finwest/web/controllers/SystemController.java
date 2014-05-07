@@ -232,8 +232,13 @@ public class SystemController extends ModelDrivenController {
 			pp.amount = (int)(amountDbl * 100);
 			pp.descriptionPl = getCommandOrParameter(request, 4, "descriptionPl");
 			pp.descriptionEn = getCommandOrParameter(request, 5, "descriptionEn");
+			pp.buttonPl = getCommandOrParameter(request, 4, "buttonPl");
+			pp.buttonEn = getCommandOrParameter(request, 5, "buttonEn");
+			pp.freeButtonPl = getCommandOrParameter(request, 4, "freeButtonPl");
+			pp.freeButtonEn = getCommandOrParameter(request, 5, "freeButtonEn");
 			log.info("Updating pricepoint " + pp.name + " with amount: " + pp.amount + ", descriptionPl: " + pp.descriptionPl
-					+ ", descriptionEn: " + pp.descriptionEn);
+					+ ", descriptionEn: " + pp.descriptionEn + ", buttonPl=" + pp.buttonPl + ", buttonEn=" + pp.buttonEn
+					 + ", freeButtonPl=" + pp.freeButtonPl + ", freeButtonEn=" + pp.freeButtonEn);
 			
 			model = UserMgmtFacade.instance().storePricepoint(pp);
 		} catch (Exception e) {
