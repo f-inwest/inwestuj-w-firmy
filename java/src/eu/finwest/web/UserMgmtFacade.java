@@ -518,6 +518,8 @@ public class UserMgmtFacade {
 		user.location = location;
         user.modified = user.lastLoggedIn = user.joined = new Date();
 		user.activationCode = "" + DigestUtils.md5Hex(email + user.joined.toString() + "25kj352025sfg");
+		user.recentDomain = FrontController.getCampaign().getSubdomain();
+		user.recentLang = FrontController.getLangVersion();
 		
 		user = getDAO().saveUser(user);
 		
@@ -1234,6 +1236,7 @@ public class UserMgmtFacade {
 			}
 			campaign.comment += "Activated by transaction " + trans.id + " done by user " + trans.email;
 			getDAO().storeCampaign(campaign);
+			MemCacheFacade.instance().cleanCampaingsCache();
 			log.info("Campaign '" + campaign.subdomain + "' has been activated by user " + user.email + " with transaction: " + trans);
 			break;
 		case PRJ_ACT:

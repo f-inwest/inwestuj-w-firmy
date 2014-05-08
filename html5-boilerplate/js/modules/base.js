@@ -231,7 +231,7 @@ pl.implement(NumberClass, {
     },
     clean: function(num) {
         var str = '' + num;
-            numstr = str.replace(/[^0-9\.]*/g, ''),
+            numstr = str.replace(/[^0-9\.,]*/g, ''),
             noleadzerostr = numstr.replace(/^0*/, '');
         return noleadzerostr;
     },
@@ -1653,12 +1653,13 @@ pl.implement(CompanyBannerClass, {
     shouldDisplaySubmit: function() {
         //public enum State {NEW, POSTED, ACTIVE, CLOSED, WITHDRAWN, FROZEN};
         var self = this,
-            activationPricepoints = (self.pricepoints && self.pricepoints.pricepointsForType('PRJ_ACT')) || [],
-            isActivationPaid = activationPricepoints.length == 0;
-        console.log('shouldDisplaySubmit() pricepoints=' + self.pricepoints + ' activationPricepoints=' + activationPricepoints);
+            isActivationPaid = true;
+        if (self.pricepoints && (self.pricepoints.pricepointsForType('PRJ_ACT').length > 0 || self.pricepoints.pricepointsForType('PRJ_ALL').length > 0)) {
+	        isActivationPaid = false;
+	    }
+        console.log('shouldDisplaySubmit() pricepoints=' + self.pricepoints + ' isActivationPaid=' + isActivationPaid);
         return this.loggedin_profile && this.loggedin_profile.profile_id === this.profile_id
-            && this.status === 'new'
-            && isActivationPaid;
+            && ((this.status === 'new' && isActivationPaid) || this.status === 'withdrawn');
     },
 
     displaySubmit: function() {
@@ -2374,6 +2375,7 @@ pl.implement(PricepointsClass, {
         if (pricepoints) {
             for (i = 0; i < pricepoints.length; i++) {
                 pricepoint = pricepoints[i];
+                console.log('pricepointsForType() pricepoint.crc=' + pricepoint.crc + ' indexOf(' + crcType + ')=' + pricepoint.crc.indexOf(crcType));
                 if (pricepoint.crc && pricepoint.crc.indexOf(crcType) == 0) {
                     pricepointsForType.push(pricepoint);
                 }

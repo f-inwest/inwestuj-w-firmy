@@ -113,7 +113,7 @@ pl.implement(ListingClass, {
 
     displayGoto: function() {
         this.displayBasicsButton();
-        //this.displayValuationButton();
+        this.displayValuationButton();
         this.displayCashFlowButton();
         this.displayModelButton();
         this.displayPresentationButton();
@@ -296,67 +296,72 @@ pl.implement(ListingClass, {
         var self = this,
             hasContributions = MicroListingClass.prototype.getHasContributions(this),
             text,
+            disabled = false,
             ajax,
             url;
         if (this.status === 'new') {
             if (hasContributions) {
-                text = '@lang_cashflow@';
+                text = '@lang_members@';
             }
             else {
-                text = '@lang_cashflow@';
+                text = '@lang_add_members@';
             }
             url = '/company-members-page.html?id=' + this.listing_id;
         }
         else if (this.status === 'posted' || this.status === 'active') {
             if (hasContributions) {
-                text = '@lang_cashflow@';
+                text = '@lang_members@';
                 url = '/company-members-page.html?id=' + this.listing_id;
             }
             else {
                 if (this.loggedin_profile) {
                     if (this.loggedin_profile.profile_id === this.profile_id) {
-                        text = '@lang_cashflow@';
+                        text = '@lang_add_members@';
                         url = '/company-members-page.html?id=' + this.listing_id;
                     }
                     else {
-                        text = '@lang_request_cashflow@';
+                        text = '@lang_request_members@';
                         ajax = new AjaxClass('/listing/ask_owner', 'cashflowbutton', function() {
                             document.location = '/company-questions-page.html?id=' + self.listing_id;
                         });
                         ajax.setPostData({
                             message: {
                                 listing_id: this.listing_id,
-                                text: '@lang_cashflow_request_message@'
+                                text: '@lang_members_request_message@'
                             }
                         })
                     }
                 }
                 else {
                     if (this.login_url) {
-                        text = '@lang_sign_in_to_request_cashflow@';
+                        text = '@lang_sign_in_to_request_members@';
                         url = '/login-page.html?url=' + encodeURIComponent('/company-page.html?id=' + this.listing_id);
                     }
                     else {
-                        text = '@lang_no_cashflow@';
+                        disabled = true;
                     }
                 }
             }
         }
         else {
-            text = '@lang_no_cashflow@';
+            disabled = true;
         }
-        pl('#cashflowbutton').text(text);
-        if (ajax) {
-            pl('#cashflowbutton').bind('click', function() {
-                pl('#cashflowbutton').unbind();
-                ajax.call();
-            });
-        }
-        else if (url) {
-            pl('#cashflowbutton').bind('click', function() {
-                document.location = url;
-            });
-        }
+        if (disabled) {
+        	pl('#contributionsbutton').hide();
+        } else {
+	        pl('#contributionsbutton').text(text);
+	        if (ajax) {
+	            pl('#contributionsbutton').bind('click', function() {
+	                pl('#contributionsbutton').unbind();
+	                ajax.call();
+	            });
+	        }
+	        else if (url) {
+	            pl('#contributionsbutton').bind('click', function() {
+	                document.location = url;
+	            });
+	        }
+	    }
     },
     
     displayModelButton: function() {
