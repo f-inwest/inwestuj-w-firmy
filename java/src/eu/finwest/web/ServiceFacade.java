@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
@@ -22,10 +24,12 @@ import com.googlecode.objectify.Key;
 import eu.finwest.dao.NotificationObjectifyDatastoreDAO;
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Comment;
+import eu.finwest.datamodel.Contribution;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
+import eu.finwest.datamodel.SmsPayment;
 import eu.finwest.datamodel.VoToModelConverter;
 import eu.finwest.util.Translations;
 import eu.finwest.vo.BaseVO;
@@ -42,6 +46,7 @@ import eu.finwest.vo.QuestionAnswerListVO;
 import eu.finwest.vo.QuestionAnswerVO;
 import eu.finwest.vo.SystemPropertyVO;
 import eu.finwest.vo.UserBasicVO;
+import eu.finwest.vo.UserContributionVO;
 import eu.finwest.vo.UserVO;
 import eu.finwest.web.ListingFacade.UpdateReason;
 
@@ -466,33 +471,82 @@ public class ServiceFacade {
 
 	public int validateSmsCode(UserVO loggedInUser, String sellerId, String value, String code) {
 		String returnValue = fetchVerificationData(sellerId, value, code);
+		int error = 0;
+		String message = "";
 		if (StringUtils.equals(returnValue, "OK")) {
 			log.info("SMS validation successful");
-			return 0;
+			error = 0;
+			message = "OK";
 		} else if (StringUtils.startsWith(returnValue, "ERROR")) {
-			String errorCode = StringUtils.substring(returnValue, 5).trim();
-			int error = NumberUtils.toInt(errorCode);
-			String message = "";
-			switch(error) {
-				case 4:
-					message = "invalid sms code or code has been already used";
-				break;
-				case 101:
-					message = "invalid or incomplete verification request";
-				break;
-				case 102:
-					message = "sms code expired";
-				break;
-				case 103:
-					message = "invalid value for code";
-				break;
+			try {
+				String errorCode = StringUtils.substring(returnValue, 5).trim();
+				error = NumberUtils.toInt(errorCode);
+				switch(error) {
+					case 4:
+						message = "invalid sms code or code has been already used";
+					break;
+					case 101:
+						message = "invalid or incomplete verification request";
+					break;
+					case 102:
+						message = "sms code expired";
+					break;
+					case 103:
+						message = "invalid value for code";
+					break;
+				}
+				log.info("SMS validation error: " + error + " " + message);
+			} catch (Exception e) {
+				log.log(Level.INFO, "Error while parsing przelewy24.pl response", e);
 			}
-			log.info("SMS validation error: " + error + " " + message);
-			return error;
 		} else {
 			log.info("SMS validation error: " + returnValue);
-			return 1;
+			error = 1;
+			message = "Unknown return value: " + returnValue;
 		}
+		SmsPayment payment = new SmsPayment();
+		payment.sellerId = sellerId;
+		payment.amount = value;
+		payment.code = code;
+		payment.date = new Date();
+		payment.status = returnValue;
+		payment.description = message;
+		if (loggedInUser != null) {
+			payment.customer = new Key<SBUser>(loggedInUser.getId());
+			payment.customerName = loggedInUser.getNickname();
+			payment.email = loggedInUser.getEmail();
+		}
+		
+		getDAO().storeSmsPayment(payment);
+		return error;
+	}
+	
+	public String getSmsPayments(UserVO loggedInUser) {
+		if (loggedInUser == null || !loggedInUser.isAdmin()) {
+			log.info("User not logged in or is not an admin");
+			return Translations.getText("lang_error_user_not_admin");
+		}
+		
+		ListPropertiesVO listProperties = new ListPropertiesVO();
+		listProperties.setMaxResults(2000);
+		List<SmsPayment> contribs = getDAO().getSmsPayments(listProperties);
+		
+		StringBuffer buf = new StringBuffer();
+		DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd hh:mm:ss");
+		
+		buf.append("data; użytkownik; nick; kod; kwota; status; opis; \n");
+		for (SmsPayment payment : contribs) {
+			buf.append(dateFormatter.print(payment.date.getTime())).append(";");
+			buf.append(payment.customer != null ? payment.customer.getId() : 0).append(";");
+			buf.append(payment.customerName).append(";");
+			buf.append(payment.code).append(";");
+			buf.append(payment.amount).append(";");
+			buf.append(payment.status).append(";");
+			buf.append(StringUtils.replace(payment.description, ";", " ")).append(";");
+			buf.append(";\n");
+		}
+
+		return buf.toString();
 	}
 	
 	private static String fetchVerificationData(String sellerId, String value, String code) {

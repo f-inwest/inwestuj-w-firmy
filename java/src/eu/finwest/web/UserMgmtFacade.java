@@ -1079,16 +1079,19 @@ public class UserMgmtFacade {
 			List<PricePoint> pricePoints = MemCacheFacade.instance().getPricePoints(Group.LISTING);
 			Set<Codes> allowedCodes = new HashSet<Codes>();
 			
-			if (paymentFreeUsage || StringUtils.equals(State.NEW.name(), listing.getState()) && StringUtils.isBlank(listing.getPaidCode())) {
+			if ((paymentFreeUsage || StringUtils.equals(State.NEW.name(), listing.getState())) && StringUtils.isBlank(listing.getPaidCode())) {
 				allowedCodes.add(Codes.PRJ_ALL);
 			} else {
-				if (!StringUtils.contains(listing.getPaidCode(), Codes.PRJ_ACT.toString())) {
+				if (!StringUtils.contains(listing.getPaidCode(), Codes.PRJ_ACT.toString())
+						&& !StringUtils.contains(listing.getPaidCode(), Codes.PRJ_ALL.toString())) {
 					allowedCodes.add(Codes.PRJ_ACT);
 				}
-				if (!StringUtils.contains(listing.getPaidCode(), Codes.PRJ_BP.toString())) {
+				if (!StringUtils.contains(listing.getPaidCode(), Codes.PRJ_BP.toString())
+						&& !StringUtils.contains(listing.getPaidCode(), Codes.PRJ_ALL.toString())) {
 					allowedCodes.add(Codes.PRJ_BP);
 				}
-				if (!StringUtils.contains(listing.getPaidCode(), Codes.PRJ_PPT.toString())) {
+				if (!StringUtils.contains(listing.getPaidCode(), Codes.PRJ_PPT.toString())
+						&& !StringUtils.contains(listing.getPaidCode(), Codes.PRJ_ALL.toString())) {
 					allowedCodes.add(Codes.PRJ_PPT);
 				}
 			}

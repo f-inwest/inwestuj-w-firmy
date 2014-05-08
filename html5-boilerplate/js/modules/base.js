@@ -1416,7 +1416,7 @@ pl.implement(BaseListClass, {
 function CompanyBannerClass(tab) {
     this.tab = tab || 'basics';
     this.pages = [ 'basics', 'bmc', 'qa', 'financials', 'media', 'submit' ],
-    this.mandatoryprops = [ 'title', 'type', 'platform', 'category', 'address', 'mantra', 'summary', 'logo', 'pic1' ],
+    this.mandatoryprops = [ 'title', 'type', 'category', 'address', 'mantra', 'summary', 'logo', 'pic1' ],
     this.proppage = {
         title: 'basics',
         type: 'basics',

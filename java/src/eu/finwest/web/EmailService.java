@@ -239,7 +239,11 @@ public class EmailService {
 			ListPropertiesVO listingsProps = new ListPropertiesVO();
 			listingsProps.setMaxResults(3); 
 			List<ListingTileVO> listingsTiles = DtoToVoConverter.convertListingTiles(
-					ObjectifyDatastoreDAO.getInstance().getTopListings(listingsProps));
+					ObjectifyDatastoreDAO.getInstance().getTopListings(notification.getUserRecentDomain(), listingsProps));
+			if (listingsTiles == null || listingsTiles.size() == 0) {
+				listingsTiles = DtoToVoConverter.convertListingTiles(
+						ObjectifyDatastoreDAO.getInstance().getActiveListings(notification.getUserRecentDomain(), listingsProps));
+			}
 			ListingTileVO listings[] = new ListingTileVO[3];
 			listings[0] = listingsTiles.get(0);
 			if (listingsTiles.size() == 1) {
@@ -456,6 +460,8 @@ public class EmailService {
 	private String escape(String text) {
 		//text = text.replaceAll("@", "<span>{AT}</span>");
 		text = text.replaceAll("\\.", "<span>.</span>");
+		text = text.replaceAll("http", "<span>http</span>");
+		text = text.replaceAll("https", "<span>https</span>");
 		return text;
 	}
 	
@@ -464,6 +470,9 @@ public class EmailService {
 		if (StringUtils.isBlank(domain)) {
 			domain = "www.inwestujwfirmy.pl";
 		}
+		if (!StringUtils.endsWith(domain, ".inwestujwfirmy.pl")) {
+			domain += ".inwestujwfirmy.pl";
+		}
 		return "https://" + domain + path;
 	}
 	
@@ -471,6 +480,9 @@ public class EmailService {
 		String domain = user.recentDomain;
 		if (StringUtils.isBlank(domain)) {
 			domain = "www.inwestujwfirmy.pl";
+		}
+		if (!StringUtils.endsWith(domain, ".inwestujwfirmy.pl")) {
+			domain += ".inwestujwfirmy.pl";
 		}
 		return "https://" + domain + path;
 	}

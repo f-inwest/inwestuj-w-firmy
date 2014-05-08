@@ -1,6 +1,6 @@
 function NewListingBaseClass() {
     var pages = [ 'basics', 'bmc', 'qa', 'financials', 'media', 'submit' ],
-        mandatoryprops = [ 'title', 'type', 'platform', 'category', 'stage', 'currency', 'address', 'mantra', 'summary', 'logo', 'pic1' ],
+        mandatoryprops = [ 'title', 'type', 'category', 'stage', 'currency', 'address', 'mantra', 'summary', 'logo', 'pic1' ],
         proppage = {
             title: 'basics',
             type: 'basics',

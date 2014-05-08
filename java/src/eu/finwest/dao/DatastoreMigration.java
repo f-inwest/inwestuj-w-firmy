@@ -61,6 +61,43 @@ public class DatastoreMigration {
 		return report.toString();
 	}
 	
+	public static String fixRecentDomain() {
+		StringBuffer report = new StringBuffer();
+
+		report.append("Recent domain migration:<br/>\n<ul>\n");
+		
+		QueryResultIterable<Key<SBUser>> l = getOfy().query(SBUser.class).fetchKeys();
+		Map<Key<SBUser>, SBUser> users = getOfy().get(l);
+
+		List<SBUser> toMigrate = new ArrayList<SBUser>();
+		for (SBUser user: users.values()) {
+			String before = user.recentDomain;
+			if (StringUtils.equals(user.recentDomain, "www.inwestujwfirmy.pl")) {
+				user.recentDomain = user.recentLang != null ? user.recentLang.name().toLowerCase() : "pl";
+				report.append("<li>" + user.nickname + " " + before + " --> " + user.recentDomain);
+				toMigrate.add(user);
+			} else if (StringUtils.equals(user.recentDomain, "localhost")) {
+				user.recentDomain = user.recentLang != null ? user.recentLang.name().toLowerCase() : "pl";
+				report.append("<li>" + user.nickname + " " + before + " --> " + user.recentDomain);
+				toMigrate.add(user);
+			} else if (StringUtils.endsWith(user.recentDomain, ".inwestujwfirmy.pl")) {
+				user.recentDomain = StringUtils.substring(user.recentDomain, 0, StringUtils.indexOf(user.recentDomain, ".inwestujwfirmy.pl"));
+				report.append("<li>" + user.nickname + " " + before + " --> " + user.recentDomain);
+				toMigrate.add(user);
+			} else if (StringUtils.endsWith(user.recentDomain, ".localhost")) {
+				user.recentDomain = StringUtils.substring(user.recentDomain, 0, StringUtils.indexOf(user.recentDomain, ".localhost"));
+				report.append("<li>" + user.nickname + " " + before + " --> " + user.recentDomain);
+				toMigrate.add(user);
+			}
+		}
+		
+		getOfy().put(toMigrate);
+		
+		report.append("<br/>\n</ul>\n");
+
+		return report.toString();
+	}
+	
 	public static String migrate20140225_to_current() {
 		StringBuffer report = new StringBuffer();
 

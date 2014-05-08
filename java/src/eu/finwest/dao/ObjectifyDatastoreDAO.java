@@ -45,6 +45,7 @@ import eu.finwest.datamodel.PictureImport;
 import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
+import eu.finwest.datamodel.SmsPayment;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.UserStats;
@@ -822,8 +823,12 @@ public class ObjectifyDatastoreDAO {
     }
 
 	public List<Listing> getTopListings(ListPropertiesVO listingProperties) {
+		return getTopListings(FrontController.getCampaign().getSubdomain(), listingProperties);
+	}
+
+	public List<Listing> getTopListings(String campaign, ListPropertiesVO listingProperties) {
 		Query<ListingStats> query = getOfy().query(ListingStats.class)
-				.filter("campaign =", FrontController.getCampaign().getSubdomain())
+				.filter("campaign =", campaign)
 				.filter("state =", Listing.State.ACTIVE)
                 //.filter("askedForFunding =", true)
 				.order("-score")
@@ -853,8 +858,12 @@ public class ObjectifyDatastoreDAO {
 	}
 
 	public List<Listing> getActiveListings(ListPropertiesVO listingProperties) {
+		return getActiveListings(FrontController.getCampaign().getSubdomain(), listingProperties);
+	}
+	
+	public List<Listing> getActiveListings(String campaign, ListPropertiesVO listingProperties) {
 		Query<Listing> query = getOfy().query(Listing.class)
-				.filter("campaign =", FrontController.getCampaign().getSubdomain())
+				.filter("campaign =", campaign)
 				.filter("state =", Listing.State.ACTIVE)
 				.order("-listedOn")
                 .chunkSize(listingProperties.getMaxResults())
@@ -1577,5 +1586,21 @@ public class ObjectifyDatastoreDAO {
 		List<Key<Contribution>> keyList = new CursorHandler<Contribution>().handleQuery(listProperties, query);
 		List<Contribution> contributions = new ArrayList<Contribution>(getOfy().get(keyList).values());
 		return contributions;
+	}
+
+	public void storeSmsPayment(SmsPayment payment) {
+		try {
+			getOfy().put(payment);
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Error while storing: " + payment);
+		}
+	}
+
+	public List<SmsPayment> getSmsPayments(ListPropertiesVO listProperties) {
+		Query<SmsPayment> query = getOfy().query(SmsPayment.class)
+				.order("-date");
+		List<Key<SmsPayment>> keyList = new CursorHandler<SmsPayment>().handleQuery(listProperties, query);
+		List<SmsPayment> payments = new ArrayList<SmsPayment>(getOfy().get(keyList).values());
+		return payments;
 	}
 }

@@ -91,6 +91,9 @@ public class PaymentsServlet extends HttpServlet {
 			out.println("<a href=\"/hello/\">Hello page</a><br/>");
 			out.println("<a href=\"/setup/\">Setup page</a></p>");
 
+			out.println("<form method=\"POST\" action=\"/system/download_sms_payments.csv\">"
+					+ "<input type=\"submit\" value=\"Download sms payments\"/></form><br/><br/>");
+			
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Pricepoints:</p>");
 			
 			out.println("<form method=\"POST\" action=\"/system/reset_pricepoints.html\">"

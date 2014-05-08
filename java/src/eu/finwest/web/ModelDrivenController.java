@@ -101,8 +101,7 @@ public abstract class ModelDrivenController {
 		}
 		
 		if (loggedInUser != null) {
-			String currentDomain = request.getServerName();
-			UserMgmtFacade.instance().updateUserRecentData(loggedInUser, currentDomain, FrontController.getLangVersion());
+			UserMgmtFacade.instance().updateUserRecentData(loggedInUser, FrontController.getCampaign().getSubdomain(), FrontController.getLangVersion());
 			UserMgmtFacade.instance().updateUserListings(loggedInUser);
 		}
 

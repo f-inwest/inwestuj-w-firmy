@@ -37,6 +37,7 @@ import eu.finwest.datamodel.PrivateMessageUser;
 import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.Rank;
 import eu.finwest.datamodel.SBUser;
+import eu.finwest.datamodel.SmsPayment;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.UserStats;
@@ -84,6 +85,7 @@ public class WarmupListener implements ServletContextListener {
         ObjectifyService.register(Transaction.class);
         ObjectifyService.register(PricePoint.class);
         ObjectifyService.register(Contribution.class);
+        ObjectifyService.register(SmsPayment.class);
 	}
 
 	public void contextInitialized(ServletContextEvent event) {

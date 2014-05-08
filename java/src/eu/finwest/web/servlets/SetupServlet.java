@@ -66,7 +66,9 @@ public class SetupServlet extends HttpServlet {
 			}
 
 			out.println("<h1>Migration</h1>");
-
+			
+			out.println("<form method=\"POST\" action=\"/system/migrate_fix_recent_domain.html\">"
+					+ "<input type=\"submit\" value=\"Migration - fix users recent domain\"/></form>");
 			out.println("<form method=\"POST\" action=\"/system/migrate20140225_to_current.html\">"
 					+ "<input type=\"submit\" value=\"Migration - fix for campaign language\"/></form>");
 			out.println("<form method=\"POST\" action=\"/system/update_avatars_dragon_lister.html\">"

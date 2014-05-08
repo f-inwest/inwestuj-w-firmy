@@ -68,6 +68,8 @@ public class SystemController extends ModelDrivenController {
 				return exportDatastore(request);
 			} else if("migrate20140225_to_current".equalsIgnoreCase(getCommand(1))) {
 				return migrate20140225_to_current(request);
+			} else if("migrate_fix_recent_domain".equalsIgnoreCase(getCommand(1))) {
+				return migrateFixRecentDomain(request);
 			} else if("reset_pricepoints".equalsIgnoreCase(getCommand(1))) {
 				return resetPricePoints(request);
 			} else if("associate_mock_images".equalsIgnoreCase(getCommand(1))) {
@@ -82,6 +84,8 @@ public class SystemController extends ModelDrivenController {
 				return storePricepoint(request);
 			} else if("validate_sms_code".equalsIgnoreCase(getCommand(1))) {
 				return validateSmsCode(request);
+			} else if("download_sms_payments".equalsIgnoreCase(getCommand(1))) {
+				return getSmsPayments(request);
 			}
 		}
 		return null;
@@ -101,6 +105,11 @@ public class SystemController extends ModelDrivenController {
 		}
 		
 		return headers;
+	}
+
+	private HttpHeaders getSmsPayments(HttpServletRequest request) {
+		model = ServiceFacade.instance().getSmsPayments(getLoggedInUser());
+		return new HttpHeadersImpl("download_sms_payments").disableCaching();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -274,6 +283,16 @@ public class SystemController extends ModelDrivenController {
 		UserVO loggedInUser = getLoggedInUser();
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
 			model = DatastoreMigration.migrate20140225_to_current();
+		}
+		return headers;
+	}
+
+	private HttpHeaders migrateFixRecentDomain(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("migrate_fix_recent_domain");
+
+		UserVO loggedInUser = getLoggedInUser();
+		if (loggedInUser != null && loggedInUser.isAdmin()) {
+			model = DatastoreMigration.fixRecentDomain();
 		}
 		return headers;
 	}
