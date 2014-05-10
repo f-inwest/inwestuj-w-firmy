@@ -32,9 +32,13 @@ include(company-not-found.m4)
     </div>
 </div>
 
+<div class="initialhidden" id="newlistingbasicswrapper">
 '
 include(basics-editable.m4)
+include(basics-rightcol-new.m4)
+include(new-listing-bottom-buttons.m4)
 `
+</div>
 
 </div> <!-- end container -->
 </div> <!-- end main -->

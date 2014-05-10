@@ -91,15 +91,13 @@ function NewListingBaseClass() {
             presentation_id: 'PRESENTATION',
             business_plan_id: 'BUSINESS_PLAN',
             financials: 'FINANCIALS'
-        };
-
-        //companyTile = new CompanyTileClass({preview: true});
-
+        },
+        qs = new QueryStringClass();
+    this.idparam = qs.vars['id'];
     this.pages = pages;
     this.mandatoryprops = mandatoryprops;
     this.proppage = proppage;
     this.displayNameOverrides = displayNameOverrides;
-    //this.companyTile = companyTile;
     this.listing = {};
     this.fields = [];
     this.fieldMap = {};
@@ -111,9 +109,12 @@ pl.implement(NewListingBaseClass, {
         var self = this;
         if (json) {
             CollectionsClass.prototype.merge(this.listing, json);
-            this.loggedin_profile = json.loggedin_profile;
             this.displayCalculated();
         }
+    },
+
+    isMyListing: function(profile) {
+        return profile && profile.profile_id && this.listing && this.listing.profile_id && this.listing.profile_id === profile.profile_id;
     },
 
     displayCalculated: function() {
@@ -181,6 +182,7 @@ pl.implement(NewListingBaseClass, {
         this.bindSaveButton();
         this.bindPreviewButton();
         this.bindWithdrawButton();
+        this.bindActiveLinks();
         //this.bindPrevButton();
         //this.bindNextButton(nextValidator);
     },
@@ -234,7 +236,7 @@ pl.implement(NewListingBaseClass, {
             }
         });
     },
-
+    /*
     bindNextButton: function(nextValidator) {
         var self = this;
         if (!self.nextPage) {
@@ -254,7 +256,7 @@ pl.implement(NewListingBaseClass, {
             }
         });
     },
-
+    */
     bindWithdrawButton: function() {
         pl('#newwithdrawbtn').bind({
             click: function() {
@@ -279,6 +281,23 @@ pl.implement(NewListingBaseClass, {
                 return false;
             }
         });
+    },
+
+    bindActiveLinks: function() {
+        var self = this,
+            id = self.idparam;
+        if (id) {
+            pl('.active-listing-link').each(function() {
+                var root = pl(this).attr('href'),
+                    url = root + '?id=' + id;
+                console.log('set url=' + url);
+                pl(this).attr('href', url);
+                //pl(this).unbind('click').bind('click', function(e) {
+                //    document.location = url;
+                //    e.preventDefault();
+                //});
+            });
+        }
     },
 
     //displaySummaryPreview: function() {
