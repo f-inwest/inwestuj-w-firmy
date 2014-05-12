@@ -442,8 +442,10 @@ pl.implement(ProfileClass, {
         pl('#mylistingscount').html(json.posted ? json.posted.length : 0);
         pl('#biddedoncount').html(json.bidon ? json.bidon.length : 0);
 */
+		console.log('displayFields username=' + (profile.username || 'anonymous'));
         pl('#username').text(profile.username || 'anonymous');
         pl('#email').text(profile.email || '');
+        console.log('displayFields name=' + (profile.name || ''));
         pl('#name').text(profile.name || '');
         if (profile.avatar) {
             pl('#avatar').css('background-image', 'url(' + profile.avatar + ')');
@@ -825,7 +827,8 @@ pl.implement(EditProfileClass, {
 
     bindDeactivateButton: function() {
         var self = this;
-        pl('#deactivatebox').show();
+        console.log('bindDeactivateButton');
+        pl('#deactivateguard').show();
         pl('#deactivatebtn').bind({
             click: function() {
                 var completeFunc = function() {
@@ -870,6 +873,7 @@ pl.implement(EditProfileClass, {
             i, property, textFields, textFieldId, textFieldObj, notifyCheckbox; 
         self.profile_id = json.profile_id;
         self.admin = json.admin;
+        console.log('store profile');
         self.updateUrl = '/user/update?id=' + self.profile_id;
         for (i = 0; i < properties.length; i++) {
             property = properties[i];
@@ -885,6 +889,7 @@ pl.implement(EditProfileClass, {
             }
 */
             if (textFieldId === 'username') {
+            	console.log('username = ' + json[textFieldId]);
                 textFieldObj.fieldBase.addValidator(function(username) {
                     var successFunc = function(json) {
                             var icon = new ValidIconClass('usernameicon');
@@ -921,6 +926,7 @@ pl.implement(EditProfileClass, {
                 };
             }
             if (textFieldId === 'name') {
+            	console.log('name = ' + json[textFieldId]);
                 textFieldObj.fieldBase.addValidator(textFieldObj.fieldBase.validator.makeLengthChecker(3, 100));
             }
             textFieldObj.bindEvents();

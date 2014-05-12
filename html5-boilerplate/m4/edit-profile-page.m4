@@ -41,7 +41,7 @@ include(profile-not-found.m4)
 <!-- left column -->
 <div class="span-16" style="margin-top: 15px;">
     <div style="float:left;" class="bannersmall">
-        <span class="bannertextsmall span-16">dane osobiste</span>
+        <span class="bannertextsmall span-16">@lang_personal_info@</span>
     </div> <!-- end banner -->
 
     <div class="boxpanel editprofilepanel">
@@ -183,16 +183,6 @@ include(profile-not-found.m4)
     </div>
 -->
 
-    <div id="deactivatebox" class="indentedtextbox deactivateguardbox" style="margin-top: 350px;">
-        <a href="#" id="deactivateguardlink" class="span-6 last backbuttonlink inputbutton backbutton">@lang_deactivate_account@</a>
-        <div class="initialhidden deactivatebox" id="deactivateguard">
-            <p>@lang_deactivate_warning@</p>
-            <div class="deactivatemsg attention" id="deactivatemsg">@lang_are_you_sure@<br/>@lang_undone_warning@</div>
-            <a href="#" id="deactivatebtn"><div class="sideboxbutton">@lang_deactivate@</div></a>
-            <a href="#" class="deactivatecancelbtn" id="deactivatecancelbtn"><div class="sideboxbutton">@lang_cancel@</div></a>
-        </div>
-    </div>
-
 </div> <!-- end left column -->
 
 <!-- right column -->
@@ -214,6 +204,17 @@ include(profile-not-found.m4)
         <p>DEACTIVATE ACCOUNT - your entire account will be deactivated, only certain legally required information will be kept on file</p>
 -->
     </div>
+
+    <div id="deactivatebox" class="sidebox" style="margin-top: 20px;">
+        <a href="#" id="deactivateguardlink" class="sideboxbutton">@lang_deactivate_account@</a>
+        <div class="initialhidden deactivatebox" id="deactivateguard">
+            <p>@lang_deactivate_warning@</p>
+            <div class="deactivatemsg attention" id="deactivatemsg">@lang_are_you_sure@<br/>@lang_undone_warning@</div>
+            <a href="#" id="deactivatebtn"><div class="sideboxbutton">@lang_deactivate@</div></a>
+            <a href="#" class="deactivatecancelbtn" id="deactivatecancelbtn"><div class="sideboxbutton">@lang_cancel@</div></a>
+        </div>
+    </div>
+
 </div> <!-- end right column -->
 
 </div> <!-- end container -->
