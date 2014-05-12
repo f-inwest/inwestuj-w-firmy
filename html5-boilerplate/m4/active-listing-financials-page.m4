@@ -43,11 +43,11 @@ include(company-not-found.m4)
     </div>
     <div class="boxpanel">
         <div class="formitem clear firstinputitem">
-            <label class="inputlabel valuation-allow-label" for="asked_fund">@lang_allow_bids@</label>
+            <label style="padding-top: 0px;" class="inputlabel valuation-allow-label" for="asked_fund">@lang_allow_bids@</label>
             <span class="inputcheckbox">
                 <div id="asked_fund"></div>
             </span>
-            <span class="inputhelp inputmsg"><span id="askfundstatus"></span><span class="newlistingaskmsg" id="newlistingaskmsg">&nbsp;</span></span>
+            <span style="padding-left: 80px;" class="inputhelp inputmsg"><span id="askfundstatus"></span><span class="newlistingaskmsg" id="newlistingaskmsg">&nbsp;</span></span>
         </div>
     </div>
 

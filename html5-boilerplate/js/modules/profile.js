@@ -873,7 +873,6 @@ pl.implement(EditProfileClass, {
             i, property, textFields, textFieldId, textFieldObj, notifyCheckbox; 
         self.profile_id = json.profile_id;
         self.admin = json.admin;
-        console.log('store profile');
         self.updateUrl = '/user/update?id=' + self.profile_id;
         for (i = 0; i < properties.length; i++) {
             property = properties[i];
@@ -889,7 +888,6 @@ pl.implement(EditProfileClass, {
             }
 */
             if (textFieldId === 'username') {
-            	console.log('username = ' + json[textFieldId]);
                 textFieldObj.fieldBase.addValidator(function(username) {
                     var successFunc = function(json) {
                             var icon = new ValidIconClass('usernameicon');
@@ -926,7 +924,6 @@ pl.implement(EditProfileClass, {
                 };
             }
             if (textFieldId === 'name') {
-            	console.log('name = ' + json[textFieldId]);
                 textFieldObj.fieldBase.addValidator(textFieldObj.fieldBase.validator.makeLengthChecker(3, 100));
             }
             textFieldObj.bindEvents();

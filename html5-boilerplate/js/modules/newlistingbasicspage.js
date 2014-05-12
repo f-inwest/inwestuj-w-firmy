@@ -170,7 +170,7 @@ pl.implement(NewListingBasicsClass, {
             },
             typeOptions = [ ['application', '@lang_application@'], ['company', '@lang_company@'] ],
             stageOptions = [ ['concept', '@lang_concept@'], ['startup', '@lang_startup@'], ['established', '@lang_established@' ] ],
-            currencyOptions = [ ['pln', '@lang_currency_pln@'], ['usd', '@lang_currency_usd@'] ],
+            currencyOptions = [ ['pln', '@lang_currency_pln@'], ['eur', '@lang_currency_eur@'], ['gbp', '@lang_currency_gbp@'], ['usd', '@lang_currency_usd@'] ],
             platforms = [ 'ios', 'android', 'windows_phone', 'website', 'desktop', 'other' ],
             platformOptions = [],
             platform,

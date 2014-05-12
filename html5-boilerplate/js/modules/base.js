@@ -247,7 +247,7 @@ pl.implement(CurrencyClass, {
         return NumberClass.prototype.formatText(num, '$');
     },
     format: function(num, _currency, _decimalpoints) {
-        var currency = _currency || 'usd',
+        var currency = _currency || 'pln',
             decimalpoints = _decimalpoints !== undefined || 2,
             prefix,
             postfix,
@@ -255,9 +255,19 @@ pl.implement(CurrencyClass, {
             decimal;
         if (currency === 'pln') {
             prefix = '';
-            postfix = 'zł';
+            postfix = 'PLN';
             thousands = ' ';
             decimal = ',';
+        } else if (currency === 'eur') {
+            prefix = '';
+            postfix = '&euro;';
+            thousands = ' ';
+            decimal = '.';
+        } else if (currency === 'gbp') {
+            prefix = '';
+            postfix = '&pound;';
+            thousands = ',';
+            decimal = '.';
         }
         else {
             prefix = '$';

@@ -18,9 +18,6 @@ include(profile-not-found.m4)
                 <span class="titleyour">@lang_editing_profile@</span>
                 <span class="titleuser initialhidden>@lang_projects@ <span class="titleusername"></span></span>
             </div>
-            <div class="welcometext">
-                <span id="username"></span>
-            </div>
         </span>
     </div>
 </div>

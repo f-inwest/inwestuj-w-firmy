@@ -7,7 +7,7 @@
     </a>
 
     <a class="active-listing-link" href="/active-listing-financials-page.html">
-        <div class="sidebox investbutton" id="askfundingbutton">@lang_ask_for_funding@</div>
+        <div style="margin-top: 47px;" class="sidebox investbutton" id="askfundingbutton">@lang_ask_for_funding@</div>
     </a>
 
     <a class="active-listing-link" href="/active-listing-media-page.html">
