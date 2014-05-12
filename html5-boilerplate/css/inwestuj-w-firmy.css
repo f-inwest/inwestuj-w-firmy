@@ -175,7 +175,7 @@ body.nearby-page > #wrap > #main > div.container > div.nearbywrapper {
     font-size: 22px;
     font-weight: 300;
     color: #5b6773;
-    width: 635px;
+    width: 634px;
     background-image: url(../img/header-content-bck.png);
     left: 1px;
     height: 30px;
@@ -675,6 +675,8 @@ a:focus, a:hover { cursor: pointer; }
     background: #fff!important;
     width: 280px;
     text-align: center;
+    position: absolute;
+    right: 0;
 }
 .companybannerfollowbtn:hover, .companybannerfollowbtn:active {
     transition: background 0.25s, color 0.25s;

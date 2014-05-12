@@ -1,4 +1,6 @@
 function NewListingFinancialsClass() {
+    var qs = new QueryStringClass();
+    this.idparam = qs.vars['id'];
     this.base = new NewListingBaseClass();
 }
 pl.implement(NewListingFinancialsClass, {
@@ -6,9 +8,11 @@ pl.implement(NewListingFinancialsClass, {
         var self = this,
             complete = function(json) {
                 var listing = json && json.listing ? json.listing : {},
+                    profile = json && json.loggedin_profile ? json.loggedin_profile : {},
                     header = new HeaderClass();
                 header.setLogin(json);
                 self.base.store(listing);
+                self.loggedin_profile = profile;
                 self.display();
                 pl('.preloader').hide();
                 pl('.wrapper').show();
@@ -18,14 +22,17 @@ pl.implement(NewListingFinancialsClass, {
                 pl('.preloader, .companyheader').hide();
                 pl('.errorwrapper').show();
             },
-            ajax = new AjaxClass('/listings/create', 'newlistingmsg', complete, null, null, error);
-        ajax.setPost();
+            url = this.idparam ? '/listing/get/' + this.idparam : '/listing/create',
+            ajax = new AjaxClass(url, 'newlistingmsg', complete, null, null, error);
+        if (!self.idparam) {
+            ajax.setPost();
+        }
         ajax.call();
     },
     display: function() {
         var status = this.base.listing.status;
-        if (status !== 'new' && status !== 'posted') {
-            document.location = '/company-page.html?id=' + this.base.listing.id;
+        if (!this.base.isMyListing(this.loggedin_profile)) {
+            document.location = '/company-page.html?id=' + this.base.listing_id;
         }
         if (!this.bound) {
             this.bindEvents();
@@ -213,13 +220,5 @@ pl.implement(NewListingFinancialsClass, {
 
 });
 
-function NewListingPageClass() {};
-pl.implement(NewListingPageClass, {
-    loadPage: function() {
-        var newlisting = new NewListingFinancialsClass();
-        newlisting.load();
-    }
-});
-
-(new NewListingPageClass()).loadPage();
+(new NewListingFinancialsClass()).load();
 
