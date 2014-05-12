@@ -118,7 +118,7 @@ public class Listing extends BaseObject<Listing> {
 	public int   suggestedValuation;
 	public int   suggestedPercentage;
 	public int   suggestedAmount;
-	public Currency currency = Currency.USD;
+	public Currency currency = Currency.PLN;
 	public Key<ListingDoc> businessPlanId;
 	public Key<ListingDoc> presentationId, presentationGenId;
 	public Key<ListingDoc> financialsId;

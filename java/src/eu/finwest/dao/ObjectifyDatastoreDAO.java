@@ -847,7 +847,6 @@ public class ObjectifyDatastoreDAO {
 
 	public List<Listing> getPostedListings(ListPropertiesVO listingProperties) {
 		Query<Listing> query = getOfy().query(Listing.class)
-				.filter("campaign =", FrontController.getCampaign().getSubdomain())
 				.filter("state =", Listing.State.POSTED)
                 .order("-posted")
                 .chunkSize(listingProperties.getMaxResults())
@@ -875,7 +874,6 @@ public class ObjectifyDatastoreDAO {
 
 	public List<Listing> getFrozenListings(ListPropertiesVO listingProperties) {
 		Query<Listing> query = getOfy().query(Listing.class)
-				.filter("campaign =", FrontController.getCampaign().getSubdomain())
 				.filter("state =", Listing.State.FROZEN)
 				.order("-listedOn")
                 .chunkSize(listingProperties.getMaxResults())

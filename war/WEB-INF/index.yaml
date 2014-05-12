@@ -185,6 +185,13 @@ indexes:
 - kind: Listing
   ancestor: no
   properties:
+    - name: state
+    - name: listedOn
+      direction: desc
+
+- kind: Listing
+  ancestor: no
+  properties:
     - name: campaign
     - name: state
     - name: listedOn
@@ -197,6 +204,13 @@ indexes:
     - name: state
     - name: closingOn
       direction: asc
+
+- kind: Listing
+  ancestor: no
+  properties:
+    - name: state
+    - name: posted
+      direction: desc
 
 - kind: Listing
   ancestor: no

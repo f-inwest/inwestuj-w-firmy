@@ -60,7 +60,24 @@ public class DatastoreMigration {
 		
 		return report.toString();
 	}
-	
+
+	public static String reindexListings() {
+		StringBuffer report = new StringBuffer();
+
+		/* reindexing Listings
+		 */
+		report.append("Reindexing all listings:<br/>\n<ul>\n");
+		List<Listing> toMigrate = new ArrayList<Listing>();
+		QueryResultIterable<Listing> pp = getOfy().query(Listing.class).fetch();
+		//for (Listing listing : pp) {
+		//	toMigrate.add(listing);
+		//}
+		getOfy().put(pp);
+		report.append("Reindexed listings</br>");
+				
+		return report.toString();
+	}
+
 	public static String fixRecentDomain() {
 		StringBuffer report = new StringBuffer();
 

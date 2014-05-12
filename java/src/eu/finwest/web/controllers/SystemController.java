@@ -70,6 +70,8 @@ public class SystemController extends ModelDrivenController {
 				return migrate20140225_to_current(request);
 			} else if("migrate_fix_recent_domain".equalsIgnoreCase(getCommand(1))) {
 				return migrateFixRecentDomain(request);
+			} else if("migrate_reindex_listings".equalsIgnoreCase(getCommand(1))) {
+				return migrateReindexListings(request);
 			} else if("reset_pricepoints".equalsIgnoreCase(getCommand(1))) {
 				return resetPricePoints(request);
 			} else if("associate_mock_images".equalsIgnoreCase(getCommand(1))) {
@@ -293,6 +295,16 @@ public class SystemController extends ModelDrivenController {
 		UserVO loggedInUser = getLoggedInUser();
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
 			model = DatastoreMigration.fixRecentDomain();
+		}
+		return headers;
+	}
+
+	private HttpHeaders migrateReindexListings(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("migrate_reindex_listings");
+
+		UserVO loggedInUser = getLoggedInUser();
+		if (loggedInUser != null && loggedInUser.isAdmin()) {
+			model = DatastoreMigration.reindexListings();
 		}
 		return headers;
 	}
