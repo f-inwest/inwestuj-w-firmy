@@ -322,6 +322,8 @@ public class UserController extends ModelDrivenController {
 			if (model == null) {
 				log.log(Level.WARNING, "User autosave error!");
 				headers.setStatus(500);
+			} else {
+				EmailAuthHelper.updateUser(request);
 			}
 		} else {
 			log.log(Level.WARNING, "Parameter 'profile' is empty!");

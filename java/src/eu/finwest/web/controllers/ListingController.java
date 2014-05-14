@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.codehaus.jackson.JsonNode;
@@ -505,8 +506,14 @@ public class ListingController extends ModelDrivenController {
 				return headers;
 			}
 			
-			log.log(Level.INFO, "Updating listing address: " + properties);
-			ListingAndUserVO listing = ListingFacade.instance().updateListingAddressProperties(getLoggedInUser(), properties);
+			String listingId = null;
+			if (rootNode.get("id") != null) {
+				listingId = rootNode.get("id").getValueAsText();
+			}
+			
+			log.log(Level.INFO, "Updating listing " + (listingId == null ? "(edited)" : listingId) + ", lat: " + properties.get("latitude")
+					+ ", long: " + properties.get("longitude") + ", formatted_address: " + properties.get("formatted_address"));
+			ListingAndUserVO listing = ListingFacade.instance().updateListingAddressProperties(getLoggedInUser(), listingId, properties);
 			if (listing != null && listing.getListing() != null) {
 				String[] url = ServiceFacade.instance().createUploadUrls(getLoggedInUser(), "/file/upload/" + listing.getListing().getId() + "/", listing.getListing().getCampaign(), 1);
 				listing.getListing().setUploadUrl(url[0]);

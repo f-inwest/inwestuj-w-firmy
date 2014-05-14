@@ -3,7 +3,6 @@ package eu.finwest.web;
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +23,6 @@ import com.googlecode.objectify.Key;
 import eu.finwest.dao.NotificationObjectifyDatastoreDAO;
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Comment;
-import eu.finwest.datamodel.Contribution;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.QuestionAnswer;
@@ -46,7 +44,6 @@ import eu.finwest.vo.QuestionAnswerListVO;
 import eu.finwest.vo.QuestionAnswerVO;
 import eu.finwest.vo.SystemPropertyVO;
 import eu.finwest.vo.UserBasicVO;
-import eu.finwest.vo.UserContributionVO;
 import eu.finwest.vo.UserVO;
 import eu.finwest.web.ListingFacade.UpdateReason;
 
@@ -295,8 +292,9 @@ public class ServiceFacade {
 			String discreteUploadUrl = uploadUrl + (uploadUrl.endsWith("/") ? "" : "/") ;
 			discreteUploadUrl += "" + new Date().getTime() + numberOfUrls + loggedInUser.hashCode();
 			String nonCampaignUploadUrl = blobstoreService.createUploadUrl(discreteUploadUrl);
-            String campaignSensitiveUploadUrl = nonCampaignUploadUrl.replaceFirst("(https?://)", "$1" + campaignId + ".");
-            urls[--numberOfUrls] = campaignSensitiveUploadUrl;
+            //String campaignSensitiveUploadUrl = nonCampaignUploadUrl.replaceFirst("(https?://)", "$1" + campaignId + ".");
+            //urls[--numberOfUrls] = campaignSensitiveUploadUrl;
+			urls[--numberOfUrls] = nonCampaignUploadUrl;
 		}
 		return urls;
 	}

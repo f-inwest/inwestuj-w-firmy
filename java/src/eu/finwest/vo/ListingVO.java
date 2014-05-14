@@ -34,7 +34,8 @@ public class ListingVO extends ListingTileVO implements Serializable {
 			"answer4", "answer5", "answer6", "answer7", "answer8", "answer9", "answer10", "answer11", "answer12", "answer13",
 			"answer14", "answer15", "answer16", "answer17", "answer18", "answer19", "answer20", "answer21", "answer22", "answer23",
             "answer24", "answer25", "answer26", "answer27", "valuation_data", "cashflow_data", "has_contributions",
-            "contribution_per_hour", "contribution_interest_daily"
+            "contribution_per_hour", "contribution_interest_daily",
+            "presentation_url", "financials_url", "logo_url", "pic1_url", "pic2_url", "pic3_url", "pic4_url", "pic5_url"
     });
 	public static final List<String> FETCHED_PROPERTIES = Arrays.asList(new String[] {"business_plan_url", 
 			"presentation_url", "financials_url", "logo_url", "pic1_url", "pic2_url", "pic3_url", "pic4_url", "pic5_url"});

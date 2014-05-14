@@ -876,7 +876,9 @@ public class UserMgmtFacade {
         if (!StringUtils.isEmpty(loggedInUser.getNickname()) && loggedInUser.getNickname().equalsIgnoreCase(nickName)) { // keeping my existing name is okay
             return true;
         }
-        if (getDAO().checkNickNameInUse(nickName)) { // same as existing nickname not allowed
+        int nickCount = StringUtils.equalsIgnoreCase(nickName, getDAO().getUser(loggedInUser.getId()).nicknameLower) ? 1 : 0;
+        if (getDAO().checkNickNameInUse(nickName) > nickCount) {
+        	// same as existing nickname not allowed
             return false;
         }
         return true;

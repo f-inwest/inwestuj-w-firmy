@@ -419,6 +419,7 @@ pl.implement(NewListingBasicsClass, {
                     self.base.displayCalculated();
                 },
                 data = { listing: {
+                		id: self.base.listing.listing_id,
                         update_address: place
                        } },
                 ajax = new AjaxClass('/listing/update_address', 'newlistingbasicsmsg', completeFunc);

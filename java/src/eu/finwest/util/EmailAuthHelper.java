@@ -64,6 +64,14 @@ public class EmailAuthHelper {
 		return user;
 	}
 	
+	public static void updateUser (HttpServletRequest request) {
+		SBUser user = (SBUser)request.getSession().getAttribute(SESSION_EMAIL_USER);
+		if (user != null) {
+			user = ObjectifyDatastoreDAO.getInstance().getUser(user.getWebKey());
+			request.getSession().setAttribute(SESSION_EMAIL_USER, user);
+		}
+	}
+	
 	public static String getLoginUrl(HttpServletRequest request) {
 		String appUrl = TwitterHelper.getApplicationUrl(request);
 		return appUrl + SERVLET_EMAIL_LOGIN;

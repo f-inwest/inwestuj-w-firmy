@@ -1086,8 +1086,8 @@ public class ObjectifyDatastoreDAO {
 		}
 	}
 
-	public boolean checkNickNameInUse(String nickName) {
-		return getOfy().query(SBUser.class).filter("nicknameLower =", nickName.toLowerCase()).count() != 0;
+	public int checkNickNameInUse(String nickName) {
+		return getOfy().query(SBUser.class).filter("nicknameLower =", nickName.toLowerCase()).count();
 	}
 
 	public void deleteComment(long commentId) {

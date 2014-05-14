@@ -268,22 +268,20 @@ public class ListingFacade {
 			log.log(Level.INFO, "Only logged in user can have edited listing", new Exception("Not logged in"));
 			return null;
 		} else {
-			Listing listing = getDAO().getListing(ListingVO.toKeyId(loggedInUser.getEditedListing()));
-			if (listing != null) {
-				if (listing.state != Listing.State.NEW && listing.state != Listing.State.POSTED) {
-					loggedInUser.setEditedListing(null);
-					loggedInUser.setEditedStatus(null);
-					return null;
-				} else {
+			SBUser user = getDAO().getUser(loggedInUser.getId());
+			if (user.editedListing != null) {
+				Listing listing = getDAO().getListing(user.editedListing.getString());
+				if (listing != null && (listing.state == Listing.State.NEW || listing.state == Listing.State.POSTED)) {
+					loggedInUser.setEditedListing(listing.getWebKey());
 					loggedInUser.setEditedStatus(listing.state.toString());
+					ListingVO listingVO = DtoToVoConverter.convert(listing);
+					UserMgmtFacade.instance().updateUserData(listingVO);
+					return listingVO;
 				}
-			} else {
-				loggedInUser.setEditedListing(null);
-				loggedInUser.setEditedStatus(null);
 			}
-			ListingVO listingVO = DtoToVoConverter.convert(listing);
-			UserMgmtFacade.instance().updateUserData(listingVO);
-			return listingVO;
+			loggedInUser.setEditedListing(null);
+			loggedInUser.setEditedStatus(null);
+			return null;
 		}
 	}
 
@@ -441,23 +439,23 @@ public class ListingFacade {
 	}
 
 	public ListingAndUserVO updateListingAddressProperties(UserVO loggedInUser, Map<String, String> properties) {
+		return updateListingAddressProperties(loggedInUser, null, properties);
+	}
+	
+	public ListingAndUserVO updateListingAddressProperties(UserVO loggedInUser, String listingId, Map<String, String> properties) {
 		ListingAndUserVO result = new ListingAndUserVO();
 
-		if (loggedInUser == null || loggedInUser.getEditedListing() == null) {
+		if (loggedInUser == null || (loggedInUser.getEditedListing() == null && StringUtils.isBlank(listingId))) {
 			result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
 			result.setErrorMessage(Translations.getText("lang_error_user_not_logged_in_or_not_editing"));
 			return result;
 		}
 		// retrieving edited listing
-		Listing listing = getDAO().getListing(BaseVO.toKeyId(loggedInUser.getEditedListing()));
+		String editedListing = StringUtils.isBlank(listingId) ? loggedInUser.getEditedListing() : listingId;
+		Listing listing = getDAO().getListing(BaseVO.toKeyId(editedListing));
 		if (listing == null) {
 			result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
 			result.setErrorMessage(Translations.getText("lang_error_listing_edited_not_exist"));
-			return result;
-		}
-		if (listing.state != Listing.State.NEW) {
-			result.setErrorCode(ErrorCodes.OPERATION_NOT_ALLOWED);
-			result.setErrorMessage(Translations.getText("lang_error_listing_edited_not_new"));
 			return result;
 		}
 		StringBuffer infos = new StringBuffer();
