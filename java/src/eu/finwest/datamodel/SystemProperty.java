@@ -46,6 +46,7 @@ public class SystemProperty implements Serializable {
 	public static final String PAYMENT_CUSTOMER_ID = "payment.customer.id";
 	public static final String PAYMENT_FREE_USAGE = "payment.free.usage";
 	public static final String PAYMENT_FREE_INVESTOR_REG = "payment.free.investor.registration";
+	public static final String PAYMENT_FREE_CAMPAIGN_REG = "payment.free.campaign.registration";
 
 	@Id public String name;
 	public String value;

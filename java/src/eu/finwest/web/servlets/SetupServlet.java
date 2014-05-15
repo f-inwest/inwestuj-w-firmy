@@ -111,6 +111,11 @@ public class SetupServlet extends HttpServlet {
             out.println("<li>notification_admin_email - Email address used as 'from' for all emails sent by portal (must be hosted by Google)");
             out.println("<li>notification_real_receivers - if true then notification emails are sent to real receivers");
             out.println("<li>notification_no_bcc_admins - if empty or false then notification emails are BCC to admins. Only when notification_real_receivers = true");
+            out.println("<li>payment.action.url, payment.customer.id - payment system url and customer id");
+            out.println("<li>payment.security.code - payment system security code");
+            out.println("<li>payment.free.investor.registration - enables free investor registration");
+            out.println("<li>payment.free.usage - enables free project services (activation, etc.)");
+            out.println("<li> - ");
             out.println("</ul></p>");
 
 			out.println("<p>Set system property:</p>");

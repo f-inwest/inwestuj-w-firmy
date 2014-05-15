@@ -1139,7 +1139,9 @@ public class UserMgmtFacade {
 	private void updateCommonFields(PricePoint pricePoint, UserVO loggedInUser, LangVersion portalLang, PricePointVO pp, String id) {
 		boolean paymentFreeUsage = MemCacheFacade.instance().getSystemProperty(true, SystemProperty.PAYMENT_FREE_USAGE);
 		boolean paymentFreeInvestorReg = MemCacheFacade.instance().getSystemProperty(true, SystemProperty.PAYMENT_FREE_INVESTOR_REG);
+		boolean paymentFreeCampaignReg = MemCacheFacade.instance().getSystemProperty(true, SystemProperty.PAYMENT_FREE_CAMPAIGN_REG);
 		boolean freeUsage = (pricePoint.type != PricePoint.Type.INVESTOR_REGISTRATION && paymentFreeUsage)
+				|| (pricePoint.group != PricePoint.Group.CAMPAIGN && paymentFreeCampaignReg)
 				|| (pricePoint.type == PricePoint.Type.INVESTOR_REGISTRATION && paymentFreeInvestorReg);
 		
 		boolean developEnv = com.google.appengine.api.utils.SystemProperty.environment.value() == com.google.appengine.api.utils.SystemProperty.Environment.Value.Development;
