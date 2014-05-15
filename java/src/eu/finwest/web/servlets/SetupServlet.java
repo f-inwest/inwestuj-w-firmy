@@ -113,9 +113,10 @@ public class SetupServlet extends HttpServlet {
             out.println("<li>notification_no_bcc_admins - if empty or false then notification emails are BCC to admins. Only when notification_real_receivers = true");
             out.println("<li>payment.action.url, payment.customer.id - payment system url and customer id");
             out.println("<li>payment.security.code - payment system security code");
+            out.println("<li>payment.free.usage - enables all services for free (investors, projects, campaigns), default value false");
             out.println("<li>payment.free.investor.registration - enables free investor registration");
-            out.println("<li>payment.free.usage - enables free project services (activation, etc.)");
-            out.println("<li> - ");
+            out.println("<li>payment.free.campaign.activation - enables free campaign activation, default value false");
+            //out.println("<li> - ");
             out.println("</ul></p>");
 
 			out.println("<p>Set system property:</p>");
