@@ -579,6 +579,30 @@ pl.implement(HeaderClass, {
         if (code) {
             this.showChangePassword(code);
         }
+        self.handleCookieNotice();
+    },
+    handleCookieNotice: function() {
+        var self = this,
+            name = 'cookies_accepted',
+            cookie = CookieClass.prototype.readCookie(name);
+        if (cookie != 'T') { // cookie warning not acknowledged, show warning
+            self.displayCookieNotice();
+        }
+    },
+    displayCookieNotice: function() {
+        var message_container = document.createElement('div'),
+            html_code = '<div id="cookies-message" class="cookie-container">' +
+            '    @lang_cookie_notice@' +
+            '    <a href="/terms-page.html" target="_blank" class="cookie-link">@lang_cookie_learn_more@</a>' +
+            '    <a id="accept-cookies-checkbox" name="accept-cookies" class="cookie-button">@lang_cookie_okay@</a>' +
+            '</div>';
+        message_container.id = 'cookies-message-container';
+        message_container.innerHTML = html_code;
+        document.body.appendChild(message_container);
+        pl('#accept-cookies-checkbox').unbind('click').bind('click', function(e) {
+            CookieClass.prototype.createCookie('cookies_accepted', 'T', 365, null);
+            document.getElementById('cookies-message-container').removeChild(document.getElementById('cookies-message'));
+        });
     },
     showLoginPopup: function() {
         pl('#light, #fade').show();

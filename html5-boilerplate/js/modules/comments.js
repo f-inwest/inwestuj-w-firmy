@@ -229,24 +229,30 @@ pl.implement(CommentClass, {
         ';
     },
 
-    deleteComment: function() {
-        var commentid = this.id.replace('comment_delete_', '');
+    deleteComment: function(e) {
+        var commentid = this.id.replace('comment_delete_', ''),
+            commentsel = '#comment_' + commentid,
+            deleteboxsel = '#comment_delete_' + commentid,
+            deletespinnersel = '#comment_deletespinner_' + commentid,
             completefunc = function(json) {
-                pl('#comment_'+commentid).remove();
+                console.log('removing sel=' + commentsel);
+                pl(commentsel).remove();
             },
-
             url = '/listing/delete_comment?id=' + commentid,
             deletemsgid = 'comment_delete_msg_' + commentid,
             ajax = new AjaxClass(url, deletemsgid, completefunc);
-        pl('#comment_delete_' + commentid).hide();
-        pl('#comment_deletespinner_' + commentid).show();
+        console.log('deleting id=' + commentid + ' url=' + url);
+        pl(deleteboxsel).hide();
+        pl(deletespinnersel).show();
         ajax.setPost();
         ajax.call();
+        e.preventDefault();
     },
 
     bindComment: function(comment) {
-        if (comment.profile_id === this.loggedin_profile_id) {
-            pl('#comment_delete_' + comment.comment_id).bind('click', this.deleteComment);
+        var self = this;
+        if (comment.profile_id === self.loggedin_profile_id) {
+            pl('#comment_delete_' + comment.comment_id).unbind('click').bind('click', self.deleteComment);
         }
     }
 });
