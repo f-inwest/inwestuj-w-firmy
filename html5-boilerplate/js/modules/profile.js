@@ -428,8 +428,9 @@ pl.implement(ProfileClass, {
             //pricepointHTML = pricepoints.buttonsHTML(pricepointsForType, 'pricepoint-description-investor', 'purchase-button-investor'),
             pricepointHTML = pricepoints.buttonsHTML(pricepointsForType, 'pricepoint-description-company', 'purchase-button-company'),
             profile = this.profile || this.loggedin_profile || {};
- /*        var investor = json.investor ? 'Accredited Investor' : 'Entrepreneur';
-            date = new DateClass(),
+         var userClass = profile.investor ? '@lang_profile_investor@' : '@lang_profile_entrepreneur@';
+         userClass += profile.admin ? ' @lang_profile_admin@' : '';
+/*           date = new DateClass(),
             joindate = json.joined_date ? date.format(json.joined_date) : 'unknown';
         pl('#profilestatus').html('');
         pl('#title').html(json.title);
@@ -453,9 +454,7 @@ pl.implement(ProfileClass, {
         if (profile.joined_date) {
             pl('#membersince').text('@lang_member_since@ ' + DateClass.prototype.formatDateStr(profile.joined_date));
         }
-        if (profile.user_class) {
-            pl('#user_class').text(ProfileUserClass.prototype.format(profile.user_class));
-        }
+        pl('#user_class').text(userClass);
 
         self.handlePaymentButtons(pricepointHTML);
     },
