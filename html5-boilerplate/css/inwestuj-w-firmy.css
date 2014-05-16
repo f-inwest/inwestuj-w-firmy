@@ -3447,8 +3447,7 @@ color: #fff;
 
 /* cookie box */
 .cookie-container {
-    padding: 10px 0px;
-    font-size: 14px;
+    padding: 5px 0px;
     line-height: 22px;
     border-bottom: 1px solid #D3D0D0;
     text-align: center;
@@ -3459,7 +3458,7 @@ color: #fff;
     z-index: 9999;
     color: #5b6773;
     font-family: Ubuntu, sans-serif;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 300;
 }
 .cookie-link {
@@ -3472,20 +3471,20 @@ color: #fff;
     cursor: pointer;
 
     font-family: Ubuntu, sans-serif;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 300;
 
     position: relative;
     max-width: 250px;
     width: 150px;
-    height: 29px;
+    height: 20px;
     border: 1px;
     border-style: solid;
     border-color: #7edaef;
     text-decoration: none;
     color: #7edaef;
-    line-height: 30px;
-    padding: 0 10px 0 10px;
+    line-height: 20px;
+    padding: 0 5px 0 5px;
     text-align: center;
     transition: background .25s,color .25s;
     background: #fff;
