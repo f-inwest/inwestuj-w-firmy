@@ -158,7 +158,7 @@ public class ImageHelper {
 		
 		try {
 			Plus plus = new Plus.Builder(new UrlFetchTransport(), new JacksonFactory(), (com.google.api.client.http.HttpRequestInitializer)null)
-		    	.setApplicationName("").setGoogleClientRequestInitializer(new PlusRequestInitializer(apiKey)).build();
+		    	.setApplicationName("inwestujwfirmy.pl").setGoogleClientRequestInitializer(new PlusRequestInitializer(apiKey)).build();
 			Plus.People.Search searchPeople = plus.people().search(user.getNickname());
 			searchPeople.setMaxResults(5L);
 			PeopleFeed peopleFeed = searchPeople.execute();

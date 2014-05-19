@@ -116,6 +116,7 @@ public class SetupServlet extends HttpServlet {
             out.println("<li>payment.free.usage - enables all services for free (investors, projects, campaigns), default value false");
             out.println("<li>payment.free.investor.registration - enables free investor registration");
             out.println("<li>payment.free.campaign.activation - enables free campaign activation, default value false");
+            out.println("<li>google.apikey - Google API key, defaults to 'AIzaSyCyUJqBsLWYgxQwnS6uOUC5yX8ASSN0P7o'");
             //out.println("<li> - ");
             out.println("</ul></p>");
 

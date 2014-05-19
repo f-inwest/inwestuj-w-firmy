@@ -26,7 +26,7 @@
                 <div class="stopka-finwest"></div>
             </div>
             <div class="span-4 footercol">
-                <div class="footerlinkheader">@lang_admin@</div>
+                <div class="footerlinkheader">@lang_other_menu@</div>
                 <a href="contact-page.html"><span class="footerlink hoverlink">@lang_contact@</span></a>
                 <a href="sms-page.html" class="initialhidden loggedinfooterlink"><span class="footerlink hoverlink">@lang_sms_payments@</span></a>
                 <div class="initialhidden adminfooterlink">
@@ -43,13 +43,13 @@
                         <span class="footericonlabel">twitter</span>
                     </span>
                 </a>
-                <a href="https://www.facebook.com/inwestuj-w-firmy">
+                <a href="https://www.facebook.com/inwestujwfirmy">
                     <span class="footericonlink hoverlink">
                         <!-- <div class="footericon headerfbsignin"></div> -->
                         <span class="footericonlabel">facebook</span>
                     </span>
                 </a>
-                <a href="https://plus.google.com/107382337795789732554" rel="publisher">
+                <a href="https://plus.google.com/u/0/117134923059516307064" rel="publisher">
                     <span class="footericonlink hoverlink">
                         <!-- <div class="footericon headersignin"></div> -->
                         <span class="footericonlabel">google+</span>

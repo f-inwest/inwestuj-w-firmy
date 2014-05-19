@@ -1092,6 +1092,7 @@ pl.implement(ProfileListClass, {
                 ? '<span class="profileliststatus">@lang_inactive@</span>'
                 : '',
 			admintext =  listitem.admin ? '<span class="profilelistadmin">@lang_admin@</span>' : '',
+			investortext =  listitem.investor ? '<span class="profilelistadmin">@lang_profile_investor@</span>' : '',
 			userclasstext =  listitem.user_class && this.type !== 'dragons'
                 ? '<span class="profilelistuserclass">' + ProfileUserClass.prototype.format(listitem.user_class) + '</span>'
                 : '',
@@ -1119,6 +1120,7 @@ pl.implement(ProfileListClass, {
 			        ' + emailtext + '\
                     ' + statustext + '\
                     ' + userclasstext + '\
+                    ' + investortext + '\
                     ' + admintext + '\
                 </p>\
                 <p class="messagetext profilelistdetails">\
