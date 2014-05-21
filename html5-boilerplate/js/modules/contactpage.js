@@ -35,7 +35,7 @@ pl.implement(ContactPageClass,{
         pl('#submitcontactbutton').bind('click', function() {
             var question = pl('#question').attr('value'),
                 details = pl('#details').attr('value'),
-                adminemail = 'admin@inwestujwfirmy.pl',
+                adminemail = 'biuro@inwestujwfirmy.pl',
                 mailto = 'mailto:' + adminemail + '?subject=' + encodeURIComponent(question) + '&body=' + encodeURIComponent(details),
                 msg = '';
             if (!question) {

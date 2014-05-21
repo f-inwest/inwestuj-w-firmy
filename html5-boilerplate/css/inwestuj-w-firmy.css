@@ -1760,10 +1760,10 @@ transition: height 300ms;
 .tilepoints { top: 266px; }
 .tiledesc { width: 146px; height: 116px; position: absolute; top: 146px; padding: 0; margin:0; overflow: hidden; border-top: 1px solid #ddd; }
 .tileloc, .tiledetails, .tiledesc { font-size: 14px; line-height: 16px; }
-.tileloc, .tiledetails { line-height: 20px; padding: 10px; }
+.tileloc, .tiledetails { line-height: 16px; padding: 10px; }
 .tilevotes, .tilevoteimg { position: absolute; }
 .tilevotes { left: 30px; }
-.tileposted { font-size: 14px; }
+.tileposted { font-size: 14px; line-height: 16px; }
 .tilecompany {
     display: block;
     background: #5b6773;

@@ -106,6 +106,7 @@ include(header.m4)
         </div>
     </div>
 
+<!--
 	<div id="pricepoints-wrapper" class="initialhidden company-side-menu-inner company-side-menu-inner-pricepoints" style="display: block;">
         <div class="header-content header-title-sidebox">@lang_sms_investor_reg@</div>
         <div id="pricepoints-wrapper-inner" class="">
@@ -123,7 +124,8 @@ include(header.m4)
         	</div>
         </div>
     </div>
-    
+-->
+
 </div> <!-- end right column -->
 
 </div> <!-- end container -->

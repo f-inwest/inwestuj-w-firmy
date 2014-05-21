@@ -13,7 +13,6 @@
                 </div>
                 <a href="help-page.html"><span class="footerlink hoverlink">@lang_help@</span></a>
                 <a href="terms-page.html"><span class="footerlink hoverlink">@lang_tandcs@</span></a>
-                <div class="stopka-ue-poland"></div>
             </div>
             <div class="span-4 footercol" style="margin-left: 40px;">
                 <div class="footerlinkheader">@lang_listings@</div>
@@ -23,7 +22,6 @@
                 <div class="initialhidden adminfooterlink">
                     <a href="profile-list-page.html?type=listers" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_entrepreneuers@</span></a>
                 </div>
-                <div class="stopka-finwest"></div>
             </div>
             <div class="span-4 footercol">
                 <div class="footerlinkheader">@lang_other_menu@</div>
@@ -56,7 +54,6 @@
                     </span>
                 </a>
                 <span class="footericonlink hoverlink">&nbsp;</span>
-                <div class="stopka-ue-eu"></div>
             </div>
 
         </div> <!-- end container -->
