@@ -2146,6 +2146,46 @@ pl.implement(InformationPageClass,{
     }
 });
 
+/* sms pages */
+function SmsPageClass() {}
+pl.implement(SmsPageClass,{
+    loadPage: function() {
+        var completeFunc = function(json) {
+                var header = new HeaderClass(),
+                    companyList = new CompanyListClass({ colsPerRow: 2});
+                header.setLogin(json);
+                companyList.storeList(json);
+            },
+            maxResults = pl('body').hasClass('about-page') ? 12 : ( pl('body').hasClass('help-page') ? 8 : 20),
+            basePage = new BaseCompanyListPageClass({ max_results: maxResults });
+        pl('#listingstitle').html('@lang_projects@');
+        
+        var queryString = new QueryStringClass(),
+        	success = queryString.vars.success,
+        	errorCode = queryString.vars.error,
+        	errorMsg = "@lang_sms_unknown_error@";
+        if (success && success === 'true') {
+        	pl('#pricepoint-message').show();
+        	pl('#pricepoint-message').html('@lang_sms_success@');
+        } else if (errorCode) {
+        	pl('#pricepoint-message').show();
+        	if(errorCode == 4) {
+        		errorMsg = "@lang_sms_error_4@";
+        	} else if (errorCode == 101) {
+        		errorMsg = "@lang_sms_error_101@";
+        	} else if (errorCode == 102) {
+				errorMsg = "@lang_sms_error_102@";
+        	} else if (errorCode == 103) {
+				errorMsg = "@lang_sms_error_103@";
+        	}
+        	pl('#pricepoint-message').html('@lang_sms_error@ ' + errorCode + ' - ' + errorMsg);
+        } else {
+        	pl('#pricepoint-message').hide();
+        }
+        basePage.loadPage(completeFunc);
+    }
+});
+
 /* discover page */
 function DiscoverPageClass() {}
 pl.implement(DiscoverPageClass,{

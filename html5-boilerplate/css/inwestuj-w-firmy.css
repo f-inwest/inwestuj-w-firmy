@@ -3181,7 +3181,7 @@ color: #fff;
     margin-bottom: 0;
 }
 .summarypanel {
-    height: 144px;
+    min-height: 144px;
 }
 .campaign-selector-wrapper {
     width: 100%;
@@ -3375,6 +3375,15 @@ color: #fff;
 }
 .company-side-menu-inner-pricepoints {
     padding-bottom: 15px;
+}
+.pricepoint-message {
+    font-family: 'Ubuntu',sans-serif;
+    font-weight: 400;
+    color: #8A1F11;
+    overflow: hidden;
+    line-height: 20px;
+    padding-top: 16px;
+    padding-bottom: 8px;
 }
 
 

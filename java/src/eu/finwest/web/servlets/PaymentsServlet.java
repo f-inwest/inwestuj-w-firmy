@@ -93,6 +93,8 @@ public class PaymentsServlet extends HttpServlet {
 
 			out.println("<form method=\"POST\" action=\"/system/download_sms_payments.csv\">"
 					+ "<input type=\"submit\" value=\"Download sms payments\"/></form><br/><br/>");
+			out.println("<form method=\"POST\" action=\"/system/get_sms_payments.html\">"
+					+ "<input type=\"submit\" value=\"Get sms payments\"/></form><br/><br/>");
 			
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Pricepoints:</p>");
 			

@@ -5,13 +5,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -530,18 +533,81 @@ public class ServiceFacade {
 		List<SmsPayment> contribs = getDAO().getSmsPayments(listProperties);
 		
 		StringBuffer buf = new StringBuffer();
-		DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd hh:mm:ss");
+		DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+		Map<Long, MutablePair<String, Integer>> map = new HashMap<Long, MutablePair<String, Integer>>();
 		
-		buf.append("data; użytkownik; nick; kod; kwota; status; opis; \n");
+		buf.append("<html><header><title>SMS Payments " + dateFormatter.print(new Date().getTime()) + "</title>\n");
+		buf.append("<meta charset=\"utf-8\"><meta content=\"text/html; charset=utf-8\" http-equiv=\"Content-type\"></header>\n");
+		buf.append("<body><table><th>");
+		buf.append("<td>data (GMT)</td><td>użytkownik</td><td>nick</td><td>kod</td><td>kwota</td><td>status</td><td>opis</td></th>\n");
 		for (SmsPayment payment : contribs) {
+			buf.append("<tr>");
+			long smsPayer = payment.customer != null ? payment.customer.getId() : 0;
 			buf.append(dateFormatter.print(payment.date.getTime())).append(";");
-			buf.append(payment.customer != null ? payment.customer.getId() : 0).append(";");
+			buf.append(smsPayer).append("</td>");
+			buf.append("<td>").append(payment.customerName).append("</td>");
+			buf.append("<td>").append(payment.code).append("</td>");
+			buf.append("<td>").append(payment.amount).append("</td>");
+			buf.append("<td>").append(payment.status).append("</td>");
+			buf.append("<td>").append(payment.description).append("</td>");
+			buf.append("</tr>\n");
+			
+			if (StringUtils.equalsIgnoreCase(payment.status, "ok")) {
+				if (!map.containsKey(smsPayer)) {
+					map.put(smsPayer, new MutablePair<String, Integer>(payment.customerName, 0));
+				}
+				map.get(smsPayer).right += 1;
+			}
+		}
+		
+		buf.append("</table><br/><br/><div>Dane zbiorcze</div><table><th>");
+		buf.append("<td>użytkownik</td><td>ilosc sms</td></th>\n");
+		for (MutablePair<String, Integer> pair : map.values()) {
+			buf.append("<tr><td>").append(pair.left).append("</td>").append("<td>").append(pair.right).append("</td></tr>");
+		}
+		buf.append("</table></body>");
+
+		return buf.toString();
+	}
+
+	public String downloadSmsPayments(UserVO loggedInUser) {
+		if (loggedInUser == null || !loggedInUser.isAdmin()) {
+			log.info("User not logged in or is not an admin");
+			return Translations.getText("lang_error_user_not_admin");
+		}
+		
+		ListPropertiesVO listProperties = new ListPropertiesVO();
+		listProperties.setMaxResults(2000);
+		List<SmsPayment> contribs = getDAO().getSmsPayments(listProperties);
+		
+		StringBuffer buf = new StringBuffer();
+		DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+		Map<Long, MutablePair<String, Integer>> map = new HashMap<Long, MutablePair<String, Integer>>();
+		
+		buf.append("data (GMT); użytkownik; nick; kod; kwota; status; opis; \n");
+		for (SmsPayment payment : contribs) {
+			long smsPayer = payment.customer != null ? payment.customer.getId() : 0;
+			buf.append(dateFormatter.print(payment.date.getTime())).append(";");
+			buf.append(smsPayer).append(";");
 			buf.append(payment.customerName).append(";");
 			buf.append(payment.code).append(";");
 			buf.append(payment.amount).append(";");
 			buf.append(payment.status).append(";");
 			buf.append(StringUtils.replace(payment.description, ";", " ")).append(";");
 			buf.append(";\n");
+			
+			if (StringUtils.equalsIgnoreCase(payment.status, "ok")) {
+				if (!map.containsKey(smsPayer)) {
+					map.put(smsPayer, new MutablePair<String, Integer>(payment.customerName, 0));
+				}
+				map.get(smsPayer).right += 1;
+			}
+		}
+		
+		buf.append("dane zbiorcze; \n");
+		buf.append("użytkownik; ilosc sms; \n");
+		for (MutablePair<String, Integer> pair : map.values()) {
+			buf.append(pair.left).append(";").append(pair.right).append(";");
 		}
 
 		return buf.toString();

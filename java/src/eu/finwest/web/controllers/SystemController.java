@@ -87,6 +87,8 @@ public class SystemController extends ModelDrivenController {
 			} else if("validate_sms_code".equalsIgnoreCase(getCommand(1))) {
 				return validateSmsCode(request);
 			} else if("download_sms_payments".equalsIgnoreCase(getCommand(1))) {
+				return downloadSmsPayments(request);
+			} else if("get_sms_payments".equalsIgnoreCase(getCommand(1))) {
 				return getSmsPayments(request);
 			}
 		}
@@ -109,9 +111,14 @@ public class SystemController extends ModelDrivenController {
 		return headers;
 	}
 
+	private HttpHeaders downloadSmsPayments(HttpServletRequest request) {
+		model = ServiceFacade.instance().downloadSmsPayments(getLoggedInUser());
+		return new HttpHeadersImpl("download_sms_payments").disableCaching();
+	}
+
 	private HttpHeaders getSmsPayments(HttpServletRequest request) {
 		model = ServiceFacade.instance().getSmsPayments(getLoggedInUser());
-		return new HttpHeadersImpl("download_sms_payments").disableCaching();
+		return new HttpHeadersImpl("get_sms_payments").disableCaching();
 	}
 
 	@SuppressWarnings("unchecked")

@@ -100,6 +100,7 @@ include(header.m4)
         			<div class="pricepoint-description-company">@lang_sms_return_code@</div>
         			<input class="text sideinputtext" type="text" maxlength="35" length="35" name="p24_kod" value="" autocomplete="off">
         			<input type="submit" class="inputbutton purchase-button-company" value="@lang_sms_send@" name="submit">
+        			<div id="pricepoint-message" class="pricepoint-message initialhidden"></div>
         			<div class="pricepoint-description-company"><center>@lang_sms_bottom_note@</center></div>
         		</form>
         	</div>
@@ -136,7 +137,7 @@ include(footer.m4)
 `
 <script src="js/modules/base.js"></script>
 <script>
-(new InformationPageClass()).loadPage();
+(new SmsPageClass()).loadPage();
 </script>
 '
 include(promptie.m4)
