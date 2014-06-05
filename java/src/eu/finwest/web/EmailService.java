@@ -25,6 +25,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
+import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.Notification;
 import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
@@ -45,6 +46,7 @@ public class EmailService {
 	private static final String TEMPLATE_AUTHORIZATION = "./WEB-INF/email-templates/email-authentication.html";
 	private static final String TEMPLATE_NOTIFICATION = "./WEB-INF/email-templates/notification.html";
 	private static final String TEMPLATE_3LISTING_NOTIFICATION = "./WEB-INF/email-templates/welcome-email.html";
+	private static final String TEMPLATE_INVESTOR_REPORT = "./WEB-INF/email-templates/investor-report.html";
 
 	private static final String WELCOME_IMAGE_URL = "https://www.inwestujwfirmy.pl/img/email-welcome.jpg";
 	private static final String NOTIFICATION_IMAGE_URL = "https://www.inwestujwfirmy.pl/img/email-notification.jpg";
@@ -62,6 +64,11 @@ public class EmailService {
 	private static final String LISTING_NAME = "##NOTIFICATION_LISTING_NAME##";
 	private static final String LISTING_CATEGORY_LOCATION = "##NOTIFICATION_LISTING_CATEGORY_LOCATION##";
 	private static final String LISTING_MANTRA = "##NOTIFICATION_LISTING_MANTRA##";
+	private static final String LISTING_SUMMARY = "##NOTIFICATION_LISTING_SUMMARY##";
+	
+	private static final String LISTING_START = "<!-- COMPANY START -->";
+	private static final String LISTING_END = "<!-- COMPANY END -->";
+	
 	private static final String COPYRIGHT_TEXT = "##NOTIFICATION_COPYRIGHT_TEXT##";
 	private static final String NOTIFICATION_UPDATE_PROFILE_PAGE = "##NOTIFICATION_UPDATE_PROFILE_PAGE##";
 	private static final String NOTIFICATION_MAILING_LIST_ADDRESS_TEXT = "##NOTIFICATION_MAILING_LIST_ADDRESS_TEXT##";
@@ -447,6 +454,59 @@ public class EmailService {
 		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, getText(user, "email_mailing_address_text"));
 		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, getText(user, "email_mailing_address"));
 		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, getText(user, "email_profil_page", getDomainUrl(user, "/edit-profile-page.html")));
+		return props;
+	}
+	
+	public boolean sendInvestorReport(SBUser user, String title, String text, List<Listing> listings) {
+		try {
+			Map<String, String> props = prepareGeneralInvestorReportProps(user, title, text);
+			String htmlTemplate = FileUtils.readFileToString(new File(TEMPLATE_INVESTOR_REPORT), "UTF-8");
+			int companyStartIndex = htmlTemplate.indexOf(LISTING_START);
+			int companyEndIndex = htmlTemplate.indexOf(LISTING_END);
+			
+			StringBuffer htmlBody = new StringBuffer();
+			htmlBody.append(applyProperties(StringUtils.substring(htmlTemplate, 0, companyStartIndex), props));
+			
+			String listingPart = StringUtils.substring(htmlTemplate, companyStartIndex, companyEndIndex + LISTING_END.length());
+			for (Listing listing : listings) {
+				htmlBody.append(applyProperties(listingPart, prepareListingInvestorReportProps(user, listing)));
+			}
+			htmlBody.append(applyProperties(StringUtils.substring(htmlTemplate, companyEndIndex + LISTING_END.length(), htmlTemplate.length() - 1), props));
+			log.info("Email body: " + htmlBody.toString());
+			
+			String subject = props.get(NOTIFICATION_TITLE);
+			send(user.email, subject, htmlBody.toString(), null);
+			return true;
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error sending notification email", e);
+			return false;
+		}
+	}
+
+	private Map<String, String> prepareGeneralInvestorReportProps(SBUser user, String title, String text) {
+		Map<String, String> props = new HashMap<String, String>();
+
+		props.put(NOTIFICATION_TITLE, title);
+		props.put(NOTIFICATION_TITLE_ESCAPED, escape(title));
+		props.put(TEXT_NO_LINK, escape(text));
+		
+		props.put(COPYRIGHT_TEXT, getText(user, "email_copyright", String.valueOf(Calendar.getInstance().get(Calendar.YEAR))));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS_TEXT, getText(user, "email_mailing_address_text"));
+		props.put(NOTIFICATION_MAILING_LIST_ADDRESS, getText(user, "email_mailing_address"));
+		props.put(NOTIFICATION_UPDATE_PROFILE_PAGE, getText(user, "email_profil_page", getDomainUrl(user, "/edit-profile-page.html")));
+		return props;
+	}
+
+	private Map<String, String> prepareListingInvestorReportProps(SBUser user, Listing listing) {
+		Map<String, String> props = new HashMap<String, String>();
+
+		props.put(LINK_TO_LISTING, getDomainUrl(user, "/company-page.html?id=" + listing.getWebKey()));
+		props.put(LINK_TO_LISTING_LOGO, getDomainUrl(user, "/listing/logo?id=" + listing.getWebKey()));
+		props.put(LISTING_NAME, escape(listing.name));
+		props.put(LISTING_CATEGORY_LOCATION, listing.category + " <br/>" + listing.briefAddress);
+		props.put(LISTING_MANTRA, escape(listing.mantra));
+		props.put(LISTING_SUMMARY, escape(listing.summary));
+		
 		return props;
 	}
 

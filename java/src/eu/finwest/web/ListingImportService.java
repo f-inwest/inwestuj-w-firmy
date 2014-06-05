@@ -363,7 +363,8 @@ public class ListingImportService {
 					tokenAdded = true;
 				}
 			}
-			return "https://play.google.com/store/search?c=apps&hl=en&q=" + appStoreQuery.toString();
+			String language = FrontController.getLangVersion() == LangVersion.PL ? "pl" : "en";
+			return "https://play.google.com/store/search?c=apps&hl=" + language + "&q=" + appStoreQuery.toString();
 		}
 		
 		@Override
@@ -374,27 +375,33 @@ public class ListingImportService {
 				converted = removeTag(converted, "script");
 				
 				Source source = new Source(new StringReader(converted));
-				List<net.htmlparser.jericho.Element> elemList = source.getAllElements(HTMLElementName.LI);
+				List<net.htmlparser.jericho.Element> elemList = source.getAllElements("class", Pattern.compile("card-content.*"));
+				log.info("Retrieved " + elemList + " app cards");
 				int index = 1;
 				Map<String, String> result = new LinkedHashMap<String, String>();
 				for (net.htmlparser.jericho.Element elem : elemList) {
 					if (index > MAX_RESULTS) {
 						break;
 					}
-					String docId = elem.getAttributeValue("data-docid");
+					List<net.htmlparser.jericho.Element> docIdList = elem.getAllElements("class", Pattern.compile("preview-overlay-container"));
+					String docId = "";
+					if (docIdList != null && docIdList.size() > 0) {
+						docId = docIdList.get(0).getAttributeValue("data-docid");
+					}
+					log.info("Found data-docid = " + docId);
 					if (!StringUtils.isEmpty(docId)) {
 						index++;
 						String name = null;
 						String author = null;
-						List<net.htmlparser.jericho.Element> aList = elem.getAllElements(HTMLElementName.A);
-						for (net.htmlparser.jericho.Element aElem : aList) {
-							String classAttr = aElem.getAttributeValue("class");
-							if (StringUtils.equals(classAttr, "title")) {
-								name = aElem.getAttributeValue("title");
-							} else if (StringUtils.equals(classAttr, "goog-inline-block")) {
-								author = aElem.getContent().toString().trim();
-							}
+						net.htmlparser.jericho.Element titleElem = elem.getFirstElement("class", Pattern.compile("title"));
+						if (titleElem != null) {
+							name = titleElem.getAttributeValue("title");
 						}
+						net.htmlparser.jericho.Element subtitleElem = elem.getFirstElement("class", Pattern.compile("subtitle"));
+						if (subtitleElem != null) {
+							author = subtitleElem.getAttributeValue("title");
+						}
+						log.info("Found name=" + name + ", author=" + author);
 						if (name != null && author != null) {
 							result.put(docId, "'" + name + "' by " + author);
 						}
@@ -410,7 +417,8 @@ public class ListingImportService {
 		@Override
 		public Listing importListing(UserVO loggedInUser, final Listing listing, final String id) {
 			log.info("Searching Android Market for application " + id);
-			String appUrl = "https://play.google.com/store/apps/details?feature=search_result&hl=en&id=" + id;
+			String language = FrontController.getLangVersion() == LangVersion.PL ? "pl" : "en";
+			String appUrl = "https://play.google.com/store/apps/details?feature=search_result&hl=" + language + "&id=" + id;
 			try {
 				byte bytes[] = fetchBytes(appUrl);
 				String converted = removeTag(new String(bytes, "UTF-8"), "style");
@@ -422,51 +430,49 @@ public class ListingImportService {
 				listing.platform = Listing.Platform.ANDROID.toString();
 	
 				Source source = new Source(new StringReader(converted));
-				for (net.htmlparser.jericho.Element tag : source.getAllElements("class", Pattern.compile("doc-banner-title"))) {
-					if (tag.getName().equalsIgnoreCase("h1")) {
-						listing.name = tag.getContent().toString().trim();
-						log.info("Name bytes: " + ImageHelper.printStringAsHex(listing.name));
-					}
+				net.htmlparser.jericho.Element tag = source.getFirstElement("class", Pattern.compile("document-title"));
+				if (tag != null && tag.getAllElements().size() > 0	) {
+					listing.name = tag.getContent().getFirstElement().toString().trim();
+					log.info("Name bytes: " + ImageHelper.printStringAsHex(listing.name));
 				}
-				for (net.htmlparser.jericho.Element tag : source.getAllElements("class", Pattern.compile("doc-header-link"))) {
-					if (tag.getName().equalsIgnoreCase("a")) {
+				tag = source.getFirstElement("itemprop", Pattern.compile("author"));
+				if (tag != null) {
+					tag = tag.getFirstElement("itemprop", Pattern.compile("name"));
+					if (tag != null) {
 						listing.founders = tag.getContent().toString().trim();
+						log.info("Founders: " + listing.founders);
 					}
 				}
-				net.htmlparser.jericho.Element descTag = source.getElementById("doc-original-text");
+				net.htmlparser.jericho.Element descTag = source.getFirstElement("class", Pattern.compile("id-app-orig-desc"));
 				if (descTag != null) {
 					fillMantraAndSummary(listing, null, descTag.getContent().toString().trim());
+					log.info("Mantra: " + listing.mantra);
+					log.info("Summary: " + listing.summary);
 				}
-				net.htmlparser.jericho.Element categoryTag = source.getFirstElement("href", Pattern.compile("/store/apps/category.*"));
-				if (categoryTag != null) {
-					log.info("Category: " + categoryTag.getContent().toString().trim()
-							+ ", id: " + categoryTag.getAttributeValue("href"));
-				}
-				for (net.htmlparser.jericho.Element tag : source.getAllElements("class", Pattern.compile("doc-banner-icon"))) {
-					if (tag.getName().equalsIgnoreCase("div")) {
-						net.htmlparser.jericho.Element img = tag.getFirstElement("img");
-						if (img != null && img.getAttributeValue("src") != null) {
-							fetchLogo(listing, img.getAttributeValue("src"));
-						}
-					}
+//				net.htmlparser.jericho.Element categoryTag = source.getFirstElement("href", Pattern.compile("/store/apps/category.*"));
+//				if (categoryTag != null) {
+//					log.info("Category: " + categoryTag.getContent().toString().trim()
+//							+ ", id: " + categoryTag.getAttributeValue("href"));
+//				}
+				tag = source.getFirstElement("class", Pattern.compile("cover-image"));
+				if (tag != null && !StringUtils.isBlank(tag.getAttributeValue("src"))) {
+					fetchLogo(listing, tag.getAttributeValue("src"));
+					log.info("Logo url: " + tag.getAttributeValue("src"));
 				}
 				
 				List<String> urls = new ArrayList<String>();
-				net.htmlparser.jericho.Element bannerTag = source.getFirstElement("class", Pattern.compile("doc-banner-image-container"));
+				int index = 0;
+				net.htmlparser.jericho.Element bannerTag = source.getFirstElement("class", Pattern.compile("thumbnails-wrapper.*"));
 				if (bannerTag != null) {
-					net.htmlparser.jericho.Element bannerImgTag = bannerTag.getFirstElement("img");
-					if (bannerImgTag != null) {
-						String src = bannerImgTag.getAttributeValue("src");
+					for (net.htmlparser.jericho.Element img : bannerTag.getAllElements("itemprop", Pattern.compile("screenshot"))) {
+						String src = img.getAttributeValue("src");
 						if (src != null && src.startsWith("http")) {
+							log.info("Picture url: " + src);
 							urls.add(src);
+							index++;
 						}
-					}
-				}
-				for (net.htmlparser.jericho.Element tag : source.getAllElements("itemprop", Pattern.compile("screenshots"))) {
-					if (tag.getName().equalsIgnoreCase("img")) {
-						String src = tag.getAttributeValue("src");
-						if (src != null && src.startsWith("http")) {
-							urls.add(src);
+						if (index > 5) {
+							break;
 						}
 					}
 				}

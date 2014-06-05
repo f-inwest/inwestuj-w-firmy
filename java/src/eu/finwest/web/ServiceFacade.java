@@ -647,4 +647,19 @@ public class ServiceFacade {
 		}
 	}
 
+	public Object sendInvestorReport(UserVO loggedInUser, String title, String message, String user_id, List<String> ids) {
+		if (!loggedInUser.isAdmin()) {
+			return "Only admins can send reports";
+		}
+		SBUser user = getDAO().getUser(user_id);
+		List<Listing> listings = new ArrayList<Listing>();
+		for (String id : ids) {
+			Listing listing = getDAO().getListing(id);
+			listings.add(listing);
+		}
+		
+		boolean returnCode = EmailService.instance().sendInvestorReport(user, title, message, listings);
+		return (returnCode ? "Investor report email has been send to user: " : "Error sending investor report email to: ") + user.email;
+	}
+
 }

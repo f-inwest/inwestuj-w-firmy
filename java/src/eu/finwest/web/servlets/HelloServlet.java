@@ -142,12 +142,21 @@ public class HelloServlet extends HttpServlet {
 			out.println("<a href=\"/setup/\">Setup page</a></p>");
 
 			StringBuffer userCombo = new StringBuffer();
+			StringBuffer investorsCombo = new StringBuffer();
 			for (SBUser u : datastore.getAllUsers()) {
 				userCombo.append("<option value=\"" + u.getWebKey() + "\">" + u.nickname + "</option>");
+				if (u.investor) {
+					investorsCombo.append("<option value=\"" + u.getWebKey() + "\">" + u.nickname + "</option>");
+				}
 			}
 			StringBuffer listingCombo = new StringBuffer();
+			StringBuffer activeListingCombo = new StringBuffer();
+			activeListingCombo.append("<option value=\"\">-- not set --</option>");
 			for (Listing l : datastore.getAllListings()) {
 				listingCombo.append("<option value=\"" + l.getWebKey() + "\">" + l.name + "</option>");
+				if (l.state == Listing.State.ACTIVE) {
+					activeListingCombo.append("<option value=\"" + l.getWebKey() + "\">" + l.name + "</option>");
+				}
 			}
 			
 			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Contribution API:</p>");
@@ -185,6 +194,18 @@ public class HelloServlet extends HttpServlet {
 					+ "<input name=\"contribution_id\" autocomplete=\"off\" type=\"text\" value=\"contribution id\"/>"
 					+ "<input type=\"submit\" value=\"Approve contribution\"/></form><br/>");
 			
+			out.println("<p style=\"background: none repeat scroll 0% 0% rgb(187, 187, 187);\">Investor emails:</p>");
+			out.println("<form method=\"POST\" action=\"/system/send_investor_report.html\">"
+					+ "Title: <input name=\"title\" autocomplete=\"off\" type=\"text\" value=\"Raport inwestora 2014/01\"/></br>"
+					+ "Message: <textarea autocomplete=\"off\" name=\"message\" rows=\"5\" cols=\"120\">Wiadomość dla inwestora...</textarea></br>"
+					+ "Listing 1: <select name=\"id_1\"/>" + activeListingCombo + "</select>"
+					+ "Listing 2: <select name=\"id_2\"/>" + activeListingCombo + "</select>"
+					+ "Listing 3: <select name=\"id_3\"/>" + activeListingCombo + "</select>"
+					+ "Listing 4: <select name=\"id_4\"/>" + activeListingCombo + "</select></br>"
+					+ "Listing 5: <select name=\"id_5\"/>" + activeListingCombo + "</select>"
+					+ "Listing 6: <select name=\"id_6\"/>" + activeListingCombo + "</select></br>"
+					+ "Receiver: <select name=\"user_id\"/>" + investorsCombo + "</select></br>"
+					+ "<input type=\"submit\" value=\"Send investor emails\"/></form><br/>");
 			
 			ListPropertiesVO listProperties = new ListPropertiesVO(1);
 			List<Listing> listings = datastore.getAllListings();

@@ -1,7 +1,9 @@
 package eu.finwest.web.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,6 +92,8 @@ public class SystemController extends ModelDrivenController {
 				return downloadSmsPayments(request);
 			} else if("get_sms_payments".equalsIgnoreCase(getCommand(1))) {
 				return getSmsPayments(request);
+			} else if("send_investor_report".equalsIgnoreCase(getCommand(1))) {
+				return sendInvestorReport(request);
 			}
 		}
 		return null;
@@ -488,6 +492,28 @@ public class SystemController extends ModelDrivenController {
 
 		return headers;
 	}
+	
+    private HttpHeaders sendInvestorReport(HttpServletRequest request) {
+        HttpHeaders headers = new HttpHeadersImpl("send_investor_report");
+
+        UserVO loggedInUser = getLoggedInUser();
+        String title = request.getParameter("title");
+        String message = request.getParameter("message");
+    	List<String> ids = new ArrayList<String>();
+    	for (int i = 1; i < 7; i++) {
+    		String id = request.getParameter("id_" + i);
+        	if (!StringUtils.isBlank(id)) {
+        		ids.add(id);
+        	}
+    	}
+        String user_id = request.getParameter("user_id");
+        if (loggedInUser != null && loggedInUser.isAdmin() && !StringUtils.isEmpty(user_id) && !StringUtils.isEmpty(title)) {
+            model = ServiceFacade.instance().sendInvestorReport(loggedInUser, title, message, user_id, ids);
+        } else {
+            headers.setStatus(500);
+        }
+        return headers;
+    }
 
 	@Override
 	public Object getModel() {

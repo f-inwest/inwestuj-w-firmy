@@ -16,7 +16,7 @@ function ImportListingClass() {
     };
     this.type = (new QueryStringClass()).vars.type || 'AppStore';
     this.displaytype = displaytypes[this.type];
-    this.corporapp = apptypes[this.type] ? 'app' : 'company';
+    this.corporapp = apptypes[this.type] ? '@lang_import_app@' : '@lang_import_company@';
 }
 
 pl.implement(ImportListingClass, {
