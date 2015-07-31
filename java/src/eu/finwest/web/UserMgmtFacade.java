@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -546,7 +545,7 @@ public class UserMgmtFacade {
 		return user;
 	}
 
-	private String encryptPassword(String password) {
+	public String encryptPassword(String password) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			return new String(md.digest(password != null ? password.getBytes("UTF-8") : new byte[0])); 
@@ -748,7 +747,6 @@ public class UserMgmtFacade {
 		List<UserVO> users = DtoToVoConverter.convertUsers(getDAO().getAllUsers());
 		int index = 1;
 		for (UserVO user : users) {
-			applyUserStatistics(loggedInUser, user);
 			user.setOrderNumber(index++);
 		}
 

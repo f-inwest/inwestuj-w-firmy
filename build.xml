@@ -380,6 +380,35 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
     </dev_appserver>
   </target>
 
+  <target name="runserver2" description="Starts the development server.">
+	<mkdir dir="ear/war/test-docs"/>
+    <copy todir="ear/war/test-docs">
+      <fileset dir="tests/test-docs"/>
+    </copy>
+  	<!--
+  	<extract_host_and_port proxy="${env.http_proxy}" host_property="http_proxy_host" port_property="http_proxy_port"/>
+  	<extract_host_and_port proxy="${env.https_proxy}" host_property="https_proxy_host" port_property="https_proxy_port"/>
+  	-->
+  	<dev_appserver ear="ear" port="7777" >
+      <options>
+        <!-- arg value="- -jvm_flag=-Xdebug"/
+        arg value="- -jvm_flag=-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=7778"/ -->
+        <arg value="--jvm_flag=-Xmx1024m"/>
+        <arg value="--jvm_flag=-XX:MaxPermSize=256m"/>
+      	<arg value="--jvm_flag=-Dappengine.user.timezone=UTC"/>
+        <!--
+        <arg value="- -jvm_flag=-Dhttp.proxyHost=${http_proxy_host}"/>
+        <arg value="- -jvm_flag=-Dhttp.proxyPort=${http_proxy_port}"/>
+        <arg value="- -jvm_flag=-Dhttps.proxyHost=${https_proxy_host}"/>
+        <arg value="- -jvm_flag=-Dhttps.proxyPort=${https_proxy_port}"/>
+        <arg value="- -jvm_flag=-Dhttp.nonProxyHosts=local*|127*"/>
+        -->
+        <arg value="--address=${env.APPENGINE_ADDRESS}"/>
+        <arg value="--disable_update_check"/>
+      </options>
+    </dev_appserver>
+  </target>
+
   <target name="update" description="Uploads the application to App Engine.">
 	<appcfg action="update" war="war">
 	   <options>
@@ -444,6 +473,7 @@ project.addTaskDefinition("filterWithEncoding", FilterWithEncoding.class);
       <fileset dir="war/WEB-INF/lib">
     	<include name="appengine*" />
       	<include name="jsr107*" />
+		<exclude name="appengine-gcs-client-0.4.4.jar" />
       </fileset>
     </delete>
   </target>

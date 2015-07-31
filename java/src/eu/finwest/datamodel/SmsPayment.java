@@ -40,6 +40,10 @@ public class SmsPayment extends BaseObject<SmsPayment> {
 	public String amount;
 	@Indexed public Date date;
 	public String description;
+	@Indexed public boolean used = false;
+	public String listingName;
+	public Key<Listing> listing;
+	public String ownerNick;
 		
 	public Date modified;
 	@PrePersist void updateModifiedDate() {

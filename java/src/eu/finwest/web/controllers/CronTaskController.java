@@ -8,13 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 
-import eu.finwest.dao.ObjectifyDatastoreDAO;
-import eu.finwest.datamodel.Listing;
-import eu.finwest.vo.ListingVO;
-import eu.finwest.web.DocService;
 import eu.finwest.web.HttpHeaders;
 import eu.finwest.web.HttpHeadersImpl;
-import eu.finwest.web.LangVersion;
 import eu.finwest.web.ListingFacade;
 import eu.finwest.web.ModelDrivenController;
 
@@ -37,8 +32,6 @@ public class CronTaskController extends ModelDrivenController {
             return updateAggregateStats(request);
         } else if("update-listing-stats".equalsIgnoreCase(getCommand(1))) {
             return updateListingStats(request);
-        } else if("update-listing-docs".equalsIgnoreCase(getCommand(1))) {
-            return updateListingDocs(request);
         }
 
 		return null;
@@ -53,12 +46,6 @@ public class CronTaskController extends ModelDrivenController {
     private HttpHeaders updateListingStats(HttpServletRequest request) {
         HttpHeaders headers = new HttpHeadersImpl("update-listing-stats");
         model = ListingFacade.instance().updateAllListingStatistics();
-        return headers;
-    }
-
-    private HttpHeaders updateListingDocs(HttpServletRequest request) {
-        HttpHeaders headers = new HttpHeadersImpl("update-listing-docs");
-        model = ListingFacade.instance().updateAllListingDocuments();
         return headers;
     }
 

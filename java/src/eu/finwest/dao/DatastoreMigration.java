@@ -10,9 +10,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.appengine.api.datastore.QueryResultIterable;
+import com.google.appengine.api.datastore.QueryResultIterator;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
@@ -25,6 +27,7 @@ import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.Notification;
 import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.SBUser;
+import eu.finwest.datamodel.SmsPayment;
 import eu.finwest.util.Translations;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.UserVO;
@@ -41,6 +44,42 @@ public class DatastoreMigration {
 	private static Objectify getOfy() {
 		Objectify ofy = ObjectifyService.begin();
 		return ofy;
+	}
+	
+	public static String updateSmsPayments() {
+		StringBuffer report = new StringBuffer();
+
+		report.append("Update not used sms payments:<br/>\n<ul>\n");
+		List<SmsPayment> used = new ArrayList<SmsPayment>();
+		List<SmsPayment> notUsed = new ArrayList<SmsPayment>();
+		QueryResultIterator<Key<SmsPayment>> listingsIt = getOfy().query(SmsPayment.class).fetchKeys().iterator();
+        while (true) {
+        	List<Key<SmsPayment>> keys = new ArrayList<Key<SmsPayment>>();
+			for (int i = 0; listingsIt.hasNext() && i < 100; i++) {
+				keys.add(listingsIt.next());
+			}
+			if (keys.size() == 0) {
+				break;
+			}
+			for (SmsPayment smsPay : getOfy().get(keys).values()) {
+				if (!smsPay.used) {
+					notUsed.add(smsPay);
+				} else {
+					used.add(smsPay);
+				}
+			}
+        }
+		for (SmsPayment smsPay : notUsed) {
+			SmsPayment orig = used.get(RandomUtils.nextInt(used.size()));
+			smsPay.used = true;
+			smsPay.ownerNick = orig.ownerNick;
+			smsPay.listing = orig.listing;
+			smsPay.listingName = orig.listingName;
+		}
+		getOfy().put(notUsed);
+		report.append("Update sms payments</br>");
+				
+		return report.toString();
 	}
 
 	public static String resetPricePoints() {

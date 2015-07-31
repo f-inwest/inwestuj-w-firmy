@@ -64,19 +64,28 @@ public class SetupServlet extends HttpServlet {
 				out.println("<p>You're not authorized to use setup page! Only Admin users can access this page! </p>");
 				return;
 			}
+			out.println("<p>Import data:</p>");
+			out.println("<form method=\"POST\" action=\"/system/load_import_data/.html\">"
+					+ "Url to import: <input name=\"url\" type=\"text\" value=\"\"/></br>"
+					+ "<input type=\"submit\" value=\"Load import data\"/></form>");
+			out.println("<form method=\"POST\" action=\"/system/start_import_data.html\">"
+					+ "number of projects to import: <input name=\"num\" type=\"text\" value=\"1\"/></br>"
+					+ "<input type=\"submit\" value=\"Start import data\"/></form>");
 
 			out.println("<h1>Migration</h1>");
 			
+			out.println("<form method=\"POST\" action=\"/system/migrate_update_smspayments.html\">"
+					+ "<input type=\"submit\" value=\"Migration - update SMS Payments\"/></form>");
 			out.println("<form method=\"POST\" action=\"/system/migrate_reindex_listings.html\">"
 					+ "<input type=\"submit\" value=\"Migration - reindex listings\"/></form>");
-			out.println("<form method=\"POST\" action=\"/system/migrate_fix_recent_domain.html\">"
-					+ "<input type=\"submit\" value=\"Migration - fix users recent domain\"/></form>");
-			out.println("<form method=\"POST\" action=\"/system/migrate20140225_to_current.html\">"
-					+ "<input type=\"submit\" value=\"Migration - fix for campaign language\"/></form>");
-			out.println("<form method=\"POST\" action=\"/system/update_avatars_dragon_lister.html\">"
-					+ "<input type=\"submit\" value=\"Update test avatars, dragon/lister flags\"/></form>");
-			out.println("<form method=\"POST\" action=\"/system/associate_mock_images.html\">"
-					+ "<input type=\"submit\" value=\"Associate mock images\"/></form>");
+//			out.println("<form method=\"POST\" action=\"/system/migrate_fix_recent_domain.html\">"
+//					+ "<input type=\"submit\" value=\"Migration - fix users recent domain\"/></form>");
+//			out.println("<form method=\"POST\" action=\"/system/migrate20140225_to_current.html\">"
+//					+ "<input type=\"submit\" value=\"Migration - fix for campaign language\"/></form>");
+//			out.println("<form method=\"POST\" action=\"/system/update_avatars_dragon_lister.html\">"
+//					+ "<input type=\"submit\" value=\"Update test avatars, dragon/lister flags\"/></form>");
+//			out.println("<form method=\"POST\" action=\"/system/associate_mock_images.html\">"
+//					+ "<input type=\"submit\" value=\"Associate mock images\"/></form>");
 
             out.println("<h1>Mock Data</h1>");
 
@@ -93,12 +102,6 @@ public class SetupServlet extends HttpServlet {
 
             out.println("<form method=\"POST\" action=\"/cron/update-listing-stats/.html\">"
                     + "<input type=\"submit\" value=\"Update all listings stats\"/></form>");
-
-
-            out.println("<h1>Documents</h1>");
-
-            out.println("<form method=\"POST\" action=\"/cron/update-listing-docs/.html\">"
-                    + "<input type=\"submit\" value=\"Update all listings docs\"/></form>");
 
 
             out.println("<h1>System Settings</h1>");

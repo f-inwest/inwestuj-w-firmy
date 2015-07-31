@@ -6,15 +6,20 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -27,6 +32,7 @@ import eu.finwest.dao.NotificationObjectifyDatastoreDAO;
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Comment;
 import eu.finwest.datamodel.Listing;
+import eu.finwest.datamodel.ListingToImport;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.QuestionAnswer;
 import eu.finwest.datamodel.SBUser;
@@ -40,6 +46,7 @@ import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ErrorCodes;
 import eu.finwest.vo.ListPropertiesVO;
 import eu.finwest.vo.ListingDocumentVO;
+import eu.finwest.vo.ListingPropertyVO;
 import eu.finwest.vo.ListingVO;
 import eu.finwest.vo.MonitorListVO;
 import eu.finwest.vo.MonitorVO;
@@ -293,7 +300,7 @@ public class ServiceFacade {
 		String[] urls = new String[numberOfUrls];
 		while (numberOfUrls > 0) {
 			String discreteUploadUrl = uploadUrl + (uploadUrl.endsWith("/") ? "" : "/") ;
-			discreteUploadUrl += "" + new Date().getTime() + numberOfUrls + loggedInUser.hashCode();
+			discreteUploadUrl += "" + new Date().getTime() + numberOfUrls + (loggedInUser != null ? loggedInUser.hashCode() : RandomUtils.nextInt());
 			String nonCampaignUploadUrl = blobstoreService.createUploadUrl(discreteUploadUrl);
             //String campaignSensitiveUploadUrl = nonCampaignUploadUrl.replaceFirst("(https?://)", "$1" + campaignId + ".");
             //urls[--numberOfUrls] = campaignSensitiveUploadUrl;
@@ -391,7 +398,7 @@ public class ServiceFacade {
 		result.setUser(loggedInUser != null ? new UserBasicVO(loggedInUser) : null);
 		return result;
 	}
-
+	
 	public MonitorVO setListingMonitor(UserVO loggedInUser, String listingId) {
 		if (loggedInUser == null) {
 			log.log(Level.WARNING, "User not logged in!");
@@ -612,6 +619,33 @@ public class ServiceFacade {
 
 		return buf.toString();
 	}
+
+	public String downloadSmsPaymentsReport(UserVO loggedInUser) {
+		if (loggedInUser == null || !loggedInUser.isAdmin()) {
+			log.info("User not logged in or is not an admin");
+			return Translations.getText("lang_error_user_not_admin");
+		}
+		
+		ListPropertiesVO listProperties = new ListPropertiesVO();
+		listProperties.setMaxResults(2000);
+		List<SmsPayment> contribs = getDAO().getSmsPayments(listProperties);
+		
+		StringBuffer buf = new StringBuffer();
+		DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+		
+		buf.append("data platnosci (GMT); nick; projekt; kod; kwota; \n");
+		for (SmsPayment payment : contribs) {
+			buf.append(dateFormatter.print(payment.date.getTime())).append(";");
+			buf.append(payment.ownerNick).append(";");
+			buf.append(payment.listingName).append(";");
+			buf.append(payment.code).append(";");
+			int amount = NumberUtils.createInteger(payment.amount);
+			buf.append((amount / 100) + "," + (amount % 100)).append(";");
+			buf.append(";\n");
+		}
+		
+		return buf.toString();
+	}
 	
 	private static String fetchVerificationData(String sellerId, String value, String code) {
 		String url = "https://secure.przelewy24.pl/smsver.php";
@@ -662,4 +696,159 @@ public class ServiceFacade {
 		return (returnCode ? "Investor report email has been send to user: " : "Error sending investor report email to: ") + user.email;
 	}
 
+	public Object loadImportData(UserVO loggedInUser, String url) {
+		if (!loggedInUser.isAdmin()) {
+			return "Only admins can send reports";
+		}
+		
+		try {
+			String urlData = new String(ListingImportService.fetchBytes(url), "UTF-8");
+			StringBuffer output = new StringBuffer();
+			
+			ObjectMapper mapper = new ObjectMapper();
+			int index = 1;
+			JsonNode rootNode = mapper.readValue(urlData, JsonNode.class);
+			if (rootNode.get("results") != null) {
+				if (StringUtils.contains(url, "ios/apps")) {
+					parseAppleStore(output, index, rootNode);
+				} else {
+					parseAndroidStore(output, index, rootNode);
+				}
+			}
+			return output.toString();
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error while loading import data", e);
+			return "Error loading import data: " + e.getMessage();
+		}
+	}
+
+	private void parseAppleStore(StringBuffer output, int index, JsonNode rootNode) {
+		Iterator<JsonNode> fields = rootNode.get("results").getElements();
+		for (JsonNode node = null; fields.hasNext();) {
+			node = fields.next();
+			output.append("<p> " + index++ + " iOS - ");
+			String identity = node.get("trackId").getValueAsText();
+			if (!getDAO().importDataExists(identity)) {
+				ListingToImport listing = new ListingToImport();
+				listing.type = ListingToImport.Type.IOS;
+				listing.identity = identity;
+				listing.creator = node.get("sellerName").getValueAsText();
+				if (StringUtils.isBlank(listing.creator)) {
+					listing.creator = node.get("artistName").getValueAsText();
+				}
+				listing.name = node.get("trackCensoredName").getValueAsText();
+				listing.description = node.get("description").getValueAsText();
+				listing.logoUrl = node.get("artworkUrl100").getValueAsText();
+				if (StringUtils.isBlank(listing.logoUrl)) {
+					listing.logoUrl = node.get("artworkUrl60").getValueAsText();
+				}
+				//listing.videoUrl = node.get("promo_video").getValueAsText();
+				
+				Iterator<JsonNode> screenshots = null;
+				if (node.get("ipadScreenshotUrls") != null) {
+					screenshots = node.get("ipadScreenshotUrls").getElements();
+				}
+				if (node.get("screenshotUrls") != null && (screenshots == null || !screenshots.hasNext())) {
+					screenshots = node.get("screenshotUrls").getElements();
+				}
+				
+				if (screenshots != null) {
+					int i = 1;
+					for (JsonNode scrNode = null; screenshots.hasNext();) {
+						scrNode = screenshots.next();
+						switch (i) {
+						case 1:
+							listing.screenshotUrl1 = scrNode.getValueAsText();
+							break;
+						case 2:
+							listing.screenshotUrl2 = scrNode.getValueAsText();
+							break;
+						case 3:
+							listing.screenshotUrl3 = scrNode.getValueAsText();
+							break;
+						case 4:
+							listing.screenshotUrl4 = scrNode.getValueAsText();
+							break;
+						case 5:
+							listing.screenshotUrl5 = scrNode.getValueAsText();
+							break;
+						}
+						i++;
+						if (i > 5) {
+							break;
+						}
+					}
+				}
+				log.info(listing.toString());
+				output.append(listing.toString());
+				getDAO().storeListingToImport(listing);
+			} else {
+				output.append(" already imported " + identity);
+			}
+			output.append("</p>");
+		}
+	}
+
+	private void parseAndroidStore(StringBuffer output, int index, JsonNode rootNode) {
+		Iterator<JsonNode> fields = rootNode.get("results").getElements();
+		for (JsonNode node = null; fields.hasNext();) {
+			node = fields.next();
+			output.append("<p>" + index++ + " Android - ");
+			String identity = node.get("package_name").getValueAsText();
+			if (!getDAO().importDataExists(identity)) {
+				ListingToImport listing = new ListingToImport();
+				listing.type = ListingToImport.Type.ANDROID;
+				listing.identity = identity;
+				listing.creator = node.get("developer").getValueAsText();
+				listing.name = node.get("title").getValueAsText();
+				listing.description = node.get("description").getValueAsText();
+				listing.logoUrl = node.get("icon").getValueAsText();
+				listing.videoUrl = node.get("promo_video").getValueAsText();
+				
+				if (node.get("screenshots") != null) {
+					Iterator<JsonNode> screenshots = node.get("screenshots").getElements();
+					int i = 1;
+					for (JsonNode scrNode = null; screenshots.hasNext();) {
+						scrNode = screenshots.next();
+						switch (i) {
+						case 1:
+							listing.screenshotUrl1 = scrNode.getValueAsText();
+							break;
+						case 2:
+							listing.screenshotUrl2 = scrNode.getValueAsText();
+							break;
+						case 3:
+							listing.screenshotUrl3 = scrNode.getValueAsText();
+							break;
+						case 4:
+							listing.screenshotUrl4 = scrNode.getValueAsText();
+							break;
+						case 5:
+							listing.screenshotUrl5 = scrNode.getValueAsText();
+							break;
+						}
+						i++;
+						if (i > 5) {
+							break;
+						}
+					}
+				}
+				log.info(listing.toString());
+				output.append(listing.toString());
+				getDAO().storeListingToImport(listing);
+			} else {
+				output.append(" already imported " + identity);
+			}
+			output.append("</p>");
+		}
+	}
+
+	public Object startImportData(UserVO loggedInUser, int numToImport) {
+		if (!loggedInUser.isAdmin()) {
+			return "Only admins can start import";
+		}
+		MemCacheFacade.instance().setListingsToImport(Math.min(numToImport - 1, 200));
+		NotificationFacade.instance().scheduleLoadListingData();
+		return "Import scheduled";
+	}
 }

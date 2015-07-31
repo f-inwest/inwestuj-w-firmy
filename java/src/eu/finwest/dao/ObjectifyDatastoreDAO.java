@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateMidnight;
@@ -22,8 +23,6 @@ import org.joda.time.Days;
 import com.google.appengine.api.datastore.Cursor;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.appengine.api.datastore.QueryResultIterator;
-import com.google.appengine.api.memcache.MemcacheService;
-import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyService;
@@ -38,6 +37,7 @@ import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingDoc;
 import eu.finwest.datamodel.ListingLocation;
 import eu.finwest.datamodel.ListingStats;
+import eu.finwest.datamodel.ListingToImport;
 import eu.finwest.datamodel.Location;
 import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.Notification;
@@ -438,7 +438,8 @@ public class ObjectifyDatastoreDAO {
 	}
 	
 	public SBUser storeUser(SBUser user) {
-		getOfy().put(user);
+		Key<SBUser> key = getOfy().put(user);
+		user.id = key.getId();
 		log.info("Put into datastore " + user);
 		return user;
 	}
@@ -495,9 +496,19 @@ public class ObjectifyDatastoreDAO {
 	}
 
 	public List<SBUser> getAllUsers() {
-		QueryResultIterable<Key<SBUser>> usersIt = getOfy().query(SBUser.class)
-				.order("nicknameLower").fetchKeys();
-		List<SBUser> users = new ArrayList<SBUser>(getOfy().get(usersIt).values());
+		QueryResultIterator<Key<SBUser>> usersIt = getOfy().query(SBUser.class)
+				.order("joined").fetchKeys().iterator();
+		List<SBUser> users = new ArrayList<SBUser>();
+        while (true) {
+        	List<Key<SBUser>> keys = new ArrayList<Key<SBUser>>();
+			for (int i = 0; usersIt.hasNext() && i < 100; i++) {
+				keys.add(usersIt.next());
+			}
+			if (keys.size() == 0) {
+				break;
+			}
+			users.addAll(getOfy().get(keys).values());
+        }
 		return users;
 	}
 
@@ -681,6 +692,7 @@ public class ObjectifyDatastoreDAO {
     public List<Listing> getAllListings() {
         int maxResults = 20;
         QueryResultIterable<Key<Listing>> listingsIt = getOfy().query(Listing.class)
+        		.filter("campaign =", "pl")
                 .order("-listedOn")
                 .limit(maxResults)
                 .prefetchSize(maxResults)
@@ -690,21 +702,27 @@ public class ObjectifyDatastoreDAO {
         return listings;
     }
 
-    public List<Listing> getAllListingsInternal(String campaign) { // use with care
-        QueryResultIterable<Key<Listing>> listingsIt = getOfy().query(Listing.class)
-        		.filter("campaign =", campaign)
+    public List<Listing> getAllListingsInternal(String campaign, ListPropertiesVO listingProperties) {
+		Query<Listing> query = getOfy().query(Listing.class)
+				.filter("campaign =", campaign)
                 .order("-listedOn")
-                .fetchKeys();
-        List<Listing> listings = new ArrayList<Listing>(getOfy().get(listingsIt).values());
-        return listings;
+       			.chunkSize(listingProperties.getMaxResults())
+       			.prefetchSize(listingProperties.getMaxResults());
+		List<Key<Listing>> keyList = new CursorHandler<Listing>().handleQuery(listingProperties, query);
+		List<Listing> listings = new ArrayList<Listing>(getOfy().get(keyList).values());
+		return listings;
     }
 
-    public List<Listing> getAllListingsInternal() { // use with care
-        QueryResultIterable<Key<Listing>> listingsIt = getOfy().query(Listing.class)
-                .order("-listedOn")
-                .fetchKeys();
-        List<Listing> listings = new ArrayList<Listing>(getOfy().get(listingsIt).values());
-        return listings;
+    public QueryResultIterable<Key<Listing>> getAllListingsInternal() {
+		Query<Listing> query = getOfy().query(Listing.class)
+                .order("-listedOn");
+		return query.fetchKeys();
+    }
+    
+    public QueryResultIterable<Key<Listing>> getAllListingsInternal(int version) {
+		Query<Listing> query = getOfy().query(Listing.class)
+                .filter("version =", version);
+		return query.fetchKeys();
     }
 
 	public List<Listing> getUserNewOrPostedListings(long userId) {
@@ -1600,5 +1618,41 @@ public class ObjectifyDatastoreDAO {
 		List<Key<SmsPayment>> keyList = new CursorHandler<SmsPayment>().handleQuery(listProperties, query);
 		List<SmsPayment> payments = new ArrayList<SmsPayment>(getOfy().get(keyList).values());
 		return payments;
+	}
+
+	public List<SmsPayment> getSmsPaymentsNotUsed() {
+		Query<SmsPayment> query = getOfy().query(SmsPayment.class)
+				.filter("used = ", Boolean.FALSE)
+				.order("date");
+		ListPropertiesVO props = new ListPropertiesVO(RandomUtils.nextInt(3) + 1);
+		List<Key<SmsPayment>> keyList = new CursorHandler<SmsPayment>().handleQuery(props, query);
+		List<SmsPayment> payments = new ArrayList<SmsPayment>(getOfy().get(keyList).values());
+		return payments;
+	}
+
+	public boolean importDataExists(String identity) {
+		Query<ListingToImport> query = getOfy().query(ListingToImport.class)
+				.filter("identity =", identity);
+		ListPropertiesVO props = new ListPropertiesVO(10);
+		List<Key<ListingToImport>> keyList = new CursorHandler<ListingToImport>().handleQuery(props, query);
+		List<ListingToImport> listings = new ArrayList<ListingToImport>(getOfy().get(keyList).values());
+		return listings.size() > 0;
+	}
+	
+	public ListingToImport getImportData() {
+		Query<ListingToImport> query = getOfy().query(ListingToImport.class)
+				.filter("imported = ", Boolean.FALSE);
+		ListPropertiesVO props = new ListPropertiesVO(1);
+		List<Key<ListingToImport>> keyList = new CursorHandler<ListingToImport>().handleQuery(props, query);
+		List<ListingToImport> listings = new ArrayList<ListingToImport>(getOfy().get(keyList).values());
+		return listings != null && listings.size() > 0 ? listings.get(0) : null;
+	}
+	
+	public void storeListingToImport(ListingToImport listingData) {
+		try {
+			getOfy().put(listingData);
+		} catch (Exception e) {
+			log.log(Level.WARNING, "Error while storing: " + listingData);
+		}
 	}
 }

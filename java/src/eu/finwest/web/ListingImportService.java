@@ -26,6 +26,7 @@ import net.htmlparser.jericho.HTMLElementName;
 import net.htmlparser.jericho.Source;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.math.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -41,13 +42,18 @@ import org.xml.sax.SAXException;
 
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.Key;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Listing;
 import eu.finwest.datamodel.ListingDoc;
+import eu.finwest.datamodel.ListingToImport;
 import eu.finwest.datamodel.PictureImport;
+import eu.finwest.datamodel.SBUser;
+import eu.finwest.datamodel.SmsPayment;
 import eu.finwest.datamodel.VoToModelConverter;
+import eu.finwest.datamodel.ListingToImport.Type;
 import eu.finwest.util.HtmlConverter;
 import eu.finwest.util.ImageHelper;
 import eu.finwest.util.Translations;
@@ -87,11 +93,11 @@ public class ListingImportService {
 		return ObjectifyDatastoreDAO.getInstance();
 	}
 	
-	private static byte[] fetchBytes(String url) {
+	public static byte[] fetchBytes(String url) {
 		return fetchBytes(url, null);
 	}
 	
-	private static byte[] fetchBytes(String url, String userAgent) {
+	public static byte[] fetchBytes(String url, String userAgent) {
 		try {
 			URLConnection con = new URL(url).openConnection();
 			if (userAgent != null) {
@@ -184,7 +190,7 @@ public class ListingImportService {
 		return converted;
 	}
 	
-	private static void fillMantraAndSummary(Listing listing, String mantra, String summary) {
+	public static void fillMantraAndSummary(Listing listing, String mantra, String summary) {
 		String textMantra = HtmlConverter.convertHtmlToText(mantra);
 		String textSummary = HtmlConverter.convertHtmlToText(summary);
 		
@@ -263,6 +269,9 @@ public class ListingImportService {
 			for (String url : urls) {
 				if (picImportList.size() == 5) {
 					break;
+				}
+				if (StringUtils.isBlank(url)) {
+					continue;
 				}
 				log.info("Scheduling picture to import from " + url);
 				PictureImport pic = new PictureImport();
@@ -1316,6 +1325,227 @@ public class ListingImportService {
 			}
 			return listing;
 		}
+	}
+
+	private static String createEmail(String creator) {
+		final String domains[] = {"google.com", "poczta.onet.pl", "poczta.onet.eu", "interia.pl", "home.pl"};
+		String email = StringUtils.remove(creator, " ");
+		email += "" + RandomUtils.nextInt(99);
+		email += "@" + domains[RandomUtils.nextInt(domains.length)];
+		return email;
+	}
+	
+	/**
+	 * Imports listing data from external resources.
+	 */
+	public static String importListingData() {
+		ListingToImport impData = getDAO().getImportData();
+		if (impData == null) {
+			log.info("No more data to import");
+			return "No more data to import";
+		}
+		boolean develEnv = SystemProperty.environment.value() == SystemProperty.Environment.Value.Development;
+		
+		SBUser owner = new SBUser();
+		Listing listing = new Listing();
+		try {
+			log.info("Importing data: " + impData);
+			Date referenceDate = null;
+			List<SmsPayment> payments = null;
+			if (develEnv) {
+				referenceDate = new Date();
+			} else {
+				payments = getDAO().getSmsPaymentsNotUsed();
+				if (payments == null || payments.size() == 0) {
+					log.info("No more payments");
+					return "No more payments";
+				}
+				referenceDate = payments.get(0).date;
+			}
+			
+			final long hour = 60 * 60 * 1000;
+			owner.email = createEmail(impData.creator);
+			owner.joined = new Date (referenceDate.getTime() - RandomUtils.nextInt(30) * 10 * hour - 48 * hour);
+			owner.name = impData.creator;
+			getDAO().generateNickname(owner, owner.email);
+			owner.status = SBUser.Status.ACTIVE;
+			owner.notifyEnabled = false;
+			owner.password = UserMgmtFacade.instance().encryptPassword("finwest2014");
+			owner.authCookie = UserMgmtFacade.instance().encryptPassword(owner.password + new Date().getTime());
+			owner.recentDomain = "start";
+			owner.recentLang = LangVersion.PL;
+			owner.modified = new Date();
+			owner.investor = false;
+			owner.dragon = false;
+			owner.admin = false;
+			owner.mockData = true;
+	
+			log.info(owner.toString());
+			getDAO().storeUser(owner);
+			
+			listing.lang = LangVersion.PL;
+			listing.campaign = develEnv ? "pl" : "start";
+			listing.state = Listing.State.ACTIVE;
+			listing.owner = owner.getKey();
+			listing.contactEmail = owner.email;
+			listing.founders = owner.name;
+			listing.askedForFunding = false;
+			listing.created = referenceDate;
+			listing.modified = referenceDate;
+			listing.name = impData.name;
+			
+			listing.type = Listing.Type.APPLICATION;
+			listing.category = "Software";
+			listing.platform = impData.type == Type.ANDROID ? Listing.Platform.ANDROID.toString() : Listing.Platform.IOS.toString();
+			listing.videoUrl = impData.videoUrl;
+			fetchLogo(listing, impData.logoUrl);
+			fillMantraAndSummary(listing, null, impData.description);
+			List<String> pics = new ArrayList<String>();
+			pics.add(impData.screenshotUrl1);
+			pics.add(impData.screenshotUrl2);
+			pics.add(impData.screenshotUrl3);
+			pics.add(impData.screenshotUrl4);
+			pics.add(impData.screenshotUrl5);
+			GpsData gps = GPS_DATA[RandomUtils.nextInt(GPS_DATA.length)];
+			listing.address = listing.briefAddress = gps.location;
+			listing.city = gps.city;
+			listing.country = gps.country;
+			listing.latitude = gps.latitude;
+			listing.longitude = gps.longitude;
+			
+			listing.notes += "Imported data from " + impData.identity + "\n";
+			getDAO().storeListing(listing);
+			log.info(listing.toString());
+			
+			if (!develEnv) {
+				for (SmsPayment payment : payments) {
+					payment.used = true;
+					payment.listingName = listing.name;
+					payment.listing = listing.getKey();
+					payment.ownerNick = owner.nickname;
+					getDAO().storeSmsPayment(payment);
+				}
+			}
+
+			schedulePictureImport(listing, pics);
+			
+			impData.imported = true;
+			getDAO().storeListingToImport(impData);
+			
+			NotificationFacade.instance().schedulePictureImport(listing, 1);
+			
+			int toImport = MemCacheFacade.instance().getListingsToImport();
+			if (toImport > 0) {
+				NotificationFacade.instance().scheduleLoadListingData();
+				MemCacheFacade.instance().setListingsToImport(toImport - 1);
+			}
+		} catch (Exception e) {
+			log.log(Level.SEVERE, "Error importing data", e);
+			return "Error happened";
+		}
+		
+		return "Created user " + owner.nickname + " and listing " + listing.name;
+	}
+	
+	private static final GpsData GPS_DATA[] = new GpsData[] {
+		new GpsData("Będzin", 50.340, 19.129),
+		new GpsData("Andrychów", 49.860, 19.339),
+		new GpsData("Gliwice", 50.310, 18.669),
+		new GpsData("Bielawa", 50.689, 16.610),
+		new GpsData("Bielsko-Biała", 49.819, 19.049),
+		new GpsData("Bieruń", 50.100, 19.100),
+		new GpsData("Blachownia", 50.790, 18.959),
+		new GpsData("Bolesławiec", 51.259, 15.560),
+		new GpsData("Brzeg", 50.849, 17.470),
+		new GpsData("Wrocław", 51.110, 17.030),
+		new GpsData("Gliwice", 50.310, 18.669),
+		new GpsData("Bystrzyca Kłodzka", 50.299, 16.639),
+		new GpsData("Bytom", 50.349, 18.909),
+		new GpsData("Chorzów", 50.299, 19.030),
+		new GpsData("Cieszyn", 49.750, 18.629),
+		new GpsData("Czerwionka-Leszczyny", 50.170, 18.680),
+		new GpsData("Częstochowa", 50.810, 19.129),
+		new GpsData("Gliwice", 50.310, 18.669),
+		new GpsData("Grójec", 51.879, 20.859),
+		new GpsData("Jastrzębie-Zdroj", 49.990, 18.590),
+		new GpsData("Jaworzno", 50.209, 19.270),
+		new GpsData("Jelenia Góra", 50.909, 15.729),
+		new GpsData("Katowice", 50.259, 19.020),
+		new GpsData("Kędzierzyn-Koźle", 50.340, 18.209),
+		new GpsData("Knurów", 50.220, 18.669),
+		new GpsData("Wrocław", 51.110, 17.030),
+		new GpsData("Kraków", 50.060, 19.959),
+		new GpsData("Lubliniec", 50.669, 18.689),
+		new GpsData("Łaziska Gorne", 50.170, 18.779),
+		new GpsData("Mikolów", 50.230, 18.969),
+		new GpsData("Mysłowice", 50.240, 19.140),
+		new GpsData("Częstochowa", 50.810, 19.129),
+		new GpsData("Olkusz", 50.279, 19.549),
+		new GpsData("Gdańsk", 54.360, 18.639),
+		new GpsData("Gdynia", 54.520, 18.530),
+		new GpsData("Orzesze", 50.160, 18.779),
+		new GpsData("Wrocław", 51.110, 17.030),
+		new GpsData("Płonsk", 52.629, 20.379),
+		new GpsData("Gliwice", 50.310, 18.669),
+		new GpsData("Warszawa", 52.359, 21.120),
+		new GpsData("Warszawa", 52.259, 21.070),
+		new GpsData("Warszawa", 52.279, 21.020),
+		new GpsData("Warszawa", 52.269, 21.040),
+		new GpsData("Pszczyna", 49.979, 18.950),
+		new GpsData("Raciborz", 50.090, 18.219),
+		new GpsData("Radlin", 50.039, 18.459),
+		new GpsData("Katowice", 50.259, 19.020),
+		new GpsData("Poznań", 52.399, 16.900),
+		new GpsData("Ruda Śląska", 50.299, 18.880),
+		new GpsData("Radzionków", 50.390, 18.889),
+		new GpsData("Siemianowice Śląskie", 50.330, 19.049),
+		new GpsData("Sosnowiec", 50.279, 19.120),
+		new GpsData("Kraków", 50.060, 19.959),
+		new GpsData("Świętochłowice", 50.290, 18.940),
+		new GpsData("Tarnowskie Góry", 50.459, 18.860),
+		new GpsData("Katowice", 50.259, 19.020),
+		new GpsData("Gdańsk", 54.360, 18.639),
+		new GpsData("Gdynia", 54.520, 18.530),
+		new GpsData("Tychy", 50.160, 19.000),
+		new GpsData("Poznań", 52.399, 16.900),
+		new GpsData("Ustroń", 49.719, 18.799),
+		new GpsData("Warszawa", 52.359, 21.120),
+		new GpsData("Warszawa", 52.259, 21.070),
+		new GpsData("Warszawa", 52.279, 21.020),
+		new GpsData("Warszawa", 52.269, 21.040),
+		new GpsData("Wisła", 49.659, 18.870),
+		new GpsData("Wolomin", 52.339, 21.229),
+		new GpsData("Zabrze", 50.299, 18.779),
+		new GpsData("Wrocław", 51.110, 17.030),
+		new GpsData("Gliwice", 50.310, 18.669),
+		new GpsData("Poznań", 52.399, 16.900),
+		new GpsData("Żory", 50.069, 18.689),
+		new GpsData("Zgorzelec", 51.149, 15.009),
+		new GpsData("Sosnowiec", 50.279, 19.120),
+		new GpsData("Zawiercie", 50.489, 19.420),
+		new GpsData("Zabrze", 50.299, 18.779),
+		new GpsData("Wodzisław Śląski", 50.039, 18.400),
+		new GpsData("Warszawa", 52.359, 21.120),
+		new GpsData("Warszawa", 52.259, 21.070),
+		new GpsData("Warszawa", 52.279, 21.020),
+		new GpsData("Warszawa", 52.269, 21.040),
+		new GpsData("Gdańsk", 54.360, 18.639),
+		new GpsData("Gdynia", 54.520, 18.530),
+		new GpsData("Grudziądz", 53.490, 18.749),
+		new GpsData("Jelenia Góra", 50.909, 15.729),
+		new GpsData("Poznań", 52.399, 16.900)
+	};
+	
+	private static class GpsData {
+		GpsData (String location, double lat, double lon) {
+			this.location = location + ", Polska";
+			this.city = location.toLowerCase();
+			this.country = "Polska";
+			this.latitude = lat;
+			this.longitude = lon;
+		}
+		String location, city, country;
+		double latitude, longitude;
 	}
 
 }

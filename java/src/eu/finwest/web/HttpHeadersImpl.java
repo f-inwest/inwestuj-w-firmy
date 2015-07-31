@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,8 @@ import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
  * @author "Grzegorz Nittner" <grzegorz.nittner@gmail.com>
  */
 public class HttpHeadersImpl implements HttpHeaders {
+    private static final Logger log = Logger.getLogger(HttpHeadersImpl.class.getName());
+
     String resultCode;
     int status = SC_OK;
     Object etag;
@@ -135,9 +139,14 @@ public class HttpHeadersImpl implements HttpHeaders {
 			response.setHeader(header.getKey(), header.getValue());
 		}
 		if (isBlobResponse()) {
-			BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-			blobstoreService.serve(getBlobKey(), response);
-			return null;
+            try {
+                BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+                log.info("Returning blob content: " + getBlobKey());
+                blobstoreService.serve(getBlobKey(), response);
+            } catch (Exception e) {
+                log.log(Level.SEVERE, "Error returning blob: " + e.getLocalizedMessage(), e);
+            }
+            return null;
 		}
 
         if (disableCaching) {

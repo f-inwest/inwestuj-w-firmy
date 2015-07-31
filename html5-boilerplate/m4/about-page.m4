@@ -23,11 +23,18 @@ include(header.m4)
 
 <!-- left column -->
 <div class="span-16">
-    <div class="boxtitle">@lang_how_it_works@
-        <a class="videolink about-videolink" href="https://youtu.be/hq5gaQ1FtAU" id="videolink">(@lang_view_on_youtube@)</a>
+    <div class="boxtitle">@lang_how_it_works_entr@
+        <a class="videolink about-videolink" href="https://www.youtube.com/watch?v=WAEtOyb_BAU" id="videolink">(@lang_view_on_youtube@)</a>
     </div>
     <div class="boxpanel-youtube">
-   	    <iframe width="626" height="382" src="https://www.youtube.com/embed/hq5gaQ1FtAU" frameborder="0" allowfullscreen></iframe>
+   	    <iframe width="626" height="382" src="https://www.youtube.com/embed/WAEtOyb_BAU" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+    <div class="boxtitle">@lang_how_it_works@
+        <a class="videolink about-videolink" href="https://www.youtube.com/watch?v=hHjjYMP_eqM" id="videolink">(@lang_view_on_youtube@)</a>
+    </div>
+    <div class="boxpanel-youtube">
+   	    <iframe width="626" height="382" src="https://www.youtube.com/embed/hHjjYMP_eqM" frameborder="0" allowfullscreen></iframe>
     </div>
 
     <div class="boxtitle">@lang_what_we_do@</div>

@@ -26,11 +26,12 @@
             <div class="span-4 footercol">
                 <div class="footerlinkheader">@lang_other_menu@</div>
                 <a href="contact-page.html"><span class="footerlink hoverlink">@lang_contact@</span></a>
-                <a href="sms-page.html" class="initialhidden loggedinfooterlink"><span class="footerlink hoverlink">@lang_sms_payments@</span></a>
+                <a href="docs-page.html"><span class="footerlink hoverlink">@lang_additional_docs@</span></a>
                 <div class="initialhidden adminfooterlink">
                     <a href="/setup" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_setup@</span></a>
                     <a href="/hello" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_hello@</span></a>
                     <a href="profile-list-page.html?type=all" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_users@</span></a>
+                	<a href="sms-page.html" class="initialhidden adminfooterlink"><span class="footerlink hoverlink">@lang_sms_payments@</span></a>
                 </div>
             </div>
             <div class="span-8 footercol">
@@ -59,7 +60,14 @@
         </div> <!-- end container -->
 
         <div class="stopka-ue">
-		    <div class="stopka-ue-img"></div>
+		    <div class="stopka-ue-img" style="cursor: pointer;" onclick="location.href=''http://www.f-inwest.eu/start/';">
+		    <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            </div>
 	    </div>
 
     </div> <!-- end footercontainer -->

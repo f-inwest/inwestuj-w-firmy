@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.codehaus.jackson.JsonNode;
@@ -28,8 +27,8 @@ import com.google.appengine.api.blobstore.BlobKey;
 
 import eu.finwest.dao.ObjectifyDatastoreDAO;
 import eu.finwest.datamodel.Listing;
-import eu.finwest.datamodel.ListingDoc;
 import eu.finwest.datamodel.Listing.State;
+import eu.finwest.datamodel.ListingDoc;
 import eu.finwest.vo.BaseVO;
 import eu.finwest.vo.BidListVO;
 import eu.finwest.vo.BidUserListVO;

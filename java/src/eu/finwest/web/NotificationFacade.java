@@ -489,5 +489,12 @@ public class NotificationFacade {
 		}
 		return DtoToVoConverter.convertNotifications(toStore);
 	}
+	
+	public void scheduleLoadListingData() {
+		String taskName = timeStampFormatter.print(new Date().getTime()) + "schedule_load_listing_data";
+		Queue queue = QueueFactory.getDefaultQueue();
+		queue.add(TaskOptions.Builder.withUrl("/task/load-listing-data")
+				.taskName(taskName));
+	}
 
 }

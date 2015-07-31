@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.joda.time.format.DateTimeFormat;
@@ -19,20 +20,32 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.gdata.client.docs.DocsService;
 import com.google.gdata.util.AuthenticationException;
+import com.googlecode.objectify.Key;
 
 import eu.finwest.dao.DatastoreMigration;
 import eu.finwest.dao.MockDataBuilder;
+import eu.finwest.datamodel.Listing;
+import eu.finwest.datamodel.Monitor;
 import eu.finwest.datamodel.PricePoint;
+import eu.finwest.datamodel.SBUser;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.datamodel.Transaction;
 import eu.finwest.datamodel.Transaction.Status;
+import eu.finwest.util.Translations;
 import eu.finwest.vo.BaseVO;
+import eu.finwest.vo.DtoToVoConverter;
+import eu.finwest.vo.ErrorCodes;
+import eu.finwest.vo.ListingAndUserVO;
+import eu.finwest.vo.ListingVO;
 import eu.finwest.vo.SystemPropertyVO;
 import eu.finwest.vo.UserVO;
+import eu.finwest.web.FrontController;
 import eu.finwest.web.HttpHeaders;
 import eu.finwest.web.HttpHeadersImpl;
+import eu.finwest.web.ListingImportService;
 import eu.finwest.web.MemCacheFacade;
 import eu.finwest.web.ModelDrivenController;
+import eu.finwest.web.NotificationFacade;
 import eu.finwest.web.ServiceFacade;
 import eu.finwest.web.UserMgmtFacade;
 
@@ -74,6 +87,8 @@ public class SystemController extends ModelDrivenController {
 				return migrateFixRecentDomain(request);
 			} else if("migrate_reindex_listings".equalsIgnoreCase(getCommand(1))) {
 				return migrateReindexListings(request);
+			} else if("migrate_update_smspayments".equalsIgnoreCase(getCommand(1))) {
+				return migrateReindexSmsPayments(request);
 			} else if("reset_pricepoints".equalsIgnoreCase(getCommand(1))) {
 				return resetPricePoints(request);
 			} else if("associate_mock_images".equalsIgnoreCase(getCommand(1))) {
@@ -92,13 +107,19 @@ public class SystemController extends ModelDrivenController {
 				return downloadSmsPayments(request);
 			} else if("get_sms_payments".equalsIgnoreCase(getCommand(1))) {
 				return getSmsPayments(request);
+			} else if("download_sms_payments_report".equalsIgnoreCase(getCommand(1))) {
+				return downloadSmsPaymentsReport(request);
 			} else if("send_investor_report".equalsIgnoreCase(getCommand(1))) {
 				return sendInvestorReport(request);
+			} else if("load_import_data".equalsIgnoreCase(getCommand(1))) {
+				return loadImportData(request);
+			} else if("start_import_data".equalsIgnoreCase(getCommand(1))) {
+				return startImportData(request);
 			}
 		}
 		return null;
 	}
-
+	
 	private HttpHeaders validateSmsCode(HttpServletRequest request) {
 		HttpHeaders headers = new HttpHeadersImpl("transferuj_pl_notification");
 		
@@ -123,6 +144,11 @@ public class SystemController extends ModelDrivenController {
 	private HttpHeaders getSmsPayments(HttpServletRequest request) {
 		model = ServiceFacade.instance().getSmsPayments(getLoggedInUser());
 		return new HttpHeadersImpl("get_sms_payments").disableCaching();
+	}
+
+	private HttpHeaders downloadSmsPaymentsReport(HttpServletRequest request) {
+		model = ServiceFacade.instance().downloadSmsPaymentsReport(getLoggedInUser());
+		return new HttpHeadersImpl("download_sms_payments_report").disableCaching();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -306,6 +332,16 @@ public class SystemController extends ModelDrivenController {
 		UserVO loggedInUser = getLoggedInUser();
 		if (loggedInUser != null && loggedInUser.isAdmin()) {
 			model = DatastoreMigration.fixRecentDomain();
+		}
+		return headers;
+	}
+
+	private HttpHeaders migrateReindexSmsPayments(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("migrate_update_smspayments");
+
+		UserVO loggedInUser = getLoggedInUser();
+		if (loggedInUser != null && loggedInUser.isAdmin()) {
+			model = DatastoreMigration.updateSmsPayments();
 		}
 		return headers;
 	}
@@ -514,7 +550,35 @@ public class SystemController extends ModelDrivenController {
         }
         return headers;
     }
+    
+    
+    private HttpHeaders loadImportData(HttpServletRequest request) {
+        HttpHeaders headers = new HttpHeadersImpl("load_import_data");
 
+        UserVO loggedInUser = getLoggedInUser();
+        String url = request.getParameter("url");
+        if (loggedInUser != null && loggedInUser.isAdmin() && !StringUtils.isEmpty(url)) {
+            model = ServiceFacade.instance().loadImportData(loggedInUser, url);
+        } else {
+            headers.setStatus(500);
+        }
+        return headers;
+    }
+
+    private HttpHeaders startImportData(HttpServletRequest request) {
+        HttpHeaders headers = new HttpHeadersImpl("load_import_data");
+
+        UserVO loggedInUser = getLoggedInUser();
+        String numStr = request.getParameter("num");
+        int num = NumberUtils.toInt(numStr, 1);
+        if (loggedInUser != null && loggedInUser.isAdmin()) {
+            model = ServiceFacade.instance().startImportData(loggedInUser, num);
+        } else {
+            headers.setStatus(500);
+        }
+        return headers;
+    }
+    
 	@Override
 	public Object getModel() {
 		return model;

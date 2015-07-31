@@ -107,8 +107,8 @@ public class Listing extends BaseObject<Listing> {
 	@Indexed public String city;
 	public String briefAddress;
 	public String address;
-	public Double latitude;
-	public Double longitude;
+	public Double latitude = 0.0;
+	public Double longitude = 0.0;
 	
 	/* Has business model canvas */
 	public boolean hasBmc;
@@ -166,6 +166,8 @@ public class Listing extends BaseObject<Listing> {
 	public int contributionPerHour = 25;
 	/* value represents 1/10000, by default it is 0.08% daily */
 	public int contributionInterestDaily = 8;
+	
+	public int version = 1;
 	
 	public String getWebKey() {
 		return new Key<Listing>(Listing.class, id).getString();

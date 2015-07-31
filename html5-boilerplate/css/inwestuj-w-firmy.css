@@ -677,6 +677,7 @@ a:focus, a:hover { cursor: pointer; }
     text-align: center;
     position: absolute;
     right: 0;
+    top: 45px;
 }
 .companybannerfollowbtn:hover, .companybannerfollowbtn:active {
     transition: background 0.25s, color 0.25s;

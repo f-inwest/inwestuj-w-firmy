@@ -27,9 +27,11 @@ import eu.finwest.web.EmailService;
 import eu.finwest.web.HttpHeaders;
 import eu.finwest.web.HttpHeadersImpl;
 import eu.finwest.web.ListingFacade;
+import eu.finwest.web.ListingImportService;
 import eu.finwest.web.ListingSearchService;
 import eu.finwest.web.ModelDrivenController;
 import eu.finwest.web.NotificationFacade;
+import eu.finwest.web.ServiceFacade;
 import eu.finwest.web.UserMgmtFacade;
 import eu.finwest.web.ListingFacade.UpdateReason;
 
@@ -84,6 +86,8 @@ public class TaskController extends ModelDrivenController {
 			return scheduleBidNotifications(request);
 		} else if("update-listing-doc".equalsIgnoreCase(getCommand(1))) {
             return updateListingDoc(request);
+        } else if("load-listing-data".equalsIgnoreCase(getCommand(1))) {
+            return loadListingData(request);
         }
 		return null;
 	}
@@ -248,6 +252,12 @@ public class TaskController extends ModelDrivenController {
         return headers;
     }
 
+	private HttpHeaders loadListingData(HttpServletRequest request) {
+		HttpHeaders headers = new HttpHeadersImpl("load-listing-data");		
+		model = ListingImportService.importListingData();
+		return headers;
+	}
+	
 	@Override
 	public Object getModel() {
 		return model;

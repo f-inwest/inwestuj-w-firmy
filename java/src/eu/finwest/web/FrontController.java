@@ -141,6 +141,9 @@ public class FrontController extends HttpServlet {
 				handleStaticFiles(request, response, pathInfo, langVersion.get());
 				// after this is called do not modify output
 			}
+		} catch(Exception e) {
+			log.log(Level.SEVERE, "Error while handling request", e);
+			throw e;
 		} finally {
 			langVersion.remove();
 		}

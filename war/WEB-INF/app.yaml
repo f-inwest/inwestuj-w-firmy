@@ -1,5 +1,5 @@
 application: inwestuj-w-firmy
-version: 201404011245
+version: 201507311159
 runtime: java
 
 static_files:
@@ -77,4 +77,4 @@ admin_console:
 system_properties:
   com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize: true
   java.awt.headless: true
-
+  user.timezone: Europe/Warsaw

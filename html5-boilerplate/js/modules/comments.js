@@ -202,7 +202,7 @@ pl.implement(CommentClass, {
                 ? '<span class="profilelistuserclass">' + ProfileUserClass.prototype.format(comment.profile_user_class) + '</span>'
                 : '',
             datetext = '<span class="commentinlinedate">'
-                + (comment.ago_text || DateClass.prototype.agoText(comment.comment_date)) + '</span>',
+                + '' /* +(comment.ago_text || DateClass.prototype.agoText(comment.comment_date)) */ + '</span>',
             deletable = comment.profile_id === this.loggedin_profile_id,
             deletemsgspan = deletable
                 ? ' <p id="comment_delete_msg_' + comment.comment_id

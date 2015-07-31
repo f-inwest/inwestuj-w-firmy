@@ -470,3 +470,11 @@ indexes:
     - name: approved
     - name: date
       direction: desc
+
+- kind: SmsPayment
+  ancestor: no
+  properties:
+    - name: used
+    - name: date
+      direction: asc
+

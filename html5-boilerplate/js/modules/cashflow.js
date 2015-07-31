@@ -185,8 +185,8 @@ pl.implement(CashFlowClass, {
             currency = self.currency.toUpperCase(),
             options = {
                 title: '@lang_cashflow_chart_title@',
-                vAxis: { title: 'Balance (' + currency + ')' },
-                hAxis: { title: 'Month' },
+                vAxis: { title: '@lang_balance@ (' + currency + ')' },
+                hAxis: { title: '@lang_month@' },
                 series: {
                     0: { color: 'green', type: 'bars' },
                     1: { color: 'black', type: 'line' }

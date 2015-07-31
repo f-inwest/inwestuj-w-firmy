@@ -37,12 +37,61 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/jsr305.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/mail-1.4.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify-3.1.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/twitter4j-core-2.2.6.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.6.0_45"/>
-	<classpathentry kind="lib" path="C:/tools/appengine-java-sdk-1.8.2/lib/testing/appengine-testing.jar"/>
-	<classpathentry kind="lib" path="C:/tools/appengine-java-sdk-1.8.2/lib/impl/appengine-api.jar"/>
-	<classpathentry kind="lib" path="C:/tools/appengine-java-sdk-1.8.2/lib/appengine-tools-api.jar"/>
-	<classpathentry kind="lib" path="C:/tools/appengine-java-sdk-1.8.2/lib/appengine-remote-api.jar"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AppEngine1.9.4"/>
+	<classpathentry kind="lib" path="lib/appengine-api-stubs.jar"/>
+	<classpathentry kind="lib" path="lib/appengine-api.jar"/>
+	<classpathentry kind="lib" path="lib/appengine-remote-api.jar"/>
+	<classpathentry kind="lib" path="lib/appengine-testing.jar"/>
+	<classpathentry kind="lib" path="lib/bsh-2.0b5.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/itext-2.1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jaxb-svg11-1.0.2.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jaxb-xmldsig-core-1.0.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jaxb-xslfo-1.0.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jsr107cache-1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/poi-3.8.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/poi-scratchpad-3.8.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/antlr-2.7.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/antlr-runtime-3.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-api-labs.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/appengine-endpoints.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/avalon-framework-api-4.3.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/avalon-framework-impl-4.3.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-anim-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-awt-util-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-bridge-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-css-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-dom-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-ext-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-extension-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-gvt-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-js-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-parser-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-script-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-svg-dom-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-svggen-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-transcoder-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-util-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/batik-xml-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/fop-1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/serializer-2.7.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/slf4j-api-1.7.5.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/slf4j-log4j12-1.7.5.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/stringtemplate-3.2.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/wmf2svg-0.9.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/xalan-2.7.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/xmlgraphics-commons-1.5.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/docx4j-3.0.2-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-services-plus-v1-rev121-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-api-client-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-appengine-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/google-http-client-jackson2-1.18.0-rc.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jackson-core-2.1.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/twitter4j-appengine-4.0.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/twitter4j-core-4.0.1.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

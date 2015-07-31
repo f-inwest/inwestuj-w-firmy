@@ -146,7 +146,7 @@ public class HelloServlet extends HttpServlet {
 			for (SBUser u : datastore.getAllUsers()) {
 				userCombo.append("<option value=\"" + u.getWebKey() + "\">" + u.nickname + "</option>");
 				if (u.investor) {
-					investorsCombo.append("<option value=\"" + u.getWebKey() + "\">" + u.nickname + "</option>");
+					investorsCombo.append("<option value=\"" + u.getWebKey() + "\">" + u.nickname + " &lt;" + u.email + "&gt;</option>");
 				}
 			}
 			StringBuffer listingCombo = new StringBuffer();

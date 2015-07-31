@@ -22,9 +22,12 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
+import com.google.appengine.tools.cloudstorage.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -41,12 +44,7 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreFailureException;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.files.AppEngineFile;
-import com.google.appengine.api.files.FileService;
-import com.google.appengine.api.files.FileServiceFactory;
-import com.google.appengine.api.files.FileWriteChannel;
-import com.google.appengine.api.files.FinalizationException;
-import com.google.appengine.api.files.LockException;
+import com.google.appengine.api.datastore.QueryResultIterator;
 import com.google.appengine.api.images.Image;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
@@ -54,6 +52,7 @@ import com.google.appengine.api.images.Transform;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.utils.SystemProperty;
 import com.googlecode.objectify.Key;
 
 import eu.finwest.dao.MockDataBuilder;
@@ -97,6 +96,7 @@ import eu.finwest.vo.UserVO;
 
 public class ListingFacade {
 	private static final Logger log = Logger.getLogger(ListingFacade.class.getName());
+	private static final String GCS_BUCKET_NAME = "inwestuj-w-firmy.appspot.com";
 
 	public static enum UpdateReason {NEW_BID, BID_UPDATE, NEW_COMMENT, DELETE_COMMENT, NEW_MONITOR, DELETE_MONITOR, QUESTION_ANSWERED, NONE};
 	private final static int PICTURE_HEIGHT = 452;
@@ -588,23 +588,25 @@ public class ListingFacade {
 			return doc;
 		} catch (Exception e) {
             String errorMsg = "Error storing document";
-            log.warning("fetchAndUpdateListingDoc: " + errorMsg);
+            log.log(Level.WARNING, "fetchAndUpdateListingDoc: " + errorMsg, e);
             doc.setErrorCode(ErrorCodes.ENTITY_VALIDATION);
             doc.setErrorMessage(errorMsg);
             return doc;
 		}
 	}
 
-	private BlobKey createBlob(byte[] docBytes, Type type, String mimeType)
-			throws IOException, FileNotFoundException, FinalizationException, LockException {
-		FileService fileService = FileServiceFactory.getFileService();
-		AppEngineFile file = fileService.createNewBlobFile(mimeType);
-		FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
-		writeChannel.write(ByteBuffer.wrap(docBytes));
-		writeChannel.closeFinally();
-		BlobKey key = fileService.getBlobKey(file);
+	private BlobKey createBlob(byte[] docBytes, Type type, String mimeType) throws IOException {
+		GcsFilename gcsFileName = new GcsFilename(GCS_BUCKET_NAME, type + "_" + RandomStringUtils.randomAlphanumeric(15));
+		GcsService gcsService = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
+		GcsFileOptions fileOptions = new GcsFileOptions.Builder().mimeType(mimeType).acl("public-read").build();
+		@SuppressWarnings("resource")
+		GcsOutputChannel outputChannel = gcsService.createOrReplace(gcsFileName, fileOptions);
+		outputChannel.write(ByteBuffer.wrap(docBytes));
+		outputChannel.close();
+
+		BlobKey key = BlobstoreServiceFactory.getBlobstoreService().createGsBlobKey("/gs/" + gcsFileName.getBucketName() + "/" + gcsFileName.getObjectName());
 		if (key == null) {
-			log.warning("Blob not created for file " + file);
+			log.warning("Blob not created for file " + "/gs/" + gcsFileName.getBucketName() + "/" + gcsFileName.getObjectName());
 			return null;
 		}
 		return key;
@@ -1670,9 +1672,9 @@ public class ListingFacade {
 	}
 
 	/**
-	 * Returns search text split by type.
-	 * 0 is full text search, 1 is category, 2 is location.
-	 */
+     * Returns search text split by type.
+     * 0 is full text search, 1 is category, 2 is location.
+     */
 	public String[] splitSearchKeywords(String searchText) {
 		String[] result = new String[] {"", "", ""};
 		StringTokenizer tokenizer = new StringTokenizer(searchText);
@@ -1700,43 +1702,62 @@ public class ListingFacade {
 
     public String updateAllAggregateStatistics() {
         Map<String, Category> categories = MemCacheFacade.instance().getInitalCategoriesMap();
-        List<Listing> listings = getDAO().getAllListingsInternal();
 
         Map<String, Map<String, Category>> statCategories = new HashMap<String, Map<String, Category>>();
         Map<String, Map<String, Location>> locations = new HashMap<String, Map<String, Location>>();
         Map<String, List<ListingLocation>> listingLocs = new HashMap<String, List<ListingLocation>>();
-        log.log(Level.INFO, "Starting listings stat calculation for " + listings.size() + " listings");
-		for (Listing listing : listings) {
-			if (listing.state == Listing.State.ACTIVE) {
-				if (!statCategories.containsKey(listing.campaign)) {
-					Map<String, Category> campCategories = new HashMap<String, Category>();
-					for (Category c : categories.values()) {
-						campCategories.put(c.name, c.copyForCampaign(listing.campaign));
+        log.log(Level.INFO, "Starting listings stat calculation for listings");
+        QueryResultIterator<Key<Listing>> listingsIt = getDAO().getAllListingsInternal().iterator();
+        while (true) {
+        	List<Key<Listing>> keys = new ArrayList<Key<Listing>>();
+			for (int i = 0; listingsIt.hasNext() && i < 100; i++) {
+				keys.add(listingsIt.next());
+			}
+			if (keys.size() == 0) {
+				break;
+			}
+			List<Listing> listings = getDAO().getListingsByKeys(keys);
+			for (Listing listing : listings) {
+				if (listing.state == Listing.State.ACTIVE) {
+					if (!statCategories.containsKey(listing.campaign)) {
+						Map<String, Category> campCategories = new HashMap<String, Category>();
+						for (Category c : categories.values()) {
+							campCategories.put(c.name, c.copyForCampaign(listing.campaign));
+						}
+						statCategories.put(listing.campaign, campCategories);
+						locations.put(listing.campaign, new HashMap<String, Location>());
+						listingLocs.put(listing.campaign, new ArrayList<ListingLocation>());
 					}
-					statCategories.put(listing.campaign, campCategories);
-					locations.put(listing.campaign, new HashMap<String, Location>());
-					listingLocs.put(listing.campaign, new ArrayList<ListingLocation>());
-				}
-				listingLocs.get(listing.campaign).add(new ListingLocation(listing));
-				// updating top locations data
-				Map<String, Location> campaignLocations = locations.get(listing.campaign);
-				Location loc = campaignLocations.get(listing.briefAddress);
-				if (loc != null) {
-					loc.value++;
-				} else {
-					campaignLocations.put(listing.briefAddress, new Location(listing.campaign, listing.briefAddress));
-				}
-				// updating top categories data
-				Map<String, Category> campaignCategories = statCategories.get(listing.campaign);
-				Category cat = campaignCategories.get(listing.category);
-				if (cat != null) {
-					cat.count++;
-				} else {
-					log.log(Level.WARNING, "Found false category in listing " + listing);
+					if ((listing.latitude == null || listing.latitude == 0.0) && (listing.longitude == null || listing.longitude == 0.0)) {
+						listing.address = listing.briefAddress = "Katowice, Polska";
+						listing.city = "katowice";
+						listing.country = "Polska";
+						listing.latitude = 50.259;
+						listing.longitude = 19.020;
+						getDAO().storeListing(listing);
+						log.info("Fixed location data for " + listing.name);
+					}
+					listingLocs.get(listing.campaign).add(new ListingLocation(listing));
+					// updating top locations data
+					Map<String, Location> campaignLocations = locations.get(listing.campaign);
+					Location loc = campaignLocations.get(listing.briefAddress);
+					if (loc != null) {
+						loc.value++;
+					} else {
+						campaignLocations.put(listing.briefAddress, new Location(listing.campaign, listing.briefAddress));
+					}
+					// updating top categories data
+					Map<String, Category> campaignCategories = statCategories.get(listing.campaign);
+					Category cat = campaignCategories.get(listing.category);
+					if (cat != null) {
+						cat.count++;
+					} else {
+						log.log(Level.WARNING, "Found false category in listing " + listing.getKey() + " : " + listing.name);
+					}
 				}
 			}
 		}
-        log.log(Level.INFO, "Generated " + locations.size() + " locations for " + listings.size() + " listings");
+        log.log(Level.INFO, "Generated " + locations.size() + " locations for listings");
 
         List<Category> allCategories = new ArrayList<Category>();
         for (Map<String, Category> cats : statCategories.values()) {
@@ -1776,29 +1797,39 @@ public class ListingFacade {
     }
 
 	public String updateAllListingStatistics() {
-		List<Listing> listings = getDAO().getAllListingsInternal();
-        log.log(Level.INFO, "Starting stat update for " + listings.size() + " listings");
         StringBuffer buf = new StringBuffer();
+        int totalLisitings = 0;
+        
+        QueryResultIterator<Key<Listing>> listingsIt = null;
+        eu.finwest.datamodel.SystemProperty updateVersion = getDAO().getSystemProperty(eu.finwest.datamodel.SystemProperty.LISTING_UPDATE_VERSION);
+        if (updateVersion == null) {
+        	listingsIt = getDAO().getAllListingsInternal(0).iterator();
+        } else {
+        	listingsIt = getDAO().getAllListingsInternal(NumberUtils.toInt(updateVersion.value)).iterator();
+        }
+        
         buf.append("Statistics:</br>\n<ul>\n");
-		for (Listing listing : listings) {
-			ListingStats stats = calculateListingStatistics(listing.id);
-			buf.append("<li>").append(listing.name).append(" = ").append(stats.score).append("\n");
-		}
-		buf.append("</ul>\n\n");
-
+        while (true) {
+        	List<Key<Listing>> keys = new ArrayList<Key<Listing>>();
+			for (int i = 0; listingsIt.hasNext() && i < 100; i++) {
+				keys.add(listingsIt.next());
+			}
+			if (keys.size() == 0) {
+				break;
+			}
+			List<Listing> listings = getDAO().getListingsByKeys(keys);
+	        log.log(Level.INFO, "Updating stat for chunk of " + listings.size() + " listings");
+			for (Listing listing : listings) {
+				ListingStats stats = calculateListingStatistics(listing.id);
+				buf.append("<li>").append(listing.name).append(" = ").append(stats.score).append("\n");
+			}
+			buf.append("</ul>\n\n");
+        }
 		MemCacheFacade.instance().clearAllListingLocations();
 
-		log.log(Level.INFO, "Updated stats for " + listings.size() + " listings");
-        return "Updated stats for " + listings.size() + " listings.</br>\n" + buf.toString();
+		log.log(Level.INFO, "Updated stats for " + totalLisitings + " listings");
+        return "Updated stats for " + totalLisitings + " listings.</br>\n" + buf.toString();
 	}
-
-    public String updateAllListingDocuments() {
-        List<Listing> listings = getDAO().getAllListingsInternal();
-        log.log(Level.INFO, "Starting doc update for " + listings.size() + " listings.");
-        int updatedDocs = ListingSearchService.instance().updateAllListingsData(listings);
-        log.log(Level.INFO, "Updated search index for " + updatedDocs + " listings.");
-        return "Updated search index for " + updatedDocs + " listings.";
-    }
 
 	public void applyListingData(UserVO loggedInUser, ListingVO listing, Monitor monitor) {
 		ListingStats listingStats = getListingStatistics(listing.toKeyId());
@@ -2491,17 +2522,21 @@ public class ListingFacade {
 			log.info("Presentation saved to byte array, length: " + outStream.size());
 
 			// save data to Google App Engine Blobstore
-			FileService fileService = FileServiceFactory.getFileService();
-			AppEngineFile file = fileService.createNewBlobFile("application/vnd.openxmlformats-officedocument.presentationml.presentation");
-			FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
-			writeChannel.write(ByteBuffer.wrap(outStream.toByteArray()));
-			writeChannel.closeFinally();
-			
-			log.info("Presentation stored to blobstore, file: " + file.getFullPath());
+			String fileName = "application/vnd.openxmlformats-officedocument.presentationml.presentation" + "$" + RandomStringUtils.randomAlphanumeric(10);
+			GcsFilename gcsFileName = new GcsFilename(GCS_BUCKET_NAME, fileName);
+			GcsService gcsService = GcsServiceFactory.createGcsService(RetryParams.getDefaultInstance());
+			@SuppressWarnings("resource")
+			GcsOutputChannel outputChannel = gcsService.createOrReplace(gcsFileName, GcsFileOptions.getDefaultInstance());
+			outputChannel.write(ByteBuffer.wrap(outStream.toByteArray()));
+			outputChannel.close();
+
+			BlobKey key = BlobstoreServiceFactory.getBlobstoreService().createGsBlobKey(fileName);
+
+			log.info("Presentation stored to blobstore, file: " + key);
 			// your blobKey to your data in Google App Engine BlobStore
 			
 			ListingDoc presDoc = new ListingDoc();
-			presDoc.blob = fileService.getBlobKey(file);
+			presDoc.blob = key;
 			presDoc.created = new Date();
 			presDoc.mockData = false;
 			presDoc.modified = new Date();
@@ -2511,7 +2546,7 @@ public class ListingFacade {
 			log.info("Created new listing document: " + presDocVO);
 			
 			createListingDocument(loggedInUser, listingId, presDocVO);
-			return fileService.getBlobKey(file);
+			return key;
 		} catch (Exception e) {
 			log.log(Level.SEVERE, "Error generating presentation", e);
 		}

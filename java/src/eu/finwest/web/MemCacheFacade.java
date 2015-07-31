@@ -19,7 +19,6 @@ import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
 
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
@@ -36,10 +35,8 @@ import eu.finwest.datamodel.Location;
 import eu.finwest.datamodel.PricePoint;
 import eu.finwest.datamodel.SystemProperty;
 import eu.finwest.vo.CampaignVO;
-import eu.finwest.vo.ContributionVO;
 import eu.finwest.vo.DtoToVoConverter;
 import eu.finwest.vo.ListPropertiesVO;
-import eu.finwest.vo.ListingContributionsVO;
 import eu.finwest.vo.UserContributionVO;
 import eu.finwest.vo.UserVO;
 
@@ -68,6 +65,8 @@ public class MemCacheFacade {
 	private static final String MEMCACHE_SYSTEM_PROPERTY_LIST = "ListOfSystemProperties";
 	private static final String MEMCACHE_SYSTEM_PROPERTY_MAP = "MapOfSystemProperties";
 	private static final String MEMCACHE_CONTRIBUTION_MAP = "MapOfListingContributions";
+	
+	private static final String LISTINGS_TO_IMPORT_COUNTER = "ListingsToImport_Counter";
 	
 	private MemCacheFacade() {
 	}
@@ -193,7 +192,7 @@ public class MemCacheFacade {
 		
 		DecimalFormatSymbols dfs = new DecimalFormatSymbols();
 		dfs.setDecimalSeparator('.');
-		DecimalFormat df = new DecimalFormat("###.######", dfs);			
+		DecimalFormat df = new DecimalFormat("###.######", dfs);
 		Set<String> locationSet = new HashSet<String>();
 
 		String location[] = new String[2];
@@ -204,8 +203,12 @@ public class MemCacheFacade {
 				allData.put(loc.campaign, data);
 			}
 
-			location[0] = df.format(loc.latitude);
-			location[1] = df.format(loc.longitude);
+			try {
+				location[0] = df.format(loc.latitude);
+				location[1] = df.format(loc.longitude);
+			} catch (Exception e) {
+				continue;
+			}
 			while (locationSet.contains(location[0] + location[1])) {
 				location = randomizeLocation(loc, df);
 			}
@@ -518,5 +521,18 @@ public class MemCacheFacade {
 		} else {
 			return new ArrayList<UserContributionVO>(loadListingContributions(listing).values());
 		}
+	}
+	
+	public int getListingsToImport() {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		if (!mem.contains(LISTINGS_TO_IMPORT_COUNTER)) {
+			return 0;
+		}
+		return (Integer)mem.get(LISTINGS_TO_IMPORT_COUNTER);
+	}
+	
+	public void setListingsToImport(int value) {
+		MemcacheService mem = MemcacheServiceFactory.getMemcacheService();
+		mem.put(LISTINGS_TO_IMPORT_COUNTER, (Integer)value);
 	}
 }

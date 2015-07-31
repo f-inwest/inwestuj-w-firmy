@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import eu.finwest.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -23,10 +24,6 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 
 import eu.finwest.datamodel.SBUser;
-import eu.finwest.util.EmailAuthHelper;
-import eu.finwest.util.FacebookHelper;
-import eu.finwest.util.FacebookUser;
-import eu.finwest.util.TwitterHelper;
 import eu.finwest.vo.BaseResultVO;
 import eu.finwest.vo.ErrorCodes;
 import eu.finwest.vo.ListPropertiesVO;
@@ -76,9 +73,11 @@ public abstract class ModelDrivenController {
 			if (loggedInUser != null) {
 				loggedInUser.setAdmin(userService.isUserAdmin());
 			}
+			log.info("Logged in via Google: " + loggedInUser);
 		} else if (emailUser != null) {
 			// login via email/pass
 			loggedInUser = UserMgmtFacade.instance().getLoggedInUser(emailUser);
+			log.info("Logged in via email: " + loggedInUser);
 		} else if (fbUser != null) {
 			// login via Facebook
 			log.info("Logged in via Facebook as " + fbUser.getId() + ", email: " + fbUser.getEmail());
@@ -174,6 +173,7 @@ public abstract class ModelDrivenController {
 	public void generateJson(HttpServletResponse response) {
 		ObjectMapper mapper = new ObjectMapper();
 		try {
+			mapper.getSerializerProvider().setNullKeySerializer(new NullKeySerializer());
 			response.setContentType("application/json;charset=UTF-8");
 			mapper.writeValue(response.getWriter(), getModel());
 		} catch (Exception e) {

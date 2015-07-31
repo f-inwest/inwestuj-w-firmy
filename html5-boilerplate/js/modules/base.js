@@ -197,6 +197,8 @@ pl.implement(DateClass, {
                     ? diffHours + (diffHours > 1 ? ' @lang_hours_ago@' : ' @lang_hour_ago@')
                     : ( diffMinutes
                         ? diffMinutes + (diffMinutes > 1 ? ' @lang_minutes_ago@' : ' @lang_minute_ago@') : '@lang_just_now@'));
+        //console.log("listingDate: " + dateTime + ", today: " + todayTime);
+        //console.log("diffTime: " + diffTime + ", diffDays: " + diffDays);
         return agoText;
     }
 });
@@ -913,8 +915,9 @@ CompanyFormatClass.prototype.daysText = function(listing) {
     return daystext;
 };
 CompanyFormatClass.prototype.agoText = function(listing) {
-    var daysago = DateClass.prototype.daysBetween(DateClass.prototype.dateFromYYYYMMDD(listing.listing_date), DateClass.prototype.todayDate());
-    return daysago === 0 ? '@lang_today@' : daysago + ' ' + (daysago === 1 ? '@lang_day_ago@' : '@lang_days_ago@');
+    //var daysago = DateClass.prototype.daysBetween(DateClass.prototype.dateFromYYYYMMDD(listing.listing_date), DateClass.prototype.todayDate());
+    return DateClass.prototype.agoText(listing.listing_date);
+    //return daysago === 0 ? '@lang_today@' : daysago + ' ' + (daysago === 1 ? '@lang_day_ago@' : '@lang_days_ago@');
 };
 CompanyFormatClass.prototype.suggestedText = function(listing) {
     var suggested_text = '',
@@ -945,8 +948,8 @@ CompanyFormatClass.prototype.summaryLine = function(listing) {
     summary_line += listing.profile_username || '@lang_anonymous@';
     summary_line += ' ~ ';
     summary_line += CompanyFormatClass.prototype.suggestedText(listing);
-    summary_line += ' ~ ';
-    summary_line += CompanyFormatClass.prototype.daysText(listing);
+    //summary_line += ' ~ ';
+    //summary_line += CompanyFormatClass.prototype.daysText(listing);
     return summary_line;
 };
 
@@ -1635,6 +1638,7 @@ pl.implement(CompanyBannerClass, {
         else if (this.status === 'frozen') {
             statusmsg = '<span class="errorcolor">@lang_status_desc_frozen@</span>';
         }
+        
         if (this.status === 'active') {
             pl('#submiterrormsg').hide();
         }
@@ -1687,13 +1691,18 @@ pl.implement(CompanyBannerClass, {
     shouldDisplaySubmit: function() {
         //public enum State {NEW, POSTED, ACTIVE, CLOSED, WITHDRAWN, FROZEN};
         var self = this,
-            isActivationPaid = true;
+            isActivationPaid = true,
+            isCompanyPage = false;
         if (self.pricepoints && (self.pricepoints.pricepointsForType('PRJ_ACT').length > 0 || self.pricepoints.pricepointsForType('PRJ_ALL').length > 0)) {
-	        isActivationPaid = false;
+			isActivationPaid = false;
+    	}
+	    if (window.location.pathname.indexOf("company-page.html") > 0) {
+	    	isCompanyPage = true;
 	    }
-        console.log('shouldDisplaySubmit() pricepoints=' + self.pricepoints + ' isActivationPaid=' + isActivationPaid);
+        console.log('shouldDisplaySubmit() pricepoints=' + self.pricepoints + ' isActivationPaid=' + isActivationPaid
+        		+ ' isCompanyPage: ' + isCompanyPage);
         return this.loggedin_profile && this.loggedin_profile.profile_id === this.profile_id
-            && ((this.status === 'new' && isActivationPaid) || this.status === 'withdrawn');
+            && ((this.status === 'new' && isActivationPaid && isCompanyPage) || this.status === 'withdrawn');
     },
 
     displaySubmit: function() {
@@ -1810,6 +1819,9 @@ pl.implement(CompanyBannerClass, {
         }
         if (this.loggedin_profile && this.loggedin_profile_id !== this.profile_id) {
             pl('#sendmessagelink').attr({href: '/messages-page.html?to_user_id=' + (this.profile_id || '') });
+        }
+        if (!self.loggedin_profile_id) {
+            pl('#listing_financial_text').hide();
         }
         pl('#companynavcontainer').show();
     },
